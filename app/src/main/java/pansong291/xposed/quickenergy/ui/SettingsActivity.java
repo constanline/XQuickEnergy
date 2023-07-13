@@ -2,6 +2,8 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -190,11 +192,6 @@ public class SettingsActivity extends Activity
                     Config.setReceivePoint(cb.isChecked());
                     break;
 
-                case R.id.btn_donation_developer:
-                    Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
-                    startActivity(it2);
-                    break;
-
                 case R.id.cb_openTreasureBox:
                     Config.setOpenTreasureBox(cb.isChecked());
                     break;
@@ -279,6 +276,13 @@ public class SettingsActivity extends Activity
                     break;
 
                 case R.id.btn_donation_developer:
+                    new AlertDialog.Builder(this)
+                            .setView(R.layout.donation_view)
+                            .setPositiveButton("关闭", null)
+                            .create().show();
+                    break;
+
+                case R.id.btn_donation_xqe_developer:
                     Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
                     startActivity(it2);
                     break;
