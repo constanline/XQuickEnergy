@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">XQuickEnergy</string>
-    <string name="hello_user">Hello User!</string>
-     
+    <string name="app_name" translatable="false">XQuickEnergy</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
-    
+
+    <string name="hello_user">Hello User!</string>
+    <string name="base_configuration">BASE CONFIGURATION</string>
+    <string name="immediate_effect">Immediate effect</string>
+    <string name="record_log">Record log</string>
+    <string name="show_toast">Show toast</string>
+    <string name="stay_awake">Stay awake</string>
+    <string name="auto_restart_service">Auto restart service</string>
+    <string name="forest_configuration">FOREST CONFIGURATION</string>
+    <string name="collect_energy">Collect energy</string>
+    <string name="check_interval_minutes">Check interval (minutes)</string>
+    <string name="thread_count">Thread count</string>
+    <string name="advance_time_milliseconds">Advance time (milliseconds)</string>
+    <string name="collect_interval_milliseconds">Collect interval (milliseconds)</string>
+    <string name="collect_timeout_seconds">Collect timeout (seconds)</string>
+    <string name="return_water_30">Return water 30</string>
+    <string name="return_water_20">Return water 20</string>
+    <string name="return_water_10">Return water 10</string>
+    <string name="help_friend_collect">Help friend collect</string>
+    <string name="don_t_help_collect_list">Don\'t help collect list</string>
+    <string name="don_t_collect_list">Don\'t collect list</string>
+    <string name="receive_forest_task_award">Receive forest task award</string>
+    <string name="water_friend_list">Water friend list</string>
+    <string name="cooperate_water">Cooperate water</string>
+    <string name="cooperate_water_list">Cooperate water list</string>
+    <string name="farm_configuration">FARM CONFIGURATION</string>
+    <string name="enable_farm">Enable farm</string>
+    <string name="reward_friend">Reward friend</string>
+    <string name="send_back_animal">Send back animal</string>
+    <string name="send_type">Send type</string>
+    <string name="don_t_send_friend_list">Don\'t send friend list</string>
+    <string name="recall_animal_type">Recall animal type</string>
+    <string name="receive_farm_tool_reward">Receive farm tool reward</string>
+    <string name="use_new_egg_tool">Use new egg tool</string>
+    <string name="harvest_produce">Harvest produce</string>
+    <string name="answer_question">Answer question</string>
+    <string name="donation">Donation</string>
+    <string name="receive_farm_task_award">Receive farm task award</string>
+    <string name="feed_animal">Feed animal</string>
+    <string name="use_accelerate_tool">Use accelerate tool</string>
+    <string name="feed_friend_animal_list">Feed friend animal list</string>
+    <string name="notify_friend">Notify friend</string>
+    <string name="don_t_notify_friend_list">Don\'t notify friend list</string>
+    <string name="other_configuration">OTHER CONFIGURATION</string>
+    <string name="receive_point">Receive point</string>
+    <string name="open_treasure_box">Open treasure box</string>
+    <string name="donate_charity_coin">Donate charity coin</string>
+    <string name="min_exchange_count">Min exchange count</string>
+    <string name="latest_exchange_time_24_hour_system">Latest exchange time (24-hour system)</string>
+    <string name="koubei_sign_in">Koubei sign in</string>
+    <string name="more">MORE</string>
+    <string name="support_developer">Support developer</string>
+    <string name="support_xqe_developer">Support XQE developer</string>
+
+
 </resources>

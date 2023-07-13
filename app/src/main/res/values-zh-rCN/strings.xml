@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="base_configuration">基础设置</string>
+    <string name="immediate_effect">立即生效</string>
+    <string name="record_log">记录日志</string>
+    <string name="show_toast">气泡提示</string>
+    <string name="stay_awake">保持唤醒</string>
+    <string name="auto_restart_service">自动重启服务</string>
+    <string name="forest_configuration">森林设置</string>
+    <string name="collect_energy">收集能量</string>
+    <string name="check_interval_minutes">检测间隔(分钟)</string>
+    <string name="thread_count">线程数</string>
+    <string name="advance_time_milliseconds">提前时间(毫秒)</string>
+    <string name="collect_interval_milliseconds">收取间隔(毫秒)</string>
+    <string name="collect_timeout_seconds">收取超时(秒)</string>
+    <string name="return_water_30">返水30g</string>
+    <string name="return_water_20">返水20g</string>
+    <string name="return_water_10">返水10g</string>
+    <string name="help_friend_collect">帮收能量</string>
+    <string name="don_t_help_collect_list">不要帮收能量名单</string>
+    <string name="don_t_collect_list">不要收取能量名单</string>
+    <string name="receive_forest_task_award">收取森林任务奖励</string>
+    <string name="water_friend_list">好友浇水列表</string>
+    <string name="cooperate_water">合种浇水</string>
+    <string name="cooperate_water_list">合种浇水列表</string>
+    <string name="farm_configuration">农场设置</string>
+    <string name="enable_farm">开启农场</string>
+    <string name="reward_friend">好友奖励？</string>
+    <string name="send_back_animal">遣返小鸡</string>
+    <string name="send_type">遣返方式</string>
+    <string name="don_t_send_friend_list">不要遣返列表</string>
+    <string name="recall_animal_type">召回类型</string>
+    <string name="receive_farm_tool_reward">收取农场工具奖励</string>
+    <string name="use_new_egg_tool">使用新蛋卡</string>
+    <string name="harvest_produce">收获农产品</string>
+    <string name="answer_question">回答问题</string>
+    <string name="donation">捐赠</string>
+    <string name="receive_farm_task_award">收取农场任务奖励</string>
+    <string name="feed_animal">喂小鸡</string>
+    <string name="use_accelerate_tool">使用加速卡</string>
+    <string name="feed_friend_animal_list">喂好友小鸡列表</string>
+    <string name="notify_friend">通知好友</string>
+    <string name="don_t_notify_friend_list">不要通知列表</string>
+    <string name="other_configuration">其他配置</string>
+    <string name="receive_point">领取积分</string>
+    <string name="open_treasure_box">开宝箱</string>
+    <string name="donate_charity_coin">捐硬币</string>
+    <string name="min_exchange_count">最小捐步步数</string>
+    <string name="latest_exchange_time_24_hour_system">最晚捐步时间(24小时制)</string>
+    <string name="koubei_sign_in">口碑签到</string>
+    <string name="more">更多</string>
+    <string name="support_developer">支持当前开发者</string>
+    <string name="hello_user">你好，旅行者！</string>
+    <string name="support_xqe_developer">支持XQE原作者</string>
+
+</resources>

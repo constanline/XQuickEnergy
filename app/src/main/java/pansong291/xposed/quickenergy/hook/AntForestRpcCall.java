@@ -112,4 +112,16 @@ public class AntForestRpcCall {
         return null;
     }
 
+    public static String popupTask(ClassLoader loader) {
+        return RpcCall.invoke(loader, "alipay.antforest.forest.h5.popupTask",
+                "[{\"fromAct\":\"pop_task\",\"needInitSign\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"statusList\":[\"TODO\",\"FINISHED\"],\"version\":\"20230501\"}]");
+    }
+
+    public static String antiepSign(ClassLoader loader, String entityId, String userId) {
+        return RpcCall.invoke(loader, "com.alipay.antiep.sign",
+                "[{\"entityId\":\"" + entityId +
+                        "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\"" +
+                        userId + "\"}]");
+    }
+
 }

@@ -1,6 +1,5 @@
 package pansong291.xposed.quickenergy.util;
 
-import de.robv.android.xposed.XposedBridge;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

@@ -1,6 +1,5 @@
 package pansong291.xposed.quickenergy;
 
-import de.robv.android.xposed.XposedBridge;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +34,44 @@ public class AntForest {
         }
     }
 
+    private static void popupTask(ClassLoader loader) {
+        try {
+            JSONObject resData = new JSONObject(AntForestRpcCall.popupTask(loader));
+            if ("SUCCESS".equals(resData.getString("resultCode"))) {
+                JSONArray forestSignVOList = resData.optJSONArray("forestSignVOList");
+                if (forestSignVOList != null) {
+                    for (int i = 0; i < forestSignVOList.length(); i++) {
+                        JSONObject forestSignVO = forestSignVOList.getJSONObject(i);
+                        String signId = forestSignVO.getString("signId");
+                        String currentSignKey = forestSignVO.getString("currentSignKey");
+                        JSONArray signRecords = forestSignVO.getJSONArray("signRecords");
+                        for (int j = 0; j < signRecords.length(); j++) {
+                            JSONObject signRecord = signRecords.getJSONObject(j);
+                            String signKey = signRecord.getString("signKey");
+                            if (signKey.equals(currentSignKey)) {
+                                if (!signRecord.getBoolean("signed")) {
+                                    int awardCount = signRecord.getInt("awardCount");
+                                    JSONObject resData2 = new JSONObject(AntForestRpcCall.antiepSign(loader, signId, FriendIdMap.currentUid));
+                                    if ("SUCCESS".equals(resData2.getString("resultCode"))) {
+                                        collectedEnergy += awardCount;
+                                        Log.forest("收取过期能量［" + awardCount + "克");
+                                        onForestEnd();
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog(resData.getString("resultDesc"), resData.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "popupTask err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void queryEnergyRanking(ClassLoader loader) {
         try {
             String s = AntForestRpcCall.queryEnergyRanking(loader);
@@ -63,7 +100,7 @@ public class AntForest {
             Log.i(TAG, "queryEnergyRanking err:");
             Log.printStackTrace(TAG, t);
         }
-        onForestEnd(loader);
+        onForestEnd();
     }
 
     private static void checkCanCollectEnergy(ClassLoader loader, JSONObject jo) throws JSONException {
@@ -153,6 +190,7 @@ public class AntForest {
             Log.i(TAG, "canCollectSelfEnergy err:");
             Log.printStackTrace(TAG, t);
         }
+        onForestEnd();
     }
 
     private static void canCollectEnergy(ClassLoader loader, String userId, boolean laterCollect) {
@@ -166,7 +204,6 @@ public class AntForest {
                 offsetTime = (start + end) / 2 - serverTime;
                 Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
                 String bizNo = jo.getString("bizNo");
-                JSONArray jaProps = jo.getJSONArray("usingUserProps");
                 JSONArray jaBubbles = jo.getJSONArray("bubbles");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
@@ -178,12 +215,15 @@ public class AntForest {
                 FriendIdMap.putIdMap(userId, loginId);
                 Log.recordLog("进入【" + loginId + "】的蚂蚁森林", "");
                 FriendIdMap.saveIdMap();
-                for (int i = 0; i < jaProps.length(); i++) {
-                    JSONObject joProps = jaProps.getJSONObject(i);
-                    if ("energyShield".equals(joProps.getString("type"))) {
-                        if (joProps.getLong("endTime") > serverTime) {
-                            Log.recordLog("【" + userName + "】被能量罩保护着哟", "");
-                            return;
+                JSONArray jaProps = jo.optJSONArray("usingUserProps");
+                if (jaProps != null) {
+                    for (int i = 0; i < jaProps.length(); i++) {
+                        JSONObject joProps = jaProps.getJSONObject(i);
+                        if ("energyShield".equals(joProps.getString("type"))) {
+                            if (joProps.getLong("endTime") > serverTime) {
+                                Log.recordLog("【" + userName + "】被能量罩保护着哟", "");
+                                return;
+                            }
                         }
                     }
                 }
@@ -224,6 +264,7 @@ public class AntForest {
                     canCollectEnergy(loader, userId, false);
                 }
                 collectedEnergy += collected;
+                onForestEnd();
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
             }
@@ -300,6 +341,7 @@ public class AntForest {
             Log.i(TAG, "forFriendCollectEnergy err:");
             Log.printStackTrace(TAG, t);
         }
+        onForestEnd();
         return helped;
     }
 
@@ -388,28 +430,6 @@ public class AntForest {
         }
     }
 
-    private static void queryPropList(ClassLoader loader) {
-        try {
-            String s = AntForestRpcCall.queryTaskList(loader);
-            JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
-                JSONArray jaForestPropVOList = jo.getJSONArray("forestPropVOList");
-                for (int i = 0; i < jaForestPropVOList.length(); i++) {
-                    jo = jaForestPropVOList.getJSONObject(i);
-                    if (TaskStatus.FINISHED.name().equals(jo.getString("taskStatus"))) {
-                        String taskType = jo.getString("taskType");
-
-                    }
-                }
-            } else {
-                Log.recordLog(jo.getString("resultDesc"), s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "queryTaskList err:");
-            Log.printStackTrace(TAG, t);
-        }
-    }
-
     private static void setLaterTime(long time) {
         Log.i(TAG, "能量成熟时间：" + time);
         if (time > serverTime && serverTime > 0
@@ -419,7 +439,7 @@ public class AntForest {
         }
     }
 
-    private static void onForestEnd(ClassLoader loader) {
+    private static void onForestEnd() {
         Log.recordLog(
                 "收【" + collectedEnergy + "克】，帮【"
                         + helpCollectedEnergy + "克】，"
@@ -462,8 +482,10 @@ public class AntForest {
             @Override
             public void run() {
                 canCollectSelfEnergy(loader, times);
-                if (Config.collectEnergy())
+                if (Config.collectEnergy()) {
                     queryEnergyRanking(loader);
+                    popupTask(loader);
+                }
             }
         }.setData(loader, times).start();
     }
