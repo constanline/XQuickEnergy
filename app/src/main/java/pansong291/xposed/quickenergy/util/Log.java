@@ -13,21 +13,21 @@ public class Log
     public static void i(String tag, String s)
     {
         StringBuilder sb = new StringBuilder(tag + ", " + s);
-        try
-        {
-            for(int i = 0; i < sb.length(); i += 2000)
-            {
-                if(sb.length() < i + 2000)
-                    XposedBridge.log(sb.substring(i, sb.length()));
-                else
-                    XposedBridge.log(sb.substring(i, i + 2000));
-            }
-        }catch(Throwable t)
-        {
-            // when hooking self, this XposedBridge.class will
-            // not be found, ignore it.
-            android.util.Log.i(tag, s);
-        }
+//        try
+//        {
+//            for(int i = 0; i < sb.length(); i += 2000)
+//            {
+//                if(sb.length() < i + 2000)
+//                    XposedBridge.log(sb.substring(i, sb.length()));
+//                else
+//                    XposedBridge.log(sb.substring(i, i + 2000));
+//            }
+//        }catch(Throwable t)
+//        {
+//            // when hooking self, this XposedBridge.class will
+//            // not be found, ignore it.
+//            android.util.Log.i(tag, s);
+//        }
         FileUtils.append2RuntimeLogFile(sb.toString());
     }
 

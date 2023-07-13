@@ -28,8 +28,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:resizeableActivity="true"
-            tools:targetApi="n"
-            android:exported="true">
+            tools:targetApi="n">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"/>

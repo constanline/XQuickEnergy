@@ -47,7 +47,7 @@ public class AntMember
                         }
                     }
                     queryPointCert(loader, 1, 8);
-                    claimFamilyPoint(loader);
+//                    claimFamilyPoint(loader);
                 }catch(Throwable t)
                 {
                     Log.i(TAG, "receivePoint.run err:");

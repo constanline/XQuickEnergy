@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy;
 
+import de.robv.android.xposed.XposedBridge;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,8 +83,7 @@ public class AntForest {
 
     private static void canCollectSelfEnergy(ClassLoader loader, int times) {
         try {
-            while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                Thread.sleep(100);
+            Log.recordLog(TAG,"canCollectSelfEnergy 1");
             long start = System.currentTimeMillis();
             String s = AntForestRpcCall.queryHomePage(loader);
             long end = System.currentTimeMillis();
@@ -93,8 +93,10 @@ public class AntForest {
                 s = AntForestRpcCall.queryHomePage(loader);
                 end = System.currentTimeMillis();
             }
+            Log.recordLog(TAG,"canCollectSelfEnergy 2");
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
+                Log.recordLog(TAG,"canCollectSelfEnergy 3");
                 serverTime = jo.getLong("now");
                 offsetTime = (start + end) / 2 - serverTime;
                 Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
