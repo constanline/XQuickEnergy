@@ -7,23 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.PowerManager;
-import de.robv.android.xposed.*;
+import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
-import java.util.Map;
-
-import pansong291.xposed.quickenergy.AntCooperate;
-import pansong291.xposed.quickenergy.AntFarm;
-import pansong291.xposed.quickenergy.AntForest;
-import pansong291.xposed.quickenergy.AntForestNotification;
-import pansong291.xposed.quickenergy.AntForestToast;
-import pansong291.xposed.quickenergy.AntMember;
-import pansong291.xposed.quickenergy.AntSports;
-import pansong291.xposed.quickenergy.KBMember;
+import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.Statistics;
+
+import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {
     private static final String TAG = XposedHook.class.getCanonicalName();
@@ -34,7 +29,6 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        Log.i(TAG, lpparam.packageName);
         if ("pansong291.xposed.quickenergy.repair".equals(lpparam.packageName)) {
             XposedHelpers.findAndHookMethod(MainActivity.class.getName(), lpparam.classLoader, "setModuleActive", boolean.class, new XC_MethodHook() {
                 @Override
@@ -90,7 +84,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                     Statistics.resetToday();
                                     AntForest.checkEnergyRanking(loader, times);
                                     AntCooperate.start(loader, times);
-//                                    AntFarm.start(loader);
+                                    AntFarm.start(loader);
                                     AntMember.receivePoint(loader, times);
 //                                    AntSports.start(loader, times);
 //                                    KBMember.start(loader);

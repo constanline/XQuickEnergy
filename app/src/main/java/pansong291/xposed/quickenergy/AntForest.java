@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy;
 
+import de.robv.android.xposed.XposedHelpers;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,32 @@ public class AntForest {
     private static long serverTime = -1;
     private static long offsetTime = -1;
     private static long laterTime = -1;
+
+    public static void checkEnergyRanking(ClassLoader loader, int times) {
+        Log.recordLog("定时检测开始", "");
+        new Thread() {
+            ClassLoader loader;
+            int times;
+
+            public Thread setData(ClassLoader cl, int i) {
+                loader = cl;
+                times = i;
+                return this;
+            }
+
+            @Override
+            public void run() {
+                canCollectSelfEnergy(loader, times);
+                if (Config.collectEnergy()) {
+                    queryEnergyRanking(loader);
+                    popupTask(loader);
+                }
+                if (Statistics.canSyncStepToday()) {
+                    new StepTask(loader).start();
+                }
+            }
+        }.setData(loader, times).start();
+    }
 
     private static void fillUserRobFlag(ClassLoader loader, List<String> idList) {
         try {
@@ -400,25 +427,25 @@ public class AntForest {
             String s = AntForestRpcCall.queryTaskList(loader);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                JSONArray jaForestTaskVOList = jo.getJSONArray("forestTaskVOList");
-                for (int i = 0; i < jaForestTaskVOList.length(); i++) {
-                    jo = jaForestTaskVOList.getJSONObject(i);
-                    if (TaskStatus.FINISHED.name().equals(jo.getString("taskStatus"))) {
-                        String taskAwardTypeStr = jo.getString("awardType");
-                        String awardName = null;
-                        if (taskAwardTypeStr.endsWith(TaskAwardType.DRESS.name())) {
-                            awardName = TaskAwardType.DRESS.nickName().toString();
-                        } else if (TaskAwardType.BUBBLE_BOOST.name().equals(taskAwardTypeStr)) {
-                            awardName = TaskAwardType.BUBBLE_BOOST.nickName().toString();
+                JSONArray forestTasksNew = jo.getJSONArray("forestTasksNew");
+                for (int i = 0; i < forestTasksNew.length(); i++) {
+                    JSONObject forestTask = forestTasksNew.getJSONObject(i);
+                    JSONArray taskInfoList = forestTask.getJSONArray("taskInfoList");
+                    for (int j = 0; j < taskInfoList.length(); j++) {
+                        JSONObject taskInfo = taskInfoList.getJSONObject(j);
+                        JSONObject taskBaseInfo = taskInfo.getJSONObject("taskBaseInfo");
+                        JSONObject bizInfo = new JSONObject(taskBaseInfo.getString("bizInfo"));
+                        String taskType = taskBaseInfo.getString("taskType");
+                        String awardName = bizInfo.optString("awardName", taskType);
+                        String awardCount = bizInfo.optString("awardCount", "1");
+                        String sceneCode = taskBaseInfo.getString("sceneCode");
+                        if (TaskStatus.FINISHED.name().equals(taskBaseInfo.getString("taskStatus"))) {
+                            JSONObject joTaskAward = new JSONObject(AntForestRpcCall.receiveTaskAward(loader, sceneCode, taskType));
+                            if ("SUCCESS".equals(joTaskAward.getString("desc")))
+                                Log.forest("已领取【" + awardCount + "个】【" + awardName + "】");
+                            else
+                                Log.recordLog("领取失败，" + s, forestTask.toString());
                         }
-                        int awardCount = jo.getInt("awardCount");
-                        s = AntForestRpcCall.receiveTaskAward(loader, jo.getString("sceneCode"), jo.getString("taskType"));
-                        jo = new JSONObject(s);
-                        s = jo.getString("desc");
-                        if ("SUCCESS".equals(s))
-                            Log.forest("已领取【" + awardCount + "个】【" + awardName + "】");
-                        else
-                            Log.recordLog("领取失败，" + s, jo.toString());
                     }
                 }
             } else {
@@ -466,30 +493,6 @@ public class AntForest {
         }
         laterTime = -1;
     }
-
-    public static void checkEnergyRanking(ClassLoader loader, int times) {
-        Log.recordLog("定时检测开始", "");
-        new Thread() {
-            ClassLoader loader;
-            int times;
-
-            public Thread setData(ClassLoader cl, int i) {
-                loader = cl;
-                times = i;
-                return this;
-            }
-
-            @Override
-            public void run() {
-                canCollectSelfEnergy(loader, times);
-                if (Config.collectEnergy()) {
-                    queryEnergyRanking(loader);
-                    popupTask(loader);
-                }
-            }
-        }.setData(loader, times).start();
-    }
-
     public static void checkUnknownId(ClassLoader loader) {
         String[] unknownIds = FriendIdMap.getUnknownIds();
         if (unknownIds != null) {
@@ -556,6 +559,35 @@ public class AntForest {
 
         public CharSequence nickName() {
             return nickNames[ordinal()];
+        }
+    }
+
+    public static class StepTask extends Thread {
+
+        ClassLoader loader;
+
+        public StepTask(ClassLoader cl) {
+            this.loader = cl;
+        }
+        @Override
+        public void run() {
+            int step = RandomUtils.nextInt(20000, 26000);
+            try {
+                boolean booleanValue = (Boolean)
+                        XposedHelpers.callMethod(
+                                XposedHelpers.callStaticMethod(
+                                        loader.loadClass("com.alibaba.health.pedometer.intergation.rpc.RpcManager"),
+                                        "a"), "a", new Object[]{step, Boolean.FALSE, "system"});
+                if (booleanValue) {
+                    Log.recordLog("记录运动步数成功:" + step, "");
+                } else {
+                    Log.recordLog("修改运动步数失败:" + step, "");
+                }
+                Statistics.SyncStepToday();
+            } catch (Throwable t) {
+                Log.i(TAG, "StepTask.run err:");
+                Log.printStackTrace(TAG, t);
+            }
         }
     }
 

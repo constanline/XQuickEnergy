@@ -1,6 +1,8 @@
 package pansong291.xposed.quickenergy.util;
 
 import android.os.Environment;
+import pansong291.xposed.quickenergy.R;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;

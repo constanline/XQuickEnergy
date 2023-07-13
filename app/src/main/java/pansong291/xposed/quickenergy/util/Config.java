@@ -183,6 +183,9 @@ public class Config
 
     public static void setCheckInterval(int i)
     {
+        if (i < 600000) {
+            i = 600000;
+        }
         getConfig().checkInterval = i;
         hasChanged = true;
     }
@@ -600,7 +603,7 @@ public class Config
         c.xedgeproData = "";
 
         c.collectEnergy = true;
-        c.checkInterval = 120_000;
+        c.checkInterval = 720_000;
         c.threadCount = 1;
         c.advanceTime = 500;
         c.collectInterval = 100;
@@ -680,7 +683,7 @@ public class Config
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
             Log.i(TAG, jn_collectEnergy + ":" + config.collectEnergy);
 
-            config.checkInterval = jo.optInt(jn_checkInterval, 120_000);
+            config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
             Log.i(TAG, jn_checkInterval + ":" + config.checkInterval);
 
             config.threadCount = jo.optInt(jn_threadCount, 1);

@@ -25,18 +25,18 @@
     <string name="cooperate_water">合种浇水</string>
     <string name="cooperate_water_list">合种浇水列表</string>
     <string name="farm_configuration">农场设置</string>
-    <string name="enable_farm">开启农场</string>
+    <string name="enable_farm">开启庄园</string>
     <string name="reward_friend">好友奖励？</string>
     <string name="send_back_animal">遣返小鸡</string>
     <string name="send_type">遣返方式</string>
     <string name="don_t_send_friend_list">不要遣返列表</string>
     <string name="recall_animal_type">召回类型</string>
-    <string name="receive_farm_tool_reward">收取农场工具奖励</string>
+    <string name="receive_farm_tool_reward">收取庄园工具奖励</string>
     <string name="use_new_egg_tool">使用新蛋卡</string>
     <string name="harvest_produce">收获农产品</string>
     <string name="answer_question">回答问题</string>
     <string name="donation">捐赠</string>
-    <string name="receive_farm_task_award">收取农场任务奖励</string>
+    <string name="receive_farm_task_award">收取庄园任务奖励</string>
     <string name="feed_animal">喂小鸡</string>
     <string name="use_accelerate_tool">使用加速卡</string>
     <string name="feed_friend_animal_list">喂好友小鸡列表</string>
@@ -53,5 +53,13 @@
     <string name="support_developer">支持当前开发者</string>
     <string name="hello_user">你好，旅行者！</string>
     <string name="support_xqe_developer">支持XQE原作者</string>
+    <string name="forest_log">森林记录</string>
+    <string name="farm_log">庄园记录</string>
+    <string name="other_log">其他记录</string>
+    <string name="unactivated">未激活</string>
+    <string name="hide_the_application_icon">隐藏图标</string>
+    <string name="export_the_statistic_file">导出统计</string>
+    <string name="import_the_statistic_file">导入统计</string>
+    <string name="settings">设置</string>
 
 </resources>

@@ -2,6 +2,7 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -69,6 +70,20 @@ public class MainActivity extends Activity {
             strArray = getResources().getStringArray(R.array.sentences);
         if (strArray != null)
             btnHelp.setText(strArray[RandomUtils.nextInt(0, strArray.length)]);
+
+        String version = "";
+        try {
+            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        this.setTitle(this.getTitle() + "[" + version + "]");
+
+        new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("本APP是为了学习研究用，不得进行任何形式的转发，发布，传播。请于24小时内卸载本APP。")
+                .setNegativeButton("我知道了", null)
+                .create().show();
     }
 
     @Override
@@ -106,12 +121,12 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         int state = getPackageManager()
                 .getComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"));
-        menu.add(0, 1, 0, "Hide the application icon")
+        menu.add(0, 1, 0, R.string.hide_the_application_icon)
                 .setCheckable(true)
                 .setChecked(state > PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
-        menu.add(0, 2, 0, "Export the statistic file");
-        menu.add(0, 3, 0, "Import the statistic file");
-        menu.add(0, 4, 0, "Settings");
+        menu.add(0, 2, 0, R.string.export_the_statistic_file);
+        menu.add(0, 3, 0, R.string.import_the_statistic_file);
+        menu.add(0, 4, 0, R.string.settings);
         return super.onCreateOptionsMenu(menu);
     }
 

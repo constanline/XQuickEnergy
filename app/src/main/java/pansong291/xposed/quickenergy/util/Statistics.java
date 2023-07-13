@@ -57,7 +57,7 @@ public class Statistics
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
             jn_answerQuestionList = "answerQuestionList",
             jn_questionHint = "questionHint", jn_memberSignIn = "memberSignIn",
-            jn_exchange = "exchange", jn_kbSignIn = "kbSignIn";
+            jn_exchange = "exchange", jn_kbSignIn = "kbSignIn", jn_syncStep = "syncStep";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -76,6 +76,8 @@ public class Statistics
     private int memberSignIn = 0;
     private int exchange = 0;
     private int kbSignIn = 0;
+
+    private int syncStep = 0;
 
     private static Statistics statistics;
 
@@ -144,18 +146,18 @@ public class Statistics
     {
         statistics = null;
         Statistics stat = getStatistics();
-        StringBuilder sb = new StringBuilder("year " + getData(TimeType.YEAR, DataType.TIME) + " : collect ");
+        StringBuilder sb = new StringBuilder(getData(TimeType.YEAR, DataType.TIME) + "年 : 收 ");
         sb.append(getData(TimeType.YEAR, DataType.COLLECTED));
-        sb.append(",   help ").append(getData(TimeType.YEAR, DataType.HELPED));
-        sb.append(",   water ").append(getData(TimeType.YEAR, DataType.WATERED));
-        sb.append("\nmonth ").append(getData(TimeType.MONTH, DataType.TIME)).append(" : collect ");
+        sb.append(",   帮 ").append(getData(TimeType.YEAR, DataType.HELPED));
+        sb.append(",   浇 ").append(getData(TimeType.YEAR, DataType.WATERED));
+        sb.append("\n").append(getData(TimeType.MONTH, DataType.TIME)).append("月 : 收 ");
         sb.append(getData(TimeType.MONTH, DataType.COLLECTED));
-        sb.append(",   help ").append(getData(TimeType.MONTH, DataType.HELPED));
-        sb.append(",   water ").append(getData(TimeType.MONTH, DataType.WATERED));
-        sb.append("\nday ").append(getData(TimeType.DAY, DataType.TIME)).append(" : collect ");
+        sb.append(",   帮 ").append(getData(TimeType.MONTH, DataType.HELPED));
+        sb.append(",   浇 ").append(getData(TimeType.MONTH, DataType.WATERED));
+        sb.append("\n").append(getData(TimeType.DAY, DataType.TIME)).append("日 : 收 ");
         sb.append(getData(TimeType.DAY, DataType.COLLECTED));
-        sb.append(",   help ").append(getData(TimeType.DAY, DataType.HELPED));
-        sb.append(",   water ").append(getData(TimeType.DAY, DataType.WATERED));
+        sb.append(",   帮 ").append(getData(TimeType.DAY, DataType.HELPED));
+        sb.append(",   浇 ").append(getData(TimeType.DAY, DataType.WATERED));
         if(stat.questionHint != null && !stat.questionHint.isEmpty())
         {
             sb.append("\nquestion hint : ").append(stat.questionHint);
@@ -330,6 +332,22 @@ public class Statistics
         }
     }
 
+    public static boolean canSyncStepToday()
+    {
+        Statistics stat = getStatistics();
+        return stat.syncStep < stat.day.time;
+    }
+
+    public static void SyncStepToday()
+    {
+        Statistics stat = getStatistics();
+        if(stat.syncStep != stat.day.time)
+        {
+            stat.syncStep = stat.day.time;
+            save();
+        }
+    }
+
     private static Statistics getStatistics()
     {
         if(statistics == null)
@@ -379,6 +397,7 @@ public class Statistics
         stat.memberSignIn = 0;
         stat.exchange = 0;
         stat.kbSignIn = 0;
+        stat.syncStep = 0;
         save();
         FileUtils.getForestLogFile().delete();
         FileUtils.getFarmLogFile().delete();
@@ -513,6 +532,10 @@ public class Statistics
                 stat.kbSignIn = jo.getInt(jn_kbSignIn);
             Log.i(TAG, jn_kbSignIn + ":" + stat.kbSignIn);
 
+            if(jo.has(jn_syncStep))
+                stat.syncStep = jo.getInt(jn_syncStep);
+            Log.i(TAG, jn_syncStep + ":" + stat.syncStep);
+
         }catch(Throwable t)
         {
             Log.printStackTrace(TAG, t);
@@ -604,6 +627,8 @@ public class Statistics
             jo.put(jn_exchange, stat.exchange);
 
             jo.put(jn_kbSignIn, stat.kbSignIn);
+
+            jo.put(jn_syncStep, stat.syncStep);
         }catch(Throwable t)
         {
             Log.printStackTrace(TAG, t);

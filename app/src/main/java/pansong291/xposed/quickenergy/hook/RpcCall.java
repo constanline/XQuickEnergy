@@ -1,13 +1,10 @@
 package pansong291.xposed.quickenergy.hook;
 
-import android.content.Intent;
+import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.util.Log;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-
-import pansong291.xposed.quickenergy.AntForestToast;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.Log;
 
 public class RpcCall
 {
@@ -19,40 +16,20 @@ public class RpcCall
 
     public static String invoke(ClassLoader loader, String args0, String args1)
     {
-        if(rpcCallMethod == null)
-        {
-            try
-            {
-                Class<?> rpcClazz = loader.loadClass(ClassMember.com_alipay_mobile_nebulabiz_rpc_H5RpcUtil);
+        if(rpcCallMethod == null) {
+            try {
                 Class<?> h5PageClazz = loader.loadClass(ClassMember.com_alipay_mobile_h5container_api_H5Page);
                 Class<?> jsonClazz = loader.loadClass(ClassMember.com_alibaba_fastjson_JSONObject);
+                Class<?> rpcClazz = loader.loadClass(ClassMember.com_alipay_mobile_nebulaappproxy_api_rpc_H5RpcUtil);
                 rpcCallMethod = rpcClazz.getMethod(
                         ClassMember.rpcCall, String.class, String.class, String.class,
                         boolean.class, jsonClazz, String.class, boolean.class, h5PageClazz,
-                        int.class, String.class, boolean.class, int.class);
-                Log.i(TAG, "get Old RpcCallMethod successfully");
-            }catch(Throwable t)
-            {
-                Log.i(TAG, "get Old RpcCallMethod err:");
+                        int.class, String.class, boolean.class, int.class, String.class);
+                Log.i(TAG, "get RpcCallMethod successfully");
+            } catch (Throwable t) {
+                Log.i(TAG, "get RpcCallMethod err:");
                 //Log.printStackTrace(TAG, t);
             }
-
-            if(rpcCallMethod == null)
-                try
-                {
-                    Class<?> h5PageClazz = loader.loadClass(ClassMember.com_alipay_mobile_h5container_api_H5Page);
-                    Class<?> jsonClazz = loader.loadClass(ClassMember.com_alibaba_fastjson_JSONObject);
-                    Class<?> rpcClazz = loader.loadClass(ClassMember.com_alipay_mobile_nebulaappproxy_api_rpc_H5RpcUtil);
-                    rpcCallMethod = rpcClazz.getMethod(
-                            ClassMember.rpcCall, String.class, String.class, String.class,
-                            boolean.class, jsonClazz, String.class, boolean.class, h5PageClazz,
-                            int.class, String.class, boolean.class, int.class, String.class);
-                    Log.i(TAG, "get RpcCallMethod successfully");
-                }catch(Throwable t)
-                {
-                    Log.i(TAG, "get RpcCallMethod err:");
-                    //Log.printStackTrace(TAG, t);
-                }
         }
 
         try
@@ -78,10 +55,10 @@ public class RpcCall
                 if(AntForestToast.context != null && sendXEdgeProBroadcast)
                 {
                     sendXEdgeProBroadcast = false;
-                    Intent it = new Intent("com.jozein.xedgepro.PERFORM");
-                    it.putExtra("data", Config.xedgeproData());
-                    AntForestToast.context.sendBroadcast(it);
-                    Log.recordLog(t.getCause().getMessage() + ",发送XposedEdgePro广播", "");
+//                    Intent it = new Intent("com.jozein.xedgepro.PERFORM");
+//                    it.putExtra("data", Config.xedgeproData());
+//                    AntForestToast.context.sendBroadcast(it);
+                    Log.recordLog(t.getCause().getMessage(), "");
                 }
             }
         }

@@ -56,6 +56,14 @@
     <string name="more">MORE</string>
     <string name="support_developer">Support developer</string>
     <string name="support_xqe_developer">Support XQE developer</string>
+    <string name="forest_log">Forest log</string>
+    <string name="farm_log">Farm log</string>
+    <string name="other_log">Other log</string>
+    <string name="unactivated">UNACTIVATED</string>
+    <string name="hide_the_application_icon">Hide the application icon</string>
+    <string name="export_the_statistic_file">Export the statistic file</string>
+    <string name="import_the_statistic_file">Import the statistic file</string>
+    <string name="settings">Settings</string>
 
 
 </resources>

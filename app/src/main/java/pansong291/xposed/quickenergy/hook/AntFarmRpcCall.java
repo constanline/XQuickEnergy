@@ -6,23 +6,13 @@ public class AntFarmRpcCall
 {
     private static final String TAG = AntFarmRpcCall.class.getCanonicalName();
 
-    private static final String cityAdCode = "000000",
-            districtAdCode = "000000", version = "1.0.1910171156.41";
+    private static final String VERSION = "1.8.2302070202.46";
 
-    public static String rpcCall_enterFarm(ClassLoader loader, String farmId, String userId)
-    {
-        try
-        {
-            String args1 = "[{\"animalId\":\"\",\"cityAdCode\":\"" + cityAdCode + "\",\"districtAdCode\":\"" + districtAdCode + "\",\"farmId\":\"" + farmId +
-                    "\",\"masterFarmId\":\"\",\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"touchRecordId\":\"\",\"userId\":\""
-                    + userId + "\",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.enterFarm", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_enterFarm err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+    public static String enterFarm(ClassLoader loader, String farmId, String userId) {
+        return RpcCall.invoke(loader, "com.alipay.antfarm.enterFarm",
+                "[{\"animalId\":\"\",\"farmId\":\"" + farmId +
+                        "\",\"gotoneScene\":\"\",\"gotoneTemplateId\":\"\",\"masterFarmId\":\"\",\"queryLastRecordNum\":true,\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ANTFOREST\",\"touchRecordId\":\"\",\"userId\":\"" +
+                userId + "\",\"version\":\"" + VERSION + "\"}]");
     }
 
     public static String rpcCall_syncAnimalStatus(ClassLoader loader, String farmId)
@@ -31,7 +21,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"farmId\":\"" + farmId +
                     "\",\"operType\":\"FEEDSYNC\",\"queryFoodStockInfo\":false,\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"userId\":\""
-                    + farmId2UserId(farmId) + "\",\"version\":\"" + version + "\"}]";
+                    + farmId2UserId(farmId) + "\",\"version\":\"" + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.syncAnimalStatus", args1);
         }catch(Throwable t)
         {
@@ -41,56 +31,39 @@ public class AntFarmRpcCall
         return null;
     }
 
-    public static String rpcCall_rewardFriend(ClassLoader loader, String consistencyKey, String friendId, String productNum, String time)
+    public static String rewardFriend(ClassLoader loader, String consistencyKey, String friendId, String productNum, String time)
     {
-        try
-        {
-            String args1 = "[{\"canMock\":true,\"consistencyKey\":\"" + consistencyKey
-                    + "\",\"friendId\":\"" + friendId + "\",\"operType\":\"1\",\"productNum\":" + productNum +
-                    ",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"time\":"
-                    + time + ",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.rewardFriend", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_rewardFriend err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"canMock\":true,\"consistencyKey\":\"" + consistencyKey
+                + "\",\"friendId\":\"" + friendId + "\",\"operType\":\"1\",\"productNum\":" + productNum +
+                ",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"time\":"
+                + time + ",\"version\":\"" + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.rewardFriend", args1);
     }
 
-    public static String rpcCall_recallAnimal(ClassLoader loader, String animalId, String currentFarmId, String masterFarmId)
+    public static String recallAnimal(ClassLoader loader, String animalId, String currentFarmId, String masterFarmId)
     {
-        try
-        {
-            String args1 = "[{\"animalId\":\"" + animalId + "\",\"currentFarmId\":\""
-                    + currentFarmId + "\",\"masterFarmId\":\"" + masterFarmId +
-                    "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.recallAnimal", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_recallAnimal err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"animalId\":\"" + animalId + "\",\"currentFarmId\":\""
+                + currentFarmId + "\",\"masterFarmId\":\"" + masterFarmId +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
+                + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.recallAnimal", args1);
     }
 
-    public static String rpcCall_sendBackAnimal(ClassLoader loader, String sendType, String animalId, String currentFarmId, String masterFarmId)
+    public static String orchardRecallAnimal(ClassLoader loader, String animalId, String userId)
     {
-        try
-        {
-            String args1 = "[{\"animalId\":\"" + animalId + "\",\"currentFarmId\":\""
-                    + currentFarmId + "\",\"masterFarmId\":\"" + masterFarmId +
-                    "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"sendType\":\""
-                    + sendType + "\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.sendBackAnimal", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_sendBackAnimal err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"animalId\":\"" + animalId + "\",\"orchardUserId\":\"" + userId +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ORCHARD\",\"source\":\"zhuangyuan_zhaohuixiaoji\",\"version\":\"\"0.1.2307042001.2\"\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antorchard.recallAnimal", args1);
+    }
+
+    public static String sendBackAnimal(ClassLoader loader, String sendType, String animalId, String currentFarmId, String masterFarmId)
+    {
+        String args1 = "[{\"animalId\":\"" + animalId + "\",\"currentFarmId\":\""
+                + currentFarmId + "\",\"masterFarmId\":\"" + masterFarmId +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"sendType\":\""
+                + sendType + "\",\"source\":\"H5\",\"version\":\""
+                + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.sendBackAnimal", args1);
     }
 
     public static String rpcCall_harvestProduce(ClassLoader loader, String farmId)
@@ -99,7 +72,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"canMock\":true,\"farmId\":\"" + farmId +
                     "\",\"giftType\":\"\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.harvestProduce", args1);
         }catch(Throwable t)
         {
@@ -114,7 +87,7 @@ public class AntFarmRpcCall
         try
         {
             String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.listActivityInfo", args1);
         }catch(Throwable t)
         {
@@ -130,7 +103,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"activityId\":\"" + activityId +
                     "\",\"donationAmount\":5,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.donation", args1);
         }catch(Throwable t)
         {
@@ -140,19 +113,10 @@ public class AntFarmRpcCall
         return null;
     }
 
-    public static String rpcCall_listFarmTask(ClassLoader loader)
-    {
-        try
-        {
-            String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.listFarmTask", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_listFarmTask err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+    public static String listFarmTask(ClassLoader loader) {
+        String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
+                + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.listFarmTask", args1);
     }
 
     public static String rpcCall_getAnswerInfo(ClassLoader loader)
@@ -160,7 +124,7 @@ public class AntFarmRpcCall
         try
         {
             String args1 = "[{\"answerSource\":\"foodTask\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.getAnswerInfo", args1);
         }catch(Throwable t)
         {
@@ -176,7 +140,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"answers\":\"[{\\\"questionId\\\":\\\"" + quesId + "\\\",\\\"answers\\\":[" + answer +
                     "]}]\",\"bizkey\":\"ANSWER\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.doFarmTask", args1);
         }catch(Throwable t)
         {
@@ -186,19 +150,11 @@ public class AntFarmRpcCall
         return null;
     }
 
-    public static String rpcCall_receiveFarmTaskAward(ClassLoader loader, String taskId)
+    public static String receiveFarmTaskAward(ClassLoader loader, String taskId)
     {
-        try
-        {
-            String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskId\":\""
-                    + taskId + "\",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.receiveFarmTaskAward", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_receiveFarmTaskAward err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskId\":\""
+                + taskId + "\",\"version\":\"" + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.receiveFarmTaskAward", args1);
     }
 
     public static String rpcCall_listToolTaskDetails(ClassLoader loader)
@@ -206,7 +162,7 @@ public class AntFarmRpcCall
         try
         {
             String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.listToolTaskDetails", args1);
         }catch(Throwable t)
         {
@@ -224,7 +180,7 @@ public class AntFarmRpcCall
                     "\",\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":"
                     + rewardCount + ",\"rewardType\":\"" + awardType +
                     "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
-                    + taskType + "\",\"version\":\"" + version + "\"}]";
+                    + taskType + "\",\"version\":\"" + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.receiveToolTaskReward", args1);
         }catch(Throwable t)
         {
@@ -240,7 +196,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"animalType\":\"CHICK\",\"canMock\":true,\"farmId\":\"" + farmId +
                     "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.feedAnimal", args1);
         }catch(Throwable t)
         {
@@ -250,34 +206,18 @@ public class AntFarmRpcCall
         return null;
     }
 
-    public static String rpcCall_listFarmTool(ClassLoader loader)
+    public static String listFarmTool(ClassLoader loader)
     {
-        try
-        {
-            String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.listFarmTool", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_listFarmTool err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
+                + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.listFarmTool", args1);
     }
 
-    public static String rpcCall_useFarmTool(ClassLoader loader, String targetFarmId, String toolId, String toolType)
+    public static String useFarmTool(ClassLoader loader, String targetFarmId, String toolId, String toolType)
     {
-        try
-        {
-            String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"targetFarmId\":\""
-                    + targetFarmId + "\",\"toolId\":\"" + toolId + "\",\"toolType\":\"" + toolType + "\",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "com.alipay.antfarm.useFarmTool", args1);
-        }catch(Throwable t)
-        {
-            Log.i(TAG, "rpcCall_useFarmTool err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"targetFarmId\":\""
+                + targetFarmId + "\",\"toolId\":\"" + toolId + "\",\"toolType\":\"" + toolType + "\",\"version\":\"" + VERSION + "\"}]";
+        return RpcCall.invoke(loader, "com.alipay.antfarm.useFarmTool", args1);
     }
 
     public static String rpcCall_rankingList(ClassLoader loader, int pageStartSum)
@@ -285,7 +225,7 @@ public class AntFarmRpcCall
         try
         {
             String args1 = "[{\"pageSize\":20,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"startNum\":"
-                    + pageStartSum + ",\"version\":\"" + version + "\"}]";
+                    + pageStartSum + ",\"version\":\"" + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.rankingList", args1);
         }catch(Throwable t)
         {
@@ -302,7 +242,7 @@ public class AntFarmRpcCall
             String args1 = "[{\"animalId\":\"" + animalId +
                     "\",\"animalType\":\"CHICK\",\"canBeGuest\":true,\"notifiedFarmId\":\"" + notifiedFarmId +
                     "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.notifyFriend", args1);
         }catch(Throwable t)
         {
@@ -318,7 +258,7 @@ public class AntFarmRpcCall
         {
             String args1 = "[{\"animalType\":\"CHICK\",\"canMock\":true,\"friendFarmId\":\"" + friendFarmId +
                     "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
-                    + version + "\"}]";
+                    + VERSION + "\"}]";
             return RpcCall.invoke(loader, "com.alipay.antfarm.feedFriendAnimal", args1);
         }catch(Throwable t)
         {
@@ -332,6 +272,11 @@ public class AntFarmRpcCall
     {
         int l = farmId.length() / 2;
         return farmId.substring(l);
+    }
+
+    public static String collectManurePot(ClassLoader loader, String manurePotNO) {
+        return RpcCall.invoke(loader, "com.alipay.antfarm.collectManurePot","[{\"manurePotNOs\":\"" + manurePotNO +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION + "\"}]");
     }
 
 }

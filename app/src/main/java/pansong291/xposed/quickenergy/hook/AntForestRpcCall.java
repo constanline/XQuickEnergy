@@ -89,27 +89,14 @@ public class AntForestRpcCall {
     }
 
     public static String queryTaskList(ClassLoader loader) {
-        try {
-            return RpcCall.invoke(loader, "alipay.antforest.forest.h5.queryTaskList",
-                    "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"20230501\"}]");
-        } catch (Throwable t) {
-            Log.i(TAG, "queryTaskList err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        return RpcCall.invoke(loader, "alipay.antforest.forest.h5.queryTaskList",
+                "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"20230501\"}]");
     }
 
     public static String receiveTaskAward(ClassLoader loader, String sceneCode, String taskType) {
-        try {
-            return RpcCall.invoke(loader, "com.alipay.antiep.receiveTaskAward",
-                    "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"" + sceneCode +
-                            "\",\"source\":\"ch_appcenter__chsub_9patch\",\"taskType\":\"" + taskType +
-                            "\",\"version\":\"0.1.2307042001.2\"}]");
-        } catch (Throwable t) {
-            Log.i(TAG, "receiveTaskAward err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        return RpcCall.invoke(loader, "com.alipay.antiep.receiveTaskAward",
+                "[{\"ignoreLimit\":false,\"requestType\":\"H5\",\"sceneCode\":\"" + sceneCode +
+                        "\",\"source\":\"ANTFOREST\",\"taskType\":\"" + taskType + "\"}]");
     }
 
     public static String popupTask(ClassLoader loader) {

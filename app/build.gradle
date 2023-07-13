@@ -8,7 +8,7 @@ android {
         minSdkVersion 23
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
-        versionCode 20230712
+        versionCode 20230713
         versionName "1.0.0-beta6"
     }
     buildTypes {
