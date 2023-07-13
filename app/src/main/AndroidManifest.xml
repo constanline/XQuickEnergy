@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="pansong291.xposed.quickenergy">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:theme="@style/AppTheme"
+        android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:label="@string/app_name">
+
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true"/>
+
+        <meta-data
+            android:name="xposeddescription"
+            android:value="蚂蚁森林快速收取能量"/>
+
+        <meta-data
+            android:name="xposedminversion"
+            android:value="54"/>
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:resizeableActivity="true"
+            tools:targetApi="n"
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN"/>
+                <category
+                    android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".ui.MainActivityAlias"
+            android:enabled="true"
+            android:targetActivity=".ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN" />
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:resizeableActivity="true"
+            tools:targetApi="n" />
+            
+        <activity
+            android:name=".ui.HtmlViewerActivity"
+            android:resizeableActivity="true"
+            tools:targetApi="n" />
+        
+    </application>
+
+</manifest>

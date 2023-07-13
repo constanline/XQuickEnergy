@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:gravity="center_horizontal">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/tv_unactive"
+		android:text="UNACTIVATED"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textColor="#FFFF0000"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/tv_statistics"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="#FF000000"/>
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:text="Forest log"
+		android:textAllCaps="false"
+		android:onClick="onClick"
+		android:background="@drawable/button"
+		android:id="@+id/btn_forest_log"/>
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:text="Farm log"
+		android:textAllCaps="false"
+		android:onClick="onClick"
+		android:background="@drawable/button"
+		android:id="@+id/btn_farm_log"/>
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:text="Other log"
+		android:textAllCaps="false"
+		android:onClick="onClick"
+		android:background="@drawable/button"
+		android:id="@+id/btn_other_log"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:text="看不到我看不到我看不到我"
+		android:textAllCaps="false"
+		android:onClick="onClick"
+		android:background="@drawable/button"
+		android:id="@+id/btn_help"
+		android:layout_marginTop="24dp"
+		android:textColor="#FF000000"
+		android:gravity="center|start"
+		android:padding="12dp"/>
+
+</LinearLayout>
+
