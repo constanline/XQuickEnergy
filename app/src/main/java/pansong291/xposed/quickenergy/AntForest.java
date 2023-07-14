@@ -8,8 +8,12 @@ import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
 import pansong291.xposed.quickenergy.util.*;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AntForest {
     private static final String TAG = AntForest.class.getCanonicalName();
@@ -22,6 +26,35 @@ public class AntForest {
     private static long serverTime = -1;
     private static long offsetTime = -1;
     private static long laterTime = -1;
+
+    private static final Queue<Long> collectedQueue = new ArrayDeque<>();
+
+    private static final Lock limitLock = new ReentrantLock();
+
+    private static boolean checkCollectLimited() {
+        if (Config.isLimitCollect()) {
+            limitLock.lock();
+            try {
+                Long ts;
+                long dropTime = System.currentTimeMillis() - 60000;
+                while ((ts = collectedQueue.peek()) != null && ts < dropTime) {
+                    collectedQueue.poll();
+                }
+                return collectedQueue.size() >= Config.getLimitCount();
+            } finally {
+                limitLock.unlock();
+            }
+        }
+        return false;
+    }
+
+    private static void offerCollectQueue() {
+        if (Config.isLimitCollect()) {
+            limitLock.lock();
+            collectedQueue.offer(System.currentTimeMillis());
+            limitLock.unlock();
+        }
+    }
 
     public static void checkEnergyRanking(ClassLoader loader, int times) {
         Log.recordLog("定时检测开始", "");
@@ -42,6 +75,7 @@ public class AntForest {
                     queryEnergyRanking(loader);
                     popupTask(loader);
                 }
+                energyRain(loader);
                 if (Statistics.canSyncStepToday()) {
                     new StepTask(loader).start();
                 }
@@ -79,7 +113,7 @@ public class AntForest {
                                 if (!signRecord.getBoolean("signed")) {
                                     int awardCount = signRecord.getInt("awardCount");
                                     JSONObject resData2 = new JSONObject(AntForestRpcCall.antiepSign(loader, signId, FriendIdMap.currentUid));
-                                    if ("SUCCESS".equals(resData2.getString("resultCode"))) {
+                                    if ("100000000".equals(resData2.getString("code"))) {
                                         collectedEnergy += awardCount;
                                         Log.forest("收取过期能量［" + awardCount + "克");
                                         onForestEnd();
@@ -303,10 +337,14 @@ public class AntForest {
 
     private static int collectEnergy(ClassLoader loader, String userId, long bubbleId, String userName, String bizNo) {
         int collected = 0;
+        if (checkCollectLimited()) {
+            return 0;
+        }
         try {
             String s = AntForestRpcCall.collectEnergy(loader, userId, bubbleId);
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
+                offerCollectQueue();
                 JSONArray jaBubbles = jo.getJSONArray("bubbles");
                 for (int i = 0; i < jaBubbles.length(); i++) {
                     jo = jaBubbles.getJSONObject(i);
@@ -454,6 +492,61 @@ public class AntForest {
         } catch (Throwable t) {
             Log.i(TAG, "receiveTaskAward err:");
             Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void startEnergyRain(ClassLoader classLoader) {
+        try {
+            JSONObject jSONObject = new JSONObject(AntForestRpcCall.startEnergyRain(classLoader));
+            if ("SUCCESS".equals(jSONObject.getString("resultCode"))) {
+                String token = jSONObject.getString("token");
+                JSONArray bubbleEnergyList = jSONObject.getJSONObject("difficultyInfo").getJSONArray("bubbleEnergyList");
+                int sum = 0;
+                for (int i = 0; i < bubbleEnergyList.length(); i++) {
+                    sum += bubbleEnergyList.getInt(i);
+                }
+                Thread.sleep(5000L);
+                if ("SUCCESS".equals(new JSONObject(AntForestRpcCall.energyRainSettlement(classLoader, sum, token)).getString("resultCode"))) {
+                    AntForestToast.show("获得了【" + sum + "g】能量【能量雨】");
+                    Log.forest("获得了【" + sum + "g】能量【能量雨】");
+                }
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "startEnergyRain err:");
+            Log.printStackTrace(TAG, th);
+        }
+    }
+
+    private static void energyRain(ClassLoader classLoader) {
+        try {
+            JSONObject joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome(classLoader));
+            if ("SUCCESS".equals(joEnergyRainHome.getString("resultCode"))) {
+                if (joEnergyRainHome.getBoolean("canPlayToday")) {
+                    startEnergyRain(classLoader);
+                }
+                if (joEnergyRainHome.getBoolean("canGrantStatus")) {
+                    JSONObject joEnergyRainCanGrantList = new JSONObject(AntForestRpcCall.queryEnergyRainCanGrantList(classLoader));
+                    JSONArray grantInfos = joEnergyRainCanGrantList.getJSONArray("grantInfos");
+                    for (int j = 0; j < grantInfos.length(); j++) {
+                        JSONObject grantInfo = grantInfos.getJSONObject(j);
+                        if (grantInfo.getBoolean("canGrantedStatus")) {
+                            String userId = grantInfo.getString("userId");
+                            JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(classLoader, userId));
+                            if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
+                                Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
+                                startEnergyRain(classLoader);
+                            }
+                        }
+                    }
+                }
+            }
+            joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome(classLoader));
+            if ("SUCCESS".equals(joEnergyRainHome.getString("resultCode")) && joEnergyRainHome.getBoolean("canPlayToday")) {
+                startEnergyRain(classLoader);
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "energyRain err:");
+            Log.printStackTrace(TAG, th);
         }
     }
 

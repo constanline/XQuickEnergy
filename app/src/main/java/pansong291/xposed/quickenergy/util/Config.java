@@ -54,6 +54,8 @@ public class Config
     /* forest */
     private boolean collectEnergy;
     private int checkInterval;
+    private boolean limitCollect;
+    private int limitCount;
     private int threadCount;
     private int advanceTime;
     private int collectInterval;
@@ -193,6 +195,24 @@ public class Config
     public static int checkInterval()
     {
         return getConfig().checkInterval;
+    }
+
+    public static boolean isLimitCollect() {
+        return getConfig().limitCollect;
+    }
+
+    public static void setLimitCollect(boolean limitCollect) {
+        getConfig().limitCollect = limitCollect;
+        hasChanged = true;
+    }
+
+    public static int getLimitCount() {
+        return getConfig().limitCount;
+    }
+
+    public static void setLimitCount(int limitCount) {
+        getConfig().limitCount = limitCount;
+        hasChanged = true;
     }
 
     public static void setThreadCount(int i)
@@ -604,6 +624,8 @@ public class Config
 
         c.collectEnergy = true;
         c.checkInterval = 720_000;
+        c.limitCollect = true;
+        c.limitCount = 50;
         c.threadCount = 1;
         c.advanceTime = 500;
         c.collectInterval = 100;
@@ -685,6 +707,12 @@ public class Config
 
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
             Log.i(TAG, jn_checkInterval + ":" + config.checkInterval);
+
+            config.limitCollect = jo.optBoolean("limitCollect", true);
+            Log.i(TAG, "limitCollect:" + config.limitCollect);
+
+            config.limitCount = jo.optInt("limitCount", 50);
+            Log.i(TAG, "limitCount:" + config.limitCount);
 
             config.threadCount = jo.optInt(jn_threadCount, 1);
             Log.i(TAG, jn_threadCount + ":" + config.threadCount);
@@ -933,6 +961,10 @@ public class Config
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_checkInterval, config.checkInterval);
+
+            jo.put("limitCollect", config.limitCollect);
+
+            jo.put("limitCount", config.limitCount);
 
             jo.put(jn_threadCount, config.threadCount);
 

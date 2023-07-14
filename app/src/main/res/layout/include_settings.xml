@@ -147,6 +147,27 @@
 			android:id="@+id/btn_collectTimeout"
 			android:paddingStart="8dp"/>
 
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/limit_collect"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_limitCollect"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/limit_count_per_minute"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_limitCount"
+			android:paddingStart="8dp"/>
+
 		<Button
 			android:id="@+id/btn_returnWater30"
 			style="?android:attr/buttonBarButtonStyle"

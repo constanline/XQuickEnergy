@@ -64,6 +64,8 @@
     <string name="export_the_statistic_file">Export the statistic file</string>
     <string name="import_the_statistic_file">Import the statistic file</string>
     <string name="settings">Settings</string>
+    <string name="limit_collect">Limit collect</string>
+    <string name="limit_count_per_minute">Limit count per minute</string>
 
 
 </resources>

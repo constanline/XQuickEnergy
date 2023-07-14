@@ -12,7 +12,7 @@ public class EditDialog
     private static AlertDialog editDialog;
     private static EditText edt;
     public enum EditMode
-    { CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL,
+    { CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME }
     private static EditMode mode;
@@ -78,6 +78,12 @@ public class EditDialog
                                                     Config.setCollectInterval(i);
                                                 break;
 
+                                            case LIMIT_COUNT:
+                                                if (i > 0) {
+                                                    Config.setLimitCount(i);
+                                                }
+                                                break;
+
                                             case COLLECT_TIMEOUT:
                                                 if(i > 0)
                                                     Config.setCollectTimeout(i * 1_000);
@@ -133,6 +139,10 @@ public class EditDialog
 
             case COLLECT_INTERVAL:
                 str = String.valueOf(Config.collectInterval());
+                break;
+
+            case LIMIT_COUNT:
+                str = String.valueOf(Config.getLimitCount());
                 break;
 
             case COLLECT_TIMEOUT:

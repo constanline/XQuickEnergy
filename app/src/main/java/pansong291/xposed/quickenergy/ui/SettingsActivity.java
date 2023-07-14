@@ -27,7 +27,7 @@ public class SettingsActivity extends Activity
             cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
-            cb_kbSignIn;
+            cb_kbSignIn, cb_limitCollect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,6 +64,7 @@ public class SettingsActivity extends Activity
         cb_openTreasureBox = findViewById(R.id.cb_openTreasureBox);
         cb_donateCharityCoin = findViewById(R.id.cb_donateCharityCoin);
         cb_kbSignIn = findViewById(R.id.cb_kbSignIn);
+        cb_limitCollect = findViewById(R.id.cb_limitCollect);
     }
 
     @Override
@@ -95,6 +96,7 @@ public class SettingsActivity extends Activity
         cb_openTreasureBox.setChecked(Config.openTreasureBox());
         cb_donateCharityCoin.setChecked(Config.donateCharityCoin());
         cb_kbSignIn.setChecked(Config.kbSginIn());
+        cb_limitCollect.setChecked(Config.isLimitCollect());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -126,6 +128,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.cb_collectEnergy:
                     Config.setCollectEnergy(cb.isChecked());
+                    break;
+
+                case R.id.cb_limitCollect:
+                    Config.setLimitCollect(cb.isChecked());
                     break;
 
                 case R.id.cb_helpFriendCollect:
@@ -225,6 +231,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.btn_collectTimeout:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.COLLECT_TIMEOUT);
+                    break;
+
+                case R.id.btn_limitCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LIMIT_COUNT);
                     break;
 
                 case R.id.btn_returnWater30:

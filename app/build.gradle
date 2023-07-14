@@ -9,7 +9,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
         versionCode 20230713
-        versionName "1.0.0-beta6"
+        versionName "1.0.0-beta7"
     }
     buildTypes {
         release {

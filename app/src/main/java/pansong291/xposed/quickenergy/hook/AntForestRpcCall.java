@@ -93,6 +93,27 @@ public class AntForestRpcCall {
                 "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"20230501\"}]");
     }
 
+    public static String queryEnergyRainHome(ClassLoader classLoader) {
+        return RpcCall.invoke(classLoader, "alipay.antforest.forest.h5.queryEnergyRainHome", "[{}]");
+    }
+
+    public static String queryEnergyRainCanGrantList(ClassLoader classLoader) {
+        return RpcCall.invoke(classLoader, "alipay.antforest.forest.h5.queryEnergyRainCanGrantList", "[{}]");
+    }
+
+    public static String grantEnergyRainChance(ClassLoader classLoader, String targetUserId) {
+        return RpcCall.invoke(classLoader, "alipay.antforest.forest.h5.grantEnergyRainChance",
+                "[{\"targetUserId\":" + targetUserId + "}]");
+    }
+
+    public static String startEnergyRain(ClassLoader classLoader) {
+        return RpcCall.invoke(classLoader, "alipay.antforest.forest.h5.startEnergyRain", "[{}]");
+    }
+    public static String energyRainSettlement(ClassLoader classLoader, int saveEnergy, String token) {
+        return RpcCall.invoke(classLoader, "alipay.antforest.forest.h5.energyRainSettlement",
+                "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\"}]");
+    }
+
     public static String receiveTaskAward(ClassLoader loader, String sceneCode, String taskType) {
         return RpcCall.invoke(loader, "com.alipay.antiep.receiveTaskAward",
                 "[{\"ignoreLimit\":false,\"requestType\":\"H5\",\"sceneCode\":\"" + sceneCode +

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.PermissionUtil;
 import pansong291.xposed.quickenergy.util.RandomUtils;
 import pansong291.xposed.quickenergy.util.Statistics;
 
@@ -63,6 +64,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setModuleActive(false);
+        PermissionUtil.verifyStoragePermissions(this);
 
         tvStatistics = findViewById(R.id.tv_statistics);
         btnHelp = findViewById(R.id.btn_help);
