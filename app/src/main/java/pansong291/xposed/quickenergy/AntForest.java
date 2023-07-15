@@ -70,8 +70,8 @@ public class AntForest {
 
             @Override
             public void run() {
-                canCollectSelfEnergy(loader, times);
                 if (Config.collectEnergy()) {
+                    canCollectSelfEnergy(loader, times);
                     queryEnergyRanking(loader);
                     popupTask(loader);
                 }
@@ -612,9 +612,9 @@ public class AntForest {
                 public void run() {
                     try {
                         Log.i(TAG, "开始检查" + unknownIds.length + "个未知id");
-                        for (int i = 0; i < unknownIds.length; i++) {
+                        for (String unknownId : unknownIds) {
                             long start = System.currentTimeMillis();
-                            String s = AntForestRpcCall.queryFriendHomePage(loader, unknownIds[i]);
+                            String s = AntForestRpcCall.queryFriendHomePage(loader, unknownId);
                             long end = System.currentTimeMillis();
                             JSONObject jo = new JSONObject(s);
                             if (jo.getString("resultCode").equals("SUCCESS")) {
@@ -628,7 +628,7 @@ public class AntForest {
                                 String loginId = userName;
                                 if (jo.has("loginId"))
                                     loginId += "(" + jo.getString("loginId") + ")";
-                                FriendIdMap.putIdMap(unknownIds[i], loginId);
+                                FriendIdMap.putIdMap(unknownId, loginId);
                                 Log.recordLog("进入【" + loginId + "】的蚂蚁森林", "");
                                 FriendIdMap.saveIdMap();
                             }
@@ -673,13 +673,20 @@ public class AntForest {
         }
         @Override
         public void run() {
-            int step = RandomUtils.nextInt(20000, 26000);
+            int step = Config.syncStepCount();
+            if (step == 0) {
+                return;
+            }
+            step = RandomUtils.nextInt(step, step + 2000);
+            if (step > 100000) {
+                step = 100000;
+            }
             try {
                 boolean booleanValue = (Boolean)
                         XposedHelpers.callMethod(
                                 XposedHelpers.callStaticMethod(
                                         loader.loadClass("com.alibaba.health.pedometer.intergation.rpc.RpcManager"),
-                                        "a"), "a", new Object[]{step, Boolean.FALSE, "system"});
+                                        "a"), "a", new Object[]{ step, Boolean.FALSE, "system" });
                 if (booleanValue) {
                     Log.recordLog("记录运动步数成功:" + step, "");
                 } else {

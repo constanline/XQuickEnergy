@@ -7,58 +7,47 @@ import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
 import pansong291.xposed.quickenergy.util.Config;
 
-public class EditDialog
-{
+public class EditDialog {
     private static AlertDialog editDialog;
     private static EditText edt;
-    public enum EditMode
-    { CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
+    public enum EditMode {
+        CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
-        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME }
+        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT }
     private static EditMode mode;
 
-    public static void showEditDialog(Context c, CharSequence title, EditMode em)
-    {
+    public static void showEditDialog(Context c, CharSequence title, EditMode em) {
         mode = em;
-        try
-        {
+        try {
             getEditDialog(c).show();
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             editDialog = null;
             getEditDialog(c).show();
         }
         editDialog.setTitle(title);
     }
 
-    private static AlertDialog getEditDialog(Context c)
-    {
-        if(editDialog == null)
-        {
+    private static AlertDialog getEditDialog(Context c) {
+        if (editDialog == null) {
             edt = new EditText(c);
             editDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(edt)
                     .setPositiveButton(
                             "OK",
-                            new OnClickListener()
-                            {
+                            new OnClickListener() {
                                 Context context;
 
-                                public OnClickListener setData(Context c)
-                                {
+                                public OnClickListener setData(Context c) {
                                     context = c;
                                     return this;
                                 }
 
                                 @Override
-                                public void onClick(DialogInterface p1, int p2)
-                                {
-                                    try
-                                    {
+                                public void onClick(DialogInterface p1, int p2) {
+                                    try {
                                         int i = Integer.parseInt(edt.getText().toString());
-                                        switch(mode)
-                                        {
+                                        switch(mode) {
                                             case CHECK_INTERVAL:
                                                 if(i > 0)
                                                     Config.setCheckInterval(i * 60_000);
@@ -114,17 +103,22 @@ public class EditDialog
                                                 if(i >= 0 && i < 24)
                                                     Config.setLatestExchangeTime(i);
                                                 break;
+                                            case SYNC_STEP_COUNT:
+                                                if (i > 100000)
+                                                    i = 100000;
+                                                if (i < 0)
+                                                    i = 0;
+                                                Config.setSyncStepCount(i);
+                                                break;
 
                                         }
-                                    }catch(Throwable t)
-                                    {}
+                                    } catch(Throwable ignored) { }
                                 }
                             }.setData(c))
                     .create();
         }
         String str = "";
-        switch(mode)
-        {
+        switch(mode) {
             case CHECK_INTERVAL:
                 str = String.valueOf(Config.checkInterval() / 60_000);
                 break;
@@ -169,6 +163,9 @@ public class EditDialog
                 str = String.valueOf(Config.latestExchangeTime());
                 break;
 
+            case SYNC_STEP_COUNT:
+                str = String.valueOf(Config.syncStepCount());
+                break;
         }
         edt.setText(str);
         return editDialog;

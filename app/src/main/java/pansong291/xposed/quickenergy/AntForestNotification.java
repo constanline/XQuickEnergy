@@ -22,11 +22,9 @@ public class AntForestNotification
     private AntForestNotification()
     {}
 
-    public static void start(Context context)
-    {
+    public static void start(Context context) {
         initNotification(context);
-        if(!isStart)
-        {
+        if (!isStart) {
             if(context instanceof Service)
                 ((Service)context).startForeground(ANTFOREST_NOTIFICATION_ID, mNotification);
             else
@@ -35,25 +33,22 @@ public class AntForestNotification
         }
     }
 
-    public static void setContentText(CharSequence cs)
-    {
-        if(isStart)
-        {
+    public static void setContentText(CharSequence cs) {
+        if (isStart) {
             mNotification = builder.setContentText(cs).build();
             if(mNotifyManager != null)
                 mNotifyManager.notify(ANTFOREST_NOTIFICATION_ID, mNotification);
         }
     }
 
-    public static void stop(Context context, boolean remove)
-    {
-        if(isStart)
-        {
+    public static void stop(Context context, boolean remove) {
+        if(isStart) {
             if(context instanceof Service)
                 ((Service)context).stopForeground(remove);
             else
                 getNotificationManager(context).cancel(ANTFOREST_NOTIFICATION_ID);
             isStart = false;
+            mNotification = null;
         }
     }
 

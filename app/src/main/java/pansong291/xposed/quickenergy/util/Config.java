@@ -39,7 +39,7 @@ public class Config
             jn_dontNotifyFriendList = "dontNotifyFriendList",
     /* other */
     jn_receivePoint = "receivePoint", jn_openTreasureBox = "openTreasureBox", jn_donateCharityCoin = "donateCharityCoin",
-            jn_minExchangeCount = "minExchangeCount", jn_latestExchangeTime = "latestExchangeTime", jn_kbSignIn = "kbSignIn";
+            jn_minExchangeCount = "minExchangeCount", jn_latestExchangeTime = "latestExchangeTime", jn_syncStepCount = "syncStepCount", jn_kbSignIn = "kbSignIn";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
@@ -103,6 +103,7 @@ public class Config
     private boolean donateCharityCoin;
     private int minExchangeCount;
     private int latestExchangeTime;
+    private int syncStepCount;
     private boolean kbSignIn;
 
     /* base */
@@ -606,6 +607,17 @@ public class Config
         return getConfig().latestExchangeTime;
     }
 
+    public static void setSyncStepCount(int i)
+    {
+        getConfig().syncStepCount = i;
+        hasChanged = true;
+    }
+
+    public static int syncStepCount()
+    {
+        return getConfig().syncStepCount;
+    }
+
     public static void setKbSginIn(boolean b)
     {
         getConfig().kbSignIn = b;
@@ -702,94 +714,70 @@ public class Config
         try
         {
             JSONObject jo = new JSONObject(json);
-            JSONArray ja = null, jaa = null;
+            JSONArray ja, jaa;
             config = new Config();
 
             config.immediateEffect = jo.optBoolean(jn_immediateEffect, true);
-            Log.i(TAG, jn_immediateEffect + ":" + config.immediateEffect);
 
             config.recordLog = jo.optBoolean(jn_recordLog, true);
-            Log.i(TAG, jn_recordLog + ":" + config.recordLog);
 
             config.showToast = jo.optBoolean(jn_showToast, true);
-            Log.i(TAG, jn_showToast + ":" + config.showToast);
 
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
-            Log.i(TAG, jn_stayAwake + ":" + config.stayAwake);
 
             config.autoRestart = jo.optBoolean(jn_autoRestart, true);
-            Log.i(TAG, jn_autoRestart + ":" + config.autoRestart);
 
             config.xedgeproData = jo.optString(jn_xedgeproData, "");
-            Log.i(TAG, jn_xedgeproData + ":" + config.xedgeproData);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
-            Log.i(TAG, jn_collectEnergy + ":" + config.collectEnergy);
 
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
-            Log.i(TAG, jn_checkInterval + ":" + config.checkInterval);
 
             config.limitCollect = jo.optBoolean("limitCollect", true);
-            Log.i(TAG, "limitCollect:" + config.limitCollect);
 
             config.limitCount = jo.optInt("limitCount", 50);
-            Log.i(TAG, "limitCount:" + config.limitCount);
 
             config.threadCount = jo.optInt(jn_threadCount, 1);
-            Log.i(TAG, jn_threadCount + ":" + config.threadCount);
 
             config.advanceTime = jo.optInt(jn_advanceTime, 500);
-            Log.i(TAG, jn_advanceTime + ":" + config.advanceTime);
 
             config.collectInterval = jo.optInt(jn_collectInterval, 100);
-            Log.i(TAG, jn_collectInterval + ":" + config.collectInterval);
 
             config.collectTimeout = jo.optInt(jn_collectTimeout, 2_000);
-            Log.i(TAG, jn_collectTimeout + ":" + config.collectTimeout);
 
             config.returnWater30 = jo.optInt(jn_ReturnWater30);
-            Log.i(TAG, jn_ReturnWater30 + ":" + config.returnWater30);
 
             config.returnWater20 = jo.optInt(jn_ReturnWater20);
-            Log.i(TAG, jn_ReturnWater20 + ":" + config.returnWater20);
 
             config.returnWater10 = jo.optInt(jn_ReturnWater10);
-            Log.i(TAG, jn_ReturnWater10 + ":" + config.returnWater10);
 
             config.helpFriendCollect = jo.optBoolean(jn_helpFriendCollect, true);
-            Log.i(TAG, jn_helpFriendCollect + ":" + config.helpFriendCollect);
 
             config.dontCollectList = new ArrayList<>();
-            Log.i(TAG, jn_dontCollectList + ":[");
             if(jo.has(jn_dontCollectList))
             {
                 ja = jo.getJSONArray(jn_dontCollectList);
                 for(int i = 0; i < ja.length(); i++)
                 {
                     config.dontCollectList.add(ja.getString(i));
-                    Log.i(TAG, "  " + config.dontCollectList.get(i) + ",");
                 }
             }
 
             config.dontHelpCollectList = new ArrayList<>();
-            Log.i(TAG, jn_dontHelpCollectList + ":[");
             if(jo.has(jn_dontHelpCollectList))
             {
                 ja = jo.getJSONArray(jn_dontHelpCollectList);
                 for(int i = 0; i < ja.length(); i++)
                 {
                     config.dontHelpCollectList.add(ja.getString(i));
-                    Log.i(TAG, "  " + config.dontHelpCollectList.get(i) + ",");
                 }
             }
 
             config.receiveForestTaskAward = jo.optBoolean(jn_receiveForestTaskAward, true);
-            Log.i(TAG, jn_receiveForestTaskAward + ":" + config.receiveForestTaskAward);
 
             config.waterFriendList = new ArrayList<>();
             config.waterCountList = new ArrayList<>();
-            Log.i(TAG, jn_waterFriendList + ":[");
             if(jo.has(jn_waterFriendList))
             {
                 ja = jo.getJSONArray(jn_waterFriendList);
@@ -805,9 +793,6 @@ public class Config
                         config.waterFriendList.add(ja.getString(i));
                         config.waterCountList.add(3);
                     }
-                    Log.i(TAG, "  "
-                            + config.waterFriendList.get(i) + ","
-                            + config.waterCountList.get(i) + ",");
                 }
             }
 
@@ -815,7 +800,6 @@ public class Config
 
             config.cooperateWaterList = new ArrayList<>();
             config.cooperateWaterNumList = new ArrayList<>();
-            Log.i(TAG, jn_cooperateWaterList + ":[");
             if(jo.has(jn_cooperateWaterList))
             {
                 ja = jo.getJSONArray(jn_cooperateWaterList);
@@ -824,9 +808,6 @@ public class Config
                     jaa = ja.getJSONArray(i);
                     config.cooperateWaterList.add(jaa.getString(0));
                     config.cooperateWaterNumList.add(jaa.getInt(1));
-                    Log.i(TAG, "  "
-                            + config.cooperateWaterList.get(i) + ","
-                            + config.cooperateWaterNumList.get(i) + ",");
                 }
             }
             config.energyRain = jo.optBoolean(jn_energyRain, true);
@@ -838,65 +819,48 @@ public class Config
                 {
                     jaa = ja.getJSONArray(i);
                     config.giveEnergyRainList.add(jaa.getString(0));
-                    Log.i(TAG, "  " + config.giveEnergyRainList.get(i));
                 }
             }
 
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
-            Log.i(TAG, jn_enableFarm + ":" + config.enableFarm);
 
             config.rewardFriend = jo.optBoolean(jn_rewardFriend, true);
-            Log.i(TAG, jn_rewardFriend + ":" + config.rewardFriend);
 
             config.sendBackAnimal = jo.optBoolean(jn_sendBackAnimal, true);
-            Log.i(TAG, jn_sendBackAnimal + ":" + config.sendBackAnimal);
 
             config.sendType = SendType.valueOf(jo.optString(jn_sendType, SendType.HIT.name()));
-            Log.i(TAG, jn_sendType + ":" + config.sendType.name());
 
             config.dontSendFriendList = new ArrayList<>();
-            Log.i(TAG, jn_dontSendFriendList + ":[");
             if(jo.has(jn_dontSendFriendList))
             {
                 ja = jo.getJSONArray(jn_dontSendFriendList);
                 for(int i = 0; i < ja.length(); i++)
                 {
                     config.dontSendFriendList.add(ja.getString(i));
-                    Log.i(TAG, "  " + config.dontSendFriendList.get(i) + ",");
                 }
             }
 
             config.recallAnimalType = RecallAnimalType.valueOf(jo.optString(jn_recallAnimalType, RecallAnimalType.ALWAYS.name()));
-            Log.i(TAG, jn_recallAnimalType + ":" + config.recallAnimalType.name());
 
             config.receiveFarmToolReward = jo.optBoolean(jn_receiveFarmToolReward, true);
-            Log.i(TAG, jn_receiveFarmToolReward + ":" + config.receiveFarmToolReward);
 
             config.useNewEggTool = jo.optBoolean(jn_useNewEggTool, true);
-            Log.i(TAG, jn_useNewEggTool + ":" + config.useNewEggTool);
 
             config.harvestProduce = jo.optBoolean(jn_harvestProduce, true);
-            Log.i(TAG, jn_harvestProduce + ":" + config.harvestProduce);
 
             config.donation = jo.optBoolean(jn_donation, true);
-            Log.i(TAG, jn_donation + ":" + config.donation);
 
             config.answerQuestion = jo.optBoolean(jn_answerQuestion, true);
-            Log.i(TAG, jn_answerQuestion + ":" + config.answerQuestion);
 
             config.receiveFarmTaskAward = jo.optBoolean(jn_receiveFarmTaskAward, true);
-            Log.i(TAG, jn_receiveFarmTaskAward + ":" + config.receiveFarmTaskAward);
 
             config.feedAnimal = jo.optBoolean(jn_feedAnimal, true);
-            Log.i(TAG, jn_feedAnimal + ":" + config.feedAnimal);
 
             config.useAccelerateTool = jo.optBoolean(jn_useAccelerateTool, true);
-            Log.i(TAG, jn_useAccelerateTool + ":" + config.useAccelerateTool);
 
             config.feedFriendAnimalList = new ArrayList<>();
             config.feedFriendCountList = new ArrayList<>();
-            Log.i(TAG, jn_feedFriendAnimalList + ":[");
             if(jo.has(jn_feedFriendAnimalList))
             {
                 ja = jo.getJSONArray(jn_feedFriendAnimalList);
@@ -912,69 +876,55 @@ public class Config
                         config.feedFriendAnimalList.add(ja.getString(i));
                         config.feedFriendCountList.add(1);
                     }
-                    Log.i(TAG, "  "
-                            + config.feedFriendAnimalList.get(i) + ","
-                            + config.feedFriendCountList.get(i) + ",");
                 }
             }
 
             config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
-            Log.i(TAG, jn_notifyFriend + ":" + config.notifyFriend);
 
             config.dontNotifyFriendList = new ArrayList<>();
-            Log.i(TAG, jn_dontNotifyFriendList + ":[");
             if(jo.has(jn_dontNotifyFriendList))
             {
                 ja = jo.getJSONArray(jn_dontNotifyFriendList);
                 for(int i = 0; i < ja.length(); i++)
                 {
                     config.dontNotifyFriendList.add(ja.getString(i));
-                    Log.i(TAG, "  " + config.dontNotifyFriendList.get(i) + ",");
                 }
             }
 
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
-            Log.i(TAG, jn_receivePoint + ":" + config.receivePoint);
 
             config.openTreasureBox = jo.optBoolean(jn_openTreasureBox, true);
-            Log.i(TAG, jn_openTreasureBox + ":" + config.openTreasureBox);
 
             config.donateCharityCoin = jo.optBoolean(jn_donateCharityCoin, true);
-            Log.i(TAG, jn_donateCharityCoin + ":" + config.donateCharityCoin);
 
             config.minExchangeCount = jo.optInt(jn_minExchangeCount);
-            Log.i(TAG, jn_minExchangeCount + ":" + config.minExchangeCount);
 
             config.latestExchangeTime = jo.optInt(jn_latestExchangeTime, 21);
-            Log.i(TAG, jn_latestExchangeTime + ":" + config.latestExchangeTime);
+
+            config.syncStepCount = jo.optInt(jn_syncStepCount, 22000);
 
             config.kbSignIn = jo.optBoolean(jn_kbSignIn, true);
-            Log.i(TAG, jn_kbSignIn + ":" + config.kbSignIn);
 
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             Log.printStackTrace(TAG, t);
-            if(json != null)
-            {
+            if(json != null) {
                 Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
         }
         String formated = config2Json(config);
-        if(!formated.equals(json))
-        {
+        if(!formated.equals(json)) {
             Log.i(TAG, "重新格式化 config.json");
             FileUtils.write2File(formated, FileUtils.getConfigFile());
         }
         return config;
     }
 
-    public static String config2Json(Config config)
-    {
+    public static String config2Json(Config config) {
         JSONObject jo = new JSONObject();
-        JSONArray ja = null, jaa = null;
+        JSONArray ja, jaa;
         try
         {
             if(config == null) config = Config.defInit();
@@ -1127,6 +1077,8 @@ public class Config
             jo.put(jn_minExchangeCount, config.minExchangeCount);
 
             jo.put(jn_latestExchangeTime, config.latestExchangeTime);
+
+            jo.put(jn_syncStepCount, config.syncStepCount);
 
             jo.put(jn_kbSignIn, config.kbSignIn);
 

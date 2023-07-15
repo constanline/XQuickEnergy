@@ -314,6 +314,10 @@ public class SettingsActivity extends Activity
                 case R.id.btn_latestExchangeTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LATEST_EXCHANGE_TIME);
                     break;
+
+                case R.id.btn_syncStepCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT);
+                    break;
             }
         }
     }
