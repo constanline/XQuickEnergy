@@ -21,7 +21,7 @@ public class SettingsActivity extends Activity
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
             cb_stayAwake, cb_autoRestart,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
-            cb_cooperateWater,
+            cb_cooperateWater, cb_energyRain,
             cb_enableFarm, cb_rewardFriend, cb_sendBackAnimal,
             cb_receiveFarmToolReward, cb_useNewEggTool, cb_harvestProduce,
             cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
@@ -48,6 +48,7 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
         cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
         cb_cooperateWater = findViewById(R.id.cb_cooperateWater);
+        cb_energyRain = findViewById(R.id.cb_energyRain);
         cb_enableFarm = findViewById(R.id.cb_enableFarm);
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
@@ -80,6 +81,7 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
         cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
         cb_cooperateWater.setChecked(Config.cooperateWater());
+        cb_energyRain.setChecked(Config.energyRain());
         cb_enableFarm.setChecked(Config.enableFarm());
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
@@ -144,6 +146,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.cb_cooperateWater:
                     Config.setCooperateWater(cb.isChecked());
+                    break;
+
+                case R.id.cb_energyRain:
+                    Config.setEnergyRain(cb.isChecked());
                     break;
 
                 case R.id.cb_enableFarm:
@@ -263,6 +269,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.btn_cooperateWaterList:
                     ListDialog.show(this, btn.getText(), AlipayCooperate.getList(), Config.getCooperateWaterList(), Config.getcooperateWaterNumList());
+                    break;
+
+                case R.id.btn_giveEnergyRainList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
 
                 case R.id.btn_sendType:

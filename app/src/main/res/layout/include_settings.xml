@@ -283,6 +283,27 @@
 			android:id="@+id/btn_cooperateWaterList"
 			android:paddingStart="8dp"/>
 
+		<CheckBox
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/energy_rain"
+				android:onClick="onClick"
+				android:minHeight="50dp"
+				android:id="@+id/cb_energyRain"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/give_energy_rain_list"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_giveEnergyRainList"
+			android:paddingStart="8dp"/>
+
 	</LinearLayout>
 
 	<LinearLayout

@@ -75,7 +75,9 @@ public class AntForest {
                     queryEnergyRanking(loader);
                     popupTask(loader);
                 }
-                energyRain(loader);
+                if (Config.energyRain()) {
+                    energyRain(loader);
+                }
                 if (Statistics.canSyncStepToday()) {
                     new StepTask(loader).start();
                 }
@@ -527,15 +529,22 @@ public class AntForest {
                 if (joEnergyRainHome.getBoolean("canGrantStatus")) {
                     JSONObject joEnergyRainCanGrantList = new JSONObject(AntForestRpcCall.queryEnergyRainCanGrantList(classLoader));
                     JSONArray grantInfos = joEnergyRainCanGrantList.getJSONArray("grantInfos");
+                    List<String> list = Config.getGiveEnergyRainList();
+                    String userId = null;
                     for (int j = 0; j < grantInfos.length(); j++) {
                         JSONObject grantInfo = grantInfos.getJSONObject(j);
                         if (grantInfo.getBoolean("canGrantedStatus")) {
-                            String userId = grantInfo.getString("userId");
-                            JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(classLoader, userId));
-                            if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
-                                Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
-                                startEnergyRain(classLoader);
+                            userId = grantInfo.getString("userId");
+                            if (list.contains(userId)) {
+                                break;
                             }
+                        }
+                    }
+                    if (userId != null) {
+                        JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(classLoader, userId));
+                        if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
+                            Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
+                            startEnergyRain(classLoader);
                         }
                     }
                 }

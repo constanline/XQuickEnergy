@@ -28,6 +28,7 @@ public class Config
             jn_advanceTime = "advanceTime", jn_collectInterval = "collectInterval", jn_collectTimeout = "collectTimeout",
             jn_receiveForestTaskAward = "receiveForestTaskAward", jn_waterFriendList = "waterFriendList",
             jn_cooperateWater = "cooperateWater", jn_cooperateWaterList = "cooperateWaterList",
+            jn_energyRain = "energyRain", jn_giveEnergyRainList = "giveEnergyRainList",
     /* farm */
     jn_enableFarm = "enableFarm",
             jn_rewardFriend = "rewardFriend", jn_sendBackAnimal = "sendBackAnimal", jn_sendType = "sendType",
@@ -72,6 +73,9 @@ public class Config
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
     private List<Integer> cooperateWaterNumList;
+    private boolean energyRain;
+
+    private List<String> giveEnergyRainList;
 
     /* farm */
     private boolean enableFarm;
@@ -353,6 +357,22 @@ public class Config
     public static List<Integer> getcooperateWaterNumList()
     {
         return getConfig().cooperateWaterNumList;
+    }
+
+    public static void setEnergyRain(boolean b)
+    {
+        getConfig().energyRain = b;
+        hasChanged = true;
+    }
+
+    public static List<String> getGiveEnergyRainList()
+    {
+        return getConfig().giveEnergyRainList;
+    }
+
+    public static boolean energyRain()
+    {
+        return getConfig().energyRain;
     }
 
     /* farm */
@@ -642,6 +662,8 @@ public class Config
         c.cooperateWater = true;
         if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
         if(c.cooperateWaterNumList == null) c.cooperateWaterNumList = new ArrayList<>();
+        c.energyRain = true;
+        if(c.giveEnergyRainList == null) c.giveEnergyRainList = new ArrayList<>();
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -805,6 +827,18 @@ public class Config
                     Log.i(TAG, "  "
                             + config.cooperateWaterList.get(i) + ","
                             + config.cooperateWaterNumList.get(i) + ",");
+                }
+            }
+            config.energyRain = jo.optBoolean(jn_energyRain, true);
+            config.giveEnergyRainList = new ArrayList<>();
+            if(jo.has(jn_giveEnergyRainList))
+            {
+                ja = jo.getJSONArray(jn_giveEnergyRainList);
+                for(int i = 0; i < ja.length(); i++)
+                {
+                    jaa = ja.getJSONArray(i);
+                    config.giveEnergyRainList.add(jaa.getString(0));
+                    Log.i(TAG, "  " + config.giveEnergyRainList.get(i));
                 }
             }
 
@@ -1019,6 +1053,16 @@ public class Config
                 ja.put(jaa);
             }
             jo.put(jn_cooperateWaterList, ja);
+
+            jo.put(jn_energyRain, config.energyRain);
+            ja = new JSONArray();
+            for(int i = 0; i < config.giveEnergyRainList.size(); i++)
+            {
+                jaa = new JSONArray();
+                jaa.put(config.giveEnergyRainList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_giveEnergyRainList, ja);
 
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
