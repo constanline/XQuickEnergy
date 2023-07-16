@@ -8,8 +8,8 @@ android {
         minSdkVersion 23
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
-        versionCode 20230714
-        versionName "1.0.0-beta8"
+        versionCode 20230715
+        versionName "1.0.0-beta9"
     }
     buildTypes {
         release {

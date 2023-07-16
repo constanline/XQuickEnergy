@@ -86,6 +86,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                                     AntCooperate.start(loader, times);
                                     AntFarm.start(loader);
                                     AntMember.receivePoint(loader, times);
+
+                                    FriendManager.checkUnknownId(loader);
 //                                    AntSports.start(loader, times);
 //                                    KBMember.start(loader);
                                     if (Config.collectEnergy() || Config.enableFarm())

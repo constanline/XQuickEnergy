@@ -61,21 +61,15 @@ public class FriendIdMap {
         return id;
     }
 
-    public static String[] getUnknownIds() {
+    public static List<String> getIncompleteUnknownIds() {
         List<String> idList = new ArrayList<>();
         Set<Map.Entry<String, String>> idSet = getIdMap().entrySet();
         for (Map.Entry<String, String> entry : idSet)
-            if (entry.getValue().contains("(*)"))
+            if (entry.getValue().split("\\|").length < 3) {
                 idList.add(entry.getKey());
-        if (idList.size() > 0) {
-            String[] ids = new String[idList.size()];
-            for (int i = 0; i < ids.length; i++) {
-                ids[i] = idList.get(i);
-                Log.i(TAG, "未知id: " + ids[i]);
+                Log.i(TAG, "未知id: " + entry.getKey());
             }
-            return ids;
-        }
-        return null;
+        return idList;
     }
 
     public static Map<String, String> getIdMap() {

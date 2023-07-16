@@ -80,13 +80,13 @@ public class EditDialog {
 
                                             case RETURN_WATER_30:
                                                 if(i >= 0)
-                                                    Config.setReturnWater30(i);
+                                                    Config.setReturnWater33(i);
                                                 break;
 
                                             case RETURN_WATER_20:
 
                                                 if(i >= 0)
-                                                    Config.setReturnWater20(i);
+                                                    Config.setReturnWater18(i);
                                                 break;
 
                                             case RETURN_WATER_10:
@@ -144,11 +144,11 @@ public class EditDialog {
                 break;
 
             case RETURN_WATER_30:
-                str = String.valueOf(Config.returnWater30());
+                str = String.valueOf(Config.returnWater33());
                 break;
 
             case RETURN_WATER_20:
-                str = String.valueOf(Config.returnWater20());
+                str = String.valueOf(Config.returnWater18());
                 break;
 
             case RETURN_WATER_10:

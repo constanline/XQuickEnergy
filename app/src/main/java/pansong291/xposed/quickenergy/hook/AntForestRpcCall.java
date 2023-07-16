@@ -59,16 +59,10 @@ public class AntForestRpcCall {
     }
 
     public static String transferEnergy(ClassLoader loader, String targetUser, String bizNo, int energyId) {
-        try {
-            return RpcCall.invoke(loader, "alipay.antmember.forest.h5.transferEnergy", "[{\"bizNo\":\"" +
-                    bizNo + UUID.randomUUID().toString() + "\",\"energyId\":" + energyId +
-                    ",\"extInfo\":{\"sendChat\":\"N\"},\"from\":\"friendIndex\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUser\":\"" +
-                    targetUser + "\",\"transferType\":\"WATERING\",\"version\":\"20230501\"}]");
-        } catch (Throwable t) {
-            Log.i(TAG, "transferEnergy err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        return RpcCall.invoke(loader, "alipay.antmember.forest.h5.transferEnergy", "[{\"bizNo\":\"" +
+                bizNo + UUID.randomUUID().toString() + "\",\"energyId\":" + energyId +
+                ",\"extInfo\":{\"sendChat\":\"N\"},\"from\":\"friendIndex\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUser\":\"" +
+                targetUser + "\",\"transferType\":\"WATERING\",\"version\":\"20230501\"}]");
     }
 
     public static String forFriendCollectEnergy(ClassLoader loader, String targetUserId, long bubbleId) {
@@ -80,6 +74,11 @@ public class AntForestRpcCall {
             Log.printStackTrace(TAG, t);
         }
         return null;
+    }
+
+    public static String vitalitySign(ClassLoader loader) {
+        return RpcCall.invoke(loader, "alipay.antforest.forest.h5.vitalitySign",
+                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
     public static String queryTaskList(ClassLoader loader) {

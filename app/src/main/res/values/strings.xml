@@ -18,8 +18,8 @@
     <string name="advance_time_milliseconds">Advance time (milliseconds)</string>
     <string name="collect_interval_milliseconds">Collect interval (milliseconds)</string>
     <string name="collect_timeout_seconds">Collect timeout (seconds)</string>
-    <string name="return_water_30">Return water 30</string>
-    <string name="return_water_20">Return water 20</string>
+    <string name="return_water_33">Return water 33</string>
+    <string name="return_water_18">Return water 18</string>
     <string name="return_water_10">Return water 10</string>
     <string name="help_friend_collect">Help friend collect</string>
     <string name="don_t_help_collect_list">Don\'t help collect list</string>

@@ -14,8 +14,8 @@
     <string name="advance_time_milliseconds">提前时间(毫秒)</string>
     <string name="collect_interval_milliseconds">收取间隔(毫秒)</string>
     <string name="collect_timeout_seconds">收取超时(秒)</string>
-    <string name="return_water_30">返水30g</string>
-    <string name="return_water_20">返水20g</string>
+    <string name="return_water_33">返水33g</string>
+    <string name="return_water_18">返水18g</string>
     <string name="return_water_10">返水10g</string>
     <string name="help_friend_collect">帮收能量</string>
     <string name="don_t_help_collect_list">不要帮收能量名单</string>

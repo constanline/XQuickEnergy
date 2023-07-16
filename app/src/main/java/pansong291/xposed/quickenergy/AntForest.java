@@ -247,13 +247,20 @@ public class AntForest {
                     if (Statistics.canWaterFriendToday(uid, waterCount))
                         waterFriendEnergy(loader, uid, waterCount);
                 }
-                checkUnknownId(loader);
             }
         } catch (Throwable t) {
             Log.i(TAG, "canCollectSelfEnergy err:");
             Log.printStackTrace(TAG, t);
         }
         onForestEnd();
+    }
+
+    private static int getEnergyId(int waterEnergy) {
+        if (waterEnergy <= 0) return 0;
+        if (waterEnergy >= 66) return 42;
+        if (waterEnergy >= 33) return 41;
+        if (waterEnergy <= 18) return 40;
+        return 39;
     }
 
     private static void canCollectEnergy(ClassLoader loader, String userId, boolean laterCollect) {
@@ -364,14 +371,14 @@ public class AntForest {
                 if (bizNo == null || bizNo.isEmpty())
                     return collected;
                 int returnCount = 0;
-                if (Config.returnWater30() > 0 && collected >= Config.returnWater30())
-                    returnCount = 3;
-                else if (Config.returnWater20() > 0 && collected >= Config.returnWater20())
-                    returnCount = 2;
+                if (Config.returnWater33() > 0 && collected >= Config.returnWater33())
+                    returnCount = 33;
+                else if (Config.returnWater18() > 0 && collected >= Config.returnWater18())
+                    returnCount = 18;
                 else if (Config.returnWater10() > 0 && collected >= Config.returnWater10())
-                    returnCount = 1;
+                    returnCount = 10;
                 if (returnCount > 0)
-                    returnFriendWater(loader, userId, userName, bizNo, returnCount);
+                    returnFriendWater(loader, userId, userName, bizNo, 1, returnCount);
             } else {
                 Log.recordLog("【" + userName + "】" + jo.getString("resultDesc"), s);
             }
@@ -420,7 +427,7 @@ public class AntForest {
                 String bizNo = jo.getString("bizNo");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
-                count = returnFriendWater(loader, userId, userName, bizNo, count);
+                count = returnFriendWater(loader, userId, userName, bizNo, count, 66);
                 if (count > 0) Statistics.waterFriendToday(userId, count);
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
@@ -431,21 +438,21 @@ public class AntForest {
         }
     }
 
-    private static int returnFriendWater(ClassLoader loader, String userId, String userName, String bizNo, int count) {
+    private static int returnFriendWater(ClassLoader loader, String userId, String userName, String bizNo, int count, int waterEnergy) {
         if (bizNo == null || bizNo.isEmpty()) return 0;
         int wateredTimes = 0;
         try {
             String s;
             JSONObject jo;
+            int energyId = getEnergyId(waterEnergy);
             for (int waterCount = 1; waterCount <= count; waterCount++) {
-                s = AntForestRpcCall.transferEnergy(loader, userId, bizNo, 42);
+                s = AntForestRpcCall.transferEnergy(loader, userId, bizNo, energyId);
                 jo = new JSONObject(s);
-                s = jo.getString("resultCode");
-                if ("SUCCESS".equals(s)) {
-                    s = jo.getJSONObject("treeEnergy").getString("currentEnergy");
-                    Log.forest("给【" + userName + "】浇水成功，剩余能量【" + s + "克】");
+                if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                    String currentEnergy = jo.getJSONObject("treeEnergy").getString("currentEnergy");
+                    Log.forest("给【" + userName + "】浇水成功，剩余能量【" + currentEnergy + "克】");
                     wateredTimes++;
-                    Statistics.addData(Statistics.DataType.WATERED, 10);
+                    Statistics.addData(Statistics.DataType.WATERED, waterEnergy);
                 } else if ("WATERING_TIMES_LIMIT".equals(s)) {
                     Log.recordLog("今日给【" + userName + "】浇水已达上限", "");
                     wateredTimes = 3;
@@ -467,6 +474,22 @@ public class AntForest {
             String s = AntForestRpcCall.queryTaskList(loader);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray forestSignVOList = jo.getJSONArray("forestSignVOList");
+                JSONObject forestSignVO = forestSignVOList.getJSONObject(0);
+                String currentSignKey = forestSignVO.getString("currentSignKey");
+                JSONArray signRecords = forestSignVO.getJSONArray("signRecords");
+                for (int i = 0; i < signRecords.length(); i++) {
+                    JSONObject signRecord = signRecords.getJSONObject(i);
+                    String signKey = signRecord.getString("signKey");
+                    if (signKey.equals(currentSignKey)) {
+                        if (!signRecord.getBoolean("signed")) {
+                            jo = new JSONObject(AntForestRpcCall.vitalitySign(loader));
+                            if ("SUCCESS".equals(jo.getString("desc")))
+                                Log.forest("签到成功");
+                        }
+                        break;
+                    }
+                }
                 JSONArray forestTasksNew = jo.getJSONArray("forestTasksNew");
                 for (int i = 0; i < forestTasksNew.length(); i++) {
                     JSONObject forestTask = forestTasksNew.getJSONObject(i);
@@ -594,52 +617,6 @@ public class AntForest {
             AntForestNotification.setContentText(Log.getFormatTime() + sb);
         }
         laterTime = -1;
-    }
-    public static void checkUnknownId(ClassLoader loader) {
-        String[] unknownIds = FriendIdMap.getUnknownIds();
-        if (unknownIds != null) {
-            new Thread() {
-                ClassLoader loader;
-                String[] unknownIds;
-
-                public Thread setData(ClassLoader cl, String[] ss) {
-                    loader = cl;
-                    unknownIds = ss;
-                    return this;
-                }
-
-                @Override
-                public void run() {
-                    try {
-                        Log.i(TAG, "开始检查" + unknownIds.length + "个未知id");
-                        for (String unknownId : unknownIds) {
-                            long start = System.currentTimeMillis();
-                            String s = AntForestRpcCall.queryFriendHomePage(loader, unknownId);
-                            long end = System.currentTimeMillis();
-                            JSONObject jo = new JSONObject(s);
-                            if (jo.getString("resultCode").equals("SUCCESS")) {
-                                serverTime = jo.getLong("now");
-                                offsetTime = (start + end) / 2 - serverTime;
-                                Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
-                                jo = jo.getJSONObject("userEnergy");
-                                String userName = jo.getString("displayName");
-                                if (userName.isEmpty())
-                                    userName = "*null*";
-                                String loginId = userName;
-                                if (jo.has("loginId"))
-                                    loginId += "(" + jo.getString("loginId") + ")";
-                                FriendIdMap.putIdMap(unknownId, loginId);
-                                Log.recordLog("进入【" + loginId + "】的蚂蚁森林", "");
-                                FriendIdMap.saveIdMap();
-                            }
-                        }
-                    } catch (Throwable t) {
-                        Log.i(TAG, "checkUnknownId.run err:");
-                        Log.printStackTrace(TAG, t);
-                    }
-                }
-            }.setData(loader, unknownIds).start();
-        }
     }
 
     public static void execute(ClassLoader loader, String userName, String userId, String bizNo, long bubbleId, long produceTime) {

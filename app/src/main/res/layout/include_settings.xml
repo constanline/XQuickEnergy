@@ -178,14 +178,14 @@
 			android:minHeight="50dp"
 			android:onClick="onClick"
 			android:paddingStart="8dp"
-			android:text="@string/return_water_30"
+			android:text="@string/return_water_33"
 			android:textAllCaps="false" />
 
 		<Button
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			style="?android:attr/buttonBarButtonStyle"
-			android:text="@string/return_water_20"
+			android:text="@string/return_water_18"
 			android:textAllCaps="false"
 			android:onClick="onClick"
 			android:minHeight="50dp"

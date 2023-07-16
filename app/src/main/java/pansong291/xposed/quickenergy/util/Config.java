@@ -22,7 +22,7 @@ public class Config
             jn_immediateEffect = "immediateEffect", jn_recordLog = "recordLog", jn_showToast = "showToast",
             jn_stayAwake = "stayAwake", jn_autoRestart = "autoRestart", jn_xedgeproData = "xedgeproData",
     /* forest */
-    jn_collectEnergy = "collectEnergy", jn_ReturnWater30 = "returnWater30", jn_ReturnWater20 = "returnWater20",
+    jn_collectEnergy = "collectEnergy", jn_ReturnWater33 = "returnWater30", jn_ReturnWater18 = "returnWater20",
             jn_ReturnWater10 = "returnWater10", jn_helpFriendCollect = "helpFriendCollect", jn_dontCollectList = "dontCollectList",
             jn_dontHelpCollectList = "dontHelpCollectList", jn_checkInterval = "checkInterval", jn_threadCount = "threadCount",
             jn_advanceTime = "advanceTime", jn_collectInterval = "collectInterval", jn_collectTimeout = "collectTimeout",
@@ -61,8 +61,8 @@ public class Config
     private int advanceTime;
     private int collectInterval;
     private int collectTimeout;
-    private int returnWater30;
-    private int returnWater20;
+    private int returnWater33;
+    private int returnWater18;
     private int returnWater10;
     private boolean helpFriendCollect;
     private List<String> dontCollectList;
@@ -264,26 +264,26 @@ public class Config
         return getConfig().collectTimeout;
     }
 
-    public static void setReturnWater30(int i)
+    public static void setReturnWater33(int i)
     {
-        getConfig().returnWater30 = i;
+        getConfig().returnWater33 = i;
         hasChanged = true;
     }
 
-    public static int returnWater30()
+    public static int returnWater33()
     {
-        return getConfig().returnWater30;
+        return getConfig().returnWater33;
     }
 
-    public static void setReturnWater20(int i)
+    public static void setReturnWater18(int i)
     {
-        getConfig().returnWater20 = i;
+        getConfig().returnWater18 = i;
         hasChanged = true;
     }
 
-    public static int returnWater20()
+    public static int returnWater18()
     {
-        return getConfig().returnWater20;
+        return getConfig().returnWater18;
     }
 
     public static void setReturnWater10(int i)
@@ -662,8 +662,8 @@ public class Config
         c.advanceTime = 500;
         c.collectInterval = 100;
         c.collectTimeout = 2_000;
-        c.returnWater30 = 0;
-        c.returnWater20 = 0;
+        c.returnWater33 = 0;
+        c.returnWater18 = 0;
         c.returnWater10 = 0;
         c.helpFriendCollect = true;
         if(c.dontCollectList == null) c.dontCollectList = new ArrayList<>();
@@ -746,9 +746,9 @@ public class Config
 
             config.collectTimeout = jo.optInt(jn_collectTimeout, 2_000);
 
-            config.returnWater30 = jo.optInt(jn_ReturnWater30);
+            config.returnWater33 = jo.optInt(jn_ReturnWater33);
 
-            config.returnWater20 = jo.optInt(jn_ReturnWater20);
+            config.returnWater18 = jo.optInt(jn_ReturnWater18);
 
             config.returnWater10 = jo.optInt(jn_ReturnWater10);
 
@@ -958,9 +958,9 @@ public class Config
 
             jo.put(jn_collectTimeout, config.collectTimeout);
 
-            jo.put(jn_ReturnWater30, config.returnWater30);
+            jo.put(jn_ReturnWater33, config.returnWater33);
 
-            jo.put(jn_ReturnWater20, config.returnWater20);
+            jo.put(jn_ReturnWater18, config.returnWater18);
 
             jo.put(jn_ReturnWater10, config.returnWater10);
 
