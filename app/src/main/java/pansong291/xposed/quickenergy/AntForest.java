@@ -31,6 +31,10 @@ public class AntForest {
 
     private static final Lock limitLock = new ReentrantLock();
 
+    private static final Lock collectLock = new ReentrantLock();
+
+    private static volatile long lastCollectTime = 0;
+
     private static boolean checkCollectLimited() {
         if (Config.isLimitCollect()) {
             limitLock.lock();
@@ -78,7 +82,7 @@ public class AntForest {
                 if (Config.energyRain()) {
                     energyRain(loader);
                 }
-                if (Statistics.canSyncStepToday()) {
+                if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0800") >= 0) {
                     new StepTask(loader).start();
                 }
             }
@@ -350,7 +354,16 @@ public class AntForest {
             return 0;
         }
         try {
-            String s = AntForestRpcCall.collectEnergy(userId, bubbleId);
+            String s = "{\"resultCode\": \"FAILED\"}";
+            if (Config.collectTimeout() > 0) {
+                synchronized (collectLock) {
+                    while (System.currentTimeMillis() - lastCollectTime < Config.collectTimeout()) {
+                        Thread.sleep(System.currentTimeMillis() - lastCollectTime);
+                    }
+                    s = AntForestRpcCall.collectEnergy(userId, bubbleId);
+                    lastCollectTime = System.currentTimeMillis();
+                }
+            }
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
                 offerCollectQueue();
@@ -706,14 +719,7 @@ public class AntForest {
                 if (sleep > 0) sleep(sleep);
                 Log.recordLog("【" + userName + "】蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
-                long time = System.currentTimeMillis();
-                int collected = 0;
-                while (System.currentTimeMillis() - time < Config.collectTimeout()) {
-                    collected = collectEnergy(loader, userId, bubbleId, userName, bizNo);
-                    if (collected > 0) break;
-                    if (Config.collectInterval() > 0)
-                        sleep(Config.collectInterval());
-                }
+                totalCollected += collectEnergy(loader, userId, bubbleId, userName, bizNo);
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);
