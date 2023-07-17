@@ -6,16 +6,15 @@ import pansong291.xposed.quickenergy.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class RpcCall
+public class RpcUtil
 {
-    private static final String TAG = RpcCall.class.getCanonicalName();
+    private static final String TAG = RpcUtil.class.getCanonicalName();
     private static Method rpcCallMethod;
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
     public static boolean sendXEdgeProBroadcast;
 
-    public static String invoke(ClassLoader loader, String args0, String args1)
-    {
+    public static void init(ClassLoader loader) {
         if(rpcCallMethod == null) {
             try {
                 Class<?> h5PageClazz = loader.loadClass(ClassMember.com_alipay_mobile_h5container_api_H5Page);
@@ -31,9 +30,10 @@ public class RpcCall
                 //Log.printStackTrace(TAG, t);
             }
         }
+    }
 
-        try
-        {
+    public static String request(String args0, String args1) {
+        try {
             Object o;
             if (rpcCallMethod.getParameterTypes().length == 12) {
                 o = rpcCallMethod.invoke(
@@ -46,12 +46,10 @@ public class RpcCall
             Log.i(TAG, "argument: " + args0 + ", " + args1);
             Log.i(TAG, "response: " + str);
             return str;
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             Log.i(TAG, "invoke err:");
             Log.printStackTrace(TAG, t);
-            if(t instanceof InvocationTargetException)
-            {
+            if(t instanceof InvocationTargetException) {
                 if(AntForestToast.context != null && sendXEdgeProBroadcast)
                 {
                     sendXEdgeProBroadcast = false;
@@ -65,16 +63,13 @@ public class RpcCall
         return null;
     }
 
-    public static String getResponse(Object resp)
-    {
-        try
-        {
+    public static String getResponse(Object resp) {
+        try {
             if(getResponseMethod == null)
                 getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
 
             return (String) getResponseMethod.invoke(resp);
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             Log.i(TAG, "getResponse err:");
             Log.printStackTrace(TAG, t);
         }

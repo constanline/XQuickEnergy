@@ -12,9 +12,9 @@ import android.os.Build;
 
 public class AntForestNotification
 {
-    public static final int ANTFOREST_NOTIFICATION_ID = 46;
+    public static final int ANTFOREST_NOTIFICATION_ID = 66;
     private static NotificationManager mNotifyManager;
-    public static final String CHANNEL_ID = "pansong291.xposed.quickenergy.ANTFOREST_NOTIFY_CHANNEL";
+    public static final String CHANNEL_ID = "pansong291.xposed.quickenergy.repair.ANTFOREST_NOTIFY_CHANNEL";
     private static Notification mNotification;
     private static Notification.Builder builder;
     private static boolean isStart = false;

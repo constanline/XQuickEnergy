@@ -11,7 +11,7 @@ public class AntCooperateRpcCall
         try
         {
             String args1 = "[{}]";
-            return RpcCall.invoke(loader, "alipay.antmember.forest.h5.queryUserCooperatePlantList", args1);
+            return RpcUtil.request("alipay.antmember.forest.h5.queryUserCooperatePlantList", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryUserCooperatePlantList err:");
@@ -25,7 +25,7 @@ public class AntCooperateRpcCall
         try
         {
             String args1 = "[{\"cooperationId\":\"" + coopId + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antmember.forest.h5.queryCooperatePlant", args1);
+            return RpcUtil.request("alipay.antmember.forest.h5.queryCooperatePlant", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryCooperatePlant err:");
@@ -40,7 +40,7 @@ public class AntCooperateRpcCall
         {
             String args1 = "[{\"bizNo\":\"" + uid + "_" + coopId + "_" + System.currentTimeMillis()
                     + "\",\"cooperationId\":\"" + coopId + "\",\"energyCount\":" + count + "}]";
-            return RpcCall.invoke(loader, "alipay.antmember.forest.h5.cooperateWater", args1);
+            return RpcUtil.request("alipay.antmember.forest.h5.cooperateWater", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_cooperateWater err:");

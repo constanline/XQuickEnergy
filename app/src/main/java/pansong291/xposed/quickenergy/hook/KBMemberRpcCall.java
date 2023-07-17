@@ -12,7 +12,7 @@ public class KBMemberRpcCall
         try
         {
             String args1 = "[{\"sceneCode\":\"KOUBEI_INTEGRAL\",\"source\":\"ALIPAY_TAB\",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "alipay.kbmemberprod.action.signIn", args1);
+            return RpcUtil.request("alipay.kbmemberprod.action.signIn", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_signIn err:");

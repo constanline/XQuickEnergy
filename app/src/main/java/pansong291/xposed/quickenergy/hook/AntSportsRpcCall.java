@@ -14,7 +14,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"chInfo\":\"" + chInfo
                     + "\",\"pathListUsePage\":true,\"timeZone\":\"" + timeZone + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.map.queryMyHomePage", args1);
+            return RpcUtil.request("alipay.antsports.walk.map.queryMyHomePage", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryMyHomePage err:");
@@ -29,7 +29,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"chInfo\":\"" + chInfo
                     + "\",\"pathId\":\"" + pathId + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.map.join", args1);
+            return RpcUtil.request("alipay.antsports.walk.map.join", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_join err:");
@@ -45,7 +45,7 @@ public class AntSportsRpcCall
             String args1 = "[{\"chInfo\":\"" + chInfo + "\",\"day\":\"" + day
                     + "\",\"needAllBox\":true,\"rankCacheKey\":\"" + rankCacheKey
                     + "\",\"timeZone\":\"" + timeZone + "\",\"useStepCount\":" + stepCount + "}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.map.go", args1);
+            return RpcUtil.request("alipay.antsports.walk.map.go", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_go err:");
@@ -60,7 +60,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"boxNo\":\"" + boxNo + "\",\"chInfo\":\""
                     + chInfo + "\",\"userId\":\"" + userId + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.treasureBox.openTreasureBox", args1);
+            return RpcUtil.request("alipay.antsports.walk.treasureBox.openTreasureBox", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_openTreasureBox err:");
@@ -75,7 +75,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"chInfo\":\"" + chInfo + "\",\"index\":"
                     + index + ",\"projectListUseVertical\":true}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.charity.queryProjectList", args1);
+            return RpcUtil.request("alipay.antsports.walk.charity.queryProjectList", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryProjectList err:");
@@ -90,7 +90,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"chInfo\":\"" + chInfo + "\",\"donateCharityCoin\":"
                     + donateCharityCoin + ",\"projectId\":\"" + projectId + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.charity.donate", args1);
+            return RpcUtil.request("alipay.antsports.walk.charity.donate", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryProjectList err:");
@@ -104,7 +104,7 @@ public class AntSportsRpcCall
         try
         {
             String args1 = "[{\"timeZone\":\"" + timeZone + "\"}]";
-            return RpcCall.invoke(loader, "alipay.antsports.walk.user.queryWalkStep", args1);
+            return RpcUtil.request("alipay.antsports.walk.user.queryWalkStep", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_queryWalkStep err:");
@@ -120,7 +120,7 @@ public class AntSportsRpcCall
             String args1 = "[{\"actId\":\"\",\"count\":" + count
                     + ",\"timezone\":\"" + timeZone + "\",\"ver\":"
                     + ver + ",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "alipay.charity.mobile.donate.exchange", args1);
+            return RpcUtil.request("alipay.charity.mobile.donate.exchange", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_exchange err:");
@@ -135,7 +135,7 @@ public class AntSportsRpcCall
         {
             String args1 = "[{\"exchangeId\":\"" + exchangeId
                     + "\",\"timezone\":\"GMT+08:00\",\"version\":\"" + version + "\"}]";
-            return RpcCall.invoke(loader, "alipay.charity.mobile.donate.exchange.success", args1);
+            return RpcUtil.request("alipay.charity.mobile.donate.exchange.success", args1);
         }catch(Throwable t)
         {
             Log.i(TAG, "rpcCall_exchange_success err:");

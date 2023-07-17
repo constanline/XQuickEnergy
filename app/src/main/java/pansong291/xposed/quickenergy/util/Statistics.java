@@ -425,11 +425,11 @@ public class Statistics
 
     private static Statistics json2Statistics(String json)
     {
-        Statistics stat = null;
+        Statistics stat;
         try
         {
             JSONObject jo = new JSONObject(json);
-            JSONObject joo = null;
+            JSONObject joo;
             stat = new Statistics();
 
             joo = jo.getJSONObject(jn_year);

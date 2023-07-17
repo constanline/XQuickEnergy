@@ -88,7 +88,7 @@ public class AntForest {
     private static void fillUserRobFlag(ClassLoader loader, List<String> idList) {
         try {
             String strList = new JSONArray(idList).toString();
-            String s = AntForestRpcCall.fillUserRobFlag(loader, strList);
+            String s = AntForestRpcCall.fillUserRobFlag(strList);
             JSONObject jo = new JSONObject(s);
             checkCanCollectEnergy(loader, jo);
         } catch (Throwable t) {
@@ -99,7 +99,7 @@ public class AntForest {
 
     private static void popupTask(ClassLoader loader) {
         try {
-            JSONObject resData = new JSONObject(AntForestRpcCall.popupTask(loader));
+            JSONObject resData = new JSONObject(AntForestRpcCall.popupTask());
             if ("SUCCESS".equals(resData.getString("resultCode"))) {
                 JSONArray forestSignVOList = resData.optJSONArray("forestSignVOList");
                 if (forestSignVOList != null) {
@@ -114,7 +114,7 @@ public class AntForest {
                             if (signKey.equals(currentSignKey)) {
                                 if (!signRecord.getBoolean("signed")) {
                                     int awardCount = signRecord.getInt("awardCount");
-                                    JSONObject resData2 = new JSONObject(AntForestRpcCall.antiepSign(loader, signId, FriendIdMap.currentUid));
+                                    JSONObject resData2 = new JSONObject(AntForestRpcCall.antiepSign(signId, FriendIdMap.currentUid));
                                     if ("100000000".equals(resData2.getString("code"))) {
                                         collectedEnergy += awardCount;
                                         Log.forest("收取过期能量［" + awardCount + "克");
@@ -137,7 +137,7 @@ public class AntForest {
 
     private static void queryEnergyRanking(ClassLoader loader) {
         try {
-            String s = AntForestRpcCall.queryEnergyRanking(loader);
+            String s = AntForestRpcCall.queryEnergyRanking();
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 checkCanCollectEnergy(loader, jo);
@@ -185,12 +185,12 @@ public class AntForest {
         try {
             Log.recordLog(TAG,"canCollectSelfEnergy 1");
             long start = System.currentTimeMillis();
-            String s = AntForestRpcCall.queryHomePage(loader);
+            String s = AntForestRpcCall.queryHomePage();
             long end = System.currentTimeMillis();
             if (s == null) {
                 Thread.sleep(RandomUtils.delay());
                 start = System.currentTimeMillis();
-                s = AntForestRpcCall.queryHomePage(loader);
+                s = AntForestRpcCall.queryHomePage();
                 end = System.currentTimeMillis();
             }
             Log.recordLog(TAG,"canCollectSelfEnergy 2");
@@ -266,7 +266,7 @@ public class AntForest {
     private static void canCollectEnergy(ClassLoader loader, String userId, boolean laterCollect) {
         try {
             long start = System.currentTimeMillis();
-            String s = AntForestRpcCall.queryFriendHomePage(loader, userId);
+            String s = AntForestRpcCall.queryFriendHomePage(userId);
             long end = System.currentTimeMillis();
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -350,7 +350,7 @@ public class AntForest {
             return 0;
         }
         try {
-            String s = AntForestRpcCall.collectEnergy(loader, userId, bubbleId);
+            String s = AntForestRpcCall.collectEnergy(userId, bubbleId);
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
                 offerCollectQueue();
@@ -392,7 +392,7 @@ public class AntForest {
     private static int forFriendCollectEnergy(ClassLoader loader, String targetUserId, long bubbleId, String userName) {
         int helped = 0;
         try {
-            String s = AntForestRpcCall.forFriendCollectEnergy(loader, targetUserId, bubbleId);
+            String s = AntForestRpcCall.forFriendCollectEnergy(targetUserId, bubbleId);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray jaBubbles = jo.getJSONArray("bubbles");
@@ -421,7 +421,7 @@ public class AntForest {
 
     private static void waterFriendEnergy(ClassLoader loader, String userId, int count) {
         try {
-            String s = AntForestRpcCall.queryFriendHomePage(loader, userId);
+            String s = AntForestRpcCall.queryFriendHomePage(userId);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 String bizNo = jo.getString("bizNo");
@@ -446,7 +446,7 @@ public class AntForest {
             JSONObject jo;
             int energyId = getEnergyId(waterEnergy);
             for (int waterCount = 1; waterCount <= count; waterCount++) {
-                s = AntForestRpcCall.transferEnergy(loader, userId, bizNo, energyId);
+                s = AntForestRpcCall.transferEnergy(userId, bizNo, energyId);
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     String currentEnergy = jo.getJSONObject("treeEnergy").getString("currentEnergy");
@@ -471,7 +471,7 @@ public class AntForest {
 
     private static void receiveTaskAward(ClassLoader loader) {
         try {
-            String s = AntForestRpcCall.queryTaskList(loader);
+            String s = AntForestRpcCall.queryTaskList();
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray forestSignVOList = jo.getJSONArray("forestSignVOList");
@@ -483,7 +483,7 @@ public class AntForest {
                     String signKey = signRecord.getString("signKey");
                     if (signKey.equals(currentSignKey)) {
                         if (!signRecord.getBoolean("signed")) {
-                            jo = new JSONObject(AntForestRpcCall.vitalitySign(loader));
+                            jo = new JSONObject(AntForestRpcCall.vitalitySign());
                             if ("SUCCESS".equals(jo.getString("desc")))
                                 Log.forest("签到成功");
                         }
@@ -503,7 +503,7 @@ public class AntForest {
                         String awardCount = bizInfo.optString("awardCount", "1");
                         String sceneCode = taskBaseInfo.getString("sceneCode");
                         if (TaskStatus.FINISHED.name().equals(taskBaseInfo.getString("taskStatus"))) {
-                            JSONObject joTaskAward = new JSONObject(AntForestRpcCall.receiveTaskAward(loader, sceneCode, taskType));
+                            JSONObject joTaskAward = new JSONObject(AntForestRpcCall.receiveTaskAward(sceneCode, taskType));
                             if ("SUCCESS".equals(joTaskAward.getString("desc")))
                                 Log.forest("已领取【" + awardCount + "个】【" + awardName + "】");
                             else
@@ -522,7 +522,7 @@ public class AntForest {
 
     private static void startEnergyRain(ClassLoader classLoader) {
         try {
-            JSONObject jSONObject = new JSONObject(AntForestRpcCall.startEnergyRain(classLoader));
+            JSONObject jSONObject = new JSONObject(AntForestRpcCall.startEnergyRain());
             if ("SUCCESS".equals(jSONObject.getString("resultCode"))) {
                 String token = jSONObject.getString("token");
                 JSONArray bubbleEnergyList = jSONObject.getJSONObject("difficultyInfo").getJSONArray("bubbleEnergyList");
@@ -531,7 +531,7 @@ public class AntForest {
                     sum += bubbleEnergyList.getInt(i);
                 }
                 Thread.sleep(5000L);
-                if ("SUCCESS".equals(new JSONObject(AntForestRpcCall.energyRainSettlement(classLoader, sum, token)).getString("resultCode"))) {
+                if ("SUCCESS".equals(new JSONObject(AntForestRpcCall.energyRainSettlement(sum, token)).getString("resultCode"))) {
                     AntForestToast.show("获得了【" + sum + "g】能量【能量雨】");
                     Log.forest("获得了【" + sum + "g】能量【能量雨】");
                 }
@@ -544,13 +544,13 @@ public class AntForest {
 
     private static void energyRain(ClassLoader classLoader) {
         try {
-            JSONObject joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome(classLoader));
+            JSONObject joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome());
             if ("SUCCESS".equals(joEnergyRainHome.getString("resultCode"))) {
                 if (joEnergyRainHome.getBoolean("canPlayToday")) {
                     startEnergyRain(classLoader);
                 }
                 if (joEnergyRainHome.getBoolean("canGrantStatus")) {
-                    JSONObject joEnergyRainCanGrantList = new JSONObject(AntForestRpcCall.queryEnergyRainCanGrantList(classLoader));
+                    JSONObject joEnergyRainCanGrantList = new JSONObject(AntForestRpcCall.queryEnergyRainCanGrantList());
                     JSONArray grantInfos = joEnergyRainCanGrantList.getJSONArray("grantInfos");
                     List<String> list = Config.getGiveEnergyRainList();
                     String userId = null;
@@ -564,7 +564,7 @@ public class AntForest {
                         }
                     }
                     if (userId != null) {
-                        JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(classLoader, userId));
+                        JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(userId));
                         if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
                             Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
                             startEnergyRain(classLoader);
@@ -572,7 +572,7 @@ public class AntForest {
                     }
                 }
             }
-            joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome(classLoader));
+            joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome());
             if ("SUCCESS".equals(joEnergyRainHome.getString("resultCode")) && joEnergyRainHome.getBoolean("canPlayToday")) {
                 startEnergyRain(classLoader);
             }

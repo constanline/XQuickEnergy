@@ -60,6 +60,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Service service = (Service) param.thisObject;
                             AntForestToast.context = service.getApplicationContext();
+                            RpcUtil.init(loader);
                             times = 0;
                             if (Config.stayAwake()) {
                                 PowerManager pm = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
@@ -80,7 +81,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 @Override
                                 public void run() {
                                     Config.shouldReload = true;
-                                    RpcCall.sendXEdgeProBroadcast = true;
+                                    RpcUtil.sendXEdgeProBroadcast = true;
                                     Statistics.resetToday();
                                     AntForest.checkEnergyRanking(loader, times);
                                     AntCooperate.start(loader, times);
