@@ -3,7 +3,6 @@ package pansong291.xposed.quickenergy.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +26,7 @@ public class SettingsActivity extends Activity
             cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
-            cb_kbSignIn, cb_limitCollect;
+            cb_kbSignIn, cb_limitCollect, cb_doubleCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,6 +65,7 @@ public class SettingsActivity extends Activity
         cb_donateCharityCoin = findViewById(R.id.cb_donateCharityCoin);
         cb_kbSignIn = findViewById(R.id.cb_kbSignIn);
         cb_limitCollect = findViewById(R.id.cb_limitCollect);
+        cb_doubleCard = findViewById(R.id.cb_doubleCard);
     }
 
     @Override
@@ -99,6 +99,7 @@ public class SettingsActivity extends Activity
         cb_donateCharityCoin.setChecked(Config.donateCharityCoin());
         cb_kbSignIn.setChecked(Config.kbSginIn());
         cb_limitCollect.setChecked(Config.isLimitCollect());
+        cb_doubleCard.setChecked(Config.doubleCard());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -134,6 +135,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.cb_limitCollect:
                     Config.setLimitCollect(cb.isChecked());
+                    break;
+
+                case R.id.cb_doubleCard:
+                    Config.setDoubleCard(cb.isChecked());
                     break;
 
                 case R.id.cb_helpFriendCollect:
@@ -219,6 +224,10 @@ public class SettingsActivity extends Activity
         } else if (v instanceof Button) {
             Button btn = (Button)v;
             switch(v.getId()) {
+                case R.id.btn_stayAwakeType:
+                    ChoiceDialog.showStayAwakeType(this, btn.getText());
+                    break;
+
                 case R.id.btn_checkInterval:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.CHECK_INTERVAL);
                     break;

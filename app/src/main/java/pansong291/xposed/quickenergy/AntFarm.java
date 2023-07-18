@@ -16,14 +16,10 @@ public class AntFarm
     public enum SendType
     {
         HIT, NORMAL;
-        public static final CharSequence[] names =
-                {HIT.name(), NORMAL.name()};
         public static final CharSequence[] nickNames =
                 {"攻击", "常规"};
-        public SendType another()
-        {
-            return this == HIT ? NORMAL : HIT;
-        }
+        public static final CharSequence[] names =
+                {HIT.nickName(), NORMAL.nickName()};
         public CharSequence nickName()
         {
             return nickNames[ordinal()];

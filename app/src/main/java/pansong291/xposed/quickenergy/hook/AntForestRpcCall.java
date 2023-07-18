@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.StringUtil;
 
 import java.util.UUID;
 
@@ -29,8 +30,13 @@ public class AntForestRpcCall {
                         userId + "\",\"version\":\"20230501\"}]");
     }
 
-    public static String collectEnergy(String userId, long bubbleId) {
-        String args1 = "[{\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
+    public static String collectEnergy(String bizType, String userId, long bubbleId) {
+        String args1;
+        if (StringUtil.isEmpty(bizType)) {
+            args1 = "[{\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
+        } else {
+            args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
+        }
         return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
     }
 
@@ -99,6 +105,16 @@ public class AntForestRpcCall {
                 "[{\"entityId\":\"" + entityId +
                         "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\"" +
                         userId + "\"}]");
+    }
+
+    public static String queryPropList() {
+        return RpcUtil.request("alipay.antforest.forest.h5.queryPropList",
+                "[{\"onlyGive\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"20230501\"}]");
+    }
+
+    public static String consumeProp(String propId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
+                "[{\"propId\":\"" + propId + "\",\"propType\":\"ENERGY_DOUBLE_CLICK\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"20230501\"}]");
     }
 
 }

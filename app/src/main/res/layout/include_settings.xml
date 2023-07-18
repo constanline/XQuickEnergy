@@ -50,6 +50,18 @@
 			android:onClick="onClick"
 			android:minHeight="50dp"
 			android:id="@+id/cb_stayAwake"/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/stay_awake_type"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_stayAwakeType"
+			android:paddingStart="8dp"/>
 
 		<CheckBox
 			android:layout_width="match_parent"
@@ -167,6 +179,14 @@
 			android:background="@drawable/button"
 			android:id="@+id/btn_limitCount"
 			android:paddingStart="8dp"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/use_double_card"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_doubleCard"/>
 
 		<Button
 			android:id="@+id/btn_returnWater30"

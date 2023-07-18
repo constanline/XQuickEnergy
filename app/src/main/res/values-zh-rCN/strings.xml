@@ -66,5 +66,7 @@
     <string name="energy_rain">能量雨</string>
     <string name="give_energy_rain_list">赠送能量雨列表</string>
     <string name="sync_step_count">自定义同步步数</string>
+    <string name="stay_awake_type">保活方式</string>
+    <string name="use_double_card">使用双击卡</string>
 
 </resources>

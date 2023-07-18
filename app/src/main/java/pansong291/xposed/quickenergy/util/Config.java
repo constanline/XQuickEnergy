@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.SendType;
+import pansong291.xposed.quickenergy.hook.XposedHook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,14 @@ public class Config
     public enum RecallAnimalType
     {
         ALWAYS, WHEN_THIEF, WHEN_HUNGRY, NEVER;
+        public static final CharSequence[] nickNames = {"始终召回", "作贼时召回", "饥饿时召回", "不召回"};
         public static final CharSequence[] names =
-                {ALWAYS.name(), WHEN_THIEF.name(), WHEN_HUNGRY.name(), NEVER.name()};
+                {ALWAYS.nickName(), WHEN_THIEF.nickName(), WHEN_HUNGRY.nickName(), NEVER.nickName()};
+
+        public CharSequence nickName()
+        {
+            return nickNames[ordinal()];
+        }
     }
 
     private static final String TAG = Config.class.getCanonicalName();
@@ -21,6 +28,7 @@ public class Config
             /* application */
             jn_immediateEffect = "immediateEffect", jn_recordLog = "recordLog", jn_showToast = "showToast",
             jn_stayAwake = "stayAwake", jn_autoRestart = "autoRestart", jn_xedgeproData = "xedgeproData",
+            jn_stayAwakeType = "stayAwakeType",
     /* forest */
     jn_collectEnergy = "collectEnergy", jn_ReturnWater33 = "returnWater30", jn_ReturnWater18 = "returnWater20",
             jn_ReturnWater10 = "returnWater10", jn_helpFriendCollect = "helpFriendCollect", jn_dontCollectList = "dontCollectList",
@@ -49,14 +57,17 @@ public class Config
     private boolean recordLog;
     private boolean showToast;
     private boolean stayAwake;
+    private XposedHook.StayAwakeType stayAwakeType;
     private boolean autoRestart;
-    private String xedgeproData;
+    private String xEdgeProData;
 
     /* forest */
     private boolean collectEnergy;
     private int checkInterval;
     private boolean limitCollect;
     private int limitCount;
+
+    private boolean doubleCard;
     private int threadCount;
     private int advanceTime;
     private int collectInterval;
@@ -154,6 +165,17 @@ public class Config
         return getConfig().stayAwake;
     }
 
+    public static void setStayAwakeType(int i)
+    {
+        getConfig().stayAwakeType = XposedHook.StayAwakeType.values()[i];
+        hasChanged = true;
+    }
+
+    public static XposedHook.StayAwakeType stayAwakeType()
+    {
+        return getConfig().stayAwakeType;
+    }
+
     public static void setAutoRestart(boolean b)
     {
         getConfig().autoRestart = b;
@@ -165,15 +187,15 @@ public class Config
         return getConfig().autoRestart;
     }
 
-    public static void setXedgeproData(String s)
+    public static void setXEdgeProData(String s)
     {
-        getConfig().xedgeproData = s;
+        getConfig().xEdgeProData = s;
         hasChanged = true;
     }
 
-    public static String xedgeproData()
+    public static String xEdgeProData()
     {
-        return getConfig().xedgeproData;
+        return getConfig().xEdgeProData;
     }
 
     /* forest */
@@ -217,6 +239,15 @@ public class Config
 
     public static void setLimitCount(int limitCount) {
         getConfig().limitCount = limitCount;
+        hasChanged = true;
+    }
+
+    public static boolean doubleCard() {
+        return getConfig().doubleCard;
+    }
+
+    public static void setDoubleCard(boolean doubleCard) {
+        getConfig().doubleCard = doubleCard;
         hasChanged = true;
     }
 
@@ -651,13 +682,15 @@ public class Config
         c.recordLog = true;
         c.showToast = true;
         c.stayAwake = true;
+        c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
         c.autoRestart = true;
-        c.xedgeproData = "";
+        c.xEdgeProData = "";
 
         c.collectEnergy = true;
         c.checkInterval = 720_000;
         c.limitCollect = true;
         c.limitCount = 50;
+        c.doubleCard = false;
         c.threadCount = 1;
         c.advanceTime = 500;
         c.collectInterval = 100;
@@ -725,9 +758,11 @@ public class Config
 
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
 
+            config.stayAwakeType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_stayAwakeType, XposedHook.StayAwakeType.BROADCAST.name()));
+
             config.autoRestart = jo.optBoolean(jn_autoRestart, true);
 
-            config.xedgeproData = jo.optString(jn_xedgeproData, "");
+            config.xEdgeProData = jo.optString(jn_xedgeproData, "");
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
@@ -737,6 +772,8 @@ public class Config
             config.limitCollect = jo.optBoolean("limitCollect", true);
 
             config.limitCount = jo.optInt("limitCount", 50);
+
+            config.doubleCard = jo.optBoolean("doubleCard", false);
 
             config.threadCount = jo.optInt(jn_threadCount, 1);
 
@@ -937,9 +974,11 @@ public class Config
 
             jo.put(jn_stayAwake, config.stayAwake);
 
+            jo.put(jn_stayAwakeType, config.stayAwakeType);
+
             jo.put(jn_autoRestart, config.autoRestart);
 
-            jo.put(jn_xedgeproData, config.xedgeproData);
+            jo.put(jn_xedgeproData, config.xEdgeProData);
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
@@ -949,6 +988,8 @@ public class Config
             jo.put("limitCollect", config.limitCollect);
 
             jo.put("limitCount", config.limitCount);
+
+            jo.put("doubleCard", config.doubleCard);
 
             jo.put(jn_threadCount, config.threadCount);
 

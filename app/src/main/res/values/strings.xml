@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">XQuickEnergy</string>
+    <string name="app_name" translatable="false">芝麻粒</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
 
@@ -69,6 +69,8 @@
     <string name="energy_rain">Energy Rain</string>
     <string name="give_energy_rain_list">Give energy rain list</string>
     <string name="sync_step_count">Sync Step Count</string>
+    <string name="stay_awake_type">Stay awake type</string>
+    <string name="use_double_card">Use double card</string>
 
 
 </resources>

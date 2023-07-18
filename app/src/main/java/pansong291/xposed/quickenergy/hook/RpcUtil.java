@@ -1,7 +1,12 @@
 package pansong291.xposed.quickenergy.hook;
 
+import android.content.Intent;
+import pansong291.xposed.quickenergy.AntForest;
+import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,13 +55,26 @@ public class RpcUtil
             Log.i(TAG, "invoke err:");
             Log.printStackTrace(TAG, t);
             if(t instanceof InvocationTargetException) {
-                if(AntForestToast.context != null && sendXEdgeProBroadcast)
-                {
-                    sendXEdgeProBroadcast = false;
-//                    Intent it = new Intent("com.jozein.xedgepro.PERFORM");
-//                    it.putExtra("data", Config.xedgeproData());
-//                    AntForestToast.context.sendBroadcast(it);
-                    Log.recordLog(t.getCause().getMessage(), "");
+                String msg = t.getCause().getMessage();
+                if (!StringUtil.isEmpty(msg) && msg.contains("登录超时")) {
+                    AntForestNotification.setContentText("登录超时");
+                    if(AntForestToast.context != null) {
+                        if (sendXEdgeProBroadcast) {
+                            sendXEdgeProBroadcast = false;
+                            Intent it = new Intent("com.jozein.xedgepro.PERFORM");
+                            it.putExtra("data", Config.xEdgeProData());
+                            AntForestToast.context.sendBroadcast(it);
+                            Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
+                        }
+                        if (Config.stayAwake()) {
+                            if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
+                                AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.broadcast"));
+                            } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
+                                XposedHook.alarmService(AntForestToast.context);
+                                AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.alarm2broadcast"));
+                            }
+                        }
+                    }
                 }
             }
         }
