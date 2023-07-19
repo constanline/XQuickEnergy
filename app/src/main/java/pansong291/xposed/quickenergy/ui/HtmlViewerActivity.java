@@ -14,14 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
 
-public class HtmlViewerActivity extends Activity
-{
+public class HtmlViewerActivity extends Activity {
     MyWebView mWebView;
     ProgressBar pgb;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html_viewer);
 
@@ -29,18 +27,14 @@ public class HtmlViewerActivity extends Activity
         pgb = findViewById(R.id.pgb_webview);
 
         mWebView.setWebChromeClient(
-                new WebChromeClient()
-                {
+                new WebChromeClient() {
                     @Override
-                    public void onProgressChanged(WebView view, int progress)
-                    {
+                    public void onProgressChanged(WebView view, int progress) {
                         pgb.setProgress(progress);
-                        if(progress < 100)
-                        {
+                        if(progress < 100) {
                             setTitle("Loading...");
                             pgb.setVisibility(View.VISIBLE);
-                        }else
-                        {
+                        } else {
                             setTitle(mWebView.getTitle());
                             pgb.setVisibility(View.GONE);
                         }
@@ -50,8 +44,7 @@ public class HtmlViewerActivity extends Activity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, 1, 0, "Open with other browser");
         menu.add(0, 2, 0, "Copy the url");
         menu.add(0, 3, 0, "Scroll to top");
@@ -60,10 +53,8 @@ public class HtmlViewerActivity extends Activity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
             case 1:
                 Intent it = new Intent(Intent.ACTION_VIEW);
                 it.addCategory(Intent.CATEGORY_DEFAULT);
@@ -88,5 +79,4 @@ public class HtmlViewerActivity extends Activity
         }
         return true;
     }
-
 }

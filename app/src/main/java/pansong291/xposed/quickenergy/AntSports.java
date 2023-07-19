@@ -50,7 +50,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_queryMyHomePage(loader);
+            String s = AntSportsRpcCall.queryMyHomePage();
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -104,7 +104,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_join(loader, pathId);
+            String s = AntSportsRpcCall.join(pathId);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -125,7 +125,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_go(loader, day, rankCacheKey, stepCount);
+            String s = AntSportsRpcCall.go(day, rankCacheKey, stepCount);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -222,7 +222,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_openTreasureBox(loader, boxNo, userId);
+            String s = AntSportsRpcCall.openTreasureBox(boxNo, userId);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -251,7 +251,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_queryProjectList(loader, 0);
+            String s = AntSportsRpcCall.queryProjectList(0);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -283,7 +283,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_donate(loader, donateCharityCoin, projectId);
+            String s = AntSportsRpcCall.donate(donateCharityCoin, projectId);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -303,7 +303,7 @@ public class AntSports
     {
         try
         {
-            String s = AntSportsRpcCall.rpcCall_queryWalkStep(loader);
+            String s = AntSportsRpcCall.queryWalkStep();
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {
@@ -312,11 +312,11 @@ public class AntSports
                 int hour = Integer.parseInt(Log.getFormatTime().split(":")[0]);
                 if(produceQuantity >= Config.minExchangeCount() || hour >= Config.latestExchangeTime())
                 {
-                    s = AntSportsRpcCall.rpcCall_exchange(loader, produceQuantity, 3);
+                    s = AntSportsRpcCall.exchange(produceQuantity, 3);
                     jo = new JSONObject(s);
                     if(jo.getBoolean("isSuccess"))
                     {
-                        s = AntSportsRpcCall.rpcCall_exchange_success(loader, jo.getString("exchangeId"));
+                        s = AntSportsRpcCall.exchangeSuccess(jo.getString("exchangeId"));
                         jo = new JSONObject(s);
                         if(jo.getBoolean("isSuccess"))
                         {

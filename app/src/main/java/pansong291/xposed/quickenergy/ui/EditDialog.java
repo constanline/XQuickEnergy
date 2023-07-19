@@ -8,8 +8,6 @@ import android.widget.EditText;
 import pansong291.xposed.quickenergy.util.Config;
 
 public class EditDialog {
-    private static AlertDialog editDialog;
-    private static EditText edt;
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
@@ -18,105 +16,99 @@ public class EditDialog {
 
     public static void showEditDialog(Context c, CharSequence title, EditMode em) {
         mode = em;
-        try {
-            getEditDialog(c).show();
-        } catch(Throwable t) {
-            editDialog = null;
-            getEditDialog(c).show();
-        }
+        AlertDialog editDialog = getEditDialog(c);
         editDialog.setTitle(title);
+        editDialog.show();
     }
 
     private static AlertDialog getEditDialog(Context c) {
-        if (editDialog == null) {
-            edt = new EditText(c);
-            editDialog = new AlertDialog.Builder(c)
-                    .setTitle("title")
-                    .setView(edt)
-                    .setPositiveButton(
-                            "OK",
-                            new OnClickListener() {
-                                Context context;
+        EditText edt = new EditText(c);
+        AlertDialog editDialog = new AlertDialog.Builder(c)
+                .setTitle("title")
+                .setView(edt)
+                .setPositiveButton(
+                        "OK",
+                        new OnClickListener() {
+                            Context context;
 
-                                public OnClickListener setData(Context c) {
-                                    context = c;
-                                    return this;
-                                }
+                            public OnClickListener setData(Context c) {
+                                context = c;
+                                return this;
+                            }
 
-                                @Override
-                                public void onClick(DialogInterface p1, int p2) {
-                                    try {
-                                        int i = Integer.parseInt(edt.getText().toString());
-                                        switch(mode) {
-                                            case CHECK_INTERVAL:
-                                                if(i > 0)
-                                                    Config.setCheckInterval(i * 60_000);
-                                                break;
+                            @Override
+                            public void onClick(DialogInterface p1, int p2) {
+                                try {
+                                    int i = Integer.parseInt(edt.getText().toString());
+                                    switch(mode) {
+                                        case CHECK_INTERVAL:
+                                            if(i > 0)
+                                                Config.setCheckInterval(i * 60_000);
+                                            break;
 
-                                            case THREAD_COUNT:
-                                                if(i >= 0)
-                                                    Config.setThreadCount(i);
-                                                break;
+                                        case THREAD_COUNT:
+                                            if(i >= 0)
+                                                Config.setThreadCount(i);
+                                            break;
 
-                                            case ADVANCE_TIME:
-                                                Config.setAdvanceTime(i);
-                                                break;
+                                        case ADVANCE_TIME:
+                                            Config.setAdvanceTime(i);
+                                            break;
 
-                                            case COLLECT_INTERVAL:
-                                                if(i >= 0)
-                                                    Config.setCollectInterval(i);
-                                                break;
+                                        case COLLECT_INTERVAL:
+                                            if(i >= 0)
+                                                Config.setCollectInterval(i);
+                                            break;
 
-                                            case LIMIT_COUNT:
-                                                if (i > 0) {
-                                                    Config.setLimitCount(i);
-                                                }
-                                                break;
+                                        case LIMIT_COUNT:
+                                            if (i > 0) {
+                                                Config.setLimitCount(i);
+                                            }
+                                            break;
 
-                                            case COLLECT_TIMEOUT:
-                                                if(i > 0)
-                                                    Config.setCollectTimeout(i * 1_000);
-                                                break;
+                                        case COLLECT_TIMEOUT:
+                                            if(i > 0)
+                                                Config.setCollectTimeout(i * 1_000);
+                                            break;
 
-                                            case RETURN_WATER_30:
-                                                if(i >= 0)
-                                                    Config.setReturnWater33(i);
-                                                break;
+                                        case RETURN_WATER_30:
+                                            if(i >= 0)
+                                                Config.setReturnWater33(i);
+                                            break;
 
-                                            case RETURN_WATER_20:
+                                        case RETURN_WATER_20:
 
-                                                if(i >= 0)
-                                                    Config.setReturnWater18(i);
-                                                break;
+                                            if(i >= 0)
+                                                Config.setReturnWater18(i);
+                                            break;
 
-                                            case RETURN_WATER_10:
-                                                if(i >= 0)
-                                                    Config.setReturnWater10(i);
-                                                break;
+                                        case RETURN_WATER_10:
+                                            if(i >= 0)
+                                                Config.setReturnWater10(i);
+                                            break;
 
-                                            case MIN_EXCHANGE_COUNT:
-                                                if(i >= 0)
-                                                    Config.setMinExchangeCount(i);
-                                                break;
+                                        case MIN_EXCHANGE_COUNT:
+                                            if(i >= 0)
+                                                Config.setMinExchangeCount(i);
+                                            break;
 
-                                            case LATEST_EXCHANGE_TIME:
-                                                if(i >= 0 && i < 24)
-                                                    Config.setLatestExchangeTime(i);
-                                                break;
-                                            case SYNC_STEP_COUNT:
-                                                if (i > 100000)
-                                                    i = 100000;
-                                                if (i < 0)
-                                                    i = 0;
-                                                Config.setSyncStepCount(i);
-                                                break;
+                                        case LATEST_EXCHANGE_TIME:
+                                            if(i >= 0 && i < 24)
+                                                Config.setLatestExchangeTime(i);
+                                            break;
+                                        case SYNC_STEP_COUNT:
+                                            if (i > 100000)
+                                                i = 100000;
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setSyncStepCount(i);
+                                            break;
 
-                                        }
-                                    } catch(Throwable ignored) { }
-                                }
-                            }.setData(c))
-                    .create();
-        }
+                                    }
+                                } catch(Throwable ignored) { }
+                            }
+                        }.setData(c))
+                .create();
         String str = "";
         switch(mode) {
             case CHECK_INTERVAL:

@@ -56,7 +56,7 @@ public class Statistics
             jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
             jn_answerQuestionList = "answerQuestionList",
-            jn_questionHint = "questionHint", jn_memberSignIn = "memberSignIn",
+            jn_questionHint = "questionHint", jn_donationEgg = "donationEgg", jn_memberSignIn = "memberSignIn",
             jn_exchange = "exchange", jn_kbSignIn = "kbSignIn", jn_syncStep = "syncStep";
 
     private TimeStatistics year;
@@ -71,6 +71,8 @@ public class Statistics
     private ArrayList<String> answerQuestionList;
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
+
+    private int donationEgg = 0;
 
     // other
     private int memberSignIn = 0;
@@ -284,18 +286,29 @@ public class Statistics
         save();
     }
 
-    public static boolean canMemberSignInToday()
-    {
+    public static boolean canMemberSignInToday() {
         Statistics stat = getStatistics();
         return stat.memberSignIn < stat.day.time;
     }
 
-    public static void memberSignInToday()
-    {
+    public static void memberSignInToday() {
         Statistics stat = getStatistics();
-        if(stat.memberSignIn != stat.day.time)
-        {
+        if(stat.memberSignIn != stat.day.time) {
             stat.memberSignIn = stat.day.time;
+            save();
+        }
+    }
+
+    public static boolean canDonationEgg() {
+        Statistics stat = getStatistics();
+        return stat.donationEgg < stat.day.time;
+    }
+
+    public static void donationEgg() {
+        Statistics stat = getStatistics();
+        if(stat.donationEgg != stat.day.time)
+        {
+            stat.donationEgg = stat.day.time;
             save();
         }
     }
@@ -394,6 +407,7 @@ public class Statistics
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
         stat.questionHint = null;
+        stat.donationEgg = 0;
         stat.memberSignIn = 0;
         stat.exchange = 0;
         stat.kbSignIn = 0;
@@ -520,6 +534,10 @@ public class Statistics
                 }
             }
 
+            if(jo.has(jn_donationEgg))
+                stat.donationEgg = jo.getInt(jn_donationEgg);
+            Log.i(TAG, jn_donationEgg + ":" + stat.donationEgg);
+
             if(jo.has(jn_memberSignIn))
                 stat.memberSignIn = jo.getInt(jn_memberSignIn);
             Log.i(TAG, jn_memberSignIn + ":" + stat.memberSignIn);
@@ -621,6 +639,8 @@ public class Statistics
                 ja.put(jaa);
             }
             jo.put(Config.jn_feedFriendAnimalList, ja);
+
+            jo.put(jn_donationEgg, stat.donationEgg);
 
             jo.put(jn_memberSignIn, stat.memberSignIn);
 

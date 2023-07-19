@@ -14,19 +14,13 @@ public class AntCooperate
 {
     private static final String TAG = AntCooperate.class.getCanonicalName();
 
-    public static void start(ClassLoader loader, int times)
-    {
-        if(!Config.cooperateWater() || times != 0)
+    private static boolean firstTime = true;
+
+    public static void start() {
+        if(!Config.cooperateWater() || !firstTime)
             return;
         new Thread()
         {
-            private ClassLoader loader;
-
-            public Thread setData(ClassLoader cl)
-            {
-                loader = cl;
-                return this;
-            }
 
             @Override
             public void run()
@@ -35,24 +29,21 @@ public class AntCooperate
                 {
                     while(FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
                         Thread.sleep(100);
-                    String s = AntCooperateRpcCall.rpcCall_queryUserCooperatePlantList(loader);
-                    if(s == null)
-                    {
+                    String s = AntCooperateRpcCall.queryUserCooperatePlantList();
+                    if(s == null) {
                         Thread.sleep(RandomUtils.delay());
-                        s = AntCooperateRpcCall.rpcCall_queryUserCooperatePlantList(loader);
+                        s = AntCooperateRpcCall.queryUserCooperatePlantList();
                     }
                     JSONObject jo = new JSONObject(s);
-                    if(jo.getString("resultCode").equals("SUCCESS"))
-                    {
+                    if(jo.getString("resultCode").equals("SUCCESS")) {
                         int userCurrentEnergy = jo.getInt("userCurrentEnergy");
                         JSONArray ja = jo.getJSONArray("cooperatePlants");
                         for(int i = 0; i < ja.length(); i++)
                         {
                             jo = ja.getJSONObject(i);
                             String cooperationId = jo.getString("cooperationId");
-                            if(!jo.has("name"))
-                            {
-                                s = AntCooperateRpcCall.rpcCall_queryCooperatePlant(loader, cooperationId);
+                            if(!jo.has("name")) {
+                                s = AntCooperateRpcCall.queryCooperatePlant(cooperationId);
                                 jo = new JSONObject(s).getJSONObject("cooperatePlant");
                             }
                             String name = jo.getString("name");
@@ -61,44 +52,40 @@ public class AntCooperate
                             if(!Statistics.canCooperateWaterToday(FriendIdMap.currentUid, cooperationId))
                                 continue;
                             int index = -1;
-                            for(int j = 0; j < Config.getCooperateWaterList().size(); j++)
-                            {
-                                if(Config.getCooperateWaterList().get(j).equals(cooperationId))
-                                {
+                            for(int j = 0; j < Config.getCooperateWaterList().size(); j++) {
+                                if(Config.getCooperateWaterList().get(j).equals(cooperationId)) {
                                     index = j;
                                     break;
                                 }
                             }
-                            if(index >= 0)
-                            {
+                            if(index >= 0) {
                                 int num = Config.getcooperateWaterNumList().get(index);
                                 if(num > waterDayLimit)
                                     num = waterDayLimit;
                                 if(num > userCurrentEnergy)
                                     num = userCurrentEnergy;
                                 if(num > 0)
-                                    cooperateWater(loader, FriendIdMap.currentUid, cooperationId, num, name);
+                                    cooperateWater(FriendIdMap.currentUid, cooperationId, num, name);
                             }
                         }
-                    }else
-                    {
+                    } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }
-                }catch(Throwable t)
-                {
+                } catch(Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
                 }
                 CooperationIdMap.saveIdMap();
+                firstTime = false;
             }
-        }.setData(loader).start();
+        }.start();
     }
 
-    private static void cooperateWater(ClassLoader loader, String uid, String coopId, int count, String name)
+    private static void cooperateWater(String uid, String coopId, int count, String name)
     {
         try
         {
-            String s = AntCooperateRpcCall.rpcCall_cooperateWater(loader, uid, coopId, count);
+            String s = AntCooperateRpcCall.cooperateWater(uid, coopId, count);
             JSONObject jo = new JSONObject(s);
             if(jo.getString("resultCode").equals("SUCCESS"))
             {

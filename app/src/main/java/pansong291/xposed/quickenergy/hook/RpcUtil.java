@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.content.Intent;
-import pansong291.xposed.quickenergy.AntForest;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.util.Config;
@@ -70,7 +69,7 @@ public class RpcUtil
                             if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
                                 AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.broadcast"));
                             } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
-                                XposedHook.alarmService(AntForestToast.context);
+                                XposedHook.alarmService(AntForestToast.context, 1000);
                                 AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.alarm2broadcast"));
                             }
                         }

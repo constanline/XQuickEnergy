@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.hook;
 public class ClassMember
 {
  public static final String com_eg_android_AlipayGphone = "com.eg.android.AlipayGphone";
+ public static final String current_using_activity = "com.eg.android.AlipayGphone.AlipayLogin";
  public static final String current_using_service = "com.alipay.dexaop.power.RuntimePowerService";
  public static final String com_alipay_mobile_nebulaappproxy_api_rpc_H5AppRpcUpdate = "com.alipay.mobile.nebulaappproxy.api.rpc.H5AppRpcUpdate";
  public static final String matchVersion = "matchVersion";

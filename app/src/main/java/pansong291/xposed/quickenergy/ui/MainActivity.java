@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setModuleActive(false);
+        setModuleActive(isExpModuleActive(this));
         PermissionUtil.verifyStoragePermissions(this);
 
         tvStatistics = findViewById(R.id.tv_statistics);
@@ -75,7 +76,8 @@ public class MainActivity extends Activity {
 
         String version = "";
         try {
-            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = packageInfo.versionName + "-" + packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -162,7 +164,6 @@ public class MainActivity extends Activity {
     }
 
     private void setModuleActive(boolean b) {
-        b = b || isExpModuleActive(this);
         TextView tvUnActive = findViewById(R.id.tv_unactive);
         tvUnActive.setVisibility(b ? View.GONE : View.VISIBLE);
     }

@@ -35,7 +35,7 @@ public class KBMember {
 
     private static void signIn(ClassLoader loader) {
         try {
-            String s = KBMemberRpcCall.rpcCall_signIn(loader);
+            String s = KBMemberRpcCall.rpcCall_signIn();
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {
                 jo = jo.getJSONObject("data");
