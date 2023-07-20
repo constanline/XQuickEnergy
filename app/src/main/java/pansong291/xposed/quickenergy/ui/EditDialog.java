@@ -162,6 +162,10 @@ public class EditDialog {
             case SYNC_STEP_COUNT:
                 str = String.valueOf(Config.syncStepCount());
                 break;
+
+            case WAIT_WHEN_EXCEPTION:
+                str = String.valueOf(Config.waitWhenException() / 60 / 1000);
+                break;
         }
         edt.setText(str);
         return editDialog;

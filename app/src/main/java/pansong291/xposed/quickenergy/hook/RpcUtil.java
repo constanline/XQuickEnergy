@@ -9,6 +9,7 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 
 public class RpcUtil
 {
@@ -76,7 +77,9 @@ public class RpcUtil
                         }
                     } else if (msg.contains("请求不合法")) {
                         if (Config.waitWhenException() > 0) {
-                            Config.setForestPauseTime(System.currentTimeMillis() + Config.waitWhenException());
+                            long waitTime = System.currentTimeMillis() + Config.waitWhenException();
+                            AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            Config.setForestPauseTime(waitTime);
                         }
                     }
                 }

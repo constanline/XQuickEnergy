@@ -222,7 +222,8 @@ public class AntForest {
                 JSONArray loginUserUsingPropNew = joHomePage.getJSONArray("loginUserUsingPropNew");
                 for (int i = 0; i < loginUserUsingPropNew.length(); i++) {
                     JSONObject userUsingProp = loginUserUsingPropNew.getJSONObject(i);
-                    if ("ENERGY_DOUBLE_CLICK".equals(userUsingProp.getString("propType"))) {
+                    String propType = userUsingProp.getString("propType");
+                    if ("ENERGY_DOUBLE_CLICK".equals(propType) || "LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         doubleEndTime = userUsingProp.getLong("endTime");
                     }
                 }
@@ -390,6 +391,10 @@ public class AntForest {
     }
 
     private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo) {
+        return collectEnergy(userId, bubbleId, userName, bizNo, null);
+    }
+
+    private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo, String extra) {
         int collected = 0;
         if (checkCollectLimited()) {
             return 0;
@@ -418,14 +423,14 @@ public class AntForest {
                 if (collected > 0) {
                     totalCollected += collected;
                     Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                    String str = "偷取【" + userName + "】的能量【" + collected + "克】";
+                    String str = "偷取【" + userName + "】的能量【" + collected + "克】【" + extra + "】";
                     Log.forest(str);
                     AntForestToast.show(str);
                 } else {
                     Log.recordLog("偷取【" + userName + "】的能量失败", "，UserID：" + userId + "，BubbleId：" + bubbleId);
                 }
                 if (jo.getBoolean("canBeRobbedAgain")) {
-                    collected += collectEnergy(userId, bubbleId, userName, null);
+                    collected += collectEnergy(userId, bubbleId, userName, null, "双击卡");
                 }
                 if (bizNo == null || bizNo.isEmpty())
                     return collected;
@@ -684,9 +689,10 @@ public class AntForest {
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
+                String propType = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
-                    String propType = forestPropVO.getString("propType");
+                    propType = forestPropVO.getString("propType");
                     if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
@@ -697,10 +703,12 @@ public class AntForest {
                         break;
                     }
                 }
-                jo = new JSONObject(AntForestRpcCall.consumeProp(propId));
-                if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                    doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
-                    Log.forest("使用【双击卡】成功");
+                if (!StringUtil.isEmpty(propId)) {
+                    jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
+                        Log.forest("使用【双击卡】成功");
+                    }
                 }
             }
         } catch (Throwable th) {

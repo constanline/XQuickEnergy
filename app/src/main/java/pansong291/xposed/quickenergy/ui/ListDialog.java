@@ -9,9 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -101,61 +98,46 @@ public class ListDialog
         edt_find = v.findViewById(R.id.edt_find);
         lv_list = v.findViewById(R.id.lv_list);
         lv_list.setAdapter(ListAdapter.get(c));
-        lv_list.setOnItemClickListener(
-                new OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
-                    {
-                        curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
-                        curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
-                        if(countList == null)
+        lv_list.setOnItemClickListener (
+                (p1, p2, p3, p4) -> {
+                    curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
+                    curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
+                    if(countList == null) {
+                        if(curViewHolder.cb.isChecked())
                         {
-                            if(curViewHolder.cb.isChecked())
-                            {
-                                if(selectedList.contains(curAlipayId.id))
-                                    selectedList.remove(curAlipayId.id);
-                                curViewHolder.cb.setChecked(false);
-                            }else
-                            {
-                                if(!selectedList.contains(curAlipayId.id))
-                                    selectedList.add(curAlipayId.id);
-                                curViewHolder.cb.setChecked(true);
-                            }
-                            Config.hasChanged = true;
+                            if(selectedList.contains(curAlipayId.id))
+                                selectedList.remove(curAlipayId.id);
+                            curViewHolder.cb.setChecked(false);
                         }else
                         {
-                            showEdtDialog(p1.getContext());
+                            if(!selectedList.contains(curAlipayId.id))
+                                selectedList.add(curAlipayId.id);
+                            curViewHolder.cb.setChecked(true);
                         }
+                        Config.hasChanged = true;
+                    } else {
+                        showEdtDialog(p1.getContext());
                     }
                 });
         lv_list.setOnItemLongClickListener(
-                new OnItemLongClickListener()
-                {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4)
+                (p1, p2, p3, p4) -> {
+                    curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
+                    if(curAlipayId instanceof AlipayCooperate)
                     {
-                        curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
-                        if(curAlipayId instanceof AlipayCooperate)
-                        {
-                            showDeleteDialog(p1.getContext());
-                        }else
-                        {
-                            showOptionsDialog(p1.getContext());
-                        }
-                        return true;
+                        showDeleteDialog(p1.getContext());
+                    }else
+                    {
+                        showOptionsDialog(p1.getContext());
                     }
+                    return true;
                 });
         return v;
     }
 
-    private static void showEdtDialog(Context c)
-    {
-        try
-        {
+    private static void showEdtDialog(Context c) {
+        try {
             getEdtDialog(c).show();
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             edtDialog = null;
             getEdtDialog(c).show();
         }
@@ -171,23 +153,18 @@ public class ListDialog
             edt_count.getText().clear();
     }
 
-    private static AlertDialog getEdtDialog(Context c)
-    {
-        if(edtDialog == null)
-        {
-            OnClickListener listener = new OnClickListener()
-            {
+    private static AlertDialog getEdtDialog(Context c)  {
+        if(edtDialog == null) {
+            OnClickListener listener = new OnClickListener() {
                 Context c;
 
-                public OnClickListener setContext(Context c)
-                {
+                public OnClickListener setContext(Context c) {
                     this.c = c;
                     return this;
                 }
 
                 @Override
-                public void onClick(DialogInterface p1, int p2)
-                {
+                public void onClick(DialogInterface p1, int p2) {
                     switch(p2)
                     {
                         case DialogInterface.BUTTON_POSITIVE:
@@ -238,19 +215,16 @@ public class ListDialog
         return edtDialog;
     }
 
-    private static void showOptionsDialog(Context c)
-    {
-        try
-        {
-            getOptionsDailog(c).show();
-        }catch(Throwable t)
-        {
+    private static void showOptionsDialog(Context c) {
+        try {
+            getOptionsDialog(c).show();
+        } catch(Throwable t) {
             optionsDialog = null;
-            getOptionsDailog(c).show();
+            getOptionsDialog(c).show();
         }
     }
 
-    private static AlertDialog getOptionsDailog(Context c)
+    private static AlertDialog getOptionsDialog(Context c)
     {
         if(optionsDialog == null)
         {
@@ -330,12 +304,10 @@ public class ListDialog
                     switch(p2)
                     {
                         case DialogInterface.BUTTON_POSITIVE:
-                            if(curAlipayId instanceof AlipayUser)
-                            {
+                            if(curAlipayId instanceof AlipayUser) {
                                 FriendIdMap.removeIdMap(curAlipayId.id);
                                 AlipayUser.remove(curAlipayId.id);
-                            }else if(curAlipayId instanceof AlipayCooperate)
-                            {
+                            } else if (curAlipayId instanceof AlipayCooperate) {
                                 CooperationIdMap.removeIdMap(curAlipayId.id);
                                 AlipayCooperate.remove(curAlipayId.id);
                             }

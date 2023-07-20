@@ -107,10 +107,10 @@ public class AntForestRpcCall {
                 "[{\"onlyGive\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
     }
 
-    public static String consumeProp(String propId) {
+    public static String consumeProp(String propId, String propType) {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
-                "[{\"propId\":\"" + propId +
-                        "\",\"propType\":\"ENERGY_DOUBLE_CLICK\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"" +
+                "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
+                        "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"" +
                         VERSION + "\"}]");
     }
 
