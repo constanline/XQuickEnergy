@@ -26,7 +26,7 @@
     <string name="cooperate_water_list">合种浇水列表</string>
     <string name="farm_configuration">农场设置</string>
     <string name="enable_farm">开启庄园</string>
-    <string name="reward_friend">好友奖励？</string>
+    <string name="reward_friend">奖励好友</string>
     <string name="send_back_animal">遣返小鸡</string>
     <string name="send_type">遣返方式</string>
     <string name="don_t_send_friend_list">不要遣返列表</string>
@@ -68,5 +68,7 @@
     <string name="sync_step_count">自定义同步步数</string>
     <string name="stay_awake_type">保活方式</string>
     <string name="use_double_card">使用双击卡</string>
+    <string name="wait_when_exception">异常等待时间(分钟)</string>
+    <string name="stay_awake_target">保活目标</string>
 
 </resources>

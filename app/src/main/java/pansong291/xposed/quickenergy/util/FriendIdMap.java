@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.util;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();
@@ -11,6 +12,14 @@ public class FriendIdMap {
 
     private static Map<String, String> idMap;
     private static boolean hasChanged = false;
+
+    public static void putIdMapIfEmpty(String key, String value) {
+        if (key == null || key.isEmpty()) return;
+        if (!getIdMap().containsKey(key)) {
+            getIdMap().put(key, value);
+            hasChanged = true;
+        }
+    }
 
     public static void putIdMap(String key, String value) {
         if (key == null || key.isEmpty()) return;
@@ -75,7 +84,7 @@ public class FriendIdMap {
     public static Map<String, String> getIdMap() {
         if (idMap == null || shouldReload) {
             shouldReload = false;
-            idMap = new TreeMap<>();
+            idMap = new ConcurrentHashMap<>();
             String str = FileUtils.readFromFile(FileUtils.getFriendIdMapFile());
             if (str != null && str.length() > 0) {
                 try {

@@ -73,7 +73,7 @@ public class AntForestNotification
             }
             mNotification = builder
                     .setSmallIcon(android.R.drawable.sym_def_app_icon)
-                    .setContentTitle("XQuickEnergy")
+                    .setContentTitle("芝麻粒")
                     .setContentText("开始检测能量")
                     .setAutoCancel(false)
                     .setContentIntent(pi)

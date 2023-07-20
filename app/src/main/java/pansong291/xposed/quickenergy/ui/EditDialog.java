@@ -11,7 +11,7 @@ public class EditDialog {
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
-        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT }
+        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
     private static EditMode mode;
 
     public static void showEditDialog(Context c, CharSequence title, EditMode em) {
@@ -102,6 +102,10 @@ public class EditDialog {
                                             if (i < 0)
                                                 i = 0;
                                             Config.setSyncStepCount(i);
+                                            break;
+                                        case WAIT_WHEN_EXCEPTION:
+                                            if (i < 0) i = 0;
+                                            Config.setWaitWhenException(i * 60 * 1000);
                                             break;
 
                                     }

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.hook.XposedHook;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
@@ -326,6 +327,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.btn_syncStepCount:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT);
+                    break;
+
+                case R.id.btn_waitWhenException:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
             }
         }

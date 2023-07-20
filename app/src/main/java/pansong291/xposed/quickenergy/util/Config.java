@@ -25,32 +25,66 @@ public class Config
 
     private static final String TAG = Config.class.getCanonicalName();
     public static final String
-            /* application */
-            jn_immediateEffect = "immediateEffect", jn_recordLog = "recordLog", jn_showToast = "showToast",
-            jn_stayAwake = "stayAwake", jn_autoRestart = "autoRestart", jn_xedgeproData = "xedgeproData",
-            jn_stayAwakeType = "stayAwakeType",
-    /* forest */
-    jn_collectEnergy = "collectEnergy", jn_ReturnWater33 = "returnWater30", jn_ReturnWater18 = "returnWater20",
-            jn_ReturnWater10 = "returnWater10", jn_helpFriendCollect = "helpFriendCollect", jn_dontCollectList = "dontCollectList",
-            jn_dontHelpCollectList = "dontHelpCollectList", jn_checkInterval = "checkInterval", jn_threadCount = "threadCount",
-            jn_advanceTime = "advanceTime", jn_collectInterval = "collectInterval", jn_collectTimeout = "collectTimeout",
-            jn_receiveForestTaskAward = "receiveForestTaskAward", jn_waterFriendList = "waterFriendList",
-            jn_cooperateWater = "cooperateWater", jn_cooperateWaterList = "cooperateWaterList",
-            jn_energyRain = "energyRain", jn_giveEnergyRainList = "giveEnergyRainList",
-    /* farm */
-    jn_enableFarm = "enableFarm",
-            jn_rewardFriend = "rewardFriend", jn_sendBackAnimal = "sendBackAnimal", jn_sendType = "sendType",
-            jn_dontSendFriendList = "dontSendFriendList", jn_recallAnimalType = "recallAnimalType", jn_receiveFarmToolReward = "receiveFarmToolReward",
-            jn_useNewEggTool = "useNewEggTool", jn_harvestProduce = "harvestProduce", jn_donation = "donation",
-            jn_answerQuestion = "answerQuestion", jn_receiveFarmTaskAward = "receiveFarmTaskAward", jn_feedAnimal = "feedAnimal",
-            jn_useAccelerateTool = "useAccelerateTool", jn_feedFriendAnimalList = "feedFriendAnimalList", jn_notifyFriend = "notifyFriend",
-            jn_dontNotifyFriendList = "dontNotifyFriendList",
-    /* other */
-    jn_receivePoint = "receivePoint", jn_openTreasureBox = "openTreasureBox", jn_donateCharityCoin = "donateCharityCoin",
-            jn_minExchangeCount = "minExchangeCount", jn_latestExchangeTime = "latestExchangeTime", jn_syncStepCount = "syncStepCount", jn_kbSignIn = "kbSignIn";
+            jn_pauseTime = "pauseTime";
+    public static final String/* application */
+            jn_immediateEffect = "immediateEffect";
+    public static final String jn_recordLog = "recordLog";
+    public static final String jn_showToast = "showToast";
+    public static final String jn_stayAwake = "stayAwake";
+    public static final String jn_autoRestart = "autoRestart";
+    public static final String jn_xedgeproData = "xedgeproData";
+    public static final String jn_stayAwakeType = "stayAwakeType";
+    public static final String/* forest */
+    jn_collectEnergy = "collectEnergy";
+    public static final String jn_ReturnWater33 = "returnWater30";
+    public static final String jn_ReturnWater18 = "returnWater20";
+    public static final String jn_ReturnWater10 = "returnWater10";
+    public static final String jn_helpFriendCollect = "helpFriendCollect";
+    public static final String jn_dontCollectList = "dontCollectList";
+    public static final String jn_dontHelpCollectList = "dontHelpCollectList";
+    public static final String jn_checkInterval = "checkInterval";
+    public static final String jn_threadCount = "threadCount";
+    public static final String jn_advanceTime = "advanceTime";
+    public static final String jn_collectInterval = "collectInterval";
+    public static final String jn_collectTimeout = "collectTimeout";
+    public static final String jn_receiveForestTaskAward = "receiveForestTaskAward";
+    public static final String jn_waterFriendList = "waterFriendList";
+    public static final String jn_cooperateWater = "cooperateWater";
+    public static final String jn_cooperateWaterList = "cooperateWaterList";
+    public static final String jn_energyRain = "energyRain";
+    public static final String jn_giveEnergyRainList = "giveEnergyRainList";
+    public static final String jn_waitWhenException = "waitWhenException";
+    public static final String/* farm */
+    jn_enableFarm = "enableFarm";
+    public static final String jn_rewardFriend = "rewardFriend";
+    public static final String jn_sendBackAnimal = "sendBackAnimal";
+    public static final String jn_sendType = "sendType";
+    public static final String jn_dontSendFriendList = "dontSendFriendList";
+    public static final String jn_recallAnimalType = "recallAnimalType";
+    public static final String jn_receiveFarmToolReward = "receiveFarmToolReward";
+    public static final String jn_useNewEggTool = "useNewEggTool";
+    public static final String jn_harvestProduce = "harvestProduce";
+    public static final String jn_donation = "donation";
+    public static final String jn_answerQuestion = "answerQuestion";
+    public static final String jn_receiveFarmTaskAward = "receiveFarmTaskAward";
+    public static final String jn_feedAnimal = "feedAnimal";
+    public static final String jn_useAccelerateTool = "useAccelerateTool";
+    public static final String jn_feedFriendAnimalList = "feedFriendAnimalList";
+    public static final String jn_notifyFriend = "notifyFriend";
+    public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
+    public static final String/* other */
+    jn_receivePoint = "receivePoint";
+    public static final String jn_openTreasureBox = "openTreasureBox";
+    public static final String jn_donateCharityCoin = "donateCharityCoin";
+    public static final String jn_minExchangeCount = "minExchangeCount";
+    public static final String jn_latestExchangeTime = "latestExchangeTime";
+    public static final String jn_syncStepCount = "syncStepCount";
+    public static final String jn_kbSignIn = "kbSignIn";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
+
+    private long forestPauseTime;
 
     /* application */
     private boolean immediateEffect;
@@ -87,6 +121,8 @@ public class Config
     private boolean energyRain;
 
     private List<String> giveEnergyRainList;
+
+    private int waitWhenException;
 
     /* farm */
     private boolean enableFarm;
@@ -143,6 +179,17 @@ public class Config
         return getConfig().recordLog;
     }
 
+    public static void setForestPauseTime(long b)
+    {
+        getConfig().forestPauseTime = b;
+        hasChanged = true;
+    }
+
+    public static long forestPauseTime()
+    {
+        return getConfig().forestPauseTime;
+    }
+
     public static void setShowToast(boolean b)
     {
         getConfig().showToast = b;
@@ -171,30 +218,25 @@ public class Config
         hasChanged = true;
     }
 
-    public static XposedHook.StayAwakeType stayAwakeType()
-    {
+    public static XposedHook.StayAwakeType stayAwakeType() {
         return getConfig().stayAwakeType;
     }
 
-    public static void setAutoRestart(boolean b)
-    {
+    public static void setAutoRestart(boolean b) {
         getConfig().autoRestart = b;
         hasChanged = true;
     }
 
-    public static boolean autoRestart()
-    {
+    public static boolean autoRestart() {
         return getConfig().autoRestart;
     }
 
-    public static void setXEdgeProData(String s)
-    {
+    public static void setXEdgeProData(String s) {
         getConfig().xEdgeProData = s;
         hasChanged = true;
     }
 
-    public static String xEdgeProData()
-    {
+    public static String xEdgeProData() {
         return getConfig().xEdgeProData;
     }
 
@@ -212,9 +254,6 @@ public class Config
 
     public static void setCheckInterval(int i)
     {
-        if (i < 600000) {
-            i = 600000;
-        }
         getConfig().checkInterval = i;
         hasChanged = true;
     }
@@ -222,6 +261,17 @@ public class Config
     public static int checkInterval()
     {
         return getConfig().checkInterval;
+    }
+
+    public static void setWaitWhenException(int i)
+    {
+        getConfig().waitWhenException = i;
+        hasChanged = true;
+    }
+
+    public static int waitWhenException()
+    {
+        return getConfig().waitWhenException;
     }
 
     public static boolean isLimitCollect() {
@@ -678,6 +728,7 @@ public class Config
     {
         Config c = new Config();
 
+        c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;
@@ -688,6 +739,7 @@ public class Config
 
         c.collectEnergy = true;
         c.checkInterval = 720_000;
+        c.waitWhenException = 60 * 60 * 1000;
         c.limitCollect = true;
         c.limitCount = 50;
         c.doubleCard = false;
@@ -736,8 +788,7 @@ public class Config
         return c;
     }
 
-    public static boolean saveConfigFile()
-    {
+    public static boolean saveConfigFile() {
         return FileUtils.write2File(config2Json(config), FileUtils.getConfigFile());
     }
 
@@ -749,6 +800,8 @@ public class Config
             JSONObject jo = new JSONObject(json);
             JSONArray ja, jaa;
             config = new Config();
+
+            config.forestPauseTime = jo.optInt(jn_pauseTime, 0);
 
             config.immediateEffect = jo.optBoolean(jn_immediateEffect, true);
 
@@ -768,6 +821,8 @@ public class Config
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
 
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
+
+            config.waitWhenException = jo.optInt(jn_waitWhenException, 60 * 60 * 1000);
 
             config.limitCollect = jo.optBoolean("limitCollect", true);
 
@@ -966,6 +1021,8 @@ public class Config
         {
             if(config == null) config = Config.defInit();
 
+            jo.put(jn_pauseTime, config.forestPauseTime);
+
             jo.put(jn_immediateEffect, config.immediateEffect);
 
             jo.put(jn_recordLog, config.recordLog);
@@ -984,6 +1041,8 @@ public class Config
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_checkInterval, config.checkInterval);
+
+            jo.put(jn_waitWhenException, config.waitWhenException);
 
             jo.put("limitCollect", config.limitCollect);
 

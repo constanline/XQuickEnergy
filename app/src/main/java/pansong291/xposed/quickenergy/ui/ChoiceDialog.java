@@ -30,7 +30,7 @@ public class ChoiceDialog {
     public static void showStayAwakeType(Context c, CharSequence title) {
         new AlertDialog.Builder(c)
                 .setTitle(title)
-                .setSingleChoiceItems(XposedHook.StayAwakeType.names, Config.stayAwakeType().ordinal(),
+                .setSingleChoiceItems(XposedHook.StayAwakeType.nickNames, Config.stayAwakeType().ordinal(),
                         (p1, p2) -> Config.setStayAwakeType(p2))
                 .setPositiveButton("OK", null)
                 .create().show();

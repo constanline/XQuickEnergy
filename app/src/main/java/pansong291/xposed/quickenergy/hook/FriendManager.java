@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FriendManager {
     private static final String TAG = FriendManager.class.getCanonicalName();
-    public static void checkUnknownId(ClassLoader loader) {
+    public static void fillUser(ClassLoader loader) {
         List<String> unknownIds = FriendIdMap.getIncompleteUnknownIds();
         if (unknownIds.size() > 0) {
             new Thread() {
@@ -29,12 +29,8 @@ public class FriendManager {
                         Class<?> clsAliAccountDaoOp = loader.loadClass("com.alipay.mobile.socialcommonsdk.bizdata.contact.data.AliAccountDaoOp");
                         Object aliAccountDaoOp = XposedHelpers.callStaticMethod(clsUserIndependentCache, "getCacheObj", clsAliAccountDaoOp);
                         List<?> allFriends = (List<?>) XposedHelpers.callMethod(aliAccountDaoOp, "getAllFriends", new Object[0]);
-                        Log.i(TAG, "开始检查" + unknownIds.size() + "个未知id");
                         for (Object friend : allFriends) {
                             String userId = (String) XposedHelpers.findField(friend.getClass(), "userId").get(friend);
-                            if (!unknownIds.contains(userId)) {
-                                continue;
-                            }
                             String account = (String) XposedHelpers.findField(friend.getClass(), "account").get(friend);
                             String name = (String)XposedHelpers.findField(friend.getClass(), "name").get(friend);
                             String nickName = (String)XposedHelpers.findField(friend.getClass(), "nickName").get(friend);
@@ -42,9 +38,12 @@ public class FriendManager {
                             if (StringUtil.isEmpty(remarkName)) {
                                 remarkName = nickName;
                             }
-                            FriendIdMap.putIdMap(userId, remarkName + "|" + name + "(" + account + ")");
-                            FriendIdMap.saveIdMap();
+                            if(!StringUtil.isEmpty(name)) {
+                                remarkName += "|" + name;
+                            }
+                            FriendIdMap.putIdMap(userId, remarkName + "(" + account + ")");
                         }
+                        FriendIdMap.saveIdMap();
                     } catch (Throwable t) {
                         Log.i(TAG, "checkUnknownId.run err:");
                         Log.printStackTrace(TAG, t);

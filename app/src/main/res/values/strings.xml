@@ -71,6 +71,8 @@
     <string name="sync_step_count">Sync Step Count</string>
     <string name="stay_awake_type">Stay awake type</string>
     <string name="use_double_card">Use double card</string>
+    <string name="wait_when_exception">Wait when exception(Min)</string>
+    <string name="stay_awake_target">Stay awake target</string>
 
 
 </resources>

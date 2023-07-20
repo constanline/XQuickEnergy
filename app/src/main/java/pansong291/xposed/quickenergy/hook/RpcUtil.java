@@ -55,23 +55,28 @@ public class RpcUtil
             Log.printStackTrace(TAG, t);
             if(t instanceof InvocationTargetException) {
                 String msg = t.getCause().getMessage();
-                if (!StringUtil.isEmpty(msg) && msg.contains("登录超时")) {
-                    AntForestNotification.setContentText("登录超时");
-                    if(AntForestToast.context != null) {
-                        if (sendXEdgeProBroadcast) {
-                            sendXEdgeProBroadcast = false;
-                            Intent it = new Intent("com.jozein.xedgepro.PERFORM");
-                            it.putExtra("data", Config.xEdgeProData());
-                            AntForestToast.context.sendBroadcast(it);
-                            Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
-                        }
-                        if (Config.stayAwake()) {
-                            if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
-                                AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.broadcast"));
-                            } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
-                                XposedHook.alarmService(AntForestToast.context, 1000);
-                                AntForestToast.context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.alarm2broadcast"));
+                if (!StringUtil.isEmpty(msg)) {
+                    if (msg.contains("登录超时")) {
+                        AntForestNotification.setContentText("登录超时");
+                        if(AntForestToast.context != null) {
+                            if (sendXEdgeProBroadcast) {
+                                sendXEdgeProBroadcast = false;
+                                Intent it = new Intent("com.jozein.xedgepro.PERFORM");
+                                it.putExtra("data", Config.xEdgeProData());
+                                AntForestToast.context.sendBroadcast(it);
+                                Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
                             }
+                            if (Config.stayAwake()) {
+                                if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
+                                    XposedHook.restartActivity(AntForestToast.context);
+                                } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
+                                    XposedHook.alarmActivity(AntForestToast.context, 1000);
+                                }
+                            }
+                        }
+                    } else if (msg.contains("请求不合法")) {
+                        if (Config.waitWhenException() > 0) {
+                            Config.setForestPauseTime(System.currentTimeMillis() + Config.waitWhenException());
                         }
                     }
                 }
