@@ -23,13 +23,13 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:id="@+id/edt_find"
-			android:hint="try to search  XX(112"/>
+			android:hint="搜索"/>
 
 		<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="?android:attr/buttonBarButtonStyle"
-			android:text="Last"
+			android:text="上一个"
             android:textAllCaps="false"
 			android:minHeight="50dp"
 			android:background="@drawable/button"
@@ -40,7 +40,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="?android:attr/buttonBarButtonStyle"
-			android:text="Next"
+			android:text="下一个"
             android:textAllCaps="false"
 			android:minHeight="50dp"
 			android:background="@drawable/button"

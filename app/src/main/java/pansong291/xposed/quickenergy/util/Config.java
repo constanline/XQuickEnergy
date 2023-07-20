@@ -731,21 +731,21 @@ public class Config
         c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
-        c.showToast = true;
+        c.showToast = false;
         c.stayAwake = true;
         c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
         c.autoRestart = true;
         c.xEdgeProData = "";
 
         c.collectEnergy = true;
-        c.checkInterval = 720_000;
+        c.checkInterval = 120_000;
         c.waitWhenException = 60 * 60 * 1000;
         c.limitCollect = true;
         c.limitCount = 50;
         c.doubleCard = false;
         c.threadCount = 1;
         c.advanceTime = 500;
-        c.collectInterval = 100;
+        c.collectInterval = 300;
         c.collectTimeout = 2_000;
         c.returnWater33 = 0;
         c.returnWater18 = 0;
@@ -807,7 +807,7 @@ public class Config
 
             config.recordLog = jo.optBoolean(jn_recordLog, true);
 
-            config.showToast = jo.optBoolean(jn_showToast, true);
+            config.showToast = jo.optBoolean(jn_showToast, false);
 
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
 
@@ -820,7 +820,7 @@ public class Config
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
 
-            config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
+            config.checkInterval = jo.optInt(jn_checkInterval, 120_000);
 
             config.waitWhenException = jo.optInt(jn_waitWhenException, 60 * 60 * 1000);
 
@@ -834,7 +834,7 @@ public class Config
 
             config.advanceTime = jo.optInt(jn_advanceTime, 500);
 
-            config.collectInterval = jo.optInt(jn_collectInterval, 100);
+            config.collectInterval = jo.optInt(jn_collectInterval, 300);
 
             config.collectTimeout = jo.optInt(jn_collectTimeout, 2_000);
 

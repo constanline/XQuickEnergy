@@ -65,7 +65,7 @@ public class ListDialog
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(getListView(c))
-                    .setPositiveButton("OK", null)
+                    .setPositiveButton("确定", null)
                     .create();
         listDialog.setOnShowListener(
                 new OnShowListener()
@@ -143,9 +143,9 @@ public class ListDialog
         }
         edtDialog.setTitle(curAlipayId.name);
         if(curAlipayId instanceof AlipayCooperate)
-            edt_count.setHint("grams");
+            edt_count.setHint("浇水克数");
         else
-            edt_count.setHint("count");
+            edt_count.setHint("次数");
         int i = selectedList.indexOf(curAlipayId.id);
         if(i >= 0)
             edt_count.setText(String.valueOf(countList.get(i)));
@@ -208,8 +208,8 @@ public class ListDialog
             edtDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(edt_count)
-                    .setPositiveButton("OK", listener)
-                    .setNegativeButton("CANCEL", null)
+                    .setPositiveButton("确定", listener)
+                    .setNegativeButton("取消", null)
                     .create();
         }
         return edtDialog;
@@ -265,7 +265,7 @@ public class ListDialog
                                     }
                                 }
                             }.setContext(c))
-                    .setNegativeButton("CANCEL", null)
+                    .setNegativeButton("取消", null)
                     .create();
         }
         return optionsDialog;
@@ -281,7 +281,7 @@ public class ListDialog
             deleteDialog = null;
             getDeleteDialog(c).show();
         }
-        deleteDialog.setTitle("Delete " + curAlipayId.name);
+        deleteDialog.setTitle("删除 " + curAlipayId.name);
     }
 
     private static AlertDialog getDeleteDialog(Context c)
@@ -321,8 +321,8 @@ public class ListDialog
             }.setContext(c);
             deleteDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
-                    .setPositiveButton("OK", listener)
-                    .setNegativeButton("CANCEL", null)
+                    .setPositiveButton("确定", listener)
+                    .setNegativeButton("取消", null)
                     .create();
         }
         return deleteDialog;
@@ -350,7 +350,7 @@ public class ListDialog
             }
             if(index < 0)
             {
-                Toast.makeText(p1.getContext(), "Not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(p1.getContext(), "未搜到", Toast.LENGTH_SHORT).show();
             }else
             {
                 lv_list.setSelection(index);

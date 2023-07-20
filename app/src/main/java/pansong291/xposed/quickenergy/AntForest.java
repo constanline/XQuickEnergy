@@ -98,7 +98,7 @@ public class AntForest {
                         if (Statistics.canWaterFriendToday(uid, waterCount))
                             waterFriendEnergy(uid, waterCount);
                     }
-                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
                         new StepTask(loader).start();
                     }
                 }
@@ -407,7 +407,7 @@ public class AntForest {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
                     if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis() &&
-                            TimeUtil.getTimeStr().compareTo("0700") > 0 && TimeUtil.getTimeStr().compareTo("0725") < 0) {
+                            TimeUtil.getTimeStr().compareTo("0700") > 0 && TimeUtil.getTimeStr().compareTo("2000") < 0) {
                         useDoubleCard();
                     }
                     s = AntForestRpcCall.collectEnergy(null, userId, bubbleId);
@@ -690,16 +690,19 @@ public class AntForest {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
                 String propType = null;
+                String propName = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
                     propType = forestPropVO.getString("propType");
                     if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propName="双击卡";
                     }
                     if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propName="限时双击卡";
                         break;
                     }
                 }
@@ -707,7 +710,7 @@ public class AntForest {
                     jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
-                        Log.forest("使用【双击卡】成功");
+                        Log.forest("使用【" + propName + "】成功");
                     }
                 }
             }

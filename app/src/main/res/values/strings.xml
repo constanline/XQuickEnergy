@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">芝麻粒</string>
+    <string name="app_name" translatable="false">仙人掌</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
 
