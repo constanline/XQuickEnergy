@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        this.setTitle(this.getTitle() + "[" + version + "]");
+        this.setTitle(this.getTitle());
 
     }
 
