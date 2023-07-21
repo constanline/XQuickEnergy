@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.hook.XposedHook;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
@@ -19,7 +18,7 @@ import pansong291.xposed.quickenergy.util.FriendIdMap;
 public class SettingsActivity extends Activity
 {
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
-            cb_stayAwake, cb_autoRestart,
+            cb_stayAwake, cb_timeoutRestart,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
             cb_cooperateWater, cb_energyRain,
             cb_enableFarm, cb_rewardFriend, cb_sendBackAnimal,
@@ -43,7 +42,7 @@ public class SettingsActivity extends Activity
         cb_recordLog = findViewById(R.id.cb_recordLog);
         cb_showToast = findViewById(R.id.cb_showToast);
         cb_stayAwake = findViewById(R.id.cb_stayAwake);
-        cb_autoRestart = findViewById(R.id.cb_autoRestart);
+        cb_timeoutRestart = findViewById(R.id.cb_timeoutRestart);
         cb_collectEnergy = findViewById(R.id.cb_collectEnergy);
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
         cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
@@ -77,7 +76,7 @@ public class SettingsActivity extends Activity
         cb_recordLog.setChecked(Config.recordLog());
         cb_showToast.setChecked(Config.showToast());
         cb_stayAwake.setChecked(Config.stayAwake());
-        cb_autoRestart.setChecked(Config.autoRestart());
+        cb_timeoutRestart.setChecked(Config.timeoutRestart());
         cb_collectEnergy.setChecked(Config.collectEnergy());
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
         cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
@@ -126,8 +125,8 @@ public class SettingsActivity extends Activity
                     Config.setStayAwake(cb.isChecked());
                     break;
 
-                case R.id.cb_autoRestart:
-                    Config.setAutoRestart(cb.isChecked());
+                case R.id.cb_timeoutRestart:
+                    Config.setTimeoutRestart(cb.isChecked());
                     break;
 
                 case R.id.cb_collectEnergy:
@@ -227,6 +226,10 @@ public class SettingsActivity extends Activity
             switch(v.getId()) {
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
+                    break;
+
+                case R.id.btn_stayAwakeTarget:
+                    ChoiceDialog.showStayAwakeTarget(this, btn.getText());
                     break;
 
                 case R.id.btn_checkInterval:
@@ -343,7 +346,7 @@ public class SettingsActivity extends Activity
         if(Config.hasChanged)
         {
             Config.hasChanged = !Config.saveConfigFile();
-            Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Configuration saved", Toast.LENGTH_SHORT).show();
         }
         FriendIdMap.saveIdMap();
         CooperationIdMap.saveIdMap();

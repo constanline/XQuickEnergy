@@ -2,9 +2,7 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -12,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.hook.ClassMember;
-import pansong291.xposed.quickenergy.hook.XposedHook;
 import pansong291.xposed.quickenergy.util.FileUtils;
 import pansong291.xposed.quickenergy.util.PermissionUtil;
 import pansong291.xposed.quickenergy.util.RandomUtils;
@@ -70,7 +65,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setModuleActive(isExpModuleActive(this));
-        PermissionUtil.verifyStoragePermissions(this);
+        PermissionUtil.requestPermissions(this);
 
         tvStatistics = findViewById(R.id.tv_statistics);
         btnHelp = findViewById(R.id.btn_help);
@@ -87,7 +82,6 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         this.setTitle(this.getTitle());
-
     }
 
     @Override
@@ -151,13 +145,13 @@ public class MainActivity extends Activity {
 
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
-                    Toast.makeText(this, "导出成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Export success", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:
                 if (FileUtils.copyTo(FileUtils.getExportedStatisticsFile(), FileUtils.getStatisticsFile())) {
                     tvStatistics.setText(Statistics.getText());
-                    Toast.makeText(this, "导入成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Import success", Toast.LENGTH_SHORT).show();
                 }
                 break;
 

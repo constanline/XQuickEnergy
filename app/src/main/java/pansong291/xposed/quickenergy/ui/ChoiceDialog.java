@@ -14,7 +14,7 @@ public class ChoiceDialog {
             .setTitle(title)
             .setSingleChoiceItems(SendType.names, Config.sendType().ordinal(),
                     (p1, p2) -> Config.setSendType(p2))
-            .setPositiveButton("确定", null)
+            .setPositiveButton("OK", null)
             .create().show();
     }
 
@@ -23,7 +23,7 @@ public class ChoiceDialog {
             .setTitle(title)
             .setSingleChoiceItems(RecallAnimalType.names, Config.recallAnimalType().ordinal(),
                     (p1, p2) -> Config.setRecallAnimalType(p2))
-            .setPositiveButton("确定", null)
+            .setPositiveButton("OK", null)
             .create().show();
     }
 
@@ -32,7 +32,16 @@ public class ChoiceDialog {
                 .setTitle(title)
                 .setSingleChoiceItems(XposedHook.StayAwakeType.nickNames, Config.stayAwakeType().ordinal(),
                         (p1, p2) -> Config.setStayAwakeType(p2))
-                .setPositiveButton("确定", null)
+                .setPositiveButton("OK", null)
+                .create().show();
+    }
+
+    public static void showStayAwakeTarget(Context c, CharSequence title) {
+        new AlertDialog.Builder(c)
+                .setTitle(title)
+                .setSingleChoiceItems(XposedHook.StayAwakeTarget.nickNames, Config.stayAwakeTarget().ordinal(),
+                        (p1, p2) -> Config.setStayAwakeTarget(p2))
+                .setPositiveButton("OK", null)
                 .create().show();
     }
 

@@ -31,9 +31,10 @@ public class Config
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
     public static final String jn_stayAwake = "stayAwake";
-    public static final String jn_autoRestart = "autoRestart";
+    public static final String jn_timeoutRestart = "timeoutRestart";
     public static final String jn_xedgeproData = "xedgeproData";
     public static final String jn_stayAwakeType = "stayAwakeType";
+    public static final String jn_stayAwakeTarget = "stayAwakeTarget";
     public static final String/* forest */
     jn_collectEnergy = "collectEnergy";
     public static final String jn_ReturnWater33 = "returnWater30";
@@ -92,7 +93,8 @@ public class Config
     private boolean showToast;
     private boolean stayAwake;
     private XposedHook.StayAwakeType stayAwakeType;
-    private boolean autoRestart;
+    private XposedHook.StayAwakeTarget stayAwakeTarget;
+    private boolean timeoutRestart;
     private String xEdgeProData;
 
     /* forest */
@@ -222,13 +224,23 @@ public class Config
         return getConfig().stayAwakeType;
     }
 
-    public static void setAutoRestart(boolean b) {
-        getConfig().autoRestart = b;
+    public static void setStayAwakeTarget(int i)
+    {
+        getConfig().stayAwakeTarget = XposedHook.StayAwakeTarget.values()[i];
         hasChanged = true;
     }
 
-    public static boolean autoRestart() {
-        return getConfig().autoRestart;
+    public static XposedHook.StayAwakeTarget stayAwakeTarget() {
+        return getConfig().stayAwakeTarget;
+    }
+
+    public static void setTimeoutRestart(boolean b) {
+        getConfig().timeoutRestart = b;
+        hasChanged = true;
+    }
+
+    public static boolean timeoutRestart() {
+        return getConfig().timeoutRestart;
     }
 
     public static void setXEdgeProData(String s) {
@@ -734,7 +746,8 @@ public class Config
         c.showToast = false;
         c.stayAwake = true;
         c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
-        c.autoRestart = true;
+        c.stayAwakeTarget = XposedHook.StayAwakeTarget.SERVICE;
+        c.timeoutRestart = true;
         c.xEdgeProData = "";
 
         c.collectEnergy = true;
@@ -785,6 +798,7 @@ public class Config
         c.openTreasureBox = true;
         c.donateCharityCoin = true;
         c.kbSignIn = true;
+        c.syncStepCount = 22000;
         return c;
     }
 
@@ -813,7 +827,9 @@ public class Config
 
             config.stayAwakeType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_stayAwakeType, XposedHook.StayAwakeType.BROADCAST.name()));
 
-            config.autoRestart = jo.optBoolean(jn_autoRestart, true);
+            config.stayAwakeTarget = XposedHook.StayAwakeTarget.valueOf(jo.optString(jn_stayAwakeTarget, XposedHook.StayAwakeTarget.SERVICE.name()));
+
+            config.timeoutRestart = jo.optBoolean(jn_timeoutRestart, true);
 
             config.xEdgeProData = jo.optString(jn_xedgeproData, "");
 
@@ -1033,7 +1049,9 @@ public class Config
 
             jo.put(jn_stayAwakeType, config.stayAwakeType);
 
-            jo.put(jn_autoRestart, config.autoRestart);
+            jo.put(jn_stayAwakeTarget, config.stayAwakeTarget);
+
+            jo.put(jn_timeoutRestart, config.timeoutRestart);
 
             jo.put(jn_xedgeproData, config.xEdgeProData);
 

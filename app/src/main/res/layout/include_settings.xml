@@ -62,14 +62,26 @@
 			android:background="@drawable/button"
 			android:id="@+id/btn_stayAwakeType"
 			android:paddingStart="8dp"/>
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/stay_awake_target"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_stayAwakeTarget"
+			android:paddingStart="8dp"/>
 
 		<CheckBox
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/auto_restart_service"
+			android:text="@string/timeout_restart_activity"
 			android:onClick="onClick"
 			android:minHeight="50dp"
-			android:id="@+id/cb_autoRestart"/>
+			android:id="@+id/cb_timeoutRestart"/>
 
 		<Button
 			android:layout_width="match_parent"
@@ -610,7 +622,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/more"
-			 android:visibility="gone"
+			android:visibility="gone"
 			android:background="#FF9BCD9B"
 			android:textColor="#FFFFFFFF"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -620,13 +632,13 @@
 			android:layout_height="wrap_content"
 			style="?android:attr/buttonBarButtonStyle"
 			android:text="@string/support_xqe_developer"
-			 android:visibility="gone"
 			android:textAllCaps="false"
 			android:onClick="onClick"
 			android:minHeight="50dp"
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_xqe_developer"
+			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 		<Button
@@ -634,13 +646,13 @@
 			android:layout_height="wrap_content"
 			style="?android:attr/buttonBarButtonStyle"
 			android:text="@string/support_developer"
-			 android:visibility="gone"
 			android:textAllCaps="false"
 			android:onClick="onClick"
 			android:minHeight="50dp"
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_developer"
+			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 	</LinearLayout>

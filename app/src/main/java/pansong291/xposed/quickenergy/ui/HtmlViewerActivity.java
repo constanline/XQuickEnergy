@@ -45,10 +45,10 @@ public class HtmlViewerActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, "浏览器中打开");
-        menu.add(0, 2, 0, "复制链接(可浏览器打开)");
-        menu.add(0, 3, 0, "跳到顶部");
-        menu.add(0, 4, 0, "跳到底部");
+        menu.add(0, 1, 0, "Open with other browser");
+        menu.add(0, 2, 0, "Copy the url");
+        menu.add(0, 3, 0, "Scroll to top");
+        menu.add(0, 4, 0, "Scroll to bottom");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -60,13 +60,13 @@ public class HtmlViewerActivity extends Activity {
                 it.addCategory(Intent.CATEGORY_DEFAULT);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 it.setDataAndType(getIntent().getData(), "text/html");
-                startActivity(Intent.createChooser(it, "选择一个浏览器"));
+                startActivity(Intent.createChooser(it, "Choose a browser"));
                 break;
 
             case 2:
                 ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText(null, mWebView.getUrl()));
-                Toast.makeText(this, "复制成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Copy success", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:

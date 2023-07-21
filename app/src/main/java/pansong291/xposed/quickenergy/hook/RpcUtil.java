@@ -67,11 +67,11 @@ public class RpcUtil
                                 AntForestToast.context.sendBroadcast(it);
                                 Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
                             }
-                            if (Config.stayAwake()) {
+                            if (Config.timeoutRestart()) {
                                 if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
-                                    XposedHook.restartActivity(AntForestToast.context);
-                                } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
-                                    XposedHook.alarmActivity(AntForestToast.context, 1000);
+                                    XposedHook.restartHook(AntForestToast.context, true);
+                                } else {
+                                    XposedHook.alarmHook(AntForestToast.context, 1000, true);
                                 }
                             }
                         }
@@ -79,7 +79,7 @@ public class RpcUtil
                         if (Config.waitWhenException() > 0) {
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
-                            Log.forest("收能量触发异常，等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            Log.forest("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime))
                             Config.setForestPauseTime(waitTime);
                         }
                     }

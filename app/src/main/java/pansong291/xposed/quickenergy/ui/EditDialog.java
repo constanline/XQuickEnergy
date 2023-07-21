@@ -27,7 +27,7 @@ public class EditDialog {
                 .setTitle("title")
                 .setView(edt)
                 .setPositiveButton(
-                        "确定",
+                        "OK",
                         new OnClickListener() {
                             Context context;
 
