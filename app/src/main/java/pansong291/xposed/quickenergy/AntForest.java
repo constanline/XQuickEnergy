@@ -391,7 +391,7 @@ public class AntForest {
     }
 
     private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo) {
-        return collectEnergy(userId, bubbleId, userName, bizNo, null);
+        return collectEnergy(userId, bubbleId, userName, bizNo, '');
     }
 
     private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo, String extra) {
@@ -423,14 +423,14 @@ public class AntForest {
                 if (collected > 0) {
                     totalCollected += collected;
                     Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                    String str = "偷取【" + userName + "】的能量【" + collected + "克】【" + extra + "】";
+                    String str = "偷取【" + userName + "】的能量【" + collected + "克】" + extra ;
                     Log.forest(str);
                     AntForestToast.show(str);
                 } else {
                     Log.recordLog("偷取【" + userName + "】的能量失败", "，UserID：" + userId + "，BubbleId：" + bubbleId);
                 }
                 if (jo.getBoolean("canBeRobbedAgain")) {
-                    collected += collectEnergy(userId, bubbleId, userName, null, "双击卡");
+                    collected += collectEnergy(userId, bubbleId, userName, null, "[双击卡]");
                 }
                 if (bizNo == null || bizNo.isEmpty())
                     return collected;
