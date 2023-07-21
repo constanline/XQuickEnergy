@@ -391,7 +391,7 @@ public class AntForest {
     }
 
     private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo) {
-        return collectEnergy(userId, bubbleId, userName, bizNo, '');
+        return collectEnergy(userId, bubbleId, userName, bizNo, "");
     }
 
     private static int collectEnergy(String userId, long bubbleId, String userName, String bizNo, String extra) {
