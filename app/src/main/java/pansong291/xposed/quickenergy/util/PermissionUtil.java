@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
 
@@ -13,13 +14,18 @@ public class PermissionUtil {
             "android.permission.WRITE_EXTERNAL_STORAGE",
     };
 
+    public static boolean checkPermissions(Context context) {
+        for (String permission : PERMISSIONS_STORAGE) {
+            if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    public static void verifyStoragePermissions(Activity activity) {
+    public static void requestPermissions(Activity activity) {
         try {
-            //检测是否有写的权限
-            int permission = activity.checkSelfPermission(PERMISSIONS_STORAGE[0]);
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，会弹出对话框
+            if (!checkPermissions(activity)) {
                 activity.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
             }
         } catch (Exception e) {

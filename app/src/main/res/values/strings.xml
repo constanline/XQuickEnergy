@@ -10,7 +10,7 @@
     <string name="record_log">Record log</string>
     <string name="show_toast">Show toast</string>
     <string name="stay_awake">Stay awake</string>
-    <string name="auto_restart_service">Auto restart service</string>
+    <string name="timeout_restart_activity">Restart activity when timeout</string>
     <string name="forest_configuration">FOREST CONFIGURATION</string>
     <string name="collect_energy">Collect energy</string>
     <string name="check_interval_minutes">Check interval (minutes)</string>

@@ -67,11 +67,11 @@ public class RpcUtil
                                 AntForestToast.context.sendBroadcast(it);
                                 Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
                             }
-                            if (Config.stayAwake()) {
+                            if (Config.timeoutRestart()) {
                                 if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
-                                    XposedHook.restartActivity(AntForestToast.context);
-                                } else if (Config.stayAwakeType() == XposedHook.StayAwakeType.ALARM) {
-                                    XposedHook.alarmActivity(AntForestToast.context, 1000);
+                                    XposedHook.restartHook(AntForestToast.context, true);
+                                } else {
+                                    XposedHook.alarmHook(AntForestToast.context, 1000, true);
                                 }
                             }
                         }
