@@ -192,8 +192,8 @@ public class AntForest {
         JSONArray jaFriendRanking = jo.getJSONArray("friendRanking");
         for (int i = 0; i < jaFriendRanking.length(); i++) {
             jo = jaFriendRanking.getJSONObject(i);
-            boolean optBoolean = jo.getBoolean("canCollectEnergy")
-                    || jo.getBoolean("canHelpCollect") || jo.getLong("canCollectLaterTime") > 0;
+            boolean optBoolean = jo.getBoolean("canCollectEnergy") || jo.getBoolean("canHelpCollect")
+                    || (jo.getLong("canCollectLaterTime") > 0 && jo.getLong("canCollectLaterTime") - System.currentTimeMillis() < Config.checkInterval());
             String userId = jo.getString("userId");
             if (optBoolean && !userId.equals(selfId)) {
                 canCollectEnergy(loader, userId, true);
@@ -326,13 +326,13 @@ public class AntForest {
                 Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
                 String bizNo = jo.getString("bizNo");
                 JSONArray jaBubbles = jo.getJSONArray("bubbles");
-                jo = jo.getJSONObject("userEnergy");
-                String userName = jo.getString("displayName");
+                JSONObject userEnergy = jo.getJSONObject("userEnergy");
+                String userName = userEnergy.getString("displayName");
                 if (userName.isEmpty())
                     userName = "*null*";
                 String loginId = userName;
-                if (jo.has("loginId"))
-                    loginId += "(" + jo.getString("loginId") + ")";
+                if (userEnergy.has("loginId"))
+                    loginId += "(" + userEnergy.getString("loginId") + ")";
                 FriendIdMap.putIdMapIfEmpty(userId, loginId);
                 Log.recordLog("进入【" + loginId + "】的蚂蚁森林", "");
                 FriendIdMap.saveIdMap();
@@ -351,9 +351,9 @@ public class AntForest {
                 int collected = 0;
                 int helped = 0;
                 for (int i = 0; i < jaBubbles.length(); i++) {
-                    jo = jaBubbles.getJSONObject(i);
-                    long bubbleId = jo.getLong("id");
-                    switch (CollectStatus.valueOf(jo.getString("collectStatus"))) {
+                    JSONObject bubble = jaBubbles.getJSONObject(i);
+                    long bubbleId = bubble.getLong("id");
+                    switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
                         case AVAILABLE:
                             if (Config.getDontCollectList().contains(userId))
                                 Log.recordLog("不偷取【" + userName + "】", ", userId=" + userId);
@@ -364,14 +364,14 @@ public class AntForest {
                         case WAITING:
                             if (!laterCollect || Config.getDontCollectList().contains(userId))
                                 break;
-                            long produceTime = jo.getLong("produceTime");
+                            long produceTime = bubble.getLong("produceTime");
                             if (produceTime - serverTime < Config.checkInterval())
                                 execute(loader, userName, userId, bizNo, bubbleId, produceTime);
                             else
                                 setLaterTime(produceTime);
                             break;
                     }
-                    if (jo.getBoolean("canHelpCollect")) {
+                    if (bubble.getBoolean("canHelpCollect")) {
                         if (Config.helpFriendCollect()) {
                             if (Config.getDontHelpCollectList().contains(userId))
                                 Log.recordLog("不帮收【" + userName + "】", ", userId=" + userId);

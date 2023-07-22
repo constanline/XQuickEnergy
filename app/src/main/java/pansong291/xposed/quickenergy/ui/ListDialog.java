@@ -65,7 +65,7 @@ public class ListDialog
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(getListView(c))
-                    .setPositiveButton("OK", null)
+                    .setPositiveButton(c.getString(R.string.ok), null)
                     .create();
         listDialog.setOnShowListener(
                 new OnShowListener()
@@ -208,8 +208,8 @@ public class ListDialog
             edtDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(edt_count)
-                    .setPositiveButton("OK", listener)
-                    .setNegativeButton("CANCEL", null)
+                    .setPositiveButton(c.getString(R.string.ok), listener)
+                    .setNegativeButton(c.getString(R.string.cancel), null)
                     .create();
         }
         return edtDialog;
@@ -265,7 +265,7 @@ public class ListDialog
                                     }
                                 }
                             }.setContext(c))
-                    .setNegativeButton("CANCEL", null)
+                    .setNegativeButton(c.getString(R.string.cancel), null)
                     .create();
         }
         return optionsDialog;
@@ -321,8 +321,8 @@ public class ListDialog
             }.setContext(c);
             deleteDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
-                    .setPositiveButton("OK", listener)
-                    .setNegativeButton("CANCEL", null)
+                    .setPositiveButton(c.getString(R.string.ok), listener)
+                    .setNegativeButton(c.getString(R.string.cancel), null)
                     .create();
         }
         return deleteDialog;
