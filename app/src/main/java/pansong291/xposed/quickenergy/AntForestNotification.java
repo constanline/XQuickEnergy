@@ -60,7 +60,7 @@ public class AntForestNotification
                     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "仙人掌能量提醒", NotificationManager.IMPORTANCE_LOW);
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "XQuickEnergy能量提醒", NotificationManager.IMPORTANCE_LOW);
                 notificationChannel.enableLights(false);
                 notificationChannel.enableVibration(false);
                 notificationChannel.setShowBadge(false);
@@ -73,7 +73,7 @@ public class AntForestNotification
             }
             mNotification = builder
                     .setSmallIcon(android.R.drawable.sym_def_app_icon)
-                    .setContentTitle("仙人掌")
+                    .setContentTitle("芝麻粒")
                     .setContentText("开始检测能量")
                     .setAutoCancel(false)
                     .setContentIntent(pi)

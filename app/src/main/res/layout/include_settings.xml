@@ -15,7 +15,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/base_configuration"
-			android:background="#FF9BCD9B"
+			android:background="#FF898989"
 			android:textColor="#FFFFFFFF"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -107,7 +107,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/forest_configuration"
-			android:background="#FF9BCD9B"
+			android:background="#FF898989"
 			android:textColor="#FFFFFFFF"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -360,7 +360,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/farm_configuration"
-			android:background="#FF9BCD9B"
+			android:background="#FF898989"
 			android:textColor="#FFFFFFFF"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -536,7 +536,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/other_configuration"
-			android:background="#FF9BCD9B"
+			android:background="#FF898989"
 			android:textColor="#FFFFFFFF"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -622,9 +622,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/more"
-			android:background="#FF9BCD9B"
+			android:background="#FF898989"
 			android:textColor="#FFFFFFFF"
-			android:visibility="gone"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 		<Button
@@ -638,7 +637,6 @@
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_xqe_developer"
-			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 		<Button
@@ -652,7 +650,6 @@
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_developer"
-			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 	</LinearLayout>
