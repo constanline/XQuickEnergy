@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
 
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
-                    Toast.makeText(this, "导出成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "导出成功!", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:

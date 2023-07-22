@@ -60,7 +60,8 @@ public class AntForestNotification
                     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "仙人掌能量提醒", NotificationManager.IMPORTANCE_LOW);
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "仙人掌能量提醒",
+                        NotificationManager.IMPORTANCE_LOW);
                 notificationChannel.enableLights(false);
                 notificationChannel.enableVibration(false);
                 notificationChannel.setShowBadge(false);

@@ -69,9 +69,9 @@ public class RpcUtil
                             }
                             if (Config.timeoutRestart()) {
                                 if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
-                                    XposedHook.restartHook(AntForestToast.context, true);
+                                    XposedHook.restartHook(true);
                                 } else {
-                                    XposedHook.alarmHook(AntForestToast.context, 1000, true);
+                                    XposedHook.alarmHook(AntForestToast.context, 3000, true);
                                 }
                             }
                         }
