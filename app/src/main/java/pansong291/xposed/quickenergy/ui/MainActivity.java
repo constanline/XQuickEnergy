@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         this.setTitle(this.getTitle());
+
     }
 
     @Override
@@ -145,13 +146,13 @@ public class MainActivity extends Activity {
 
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
-                    Toast.makeText(this, "导出成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Export success", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:
                 if (FileUtils.copyTo(FileUtils.getExportedStatisticsFile(), FileUtils.getStatisticsFile())) {
                     tvStatistics.setText(Statistics.getText());
-                    Toast.makeText(this, "导入成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Import success", Toast.LENGTH_SHORT).show();
                 }
                 break;
 

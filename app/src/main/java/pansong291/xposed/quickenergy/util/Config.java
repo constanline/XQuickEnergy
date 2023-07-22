@@ -758,7 +758,7 @@ public class Config
         c.doubleCard = false;
         c.threadCount = 1;
         c.advanceTime = 500;
-        c.collectInterval = 300;
+        c.collectInterval = 280;
         c.collectTimeout = 2_000;
         c.returnWater33 = 0;
         c.returnWater18 = 0;
@@ -850,7 +850,7 @@ public class Config
 
             config.advanceTime = jo.optInt(jn_advanceTime, 500);
 
-            config.collectInterval = jo.optInt(jn_collectInterval, 300);
+            config.collectInterval = jo.optInt(jn_collectInterval, 280);
 
             config.collectTimeout = jo.optInt(jn_collectTimeout, 2_000);
 

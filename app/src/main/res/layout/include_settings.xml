@@ -622,9 +622,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/more"
-			android:visibility="gone"
 			android:background="#FF9BCD9B"
 			android:textColor="#FFFFFFFF"
+			android:visibility="gone"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 		<Button

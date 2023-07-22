@@ -70,5 +70,17 @@
     <string name="use_double_card">使用双击卡</string>
     <string name="wait_when_exception">异常等待时间(分钟)</string>
     <string name="stay_awake_target">保活目标</string>
+    <string name="app_name">仙人掌</string>
+    <string name="search">搜索</string>
+    <string name="last">上一个</string>
+    <string name="next">下一个</string>
+    <string name="ok">确认</string>
+    <string name="open_with_other_browser">用浏览器打开</string>
+    <string name="copy_the_url">复制链接</string>
+    <string name="scroll_to_top">跳到顶部</string>
+    <string name="scroll_to_bottom">跳到底部</string>
+    <string name="choose_a_browser">选择浏览器</string>
+    <string name="copy_success">复制成功</string>
+    <string name="cancel">取消</string>
 
 </resources>

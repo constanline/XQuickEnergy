@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.widget.EditText;
+import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.util.Config;
 
 public class EditDialog {
@@ -27,7 +28,7 @@ public class EditDialog {
                 .setTitle("title")
                 .setView(edt)
                 .setPositiveButton(
-                        "确定",
+                        c.getString(R.string.ok),
                         new OnClickListener() {
                             Context context;
 
