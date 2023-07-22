@@ -5,9 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.*;
-import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.os.PowerManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -147,6 +145,30 @@ public class XposedHook implements IXposedHookLoadPackage {
             Log.i(TAG, "hook onCreate err:");
             Log.printStackTrace(TAG, t);
         }
+        try {
+            XposedHelpers.findAndHookMethod("android.app.Service", loader, "onDestroy", new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) {
+                            Service service = (Service) param.thisObject;
+                            if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
+                                return;
+                            }
+                            if (wakeLock != null) {
+                                wakeLock.release();
+                                wakeLock = null;
+                            }
+                            AntForestNotification.stop(service, false);
+                            AntForestNotification.setContentText("支付宝前台服务被销毁");
+                            Log.recordLog("支付宝前台服务被销毁", "");
+                            handler.removeCallbacks(runnable);
+                            alarmHook(AntForestToast.context, 3000, false);
+                        }
+                    });
+            Log.i(TAG, "hook onDestroy successfully");
+        } catch (Throwable t) {
+            Log.i(TAG, "hook onDestroy err:");
+            Log.printStackTrace(TAG, t);
+        }
     }
 
     private void hookRpcCall(ClassLoader loader) {
@@ -164,16 +186,15 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     }
 
-    public static void restartHook(Context context, boolean force) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+    public static void restartHook(boolean force) {
+        Intent intent = new Intent();
         if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
-            intent.setComponent(new ComponentName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY));
+            intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+            AntForestToast.context.startActivity(intent);
         } else {
-            intent.setComponent(new ComponentName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE));
+            intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
+            AntForestToast.context.startService(intent);
         }
-        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        context.startActivity(intent);
     }
 
     public static void alarmBroadcast(Context context, long delayTime, boolean force) {
@@ -195,18 +216,13 @@ public class XposedHook implements IXposedHookLoadPackage {
             PendingIntent pi;
             if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 Intent it = new Intent();
-                it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    pi = PendingIntent.getForegroundService(context, 0, it,
-                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-                } else {
-                    pi = PendingIntent.getService(context, 0, it,
-                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-                }
+                it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+                pi = PendingIntent.getActivity(context, 1, it,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
                 Intent it = new Intent();
-                it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
-                pi = PendingIntent.getActivity(context, 0, it,
+                it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
+                pi = PendingIntent.getService(context, 2, it,
                         PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             }
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayTime, pi);
@@ -221,7 +237,10 @@ public class XposedHook implements IXposedHookLoadPackage {
             String action = intent.getAction();
             if ("com.eg.android.AlipayGphone.xqe.broadcast".equals(action)) {
                 boolean force = intent.getBooleanExtra("force", false);
-                restartHook(context, force);
+                restartHook(force);
+            } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
+                Log.recordLog("收到测试消息");
+                XposedHook.restartHook(false);
             }
         }
     }
@@ -230,6 +249,7 @@ public class XposedHook implements IXposedHookLoadPackage {
         try {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("com.eg.android.AlipayGphone.xqe.broadcast");
+            intentFilter.addAction("com.eg.android.AlipayGphone.xqe.test");
             context.registerReceiver(new AlipayBroadcastReceiver(), intentFilter);
             Log.recordLog("注册广播接收器成功" , context.toString());
         } catch (Throwable th) {

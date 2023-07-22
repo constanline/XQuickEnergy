@@ -32,6 +32,10 @@ public class Log
         FileUtils.append2File(getFormatTime() + " " + s + "\n", FileUtils.getOtherLogFile());
     }
 
+    public static void recordLog(String str) {
+        recordLog(str, "");
+    }
+
     public static void recordLog(String str, String str2) {
         Log.i(TAG, str + str2);
         if(!Config.recordLog()) return;
