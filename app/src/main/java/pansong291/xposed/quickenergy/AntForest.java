@@ -98,7 +98,7 @@ public class AntForest {
                         if (Statistics.canWaterFriendToday(uid, waterCount))
                             waterFriendEnergy(uid, waterCount);
                     }
-                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
                         new StepTask(loader).start();
                     }
                 }
@@ -139,7 +139,7 @@ public class AntForest {
                                     JSONObject resData2 = new JSONObject(AntForestRpcCall.antiepSign(signId, FriendIdMap.currentUid));
                                     if ("100000000".equals(resData2.getString("code"))) {
                                         collectedEnergy += awardCount;
-                                        Log.forest("收取过期能量［" + awardCount + "克");
+                                        Log.forest("收取过期能量[" + awardCount + "g]");
                                         onForestEnd();
                                     }
                                 }
@@ -193,7 +193,7 @@ public class AntForest {
         for (int i = 0; i < jaFriendRanking.length(); i++) {
             jo = jaFriendRanking.getJSONObject(i);
             boolean optBoolean = jo.getBoolean("canCollectEnergy") || jo.getBoolean("canHelpCollect")
-                    || (jo.getLong("canCollectLaterTime") > 0 && jo.getLong("canCollectLaterTime") - System.currentTimeMillis() < Config.checkInterval());
+            || (jo.getLong("canCollectLaterTime") > 0 && jo.getLong("canCollectLaterTime") - System.currentTimeMillis() < Config.checkInterval());
             String userId = jo.getString("userId");
             if (optBoolean && !userId.equals(selfId)) {
                 canCollectEnergy(loader, userId, true);
@@ -277,7 +277,7 @@ public class AntForest {
                             if (collected > 0) {
                                 totalCollected += collected;
                                 Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                                String msg = "收取【我】的金球【" + collected + "克】";
+                                String msg = "收取[我]的金球[" + collected + "g]";
                                 Log.forest(msg);
                                 AntForestToast.show(msg);
                             } else {
@@ -326,13 +326,13 @@ public class AntForest {
                 Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
                 String bizNo = jo.getString("bizNo");
                 JSONArray jaBubbles = jo.getJSONArray("bubbles");
-                JSONObject userEnergy = jo.getJSONObject("userEnergy");
-                String userName = userEnergy.getString("displayName");
+                jo = jo.getJSONObject("userEnergy");
+                String userName = jo.getString("displayName");
                 if (userName.isEmpty())
                     userName = "*null*";
                 String loginId = userName;
-                if (userEnergy.has("loginId"))
-                    loginId += "(" + userEnergy.getString("loginId") + ")";
+                if (jo.has("loginId"))
+                    loginId += "(" + jo.getString("loginId") + ")";
                 FriendIdMap.putIdMapIfEmpty(userId, loginId);
                 Log.recordLog("进入【" + loginId + "】的蚂蚁森林", "");
                 FriendIdMap.saveIdMap();
@@ -351,9 +351,9 @@ public class AntForest {
                 int collected = 0;
                 int helped = 0;
                 for (int i = 0; i < jaBubbles.length(); i++) {
-                    JSONObject bubble = jaBubbles.getJSONObject(i);
-                    long bubbleId = bubble.getLong("id");
-                    switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
+                    jo = jaBubbles.getJSONObject(i);
+                    long bubbleId = jo.getLong("id");
+                    switch (CollectStatus.valueOf(jo.getString("collectStatus"))) {
                         case AVAILABLE:
                             if (Config.getDontCollectList().contains(userId))
                                 Log.recordLog("不偷取【" + userName + "】", ", userId=" + userId);
@@ -364,14 +364,14 @@ public class AntForest {
                         case WAITING:
                             if (!laterCollect || Config.getDontCollectList().contains(userId))
                                 break;
-                            long produceTime = bubble.getLong("produceTime");
+                            long produceTime = jo.getLong("produceTime");
                             if (produceTime - serverTime < Config.checkInterval())
                                 execute(loader, userName, userId, bizNo, bubbleId, produceTime);
                             else
                                 setLaterTime(produceTime);
                             break;
                     }
-                    if (bubble.getBoolean("canHelpCollect")) {
+                    if (jo.getBoolean("canHelpCollect")) {
                         if (Config.helpFriendCollect()) {
                             if (Config.getDontHelpCollectList().contains(userId))
                                 Log.recordLog("不帮收【" + userName + "】", ", userId=" + userId);
@@ -416,7 +416,7 @@ public class AntForest {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
                     if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis() &&
-                            TimeUtil.getTimeStr().compareTo("0700") > 0 && TimeUtil.getTimeStr().compareTo("0725") < 0) {
+                            TimeUtil.getTimeStr().compareTo("0700") > 0 && TimeUtil.getTimeStr().compareTo("2000") < 0) {
                         useDoubleCard();
                     }
                     s = AntForestRpcCall.collectEnergy(null, userId, bubbleId);
@@ -432,7 +432,7 @@ public class AntForest {
                 if (collected > 0) {
                     totalCollected += collected;
                     Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                    String str = "偷取【" + userName + "】的能量【" + collected + "克】" + (StringUtil.isEmpty(extra) ? "" : "【" + extra + "】");
+                    String str = "偷取[" + userName + "]的能量[" + collected + "g]" + (StringUtil.isEmpty(extra) ? "" : "[" + extra + "]");
                     Log.forest(str);
                     AntForestToast.show(str);
                 } else {
@@ -474,7 +474,7 @@ public class AntForest {
                     helped += jo.getInt("collectedEnergy");
                 }
                 if (helped > 0) {
-                    Log.forest("帮【" + userName + "】收取【" + helped + "克】");
+                    Log.forest("帮[" + userName + "]收取[" + helped + "g]");
                     helpCollectedEnergy += helped;
                     totalHelpCollected += helped;
                     Statistics.addData(Statistics.DataType.HELPED, helped);
@@ -523,7 +523,7 @@ public class AntForest {
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     String currentEnergy = jo.getJSONObject("treeEnergy").getString("currentEnergy");
-                    Log.forest("给【" + userName + "】浇水成功，剩余能量【" + currentEnergy + "克】");
+                    Log.forest("给[" + userName + "]浇水成功，剩余能量[" + currentEnergy + "克]");
                     wateredTimes++;
                     Statistics.addData(Statistics.DataType.WATERED, waterEnergy);
                 } else if ("WATERING_TIMES_LIMIT".equals(s)) {
@@ -578,7 +578,7 @@ public class AntForest {
                         if (TaskStatus.FINISHED.name().equals(taskBaseInfo.getString("taskStatus"))) {
                             JSONObject joTaskAward = new JSONObject(AntForestRpcCall.receiveTaskAward(sceneCode, taskType));
                             if ("SUCCESS".equals(joTaskAward.getString("desc")))
-                                Log.forest("已领取【" + awardCount + "个】【" + awardName + "】");
+                                Log.forest("已领取[" + awardCount + "个][" + awardName + "]");
                             else
                                 Log.recordLog("领取失败，" + s, forestTask.toString());
                         }
@@ -606,7 +606,7 @@ public class AntForest {
                 Thread.sleep(5000L);
                 if ("SUCCESS".equals(new JSONObject(AntForestRpcCall.energyRainSettlement(sum, token)).getString("resultCode"))) {
                     AntForestToast.show("获得了【" + sum + "g】能量【能量雨】");
-                    Log.forest("获得了【" + sum + "g】能量【能量雨】");
+                    Log.forest("获得了[" + sum + "g]能量[能量雨]");
                 }
             }
         } catch (Throwable th) {
@@ -639,7 +639,7 @@ public class AntForest {
                     if (userId != null) {
                         JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(userId));
                         if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
-                            Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
+                            Log.forest("给[" + FriendIdMap.getNameById(userId) + "]赠送机会成功[" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "]");
                             startEnergyRain();
                         }
                     }
@@ -699,16 +699,19 @@ public class AntForest {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
                 String propType = null;
+                String propName = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
                     propType = forestPropVO.getString("propType");
                     if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propName = "双击卡";
                     }
                     if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propName = "限时双击卡";
                         break;
                     }
                 }
@@ -716,7 +719,7 @@ public class AntForest {
                     jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
-                        Log.forest("使用【双击卡】成功");
+                        Log.forest("使用[" + propName + "]成功");
                     }
                 }
             }

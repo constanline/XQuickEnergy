@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sesame</string>
+    <string name="app_name" translatable="false">仙人掌</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
 
@@ -73,17 +73,6 @@
     <string name="use_double_card">Use double card</string>
     <string name="wait_when_exception">Wait when exception(Min)</string>
     <string name="stay_awake_target">Stay awake target</string>
-    <string name="search">Search</string>
-    <string name="last">Last</string>
-    <string name="next">Next</string>
-    <string name="ok">OK</string>
-    <string name="open_with_other_browser">Open with other browser</string>
-    <string name="copy_the_url">Copy the url</string>
-    <string name="scroll_to_top">Scroll to top</string>
-    <string name="scroll_to_bottom">Scroll to bottom</string>
-    <string name="choose_a_browser">Choose a browser</string>
-    <string name="copy_success">Copy success</string>
-    <string name="cancel">Cancel</string>
 
 
 </resources>

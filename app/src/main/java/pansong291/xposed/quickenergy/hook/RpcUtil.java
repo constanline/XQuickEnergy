@@ -79,6 +79,7 @@ public class RpcUtil
                         if (Config.waitWhenException() > 0) {
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            Log.forest("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                             Config.setForestPauseTime(waitTime);
                         }
                     }

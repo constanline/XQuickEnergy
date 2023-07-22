@@ -73,15 +73,11 @@ public class FriendIdMap {
     public static List<String> getIncompleteUnknownIds() {
         List<String> idList = new ArrayList<>();
         Set<Map.Entry<String, String>> idSet = getIdMap().entrySet();
-        for (Map.Entry<String, String> entry : idSet) {
-            if (currentUid.equals(entry.getValue())) {
-                continue;
-            }
-            if (entry.getValue().split("\\|").length < 1) {
+        for (Map.Entry<String, String> entry : idSet)
+            if (entry.getValue().split("\\|").length < 3) {
                 idList.add(entry.getKey());
                 Log.i(TAG, "未知id: " + entry.getKey());
             }
-        }
         return idList;
     }
 
