@@ -10,7 +10,6 @@
     <string name="forest_configuration">森林设置</string>
     <string name="collect_energy">收集能量</string>
     <string name="check_interval_minutes">检测间隔(分钟)</string>
-    <string name="thread_count">线程数</string>
     <string name="advance_time_milliseconds">提前时间(毫秒)</string>
     <string name="collect_interval_milliseconds">收取间隔(毫秒)</string>
     <string name="collect_timeout_seconds">收取超时(秒)</string>

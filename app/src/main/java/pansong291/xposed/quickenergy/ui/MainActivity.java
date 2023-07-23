@@ -137,15 +137,17 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                int state = item.isChecked() ? PackageManager.COMPONENT_ENABLED_STATE_DEFAULT : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+                int state = item.isChecked() ? PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
                 getPackageManager()
-                        .setComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"), state, PackageManager.DONT_KILL_APP);
+                        .setComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"),
+                                state, PackageManager.DONT_KILL_APP);
                 item.setChecked(!item.isChecked());
                 break;
 
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
-                    Toast.makeText(this, "导出成功!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "导出成功！", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:

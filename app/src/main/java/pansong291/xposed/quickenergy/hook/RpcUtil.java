@@ -17,7 +17,6 @@ public class RpcUtil
     private static Method rpcCallMethod;
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
-    public static boolean sendXEdgeProBroadcast;
 
     public static void init(ClassLoader loader) {
         if(rpcCallMethod == null) {
@@ -60,13 +59,6 @@ public class RpcUtil
                     if (msg.contains("登录超时")) {
                         AntForestNotification.setContentText("登录超时");
                         if(AntForestToast.context != null) {
-                            if (sendXEdgeProBroadcast) {
-                                sendXEdgeProBroadcast = false;
-                                Intent it = new Intent("com.jozein.xedgepro.PERFORM");
-                                it.putExtra("data", Config.xEdgeProData());
-                                AntForestToast.context.sendBroadcast(it);
-                                Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
-                            }
                             if (Config.timeoutRestart()) {
                                 if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
                                     XposedHook.restartHook(true);

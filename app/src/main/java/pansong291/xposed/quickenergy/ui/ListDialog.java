@@ -36,8 +36,7 @@ public class ListDialog
     static AlertDialog optionsDialog;
     static AlertDialog deleteDialog;
 
-    public static void show(Context c, CharSequence title, List<?> bl, List<String> sl, List<Integer> cl)
-    {
+    public static void show(Context c, CharSequence title, List<? extends AlipayId> bl, List<String> sl, List<Integer> cl) {
         selectedList = sl;
         countList = cl;
         ListAdapter la = ListAdapter.get(c);
@@ -46,21 +45,17 @@ public class ListDialog
         showListDialog(c, title);
     }
 
-    private static void showListDialog(Context c, CharSequence title)
-    {
-        try
-        {
+    private static void showListDialog(Context c, CharSequence title) {
+        try {
             getListDialog(c).show();
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             listDialog = null;
             getListDialog(c).show();
         }
         listDialog.setTitle(title);
     }
 
-    private static AlertDialog getListDialog(Context c)
-    {
+    private static AlertDialog getListDialog(Context c) {
         if(listDialog == null)
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
@@ -68,8 +63,7 @@ public class ListDialog
                     .setPositiveButton(c.getString(R.string.ok), null)
                     .create();
         listDialog.setOnShowListener(
-                new OnShowListener()
-                {
+                new OnShowListener() {
                     Context c;
 
                     public OnShowListener setContext(Context c)
@@ -87,8 +81,7 @@ public class ListDialog
         return listDialog;
     }
 
-    private static View getListView(Context c)
-    {
+    private static View getListView(Context c) {
         View v = LayoutInflater.from(c).inflate(R.layout.dialog_list, null);
         OnBtnClickListener onBtnClickListener = new OnBtnClickListener();
         btn_find_last = v.findViewById(R.id.btn_find_last);
@@ -103,13 +96,10 @@ public class ListDialog
                     curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                     curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
                     if(countList == null) {
-                        if(curViewHolder.cb.isChecked())
-                        {
-                            if(selectedList.contains(curAlipayId.id))
-                                selectedList.remove(curAlipayId.id);
+                        if(curViewHolder.cb.isChecked()) {
+                            selectedList.remove(curAlipayId.id);
                             curViewHolder.cb.setChecked(false);
-                        }else
-                        {
+                        } else {
                             if(!selectedList.contains(curAlipayId.id))
                                 selectedList.add(curAlipayId.id);
                             curViewHolder.cb.setChecked(true);
@@ -122,11 +112,9 @@ public class ListDialog
         lv_list.setOnItemLongClickListener(
                 (p1, p2, p3, p4) -> {
                     curAlipayId = (AlipayId) p1.getAdapter().getItem(p3);
-                    if(curAlipayId instanceof AlipayCooperate)
-                    {
+                    if(curAlipayId instanceof AlipayCooperate) {
                         showDeleteDialog(p1.getContext());
-                    }else
-                    {
+                    } else {
                         showOptionsDialog(p1.getContext());
                     }
                     return true;
@@ -165,41 +153,31 @@ public class ListDialog
 
                 @Override
                 public void onClick(DialogInterface p1, int p2) {
-                    switch(p2)
-                    {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            int count = 0;
-                            if(edt_count.length() > 0)
-                                try
-                                {
-                                    count = Integer.parseInt(edt_count.getText().toString());
-                                }catch(Throwable t)
-                                {
-                                    return;
-                                }
-                            int index = selectedList.indexOf(curAlipayId.id);
-                            if(count > 0)
-                            {
-                                if(index < 0)
-                                {
-                                    selectedList.add(curAlipayId.id);
-                                    countList.add(count);
-                                }else
-                                {
-                                    countList.set(index, count);
-                                }
-                                curViewHolder.cb.setChecked(true);
-                            }else
-                            {
-                                if(index >= 0)
-                                {
-                                    selectedList.remove(index);
-                                    countList.remove(index);
-                                }
-                                curViewHolder.cb.setChecked(false);
+                    if (p2 == DialogInterface.BUTTON_POSITIVE) {
+                        int count = 0;
+                        if (edt_count.length() > 0)
+                            try {
+                                count = Integer.parseInt(edt_count.getText().toString());
+                            } catch (Throwable t) {
+                                return;
                             }
-                            Config.hasChanged = true;
-                            break;
+                        int index = selectedList.indexOf(curAlipayId.id);
+                        if (count > 0) {
+                            if (index < 0) {
+                                selectedList.add(curAlipayId.id);
+                                countList.add(count);
+                            } else {
+                                countList.set(index, count);
+                            }
+                            curViewHolder.cb.setChecked(true);
+                        } else {
+                            if (index >= 0) {
+                                selectedList.remove(index);
+                                countList.remove(index);
+                            }
+                            curViewHolder.cb.setChecked(false);
+                        }
+                        Config.hasChanged = true;
                     }
                     ListAdapter.get(c).notifyDataSetChanged();
                 }
@@ -258,7 +236,7 @@ public class ListDialog
                                         case 2:
                                             showDeleteDialog(c);
                                     }
-                                    if(url != null && !url.isEmpty())
+                                    if(url != null)
                                     {
                                         Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url + curAlipayId.id));
                                         c.startActivity(it);
@@ -301,20 +279,16 @@ public class ListDialog
                 @Override
                 public void onClick(DialogInterface p1, int p2)
                 {
-                    switch(p2)
-                    {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            if(curAlipayId instanceof AlipayUser) {
-                                FriendIdMap.removeIdMap(curAlipayId.id);
-                                AlipayUser.remove(curAlipayId.id);
-                            } else if (curAlipayId instanceof AlipayCooperate) {
-                                CooperationIdMap.removeIdMap(curAlipayId.id);
-                                AlipayCooperate.remove(curAlipayId.id);
-                            }
-                            if(selectedList.contains(curAlipayId.id))
-                                selectedList.remove(curAlipayId.id);
-                            ListAdapter.get(c).exitFind();
-                            break;
+                    if (p2 == DialogInterface.BUTTON_POSITIVE) {
+                        if (curAlipayId instanceof AlipayUser) {
+                            FriendIdMap.removeIdMap(curAlipayId.id);
+                            AlipayUser.remove(curAlipayId.id);
+                        } else if (curAlipayId instanceof AlipayCooperate) {
+                            CooperationIdMap.removeIdMap(curAlipayId.id);
+                            AlipayCooperate.remove(curAlipayId.id);
+                        }
+                        selectedList.remove(curAlipayId.id);
+                        ListAdapter.get(c).exitFind();
                     }
                     ListAdapter.get(c).notifyDataSetChanged();
                 }
