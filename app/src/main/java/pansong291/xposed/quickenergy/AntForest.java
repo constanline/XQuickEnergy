@@ -8,10 +8,7 @@ import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
 import pansong291.xposed.quickenergy.util.*;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -36,6 +33,8 @@ public class AntForest {
     private static volatile long lastCollectTime = 0;
 
     private static volatile long doubleEndTime = 0;
+
+    private static final HashSet<Long> waitCollectBubbleIds = new HashSet<>();
 
     private static boolean checkCollectLimited() {
         if (Config.isLimitCollect()) {
@@ -110,9 +109,9 @@ public class AntForest {
         try {
             String strList = new JSONArray(idList).toString();
             String s = AntForestRpcCall.fillUserRobFlag(strList);
-            Thread.sleep(500);
             JSONObject jo = new JSONObject(s);
             checkCanCollectEnergy(loader, jo);
+            Thread.sleep(500);
         } catch (Throwable t) {
             Log.i(TAG, "fillUserRobFlag err:");
             Log.printStackTrace(TAG, t);
@@ -226,6 +225,7 @@ public class AntForest {
                     String propType = userUsingProp.getString("propType");
                     if ("ENERGY_DOUBLE_CLICK".equals(propType) || "LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         doubleEndTime = userUsingProp.getLong("endTime");
+                        Log.forest("双倍卡剩余时间" + (doubleEndTime - System.currentTimeMillis()) / 1000);
                     }
                 }
                 JSONArray jaBubbles = joHomePage.getJSONArray("bubbles");
@@ -405,9 +405,17 @@ public class AntForest {
             return 0;
         }
         int collected = 0;
-        if (checkCollectLimited()) {
+        try {
+            while (checkCollectLimited()) {
+                Thread.sleep(1000);
+            }
+        } catch (Throwable th) {
+            Log.printStackTrace("到达分钟限制，等待失败！", th);
             return 0;
         }
+//        if (checkCollectLimited()) {
+//            return 0;
+//        }
         try {
             String s = "{\"resultCode\": \"FAILED\"}";
             if (Config.collectInterval() > 0) {
@@ -423,6 +431,7 @@ public class AntForest {
                     lastCollectTime = System.currentTimeMillis();
                 }
             }
+            waitCollectBubbleIds.remove(bubbleId);
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
                 offerCollectQueue();
@@ -702,21 +711,26 @@ public class AntForest {
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
                     propType = forestPropVO.getString("propType");
-                    if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
-                        JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
-                        propId = propIdList.getString(0);
-                    }
                     if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        Log.forest("检测到【限时双击卡】" + propId);
                         break;
+                    }
+                    if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
+                        JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
+                        propId = propIdList.getString(0);
+                        Log.forest("检测到【双击卡】" + propId);
                     }
                 }
                 if (!StringUtil.isEmpty(propId)) {
+                    Log.forest("尝试使用【双击卡】【" + propType + "】" + propId);
                     jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
                         Log.forest("使用【双击卡】成功");
+                    } else {
+                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     }
                 }
             }
@@ -727,13 +741,14 @@ public class AntForest {
     }
 
     public static void execute(ClassLoader loader, String userName, String userId, String bizNo, long bubbleId, long produceTime) {
-        for (int i = Config.threadCount(); i > 0; i--) {
-            BubbleTimerTask btt = new BubbleTimerTask(loader, userName, userId, bizNo, bubbleId, produceTime);
-            long delay = btt.getDelayTime();
-            btt.start();
-            collectTaskCount++;
-            Log.recordLog(delay / 1000 + "秒后尝试收取能量", "");
+        if (waitCollectBubbleIds.contains(bubbleId)) {
+            return;
         }
+        BubbleTimerTask btt = new BubbleTimerTask(loader, userName, userId, bizNo, bubbleId, produceTime);
+        long delay = btt.getDelayTime();
+        btt.start();
+        collectTaskCount++;
+        Log.recordLog(delay / 1000 + "秒后尝试收取能量", "");
     }
 
     public enum CollectStatus {AVAILABLE, WAITING, INSUFFICIENT, ROBBED}

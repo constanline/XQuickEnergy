@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
 
@@ -23,43 +27,42 @@ public class ListAdapter extends BaseAdapter
     }
 
     Context context;
-    List<?> list;
+    List<? extends AlipayId> list;
     List<String> selects;
     int findIndex = -1;
     CharSequence findWord = null;
 
-    private ListAdapter(Context c)
-    {
+    private ListAdapter(Context c) {
         context = c;
     }
 
-    public void setBaseList(List<?> l)
-    {
+    public void setBaseList(List<? extends AlipayId> l) {
         if(l != list) exitFind();
         list = l;
     }
 
-    public void setSelectedList(List<String> l)
-    {
+    public void setSelectedList(List<String> l) {
         selects = l;
+        Collections.sort(list, (Comparator<AlipayId>) (o1, o2) -> {
+            if (selects.contains(o1.id) == selects.contains(o2.id)) {
+                return o1.id.compareTo(o2.id);
+            }
+            return selects.contains(o1.id) ? -1 : 1;
+        });
     }
 
-    public int findLast(CharSequence cs)
-    {
+    public int findLast(CharSequence cs) {
         if(list == null || list.size() == 0) return -1;
-        if(!cs.equals(findWord))
-        {
+        if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
         }
         int i = findIndex;
         if(i < 0) i = list.size();
-        for(;;)
-        {
+        for(;;) {
             i = (i + list.size() - 1) % list.size();
             AlipayId ai = (AlipayId) list.get(i);
-            if(ai.name.contains(cs))
-            {
+            if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
             }
@@ -70,20 +73,16 @@ public class ListAdapter extends BaseAdapter
         return findIndex;
     }
 
-    public int findNext(CharSequence cs)
-    {
+    public int findNext(CharSequence cs) {
         if(list == null || list.size() == 0) return -1;
-        if(!cs.equals(findWord))
-        {
+        if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
         }
-        for(int i = findIndex;;)
-        {
+        for(int i = findIndex;;) {
             i = (i + 1) % list.size();
             AlipayId ai = (AlipayId) list.get(i);
-            if(ai.name.contains(cs))
-            {
+            if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
             }
@@ -94,54 +93,46 @@ public class ListAdapter extends BaseAdapter
         return findIndex;
     }
 
-    public void exitFind()
-    {
+    public void exitFind() {
         findIndex = -1;
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return list == null ? 0: list.size();
     }
 
     @Override
-    public Object getItem(int p1)
-    {
+    public Object getItem(int p1) {
         return list.get(p1);
     }
 
     @Override
-    public long getItemId(int p1)
-    {
+    public long getItemId(int p1) {
         return p1;
     }
 
     @Override
-    public View getView(int p1, View p2, ViewGroup p3)
-    {
+    public View getView(int p1, View p2, ViewGroup p3) {
         ViewHolder vh;
-        if(p2 == null)
-        {
+        if (p2 == null) {
             vh = new ViewHolder();
             p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
             p2.setTag(vh);
-        }else
-        {
+        } else {
             vh = (ViewHolder)p2.getTag();
         }
 
         AlipayId ai = (AlipayId) list.get(p1);
         vh.tv.setText(ai.name);
         vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
-        vh.cb.setChecked(selects == null ? false: selects.contains(ai.id));
+        vh.cb.setChecked(selects != null && selects.contains(ai.id));
         return p2;
     }
 
-    class ViewHolder
-    {
+    static class ViewHolder {
         TextView tv;
         CheckBox cb;
     }

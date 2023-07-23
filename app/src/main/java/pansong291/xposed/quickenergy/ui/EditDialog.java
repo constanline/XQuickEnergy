@@ -47,11 +47,6 @@ public class EditDialog {
                                                 Config.setCheckInterval(i * 60_000);
                                             break;
 
-                                        case THREAD_COUNT:
-                                            if(i >= 0)
-                                                Config.setThreadCount(i);
-                                            break;
-
                                         case ADVANCE_TIME:
                                             Config.setAdvanceTime(i);
                                             break;
@@ -118,10 +113,6 @@ public class EditDialog {
         switch(mode) {
             case CHECK_INTERVAL:
                 str = String.valueOf(Config.checkInterval() / 60_000);
-                break;
-
-            case THREAD_COUNT:
-                str = String.valueOf(Config.threadCount());
                 break;
 
             case ADVANCE_TIME:

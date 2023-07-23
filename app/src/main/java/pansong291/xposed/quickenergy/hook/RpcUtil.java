@@ -17,7 +17,8 @@ public class RpcUtil
     private static Method rpcCallMethod;
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
-    public static boolean sendXEdgeProBroadcast;
+
+    public static boolean isTimeout = false;
 
     public static void init(ClassLoader loader) {
         if(rpcCallMethod == null) {
@@ -38,6 +39,9 @@ public class RpcUtil
     }
 
     public static String request(String args0, String args1) {
+        if (isTimeout) {
+            return null;
+        }
         try {
             Object o;
             if (rpcCallMethod.getParameterTypes().length == 12) {
@@ -58,21 +62,11 @@ public class RpcUtil
                 String msg = t.getCause().getMessage();
                 if (!StringUtil.isEmpty(msg)) {
                     if (msg.contains("登录超时")) {
+                        isTimeout = true;
                         AntForestNotification.setContentText("登录超时");
                         if(AntForestToast.context != null) {
-                            if (sendXEdgeProBroadcast) {
-                                sendXEdgeProBroadcast = false;
-                                Intent it = new Intent("com.jozein.xedgepro.PERFORM");
-                                it.putExtra("data", Config.xEdgeProData());
-                                AntForestToast.context.sendBroadcast(it);
-                                Log.recordLog("发送XposedEdgePro广播", Config.xEdgeProData());
-                            }
                             if (Config.timeoutRestart()) {
-                                if (Config.stayAwakeType() == XposedHook.StayAwakeType.BROADCAST) {
-                                    XposedHook.restartHook(true);
-                                } else {
-                                    XposedHook.alarmHook(AntForestToast.context, 3000, true);
-                                }
+                                XposedHook.restartHook(true);
                             }
                         }
                     } else if (msg.contains("请求不合法")) {

@@ -236,10 +236,6 @@ public class SettingsActivity extends Activity
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.CHECK_INTERVAL);
                     break;
 
-                case R.id.btn_threadCount:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.THREAD_COUNT);
-                    break;
-
                 case R.id.btn_advanceTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ADVANCE_TIME);
                     break;

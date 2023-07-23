@@ -30,6 +30,8 @@ public class AntForestNotification
             else
                 getNotificationManager(context).notify(ANTFOREST_NOTIFICATION_ID, mNotification);
             isStart = true;
+        } else {
+            setContentText("开始检测能量");
         }
     }
 

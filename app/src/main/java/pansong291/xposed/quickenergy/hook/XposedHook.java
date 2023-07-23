@@ -68,7 +68,6 @@ public class XposedHook implements IXposedHookLoadPackage {
             @Override
             public void run() {
                 Config.shouldReload = true;
-                RpcUtil.sendXEdgeProBroadcast = true;
                 Statistics.resetToday();
                 AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
@@ -118,6 +117,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
                             }
+                            RpcUtil.isTimeout = false;
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
                             XposedHook.classLoader = loader;
@@ -190,6 +190,9 @@ public class XposedHook implements IXposedHookLoadPackage {
         Intent intent = new Intent();
         if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
             intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+            if (force) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             AntForestToast.context.startActivity(intent);
         } else {
             intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);

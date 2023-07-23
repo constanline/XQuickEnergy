@@ -2,6 +2,8 @@ package pansong291.xposed.quickenergy.util;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();
@@ -72,9 +74,11 @@ public class FriendIdMap {
 
     public static List<String> getIncompleteUnknownIds() {
         List<String> idList = new ArrayList<>();
-        Set<Map.Entry<String, String>> idSet = getIdMap().entrySet();
-        for (Map.Entry<String, String> entry : idSet) {
-            if (entry.getValue().split("\\|").length < 1) {
+        for (Map.Entry<String, String> entry : getIdMap().entrySet()) {
+            if ("我".equals(entry.getValue())) {
+                continue;
+            }
+            if (entry.getValue().split("\\|").length < 2) {
                 idList.add(entry.getKey());
                 Log.i(TAG, "未知id: " + entry.getKey());
             }

@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
-            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.broadcast"));
+            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
             return;
         }
 
