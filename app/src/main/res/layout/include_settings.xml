@@ -132,18 +132,13 @@
 			android:id="@+id/btn_checkInterval"
 			android:paddingStart="8dp"/>
 
-		<Button
+		<CheckBox
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			style="?android:attr/buttonBarButtonStyle"
-			android:text="@string/thread_count"
-			android:textAllCaps="false"
+			android:text="@string/collect_watering_bubble"
 			android:onClick="onClick"
 			android:minHeight="50dp"
-			android:gravity="start|center_vertical"
-			android:background="@drawable/button"
-			android:id="@+id/btn_threadCount"
-			android:paddingStart="8dp"/>
+			android:id="@+id/cb_collectWateringBubble"/>
 
 		<Button
 			android:layout_width="match_parent"
@@ -212,6 +207,19 @@
 			android:onClick="onClick"
 			android:minHeight="50dp"
 			android:id="@+id/cb_doubleCard"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/use_double_card_time"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_doubleCardTime"
+			android:paddingStart="8dp"/>
 
 		<Button
 			android:id="@+id/btn_returnWater30"

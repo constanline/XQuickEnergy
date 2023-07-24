@@ -85,6 +85,8 @@
     <string name="choose_a_browser">Choose a browser</string>
     <string name="copy_success">Copy success</string>
     <string name="cancel">Cancel</string>
+    <string name="collect_watering_bubble">Collect watering bubble</string>
+    <string name="use_double_card_time">Use double card time</string>
 
 
 </resources>

@@ -12,6 +12,10 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 蚂蚁森林
+ * @author Constanline
+ */
 public class AntForest {
     private static final String TAG = AntForest.class.getCanonicalName();
     private static String selfId;
@@ -26,6 +30,9 @@ public class AntForest {
 
     private static boolean isScanning = false;
 
+    /**
+     * 记录收集能量时间戳的队列
+     */
     private static final Queue<Long> collectedQueue = new ArrayDeque<>();
 
     private static final Lock limitLock = new ReentrantLock();
@@ -38,6 +45,15 @@ public class AntForest {
 
     private static final HashSet<Long> waitCollectBubbleIds = new HashSet<>();
 
+    /**
+     * 检查是否到达一分钟内收取限制
+     *
+     * <p>如果启用一分钟收取限制 {@link pansong291.xposed.quickenergy.util.Config#isLimitCollect}，
+     * 则清理 {@link #collectedQueue} 中超过1分钟的项，之后检查剩余条目是否多余一分钟收取限制数量
+     * {@link pansong291.xposed.quickenergy.util.Config#getLimitCount}。
+     *
+     * @return  如果到达上限，则返回True，否则返回False
+     */
     private static boolean checkCollectLimited() {
         if (Config.isLimitCollect()) {
             limitLock.lock();
@@ -63,6 +79,12 @@ public class AntForest {
         }
     }
 
+    /**
+     * Check energy ranking.
+     *
+     * @param loader the loader
+     * @param times  the times
+     */
     public static void checkEnergyRanking(ClassLoader loader, int times) {
         if (Config.forestPauseTime() > System.currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
@@ -271,31 +293,33 @@ public class AntForest {
                         }
                     }
                 }
-                JSONArray wateringBubbles = joHomePage.has("wateringBubbles") ? joHomePage.getJSONArray("wateringBubbles") : new JSONArray();
-                if (wateringBubbles.length() > 0) {
-                    int collected = 0;
-                    for (int i = 0; i < wateringBubbles.length(); i++) {
-                        String str = AntForestRpcCall.collectEnergy("jiaoshui", selfId,
-                                wateringBubbles.getJSONObject(i).getLong("id"));
-                        JSONObject joEnergy = new JSONObject(str);
-                        if ("SUCCESS".equals(joEnergy.getString("resultCode"))) {
-                            JSONArray bubbles = joEnergy.getJSONArray("bubbles");
-                            for (int j = 0; j < bubbles.length(); j++) {
-                                collected = bubbles.getJSONObject(j).getInt("collectedEnergy");
-                            }
-                            if (collected > 0) {
-                                totalCollected += collected;
-                                Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                                String msg = "收取【我】的金球【" + collected + "克】";
-                                Log.forest(msg);
-                                AntForestToast.show(msg);
+                if (Config.collectWateringBubble()) {
+                    JSONArray wateringBubbles = joHomePage.has("wateringBubbles") ? joHomePage.getJSONArray("wateringBubbles") : new JSONArray();
+                    if (wateringBubbles.length() > 0) {
+                        int collected = 0;
+                        for (int i = 0; i < wateringBubbles.length(); i++) {
+                            String str = AntForestRpcCall.collectEnergy("jiaoshui", selfId,
+                                    wateringBubbles.getJSONObject(i).getLong("id"));
+                            JSONObject joEnergy = new JSONObject(str);
+                            if ("SUCCESS".equals(joEnergy.getString("resultCode"))) {
+                                JSONArray bubbles = joEnergy.getJSONArray("bubbles");
+                                for (int j = 0; j < bubbles.length(); j++) {
+                                    collected = bubbles.getJSONObject(j).getInt("collectedEnergy");
+                                }
+                                if (collected > 0) {
+                                    totalCollected += collected;
+                                    Statistics.addData(Statistics.DataType.COLLECTED, collected);
+                                    String msg = "收取【我】的金球【" + collected + "克】";
+                                    Log.forest(msg);
+                                    AntForestToast.show(msg);
+                                } else {
+                                    Log.recordLog("收取【我】的金球失败", "");
+                                }
                             } else {
-                                Log.recordLog("收取【我】的金球失败", "");
+                                Log.recordLog("收取【我】的金球失败:" + joEnergy.getString("resultDesc"), str);
                             }
-                        } else {
-                            Log.recordLog("收取【我】的金球失败:" + joEnergy.getString("resultDesc"), str);
+                            Thread.sleep(1000L);
                         }
-                        Thread.sleep(1000L);
                     }
                 }
             } else {
@@ -432,9 +456,10 @@ public class AntForest {
                     while (System.currentTimeMillis() - lastCollectTime < Config.collectInterval()) {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
-                    if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis() &&
-                            TimeUtil.getTimeStr().compareTo("0700") > 0 && TimeUtil.getTimeStr().compareTo("0725") < 0) {
-                        useDoubleCard();
+                    if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis()) {
+                        if (Config.isDoubleCardTime()) {
+                            useDoubleCard();
+                        }
                     }
                     s = AntForestRpcCall.collectEnergy(null, userId, bubbleId);
                     lastCollectTime = System.currentTimeMillis();
@@ -633,6 +658,7 @@ public class AntForest {
         }
     }
 
+
     private static void energyRain() {
         try {
             JSONObject joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome());
@@ -650,17 +676,23 @@ public class AntForest {
                         if (grantInfo.getBoolean("canGrantedStatus")) {
                             userId = grantInfo.getString("userId");
                             if (list.contains(userId)) {
+                                JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(userId));
+                                // 20230724能量雨调整为列表中没有可赠送的好友则不赠送
+                                if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
+                                    Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
+                                    startEnergyRain();
+                                }
                                 break;
                             }
                         }
                     }
-                    if (userId != null) {
-                        JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(userId));
-                        if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
-                            Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
-                            startEnergyRain();
-                        }
-                    }
+//                    if (userId != null) {
+//                        JSONObject joEnergyRainChance = new JSONObject(AntForestRpcCall.grantEnergyRainChance(userId));
+//                        if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
+//                            Log.forest("给【" + FriendIdMap.getNameById(userId) + "】赠送机会成功【" + FriendIdMap.getNameById(FriendIdMap.currentUid) + "】");
+//                            startEnergyRain();
+//                        }
+//                    }
                 }
             }
             joEnergyRainHome = new JSONObject(AntForestRpcCall.queryEnergyRainHome());
@@ -751,24 +783,64 @@ public class AntForest {
         }
     }
 
-    public static void execute(ClassLoader loader, String userName, String userId, String bizNo, long bubbleId, long produceTime) {
+    /**
+     * Execute.
+     *
+     * @param loader      the loader
+     * @param username    the username
+     * @param userId      the user id
+     * @param bizNo       the biz no
+     * @param bubbleId    the bubble id
+     * @param produceTime the produce time
+     */
+    public static void execute(ClassLoader loader, String username, String userId, String bizNo, long bubbleId, long produceTime) {
         if (waitCollectBubbleIds.contains(bubbleId)) {
             return;
         }
         waitCollectBubbleIds.add(bubbleId);
-        BubbleTimerTask btt = new BubbleTimerTask(loader, userName, userId, bizNo, bubbleId, produceTime);
+        BubbleTimerTask btt = new BubbleTimerTask(loader, username, userId, bizNo, bubbleId, produceTime);
         long delay = btt.getDelayTime();
         btt.start();
         collectTaskCount++;
         Log.recordLog(delay / 1000 + "秒后尝试收取能量", "");
     }
 
-    public enum CollectStatus {AVAILABLE, WAITING, INSUFFICIENT, ROBBED}
+    /**
+     * The enum Collect status.
+     */
+    public enum CollectStatus {
+        /**
+         * Available collect status.
+         */
+        AVAILABLE,
+        /**
+         * Waiting collect status.
+         */
+        WAITING,
+        /**
+         * Insufficient collect status.
+         */
+        INSUFFICIENT,
+        /**
+         * Robbed collect status.
+         */
+        ROBBED}
 
+    /**
+     * The type Step task.
+     */
     public static class StepTask extends Thread {
 
+        /**
+         * The Loader.
+         */
         ClassLoader loader;
 
+        /**
+         * Instantiates a new Step task.
+         *
+         * @param cl the cl
+         */
         public StepTask(ClassLoader cl) {
             this.loader = cl;
         }
@@ -801,15 +873,49 @@ public class AntForest {
         }
     }
 
+    /**
+     * The type Bubble timer task.
+     */
     public static class BubbleTimerTask extends Thread {
+        /**
+         * The Loader.
+         */
         ClassLoader loader;
+        /**
+         * The User name.
+         */
         String userName;
+        /**
+         * The User id.
+         */
         String userId;
+        /**
+         * The Biz no.
+         */
         String bizNo;
+        /**
+         * The Bubble id.
+         */
         long bubbleId;
+        /**
+         * The Produce time.
+         */
         long produceTime;
+        /**
+         * The Sleep.
+         */
         long sleep = 0;
 
+        /**
+         * Instantiates a new Bubble timer task.
+         *
+         * @param cl the cl
+         * @param un the un
+         * @param ui the ui
+         * @param bn the bn
+         * @param bi the bi
+         * @param pt the pt
+         */
         BubbleTimerTask(ClassLoader cl, String un, String ui, String bn, long bi, long pt) {
             loader = cl;
             userName = un;
@@ -819,6 +925,11 @@ public class AntForest {
             produceTime = pt;
         }
 
+        /**
+         * Gets delay time.
+         *
+         * @return the delay time
+         */
         public long getDelayTime() {
             sleep = produceTime + offsetTime - System.currentTimeMillis() - Config.advanceTime();
             return sleep;

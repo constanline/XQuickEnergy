@@ -6,6 +6,7 @@ import pansong291.xposed.quickenergy.AntFarm.SendType;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Config
@@ -24,18 +25,20 @@ public class Config
     }
 
     private static final String TAG = Config.class.getCanonicalName();
-    public static final String
-            jn_pauseTime = "pauseTime";
-    public static final String/* application */
-            jn_immediateEffect = "immediateEffect";
+    /* application */
+    public static final String jn_pauseTime = "pauseTime";
+    public static final String jn_immediateEffect = "immediateEffect";
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
     public static final String jn_stayAwake = "stayAwake";
     public static final String jn_timeoutRestart = "timeoutRestart";
     public static final String jn_stayAwakeType = "stayAwakeType";
     public static final String jn_stayAwakeTarget = "stayAwakeTarget";
-    public static final String/* forest */
-    jn_collectEnergy = "collectEnergy";
+
+    /* forest */
+    public static final String jn_collectEnergy = "collectEnergy";
+
+    public static final String jn_collectWateringBubble = "collectWateringBubble";
     public static final String jn_ReturnWater33 = "returnWater30";
     public static final String jn_ReturnWater18 = "returnWater20";
     public static final String jn_ReturnWater10 = "returnWater10";
@@ -53,8 +56,8 @@ public class Config
     public static final String jn_energyRain = "energyRain";
     public static final String jn_giveEnergyRainList = "giveEnergyRainList";
     public static final String jn_waitWhenException = "waitWhenException";
-    public static final String/* farm */
-    jn_enableFarm = "enableFarm";
+    /* farm */
+    public static final String jn_enableFarm = "enableFarm";
     public static final String jn_rewardFriend = "rewardFriend";
     public static final String jn_sendBackAnimal = "sendBackAnimal";
     public static final String jn_sendType = "sendType";
@@ -71,8 +74,8 @@ public class Config
     public static final String jn_feedFriendAnimalList = "feedFriendAnimalList";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
-    public static final String/* other */
-    jn_receivePoint = "receivePoint";
+    /* other */
+    public static final String jn_receivePoint = "receivePoint";
     public static final String jn_openTreasureBox = "openTreasureBox";
     public static final String jn_donateCharityCoin = "donateCharityCoin";
     public static final String jn_minExchangeCount = "minExchangeCount";
@@ -97,10 +100,12 @@ public class Config
     /* forest */
     private boolean collectEnergy;
     private int checkInterval;
+
+    private boolean collectWateringBubble;
     private boolean limitCollect;
     private int limitCount;
-
     private boolean doubleCard;
+    private List<String> doubleCardTime;
     private int advanceTime;
     private int collectInterval;
     private int collectTimeout;
@@ -251,6 +256,17 @@ public class Config
         return getConfig().collectEnergy;
     }
 
+    public static void setCollectWateringBubble(boolean b)
+    {
+        getConfig().collectWateringBubble = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectWateringBubble()
+    {
+        return getConfig().collectWateringBubble;
+    }
+
     public static void setCheckInterval(int i)
     {
         getConfig().checkInterval = i;
@@ -298,6 +314,36 @@ public class Config
     public static void setDoubleCard(boolean doubleCard) {
         getConfig().doubleCard = doubleCard;
         hasChanged = true;
+    }
+
+    public static void setDoubleCardTime(String i) {
+        getConfig().doubleCardTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+
+    public static String doubleCardTime() {
+        return String.join(",", getConfig().doubleCardTime);
+    }
+
+    public static boolean isDoubleCardTime() {
+        for (String doubleTime : getConfig().doubleCardTime) {
+            if (doubleTime.contains("-")) {
+                String[] arr = doubleTime.split("-");
+                String min = arr[0];
+                String max = arr[1];
+                String now = TimeUtil.getTimeStr();
+                if (min.compareTo(now) <= 0 && max.compareTo(now) >= 0) {
+                    return true;
+                }
+            } else {
+                String min = TimeUtil.getTimeStr(-getConfig().checkInterval);
+                String max = TimeUtil.getTimeStr();
+                if (min.compareTo(doubleTime) <= 0 && max.compareTo(doubleTime) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void setAdvanceTime(int i)
@@ -726,11 +772,14 @@ public class Config
         c.timeoutRestart = true;
 
         c.collectEnergy = true;
+        c.collectWateringBubble = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
         c.limitCollect = true;
         c.limitCount = 50;
         c.doubleCard = false;
+        c.doubleCardTime = new ArrayList<>();
+        c.doubleCardTime.add("0700-0725");
         c.advanceTime = 500;
         c.collectInterval = 100;
         c.collectTimeout = 2_000;
@@ -808,6 +857,8 @@ public class Config
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
 
+            config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
+
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
 
             config.waitWhenException = jo.optInt(jn_waitWhenException, 60 * 60 * 1000);
@@ -817,6 +868,8 @@ public class Config
             config.limitCount = jo.optInt("limitCount", 50);
 
             config.doubleCard = jo.optBoolean("doubleCard", false);
+
+            config.doubleCardTime = Arrays.asList(jo.optString("doubleCardTime", "0700-0725").split(","));
 
             config.advanceTime = jo.optInt(jn_advanceTime, 500);
 
@@ -1025,6 +1078,8 @@ public class Config
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
+
+            jo.put(jn_collectWateringBubble, config.collectWateringBubble);
 
             jo.put(jn_checkInterval, config.checkInterval);
 

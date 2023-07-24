@@ -18,7 +18,7 @@ import pansong291.xposed.quickenergy.util.FriendIdMap;
 public class SettingsActivity extends Activity
 {
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
-            cb_stayAwake, cb_timeoutRestart,
+            cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
             cb_cooperateWater, cb_energyRain,
             cb_enableFarm, cb_rewardFriend, cb_sendBackAnimal,
@@ -44,6 +44,7 @@ public class SettingsActivity extends Activity
         cb_stayAwake = findViewById(R.id.cb_stayAwake);
         cb_timeoutRestart = findViewById(R.id.cb_timeoutRestart);
         cb_collectEnergy = findViewById(R.id.cb_collectEnergy);
+        cb_collectWateringBubble = findViewById(R.id.cb_collectWateringBubble);
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
         cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
         cb_cooperateWater = findViewById(R.id.cb_cooperateWater);
@@ -78,6 +79,7 @@ public class SettingsActivity extends Activity
         cb_stayAwake.setChecked(Config.stayAwake());
         cb_timeoutRestart.setChecked(Config.timeoutRestart());
         cb_collectEnergy.setChecked(Config.collectEnergy());
+        cb_collectWateringBubble.setChecked(Config.collectWateringBubble());
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
         cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
         cb_cooperateWater.setChecked(Config.cooperateWater());
@@ -131,6 +133,10 @@ public class SettingsActivity extends Activity
 
                 case R.id.cb_collectEnergy:
                     Config.setCollectEnergy(cb.isChecked());
+                    break;
+
+                case R.id.cb_collectWateringBubble:
+                    Config.setCollectWateringBubble(cb.isChecked());
                     break;
 
                 case R.id.cb_limitCollect:
@@ -252,6 +258,10 @@ public class SettingsActivity extends Activity
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LIMIT_COUNT);
                     break;
 
+                case R.id.btn_doubleCardTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME);
+                    break;
+
                 case R.id.btn_returnWater30:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_30);
                     break;
@@ -336,11 +346,9 @@ public class SettingsActivity extends Activity
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
-        if(Config.hasChanged)
-        {
+        if(Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
             Toast.makeText(this, "Configuration saved", Toast.LENGTH_SHORT).show();
         }

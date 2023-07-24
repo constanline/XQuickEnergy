@@ -10,7 +10,7 @@ import pansong291.xposed.quickenergy.util.Config;
 
 public class EditDialog {
     public enum EditMode {
-        CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT,
+        CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
     private static EditMode mode;
@@ -60,6 +60,9 @@ public class EditDialog {
                                             if (i > 0) {
                                                 Config.setLimitCount(i);
                                             }
+                                            break;
+                                        case DOUBLE_CARD_TIME:
+                                            Config.setDoubleCardTime(edt.getText().toString());
                                             break;
 
                                         case COLLECT_TIMEOUT:
@@ -125,6 +128,9 @@ public class EditDialog {
 
             case LIMIT_COUNT:
                 str = String.valueOf(Config.getLimitCount());
+                break;
+            case DOUBLE_CARD_TIME:
+                str = Config.doubleCardTime();
                 break;
 
             case COLLECT_TIMEOUT:
