@@ -24,6 +24,8 @@ public class AntForest {
     private static long offsetTime = -1;
     private static long laterTime = -1;
 
+    private static boolean isScanning = false;
+
     private static final Queue<Long> collectedQueue = new ArrayDeque<>();
 
     private static final Lock limitLock = new ReentrantLock();
@@ -66,7 +68,13 @@ public class AntForest {
             Log.recordLog("异常等待中，暂不执行检测！", "");
             return;
         }
-        Log.recordLog("定时检测开始", "");
+        if (isScanning) {
+            Log.recordLog("之前的检测未结束，本次暂停", "");
+            return;
+        } else {
+            Log.recordLog("定时检测开始", "");
+            isScanning = true;
+        }
         new Thread() {
             ClassLoader loader;
             int times;
@@ -82,6 +90,7 @@ public class AntForest {
                 if (Config.collectEnergy()) {
                     canCollectSelfEnergy(loader, times);
                     queryEnergyRanking(loader);
+                    isScanning = false;
                 }
                 if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                     popupTask();
@@ -710,16 +719,18 @@ public class AntForest {
                 String propType = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
-                    propType = forestPropVO.getString("propType");
-                    if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
+                    String tmpPropType = forestPropVO.getString("propType");
+                    if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propType = tmpPropType;
                         Log.forest("检测到【限时双击卡】" + propId);
                         break;
                     }
-                    if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
+                    if ("ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
+                        propType = tmpPropType;
                         Log.forest("检测到【双击卡】" + propId);
                     }
                 }
@@ -744,6 +755,7 @@ public class AntForest {
         if (waitCollectBubbleIds.contains(bubbleId)) {
             return;
         }
+        waitCollectBubbleIds.add(bubbleId);
         BubbleTimerTask btt = new BubbleTimerTask(loader, userName, userId, bizNo, bubbleId, produceTime);
         long delay = btt.getDelayTime();
         btt.start();
