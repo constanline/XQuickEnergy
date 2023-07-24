@@ -734,17 +734,19 @@ public class AntForest {
                 String propName = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
-                    propType = forestPropVO.getString("propType");
-                    if ("ENERGY_DOUBLE_CLICK".equals(propType)) {
-                        JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
-                        propId = propIdList.getString(0);
-                        propName = "双击卡";
-                    }
-                    if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
+                    String tmpPropType = forestPropVO.getString("propType");
+                    if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
                         propName = "限时双击卡";
+                        propType = tmpPropType;
                         break;
+                    }
+                    if ("ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
+                        JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
+                        propId = propIdList.getString(0);
+                        propName = "双击卡";
+                        propType = tmpPropType;
                     }
                 }
                 if (!StringUtil.isEmpty(propId)) {
@@ -766,6 +768,7 @@ public class AntForest {
         if (waitCollectBubbleIds.contains(bubbleId)) {
             return;
         }
+        waitCollectBubbleIds.add(bubbleId);
         BubbleTimerTask btt = new BubbleTimerTask(loader, userName, userId, bizNo, bubbleId, produceTime);
         long delay = btt.getDelayTime();
         btt.start();
