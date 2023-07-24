@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
-            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.broadcast"));
+            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
             return;
         }
 
@@ -137,11 +137,9 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                int state = item.isChecked() ? PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
-                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+                int state = item.isChecked() ? PackageManager.COMPONENT_ENABLED_STATE_DEFAULT : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
                 getPackageManager()
-                        .setComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"),
-                                state, PackageManager.DONT_KILL_APP);
+                        .setComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"), state, PackageManager.DONT_KILL_APP);
                 item.setChecked(!item.isChecked());
                 break;
 

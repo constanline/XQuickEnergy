@@ -15,6 +15,7 @@
     <string name="forest_configuration">FOREST CONFIGURATION</string>
     <string name="collect_energy">Collect energy</string>
     <string name="check_interval_minutes">Check interval (minutes)</string>
+    <string name="thread_count">Thread count</string>
     <string name="advance_time_milliseconds">Advance time (milliseconds)</string>
     <string name="collect_interval_milliseconds">Collect interval (milliseconds)</string>
     <string name="collect_timeout_seconds">Collect timeout (seconds)</string>

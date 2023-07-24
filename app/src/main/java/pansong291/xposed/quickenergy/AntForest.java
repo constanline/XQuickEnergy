@@ -24,6 +24,8 @@ public class AntForest {
     private static long offsetTime = -1;
     private static long laterTime = -1;
 
+    private static boolean isScanning = false;
+
     private static final Queue<Long> collectedQueue = new ArrayDeque<>();
 
     private static final Lock limitLock = new ReentrantLock();
@@ -66,7 +68,13 @@ public class AntForest {
             Log.recordLog("异常等待中，暂不执行检测！", "");
             return;
         }
-        Log.recordLog("定时检测开始", "");
+        if (isScanning) {
+            Log.recordLog("之前的检测未结束，本次暂停", "");
+            return;
+        } else {
+            Log.recordLog("定时检测开始", "");
+            isScanning = true;
+        }
         new Thread() {
             ClassLoader loader;
             int times;
@@ -82,6 +90,7 @@ public class AntForest {
                 if (Config.collectEnergy()) {
                     canCollectSelfEnergy(loader, times);
                     queryEnergyRanking(loader);
+                    isScanning = false;
                 }
                 if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                     popupTask();
@@ -230,6 +239,7 @@ public class AntForest {
                     String propType = userUsingProp.getString("propType");
                     if ("ENERGY_DOUBLE_CLICK".equals(propType) || "LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
                         doubleEndTime = userUsingProp.getLong("endTime");
+                        //Log.forest("双倍卡剩余时间" + (doubleEndTime - System.currentTimeMillis()) / 1000);
                     }
                 }
                 JSONArray jaBubbles = joHomePage.getJSONArray("bubbles");
@@ -738,22 +748,25 @@ public class AntForest {
                     if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
-                        propName = "限时双击卡";
                         propType = tmpPropType;
+                        propName = "限时双击卡";
                         break;
                     }
                     if ("ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
-                        propName = "双击卡";
                         propType = tmpPropType;
+                        propName = "双击卡";
                     }
                 }
                 if (!StringUtil.isEmpty(propId)) {
+                    // Log.forest("尝试使用[双击卡][" + propType + "]" + propId);
                     jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
                         Log.forest("使用[" + propName + "]成功");
+                    } else {
+                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     }
                 }
             }

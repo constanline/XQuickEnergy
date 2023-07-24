@@ -38,9 +38,7 @@ public class FriendManager {
                             if (StringUtil.isEmpty(remarkName)) {
                                 remarkName = nickName;
                             }
-                            if(!StringUtil.isEmpty(name)) {
-                                remarkName += "|" + name;
-                            }
+                            remarkName += "|" + name;
                             FriendIdMap.putIdMap(userId, remarkName + "(" + account + ")");
                         }
                         FriendIdMap.saveIdMap();

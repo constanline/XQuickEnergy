@@ -80,7 +80,7 @@ public class FriendIdMap {
             }
             if (entry.getValue().split("\\|").length < 2) {
                 idList.add(entry.getKey());
-                //Log.i(TAG, "未知id: " + entry.getKey());
+                Log.i(TAG, "未知id: " + entry.getKey());
             }
         }
         return idList;
@@ -95,7 +95,7 @@ public class FriendIdMap {
                 try {
                     String[] idSet = str.split("\n");
                     for (String s : idSet) {
-                        //Log.i(TAG, s);
+                        Log.i(TAG, s);
                         int ind = s.indexOf(":");
                         idMap.put(s.substring(0, ind), s.substring(ind + 1));
                     }
