@@ -3,11 +3,7 @@ package pansong291.xposed.quickenergy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.FriendIdMap;
-import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.RandomUtils;
-import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.*;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -210,7 +206,13 @@ public class AntFarm {
                     feedFriend();
 
                     // 通知好友赶鸡
-                    if(Config.notifyFriend()) notifyFriend();
+                    if (Config.notifyFriend()) notifyFriend();
+
+                    if (!StringUtil.isEmpty(Config.animalSleepTime())) {
+                        if (TimeUtil.getTimeStr().compareTo(Config.animalSleepTime()) < 0) {
+                            animalSleep();
+                        }
+                    }
 
                 } catch(Throwable t) {
                     Log.i(TAG, "AntFarm.start.run err:");
@@ -222,13 +224,31 @@ public class AntFarm {
 
     }
 
-    private static boolean isEnterOwnerFarm(String resp)
-    {
+    private static void animalSleep() {
+        try {
+            String s = AntFarmRpcCall.queryLoveCabin(FriendIdMap.currentUid);
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("memo"))) {
+                JSONObject sleepNotifyInfo = jo.getJSONObject("sleepNotifyInfo");
+                if (sleepNotifyInfo.getBoolean("canSleep")) {
+                    s = AntFarmRpcCall.sleep();
+                    jo = new JSONObject(s);
+                    if ("SUCCESS".equals(jo.getString("memo"))) {
+                        Log.farm("小鸡去睡觉啦");
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "sleep err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static boolean isEnterOwnerFarm(String resp) {
         return resp.contains("\"relation\":\"OWNER\"");
     }
 
-    public static boolean isEnterFriendFarm(String resp)
-    {
+    public static boolean isEnterFriendFarm(String resp) {
         return resp.contains("\"relation\":\"FRIEND\"");
     }
 

@@ -28,6 +28,8 @@ public class MainActivity extends Activity {
     TextView tvStatistics;
     Button btnHelp;
 
+    public static String version = "";
+
     private static boolean isExpModuleActive(Context context) {
         boolean isExp = false;
         if (context == null)
@@ -74,7 +76,6 @@ public class MainActivity extends Activity {
         if (strArray != null)
             btnHelp.setText(strArray[RandomUtils.nextInt(0, strArray.length)]);
 
-        String version = "";
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = packageInfo.versionName + "-" + packageInfo.versionCode;

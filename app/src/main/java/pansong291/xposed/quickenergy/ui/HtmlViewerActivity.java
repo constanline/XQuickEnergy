@@ -35,7 +35,7 @@ public class HtmlViewerActivity extends Activity {
                             setTitle("Loading...");
                             pgb.setVisibility(View.VISIBLE);
                         } else {
-                            setTitle(mWebView.getTitle());
+                            setTitle(mWebView.getTitle() + MainActivity.version);
                             pgb.setVisibility(View.GONE);
                         }
                     }

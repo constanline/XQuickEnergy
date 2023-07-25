@@ -512,6 +512,19 @@
 			android:id="@+id/btn_feedFriendAnimalList"
 			android:paddingStart="8dp"/>
 
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/animal_sleep_time"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_animalSleepTime"
+			android:paddingStart="8dp"/>
+
 		<CheckBox
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

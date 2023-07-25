@@ -83,5 +83,8 @@
     <string name="copy_success">复制成功</string>
     <string name="cancel">取消</string>
     <string name="start_check_energy">开始检测能量</string>
+    <string name="collect_watering_bubble">收金球</string>
+    <string name="use_double_card_time">使用双击卡时间</string>
+    <string name="animal_sleep_time">小鸡睡眠时间</string>
 
 </resources>

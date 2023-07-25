@@ -11,7 +11,7 @@ import pansong291.xposed.quickenergy.util.Config;
 public class EditDialog {
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
-        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10,
+        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, ANIMAL_SLEEP_TIME,
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
     private static EditMode mode;
 
@@ -40,7 +40,10 @@ public class EditDialog {
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
                                 try {
-                                    int i = Integer.parseInt(edt.getText().toString());
+                                    int i = 0;
+                                    try {
+                                        i = Integer.parseInt(edt.getText().toString());
+                                    } catch (Throwable ignored) { }
                                     switch(mode) {
                                         case CHECK_INTERVAL:
                                             if(i > 0)
@@ -84,6 +87,10 @@ public class EditDialog {
                                         case RETURN_WATER_10:
                                             if(i >= 0)
                                                 Config.setReturnWater10(i);
+                                            break;
+
+                                        case ANIMAL_SLEEP_TIME:
+                                            Config.setAnimalSleepTime(edt.getText().toString());
                                             break;
 
                                         case MIN_EXCHANGE_COUNT:
@@ -147,6 +154,10 @@ public class EditDialog {
 
             case RETURN_WATER_10:
                 str = String.valueOf(Config.returnWater10());
+                break;
+
+            case ANIMAL_SLEEP_TIME:
+                str = Config.animalSleepTime();
                 break;
 
             case MIN_EXCHANGE_COUNT:

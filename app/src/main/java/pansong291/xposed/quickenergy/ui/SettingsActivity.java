@@ -314,6 +314,10 @@ public class SettingsActivity extends Activity
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getDontNotifyFriendList(), null);
                     break;
 
+                case R.id.btn_animalSleepTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANIMAL_SLEEP_TIME);
+                    break;
+
                 case R.id.btn_donation_developer:
                     new AlertDialog.Builder(this)
                             .setView(R.layout.donation_view)

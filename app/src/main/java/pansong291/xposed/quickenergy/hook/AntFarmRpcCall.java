@@ -17,6 +17,17 @@ public class AntFarmRpcCall {
         return RpcUtil.request("com.alipay.antfarm.syncAnimalStatus", args1);
     }
 
+    public static String sleep() {
+        String args1 = "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTFARM\",\"source\":\"LOVECABIN\",\"version\":\"unknown\"}]";
+        return RpcUtil.request("com.alipay.antfarm.sleep", args1);
+    }
+
+    public static String queryLoveCabin(String userId) {
+        String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ENTERFARM\",\"userId\":\"" +
+                userId + "\",\"version\":\"unknown\"}]";
+        return RpcUtil.request("com.alipay.antfarm.queryLoveCabin", args1);
+    }
+
     public static String rewardFriend(String consistencyKey, String friendId, String productNum, String time) {
         String args1 = "[{\"canMock\":true,\"consistencyKey\":\"" + consistencyKey
                 + "\",\"friendId\":\"" + friendId + "\",\"operType\":\"1\",\"productNum\":" + productNum +

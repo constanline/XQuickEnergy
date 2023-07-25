@@ -109,11 +109,9 @@ public class AntForest {
 
             @Override
             public void run() {
-                if (Config.collectEnergy()) {
-                    canCollectSelfEnergy(loader, times);
-                    queryEnergyRanking(loader);
-                    isScanning = false;
-                }
+                canCollectSelfEnergy(loader, times);
+                queryEnergyRanking(loader);
+                isScanning = false;
                 if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                     popupTask();
                     if (Config.energyRain()) {
@@ -125,8 +123,9 @@ public class AntForest {
                         int waterCount = Config.getWaterCountList().get(i);
                         if (waterCount <= 0) continue;
                         if (waterCount > 3) waterCount = 3;
-                        if (Statistics.canWaterFriendToday(uid, waterCount))
+                        if (Statistics.canWaterFriendToday(uid, waterCount)) {
                             waterFriendEnergy(uid, waterCount);
+                        }
                     }
                     if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0800") >= 0) {
                         new StepTask(loader).start();
@@ -137,6 +136,9 @@ public class AntForest {
     }
 
     private static void fillUserRobFlag(ClassLoader loader, List<String> idList) {
+        if (Config.forestPauseTime() > System.currentTimeMillis()) {
+            return;
+        }
         try {
             String strList = new JSONArray(idList).toString();
             String s = AntForestRpcCall.fillUserRobFlag(strList);
@@ -188,6 +190,9 @@ public class AntForest {
     }
 
     private static void queryEnergyRanking(ClassLoader loader) {
+        if (!Config.collectEnergy()) {
+            return;
+        }
         try {
             String s = AntForestRpcCall.queryEnergyRanking();
             JSONObject jo = new JSONObject(s);
@@ -267,9 +272,10 @@ public class AntForest {
                 if (selfName.isEmpty())
                     selfName = "我";
                 FriendIdMap.putIdMapIfEmpty(selfId, selfName);
-                Log.recordLog("进入【" + selfName + "】的蚂蚁森林", "");
                 FriendIdMap.saveIdMap();
-                if (Config.collectEnergy()){
+
+                if (Config.collectEnergy()) {
+                    Log.recordLog("进入【" + selfName + "】的蚂蚁森林", "");
                     for (int i = 0; i < jaBubbles.length(); i++) {
                         JSONObject bubble = jaBubbles.getJSONObject(i);
                         long bubbleId = bubble.getLong("id");
@@ -456,6 +462,10 @@ public class AntForest {
                     while (System.currentTimeMillis() - lastCollectTime < Config.collectInterval()) {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
+                    if (Config.forestPauseTime() > System.currentTimeMillis()) {
+                        Log.recordLog("异常等待中，暂不执行检测！", "");
+                        return 0;
+                    }
                     if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis()) {
                         if (Config.isDoubleCardTime()) {
                             useDoubleCard();
@@ -543,6 +553,7 @@ public class AntForest {
                 String bizNo = jo.getString("bizNo");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
+                Log.recordLog("尝试对【" + userName + "】浇水66g" + count + "次【" + bizNo + "】");
                 count = returnFriendWater(userId, userName, bizNo, count, 66);
                 if (count > 0) Statistics.waterFriendToday(userId, count);
             } else {
@@ -941,11 +952,15 @@ public class AntForest {
                 if (sleep > 0) sleep(sleep);
                 Log.recordLog("【" + userName + "】蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
-                long time = System.currentTimeMillis();
-                while (System.currentTimeMillis() - time < Config.collectTimeout()) {
-                    if (collectEnergy(userId, bubbleId, userName, bizNo) > 0) break;
-                    sleep(500);
-                }
+                // 20230725收取失败不再继续尝试
+                collectEnergy(userId, bubbleId, userName, bizNo);
+
+//                long time = System.currentTimeMillis();
+//                while (System.currentTimeMillis() - time < Config.collectTimeout()) {
+//                    if (collectEnergy(userId, bubbleId, userName, bizNo) > 0)
+//                        break;
+//                    sleep(500);
+//                }
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);
