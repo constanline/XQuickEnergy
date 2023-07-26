@@ -58,6 +58,7 @@ public class Config
     public static final String jn_energyRain = "energyRain";
     public static final String jn_giveEnergyRainList = "giveEnergyRainList";
     public static final String jn_waitWhenException = "waitWhenException";
+    public static final String jn_ancientTreeAreaCode = "ancientTreeAreaCode";
     /* farm */
     public static final String jn_enableFarm = "enableFarm";
     public static final String jn_rewardFriend = "rewardFriend";
@@ -130,6 +131,8 @@ public class Config
 
     private int waitWhenException;
 
+    private String ancientTreeAreaCode;
+
     /* farm */
     private boolean enableFarm;
     private boolean rewardFriend;
@@ -148,7 +151,7 @@ public class Config
     private List<String> feedFriendAnimalList;
     private List<Integer> feedFriendCountList;
 
-    private String animalSleepTime;
+    private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
 
@@ -294,6 +297,17 @@ public class Config
         return getConfig().waitWhenException;
     }
 
+    public static void setAncientTreeAreaCode(String i)
+    {
+        getConfig().ancientTreeAreaCode = i;
+        hasChanged = true;
+    }
+
+    public static String ancientTreeAreaCode()
+    {
+        return getConfig().ancientTreeAreaCode;
+    }
+
     public static boolean isLimitCollect() {
         return getConfig().limitCollect;
     }
@@ -332,19 +346,7 @@ public class Config
 
     public static boolean isDoubleCardTime() {
         for (String doubleTime : getConfig().doubleCardTime) {
-            if (doubleTime.contains("-")) {
-                String[] arr = doubleTime.split("-");
-                String min = arr[0];
-                String max = arr[1];
-                String now = TimeUtil.getTimeStr();
-                if (min.compareTo(now) <= 0 && max.compareTo(now) >= 0) {
-                    return true;
-                }
-            } else {
-                if (TimeUtil.checkInTime(-getConfig().checkInterval, doubleTime)) {
-                    return true;
-                }
-            }
+            if (checkInTiemSpan(doubleTime)) return true;
         }
         return false;
     }
@@ -653,15 +655,33 @@ public class Config
         return getConfig().feedFriendCountList;
     }
 
-    public static void setAnimalSleepTime(String i)
-    {
-        getConfig().animalSleepTime = i;
+    public static void setAnimalSleepTime(String i) {
+        getConfig().animalSleepTime = Arrays.asList(i.split(","));
         hasChanged = true;
     }
 
-    public static String animalSleepTime()
-    {
-        return getConfig().animalSleepTime;
+    public static String animalSleepTime() {
+        return String.join(",", getConfig().animalSleepTime);
+    }
+
+
+    public static boolean isAnimalSleepTime() {
+        for (String doubleTime : getConfig().animalSleepTime) {
+            if (checkInTiemSpan(doubleTime)) return true;
+        }
+        return false;
+    }
+
+    private static boolean checkInTiemSpan(String timestr) {
+        if (timestr.contains("-")) {
+            String[] arr = timestr.split("-");
+            String min = arr[0];
+            String max = arr[1];
+            String now = TimeUtil.getTimeStr();
+            return min.compareTo(now) <= 0 && max.compareTo(now) >= 0;
+        } else {
+            return TimeUtil.checkInTime(-getConfig().checkInterval, timestr);
+        }
     }
 
     public static void setNotifyFriend(boolean b)
@@ -789,6 +809,7 @@ public class Config
         c.collectWateringBubble = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
+        c.ancientTreeAreaCode = "";
         c.limitCollect = true;
         c.limitCount = 50;
         c.doubleCard = false;
@@ -828,7 +849,9 @@ public class Config
         c.useAccelerateTool = true;
         if(c.feedFriendAnimalList == null) c.feedFriendAnimalList = new ArrayList<>();
         if(c.feedFriendCountList == null) c.feedFriendCountList = new ArrayList<>();
-        c.animalSleepTime = "";
+        c.doubleCardTime = new ArrayList<>();
+        c.doubleCardTime.add("2300-2400");
+        c.doubleCardTime.add("0000-0559");
         c.notifyFriend = true;
         if(c.dontNotifyFriendList == null) c.dontNotifyFriendList = new ArrayList<>();
 
@@ -878,13 +901,15 @@ public class Config
 
             config.waitWhenException = jo.optInt(jn_waitWhenException, 60 * 60 * 1000);
 
+            config.ancientTreeAreaCode = jo.optString(jn_ancientTreeAreaCode, "");
+
             config.limitCollect = jo.optBoolean("limitCollect", true);
 
             config.limitCount = jo.optInt("limitCount", 50);
 
             config.doubleCard = jo.optBoolean("doubleCard", false);
 
-            config.doubleCardTime = Arrays.asList(jo.optString("doubleCardTime", "0700-0725").split(","));
+            config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0725").split(","));
 
             config.advanceTime = jo.optInt(jn_advanceTime, 500);
 
@@ -1021,7 +1046,7 @@ public class Config
                 }
             }
 
-            config.animalSleepTime = jo.optString(jn_animalSleepTime, "");
+            config.animalSleepTime = Arrays.asList(jo.optString(jn_animalSleepTime, "2200-2400,0000-0559").split(","));
 
             config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
 
@@ -1098,13 +1123,15 @@ public class Config
 
             jo.put(jn_waitWhenException, config.waitWhenException);
 
+            jo.put(jn_ancientTreeAreaCode, config.ancientTreeAreaCode);
+
             jo.put("limitCollect", config.limitCollect);
 
             jo.put("limitCount", config.limitCount);
 
             jo.put(jn_doubleCard, config.doubleCard);
 
-            jo.put(jn_doubleCardTime, String.join(",", config.doubleCardTime));
+            jo.put(jn_doubleCardTime,  Config.doubleCardTime());
 
             jo.put(jn_advanceTime, config.advanceTime);
 
@@ -1212,7 +1239,7 @@ public class Config
             }
             jo.put(jn_feedFriendAnimalList, ja);
 
-            jo.put(jn_animalSleepTime, config.animalSleepTime);
+            jo.put(jn_animalSleepTime, Config.animalSleepTime());
 
             jo.put(jn_notifyFriend, config.notifyFriend);
 

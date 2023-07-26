@@ -357,6 +357,19 @@
 			android:id="@+id/btn_giveEnergyRainList"
 			android:paddingStart="8dp"/>
 
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/ancient_tree_area_code"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_ancientTreeAreaCode"
+			android:paddingStart="8dp"/>
+
 	</LinearLayout>
 
 	<LinearLayout

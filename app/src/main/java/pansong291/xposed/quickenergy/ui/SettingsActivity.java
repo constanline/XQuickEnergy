@@ -293,6 +293,9 @@ public class SettingsActivity extends Activity
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
+                case R.id.btn_ancientTreeAreaCode:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANCIENT_TREE_AREA_CODE);
+                    break;
 
                 case R.id.btn_sendType:
                     ChoiceDialog.showSendType(this, btn.getText());

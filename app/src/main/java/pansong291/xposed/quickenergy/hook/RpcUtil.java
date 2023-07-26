@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.content.Intent;
+import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.util.Config;
@@ -38,7 +39,21 @@ public class RpcUtil
         }
     }
 
+    public interface ResponseCallback {
+        /**
+         * Run.
+         *
+         * @param resData     the data
+         * @param respArgs the resp args
+         */
+        void run(JSONObject resData, Object... respArgs) throws Throwable;
+    }
+
     public static String request(String args0, String args1) {
+        return requestRpc(args0, args1, null);
+    }
+
+    public static String requestRpc(String args0, String args1, ResponseCallback successCallback) {
         if (isTimeout) {
             return null;
         }
@@ -54,6 +69,12 @@ public class RpcUtil
             String str = getResponse(o);
             Log.i(TAG, "argument: " + args0 + ", " + args1);
             Log.i(TAG, "response: " + str);
+            if (successCallback != null) {
+                JSONObject jo = new JSONObject(str);
+                if (jo.getBoolean("success")) {
+                    successCallback.run(jo, o);
+                }
+            }
             return str;
         } catch(Throwable t) {
             Log.i(TAG, "invoke err:");
@@ -75,6 +96,8 @@ public class RpcUtil
                             Config.setForestPauseTime(waitTime);
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
+                    } else if (msg.contains("MMTPException")) {
+                        return "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
                     }
                 }
             }
@@ -82,17 +105,11 @@ public class RpcUtil
         return null;
     }
 
-    public static String getResponse(Object resp) {
-        try {
-            if(getResponseMethod == null)
-                getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
+    public static String getResponse(Object resp) throws Throwable {
+        if(getResponseMethod == null)
+            getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
 
-            return (String) getResponseMethod.invoke(resp);
-        } catch(Throwable t) {
-            Log.i(TAG, "getResponse err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return null;
+        return (String) getResponseMethod.invoke(resp);
     }
 
 }

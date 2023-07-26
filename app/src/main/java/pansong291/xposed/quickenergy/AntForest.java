@@ -238,6 +238,24 @@ public class AntForest {
         }
     }
 
+    private static void updateDoubleTime() throws JSONException {
+        String s = AntForestRpcCall.queryHomePage();
+        JSONObject joHomePage = new JSONObject(s);
+        updateDoubleTime(joHomePage);
+    }
+
+    private static void updateDoubleTime(JSONObject joHomePage) throws JSONException {
+        JSONArray loginUserUsingPropNew = joHomePage.getJSONArray("loginUserUsingPropNew");
+        for (int i = 0; i < loginUserUsingPropNew.length(); i++) {
+            JSONObject userUsingProp = loginUserUsingPropNew.getJSONObject(i);
+            String propType = userUsingProp.getString("propType");
+            if ("ENERGY_DOUBLE_CLICK".equals(propType) || "LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
+                doubleEndTime = userUsingProp.getLong("endTime");
+                Log.forest("双倍卡剩余时间" + (doubleEndTime - System.currentTimeMillis()) / 1000);
+            }
+        }
+    }
+
     private static void canCollectSelfEnergy(ClassLoader loader, int times) {
         try {
             long start = System.currentTimeMillis();
@@ -255,15 +273,7 @@ public class AntForest {
                 offsetTime = (start + end) / 2 - serverTime;
                 Log.i(TAG, "服务器时间：" + serverTime + "，本地减服务器时间差：" + offsetTime);
 
-                JSONArray loginUserUsingPropNew = joHomePage.getJSONArray("loginUserUsingPropNew");
-                for (int i = 0; i < loginUserUsingPropNew.length(); i++) {
-                    JSONObject userUsingProp = loginUserUsingPropNew.getJSONObject(i);
-                    String propType = userUsingProp.getString("propType");
-                    if ("ENERGY_DOUBLE_CLICK".equals(propType) || "LIMIT_TIME_ENERGY_DOUBLE_CLICK".equals(propType)) {
-                        doubleEndTime = userUsingProp.getLong("endTime");
-                        Log.forest("双倍卡剩余时间" + (doubleEndTime - System.currentTimeMillis()) / 1000);
-                    }
-                }
+                updateDoubleTime(joHomePage);
                 JSONArray jaBubbles = joHomePage.getJSONArray("bubbles");
                 JSONObject userEnergy = joHomePage.getJSONObject("userEnergy");
                 selfId = userEnergy.getString("userId");
@@ -345,7 +355,7 @@ public class AntForest {
         if (waterEnergy <= 0) return 0;
         if (waterEnergy >= 66) return 42;
         if (waterEnergy >= 33) return 41;
-        if (waterEnergy <= 18) return 40;
+        if (waterEnergy >= 18) return 40;
         return 39;
     }
 
@@ -785,6 +795,7 @@ public class AntForest {
                         Log.forest("使用【双击卡】成功");
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                        updateDoubleTime();
                     }
                 }
             }

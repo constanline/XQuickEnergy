@@ -209,7 +209,7 @@ public class AntFarm {
                     if (Config.notifyFriend()) notifyFriend();
 
                     if (!StringUtil.isEmpty(Config.animalSleepTime())) {
-                        if (TimeUtil.getTimeStr().compareTo(Config.animalSleepTime()) < 0) {
+                        if (Config.isAnimalSleepTime()) {
                             animalSleep();
                         }
                     }

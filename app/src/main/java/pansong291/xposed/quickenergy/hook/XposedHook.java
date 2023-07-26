@@ -94,6 +94,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     AntCooperate.start();
                     AntFarm.start();
                     AntMember.receivePoint();
+                    AncientTree.start();
                     handler.postDelayed(this, Config.checkInterval());
                 }
             }
