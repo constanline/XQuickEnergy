@@ -1131,7 +1131,7 @@ public class Config
 
             jo.put(jn_doubleCard, config.doubleCard);
 
-            jo.put(jn_doubleCardTime,  Config.doubleCardTime());
+            jo.put(jn_doubleCardTime,  String.join(",", config.doubleCardTime));
 
             jo.put(jn_advanceTime, config.advanceTime);
 
@@ -1239,7 +1239,7 @@ public class Config
             }
             jo.put(jn_feedFriendAnimalList, ja);
 
-            jo.put(jn_animalSleepTime, Config.animalSleepTime());
+            jo.put(jn_animalSleepTime, String.join(",", config.animalSleepTime));
 
             jo.put(jn_notifyFriend, config.notifyFriend);
 
