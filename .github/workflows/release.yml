@@ -27,13 +27,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
-      - name: Grant execute permission for gradlew
-        run: ls -l ./app/build/outputs/apk/debug
-
       - name: Upload to Release Action
         uses: Shopify/upload-to-release@v1.0.1
         with:
           name: xqe-sesame-${{ github.event.release.tag_name }}.apk
-          path: app/build/outputs/apk/debug/*
+          path: app/build/outputs/apk/debug/xqe-sesame-${{ github.event.release.tag_name }}.apk
           repo-token: ${{ github.token }}
           content-type: application/zip
