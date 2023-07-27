@@ -43,6 +43,7 @@ public class Config
     public static final String jn_ReturnWater18 = "returnWater20";
     public static final String jn_ReturnWater10 = "returnWater10";
     public static final String jn_helpFriendCollect = "helpFriendCollect";
+    public static final String jn_ancientTreeAreaCodeList = "ancientTreeAreaCodeList";
     public static final String jn_dontCollectList = "dontCollectList";
     public static final String jn_dontHelpCollectList = "dontHelpCollectList";
     public static final String jn_checkInterval = "checkInterval";
@@ -58,7 +59,6 @@ public class Config
     public static final String jn_energyRain = "energyRain";
     public static final String jn_giveEnergyRainList = "giveEnergyRainList";
     public static final String jn_waitWhenException = "waitWhenException";
-    public static final String jn_ancientTreeAreaCode = "ancientTreeAreaCode";
     /* farm */
     public static final String jn_enableFarm = "enableFarm";
     public static final String jn_rewardFriend = "rewardFriend";
@@ -131,7 +131,7 @@ public class Config
 
     private int waitWhenException;
 
-    private String ancientTreeAreaCode;
+    private List<String> ancientTreeAreaCodeList;
 
     /* farm */
     private boolean enableFarm;
@@ -297,15 +297,9 @@ public class Config
         return getConfig().waitWhenException;
     }
 
-    public static void setAncientTreeAreaCode(String i)
+    public static List<String> getAncientTreeAreaCodeList()
     {
-        getConfig().ancientTreeAreaCode = i;
-        hasChanged = true;
-    }
-
-    public static String ancientTreeAreaCode()
-    {
-        return getConfig().ancientTreeAreaCode;
+        return getConfig().ancientTreeAreaCodeList;
     }
 
     public static boolean isLimitCollect() {
@@ -346,7 +340,7 @@ public class Config
 
     public static boolean isDoubleCardTime() {
         for (String doubleTime : getConfig().doubleCardTime) {
-            if (checkInTiemSpan(doubleTime)) return true;
+            if (checkInTimeSpan(doubleTime)) return true;
         }
         return false;
     }
@@ -667,20 +661,20 @@ public class Config
 
     public static boolean isAnimalSleepTime() {
         for (String doubleTime : getConfig().animalSleepTime) {
-            if (checkInTiemSpan(doubleTime)) return true;
+            if (checkInTimeSpan(doubleTime)) return true;
         }
         return false;
     }
 
-    private static boolean checkInTiemSpan(String timestr) {
-        if (timestr.contains("-")) {
-            String[] arr = timestr.split("-");
+    private static boolean checkInTimeSpan(String timeStr) {
+        if (timeStr.contains("-")) {
+            String[] arr = timeStr.split("-");
             String min = arr[0];
             String max = arr[1];
             String now = TimeUtil.getTimeStr();
             return min.compareTo(now) <= 0 && max.compareTo(now) >= 0;
         } else {
-            return TimeUtil.checkInTime(-getConfig().checkInterval, timestr);
+            return TimeUtil.checkInTime(-getConfig().checkInterval, timeStr);
         }
     }
 
@@ -809,7 +803,7 @@ public class Config
         c.collectWateringBubble = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
-        c.ancientTreeAreaCode = "";
+        c.ancientTreeAreaCodeList = new ArrayList<>();
         c.limitCollect = true;
         c.limitCount = 50;
         c.doubleCard = false;
@@ -901,7 +895,13 @@ public class Config
 
             config.waitWhenException = jo.optInt(jn_waitWhenException, 60 * 60 * 1000);
 
-            config.ancientTreeAreaCode = jo.optString(jn_ancientTreeAreaCode, "");
+            config.ancientTreeAreaCodeList = new ArrayList<>();
+            if (jo.has(jn_ancientTreeAreaCodeList)) {
+                ja = jo.getJSONArray(jn_ancientTreeAreaCodeList);
+                for(int i = 0; i < ja.length(); i++) {
+                    config.ancientTreeAreaCodeList.add(ja.getString(i));
+                }
+            }
 
             config.limitCollect = jo.optBoolean("limitCollect", true);
 
@@ -926,21 +926,17 @@ public class Config
             config.helpFriendCollect = jo.optBoolean(jn_helpFriendCollect, true);
 
             config.dontCollectList = new ArrayList<>();
-            if(jo.has(jn_dontCollectList))
-            {
+            if (jo.has(jn_dontCollectList)) {
                 ja = jo.getJSONArray(jn_dontCollectList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     config.dontCollectList.add(ja.getString(i));
                 }
             }
 
             config.dontHelpCollectList = new ArrayList<>();
-            if(jo.has(jn_dontHelpCollectList))
-            {
+            if (jo.has(jn_dontHelpCollectList)) {
                 ja = jo.getJSONArray(jn_dontHelpCollectList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     config.dontHelpCollectList.add(ja.getString(i));
                 }
             }
@@ -949,7 +945,7 @@ public class Config
 
             config.waterFriendList = new ArrayList<>();
             config.waterCountList = new ArrayList<>();
-            if(jo.has(jn_waterFriendList)) {
+            if (jo.has(jn_waterFriendList)) {
                 ja = jo.getJSONArray(jn_waterFriendList);
                 for(int i = 0; i < ja.length(); i++) {
                     if(ja.get(i) instanceof JSONArray) {
@@ -967,11 +963,9 @@ public class Config
 
             config.cooperateWaterList = new ArrayList<>();
             config.cooperateWaterNumList = new ArrayList<>();
-            if(jo.has(jn_cooperateWaterList))
-            {
+            if (jo.has(jn_cooperateWaterList)) {
                 ja = jo.getJSONArray(jn_cooperateWaterList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     jaa = ja.getJSONArray(i);
                     config.cooperateWaterList.add(jaa.getString(0));
                     config.cooperateWaterNumList.add(jaa.getInt(1));
@@ -979,11 +973,9 @@ public class Config
             }
             config.energyRain = jo.optBoolean(jn_energyRain, true);
             config.giveEnergyRainList = new ArrayList<>();
-            if(jo.has(jn_giveEnergyRainList))
-            {
+            if(jo.has(jn_giveEnergyRainList)) {
                 ja = jo.getJSONArray(jn_giveEnergyRainList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     jaa = ja.getJSONArray(i);
                     config.giveEnergyRainList.add(jaa.getString(0));
                 }
@@ -999,11 +991,9 @@ public class Config
             config.sendType = SendType.valueOf(jo.optString(jn_sendType, SendType.HIT.name()));
 
             config.dontSendFriendList = new ArrayList<>();
-            if(jo.has(jn_dontSendFriendList))
-            {
+            if(jo.has(jn_dontSendFriendList)) {
                 ja = jo.getJSONArray(jn_dontSendFriendList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     config.dontSendFriendList.add(ja.getString(i));
                 }
             }
@@ -1028,18 +1018,14 @@ public class Config
 
             config.feedFriendAnimalList = new ArrayList<>();
             config.feedFriendCountList = new ArrayList<>();
-            if(jo.has(jn_feedFriendAnimalList))
-            {
+            if(jo.has(jn_feedFriendAnimalList)) {
                 ja = jo.getJSONArray(jn_feedFriendAnimalList);
-                for(int i = 0; i < ja.length(); i++)
-                {
-                    if(ja.get(i) instanceof JSONArray)
-                    {
+                for(int i = 0; i < ja.length(); i++) {
+                    if(ja.get(i) instanceof JSONArray) {
                         jaa = ja.getJSONArray(i);
                         config.feedFriendAnimalList.add(jaa.getString(0));
                         config.feedFriendCountList.add(jaa.getInt(1));
-                    }else
-                    {
+                    } else {
                         config.feedFriendAnimalList.add(ja.getString(i));
                         config.feedFriendCountList.add(1);
                     }
@@ -1051,11 +1037,9 @@ public class Config
             config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
 
             config.dontNotifyFriendList = new ArrayList<>();
-            if(jo.has(jn_dontNotifyFriendList))
-            {
+            if (jo.has(jn_dontNotifyFriendList)) {
                 ja = jo.getJSONArray(jn_dontNotifyFriendList);
-                for(int i = 0; i < ja.length(); i++)
-                {
+                for(int i = 0; i < ja.length(); i++) {
                     config.dontNotifyFriendList.add(ja.getString(i));
                 }
             }
@@ -1123,7 +1107,11 @@ public class Config
 
             jo.put(jn_waitWhenException, config.waitWhenException);
 
-            jo.put(jn_ancientTreeAreaCode, config.ancientTreeAreaCode);
+            ja = new JSONArray();
+            for (String s : config.ancientTreeAreaCodeList) {
+                ja.put(s);
+            }
+            jo.put(jn_ancientTreeAreaCodeList, ja);
 
             jo.put("limitCollect", config.limitCollect);
 
@@ -1148,8 +1136,7 @@ public class Config
             jo.put(jn_helpFriendCollect, config.helpFriendCollect);
 
             ja = new JSONArray();
-            for(String s: config.dontCollectList)
-            {
+            for (String s: config.dontCollectList) {
                 ja.put(s);
             }
             jo.put(jn_dontCollectList, ja);

@@ -1,6 +1,8 @@
 package pansong291.xposed.quickenergy.ui;
 
-public class AlipayId  {
+public class IdAndName {
+
     public String name;
+
     public String id;
 }

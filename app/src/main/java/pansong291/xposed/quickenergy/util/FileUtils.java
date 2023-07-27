@@ -22,6 +22,7 @@ public class FileUtils
     private static File otherLogFile;
     private static File simpleLogFile;
     private static File runtimeLogFile;
+    private static File cityCodeFile;
 
     @SuppressWarnings("deprecation")
     public static File getConfigDirectoryFile() {
@@ -38,6 +39,15 @@ public class FileUtils
             }
         }
         return configDirectory;
+    }
+
+    public static File getCityCodeFile() {
+        if(cityCodeFile == null) {
+            cityCodeFile = new File(getConfigDirectoryFile(), "cityCode.json");
+            if(cityCodeFile.exists() && cityCodeFile.isDirectory())
+                cityCodeFile.delete();
+        }
+        return cityCodeFile;
     }
 
     public static File getConfigFile() {

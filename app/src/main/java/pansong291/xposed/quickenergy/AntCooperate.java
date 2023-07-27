@@ -10,8 +10,7 @@ import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.RandomUtils;
 import pansong291.xposed.quickenergy.util.Statistics;
 
-public class AntCooperate
-{
+public class AntCooperate {
     private static final String TAG = AntCooperate.class.getCanonicalName();
 
     private static boolean firstTime = true;

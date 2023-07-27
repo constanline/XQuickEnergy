@@ -119,7 +119,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
                             }
-                            RpcUtil.isTimeout = false;
+                            RpcUtil.isInterruptted = false;
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
                             XposedHook.classLoader = loader;

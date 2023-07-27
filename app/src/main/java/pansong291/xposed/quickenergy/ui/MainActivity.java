@@ -121,6 +121,10 @@ public class MainActivity extends Activity {
             case R.id.btn_help:
                 data = "https://github.com/pansong291/XQuickEnergy/wiki";
                 break;
+
+            case R.id.btn_github:
+                data = "https://github.com/constanline/XQuickEnergy";
+                break;
         }
         Intent it = new Intent(this, HtmlViewerActivity.class);
         it.setData(Uri.parse(data));

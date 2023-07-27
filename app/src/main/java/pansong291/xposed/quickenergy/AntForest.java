@@ -691,7 +691,7 @@ public class AntForest {
                     JSONObject joEnergyRainCanGrantList = new JSONObject(AntForestRpcCall.queryEnergyRainCanGrantList());
                     JSONArray grantInfos = joEnergyRainCanGrantList.getJSONArray("grantInfos");
                     List<String> list = Config.getGiveEnergyRainList();
-                    String userId = null;
+                    String userId;
                     for (int j = 0; j < grantInfos.length(); j++) {
                         JSONObject grantInfo = grantInfos.getJSONObject(j);
                         if (grantInfo.getBoolean("canGrantedStatus")) {

@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,7 +26,7 @@ public class ListAdapter extends BaseAdapter
     }
 
     Context context;
-    List<? extends AlipayId> list;
+    List<? extends IdAndName> list;
     List<String> selects;
     int findIndex = -1;
     CharSequence findWord = null;
@@ -36,14 +35,14 @@ public class ListAdapter extends BaseAdapter
         context = c;
     }
 
-    public void setBaseList(List<? extends AlipayId> l) {
+    public void setBaseList(List<? extends IdAndName> l) {
         if(l != list) exitFind();
         list = l;
     }
 
     public void setSelectedList(List<String> l) {
         selects = l;
-        Collections.sort(list, (Comparator<AlipayId>) (o1, o2) -> {
+        Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
             if (selects.contains(o1.id) == selects.contains(o2.id)) {
                 return o1.id.compareTo(o2.id);
             }
@@ -61,7 +60,7 @@ public class ListAdapter extends BaseAdapter
         if(i < 0) i = list.size();
         for(;;) {
             i = (i + list.size() - 1) % list.size();
-            AlipayId ai = (AlipayId) list.get(i);
+            IdAndName ai = (IdAndName) list.get(i);
             if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
@@ -81,7 +80,7 @@ public class ListAdapter extends BaseAdapter
         }
         for(int i = findIndex;;) {
             i = (i + 1) % list.size();
-            AlipayId ai = (AlipayId) list.get(i);
+            IdAndName ai = (IdAndName) list.get(i);
             if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
@@ -125,7 +124,7 @@ public class ListAdapter extends BaseAdapter
             vh = (ViewHolder)p2.getTag();
         }
 
-        AlipayId ai = (AlipayId) list.get(p1);
+        IdAndName ai = (IdAndName) list.get(p1);
         vh.tv.setText(ai.name);
         vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
         vh.cb.setChecked(selects != null && selects.contains(ai.id));

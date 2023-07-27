@@ -1,6 +1,5 @@
 package pansong291.xposed.quickenergy.hook;
 
-import android.content.Intent;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
@@ -19,7 +18,7 @@ public class RpcUtil
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
 
-    public static boolean isTimeout = false;
+    public static boolean isInterruptted = false;
 
     public static void init(ClassLoader loader) {
         if(rpcCallMethod == null) {
@@ -34,27 +33,13 @@ public class RpcUtil
                 Log.i(TAG, "get RpcCallMethod successfully");
             } catch (Throwable t) {
                 Log.i(TAG, "get RpcCallMethod err:");
-                //Log.printStackTrace(TAG, t);
+                Log.printStackTrace(TAG, t);
             }
         }
     }
 
-    public interface ResponseCallback {
-        /**
-         * Run.
-         *
-         * @param resData     the data
-         * @param respArgs the resp args
-         */
-        void run(JSONObject resData, Object... respArgs) throws Throwable;
-    }
-
     public static String request(String args0, String args1) {
-        return requestRpc(args0, args1, null);
-    }
-
-    public static String requestRpc(String args0, String args1, ResponseCallback successCallback) {
-        if (isTimeout) {
+        if (isInterruptted) {
             return null;
         }
         try {
@@ -69,12 +54,14 @@ public class RpcUtil
             String str = getResponse(o);
             Log.i(TAG, "argument: " + args0 + ", " + args1);
             Log.i(TAG, "response: " + str);
-            if (successCallback != null) {
+            try {
                 JSONObject jo = new JSONObject(str);
-                if (jo.getBoolean("success")) {
-                    successCallback.run(jo, o);
+                if (jo.optString("memo", "").contains("系统繁忙")) {
+                    isInterruptted = true;
+                    AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
+                    return str;
                 }
-            }
+            } catch (Throwable ignored) { }
             return str;
         } catch(Throwable t) {
             Log.i(TAG, "invoke err:");
@@ -83,7 +70,7 @@ public class RpcUtil
                 String msg = t.getCause().getMessage();
                 if (!StringUtil.isEmpty(msg)) {
                     if (msg.contains("登录超时")) {
-                        isTimeout = true;
+                        isInterruptted = true;
                         AntForestNotification.setContentText("登录超时");
                         if(AntForestToast.context != null) {
                             if (Config.timeoutRestart()) {

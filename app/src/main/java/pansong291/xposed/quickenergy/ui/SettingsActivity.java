@@ -287,14 +287,15 @@ public class SettingsActivity extends Activity
                     break;
 
                 case R.id.btn_cooperateWaterList:
-                    ListDialog.show(this, btn.getText(), AlipayCooperate.getList(), Config.getCooperateWaterList(), Config.getcooperateWaterNumList());
+                    ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(), Config.getcooperateWaterNumList());
                     break;
 
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
-                case R.id.btn_ancientTreeAreaCode:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANCIENT_TREE_AREA_CODE);
+
+                case R.id.btn_ancientTreeAreaCodeList:
+                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
                     break;
 
                 case R.id.btn_sendType:

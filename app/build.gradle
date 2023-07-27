@@ -8,8 +8,8 @@ android {
         minSdkVersion 23
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
-        versionCode 25
-        versionName "1.0.8"
+        versionCode 26
+        versionName "1.0.9"
     }
     buildTypes {
         release {
@@ -23,8 +23,6 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 if (variant.buildType.name == 'release') {
                     outputFileName = "xqe-sesame-v${defaultConfig.versionName}.apk"
-                } else if (variant.buildType.name == 'debug') {
-                    outputFileName = "xqe-sesame-v${defaultConfig.versionName}-debug.apk"
                 }
             }
         }

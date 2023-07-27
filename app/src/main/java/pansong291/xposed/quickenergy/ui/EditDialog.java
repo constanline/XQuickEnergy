@@ -11,7 +11,7 @@ import pansong291.xposed.quickenergy.util.Config;
 public class EditDialog {
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
-        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, ANCIENT_TREE_AREA_CODE, ANIMAL_SLEEP_TIME,
+        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, ANIMAL_SLEEP_TIME,
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
     private static EditMode mode;
 
@@ -88,9 +88,6 @@ public class EditDialog {
                                             if(i >= 0)
                                                 Config.setReturnWater10(i);
                                             break;
-                                        case ANCIENT_TREE_AREA_CODE:
-                                            Config.setAncientTreeAreaCode(edt.getText().toString());
-                                            break;
 
                                         case ANIMAL_SLEEP_TIME:
                                             Config.setAnimalSleepTime(edt.getText().toString());
@@ -158,10 +155,6 @@ public class EditDialog {
 
             case RETURN_WATER_10:
                 str = String.valueOf(Config.returnWater10());
-                break;
-
-            case ANCIENT_TREE_AREA_CODE:
-                Config.setAncientTreeAreaCode(Config.ancientTreeAreaCode());
                 break;
 
             case ANIMAL_SLEEP_TIME:
