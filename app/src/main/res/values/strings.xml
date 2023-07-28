@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sesame</string>
+    <string name="app_name">仙人掌</string>
     <string name="start_check_energy">Start check energy</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
@@ -61,6 +61,7 @@
     <string name="farm_log">Farm log</string>
     <string name="other_log">Other log</string>
     <string name="unactivated">UNACTIVATED</string>
+    <string name="tips">Tips</string>
     <string name="hide_the_application_icon">Hide the application icon</string>
     <string name="export_the_statistic_file">Export the statistic file</string>
     <string name="import_the_statistic_file">Import the statistic file</string>
@@ -88,9 +89,13 @@
     <string name="collect_watering_bubble">Collect watering bubble</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="animal_sleep_time">Animal sleep time</string>
-    <string name="ancient_tree_area_code_list">Ancient tree area code list</string>
-    <string name="visit_github">Visit GitHub</string>
-    <string name="tips">Tips</string>
-
+    <string name="exchange_energy_double_click">Exchange energy double click</string>
+    <string name="exchange_energy_double_click_count">Exchange energy double click count</string>
+    <string name="reserve">Reserve</string>
+    <string name="reserve_list">Reserve list</string>
+    <string name="eco_life_tick">Eco Life Tick</string>
+    <string name="ancient_tree">Ancient Tree</string>
+    <string name="ancient_tree_citycode_list">Ancient Tree Citycode List</string>
+    <string name="ancient_tree_only_week">Ancient Tree only week</string>
 
 </resources>

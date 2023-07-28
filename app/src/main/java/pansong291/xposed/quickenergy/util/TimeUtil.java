@@ -25,4 +25,5 @@ public class TimeUtil {
         String max = TimeUtil.getTimeStr();
         return min.compareTo(strTime) <= 0 && max.compareTo(strTime) > 0;
     }
+
 }

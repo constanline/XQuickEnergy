@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                if (variant.buildType.name == 'release') {
+                    outputFileName = "xqe-sesame-v${defaultConfig.versionName}.apk"
+                } else if (variant.buildType.name == 'debug') {
+                    outputFileName = "xqe-sesame-v${defaultConfig.versionName}-debug.apk"
+                }
+            }
+        }
+    }
 }
 
 dependencies {

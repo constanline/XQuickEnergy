@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class CooperationIdMap
+public class ReserveIdMap
 {
-    private static final String TAG = CooperationIdMap.class.getCanonicalName();
+    private static final String TAG = ReserveIdMap.class.getCanonicalName();
 
     public static boolean shouldReload = false;
 
@@ -46,7 +46,7 @@ public class CooperationIdMap
                 sb.append(entry.getValue());
                 sb.append('\n');
             }
-            hasChanged = !FileUtils.write2File(sb.toString(), FileUtils.getCooperationIdMapFile());
+            hasChanged = !FileUtils.write2File(sb.toString(), FileUtils.getReserveIdMapFile());
         }
     }
 
@@ -54,12 +54,12 @@ public class CooperationIdMap
         if(idMap == null || shouldReload) {
             shouldReload = false;
             idMap = new TreeMap<>();
-            String str = FileUtils.readFromFile(FileUtils.getCooperationIdMapFile());
+            String str = FileUtils.readFromFile(FileUtils.getReserveIdMapFile());
             if(str != null && str.length() > 0) {
                 try {
                     String[] idSet = str.split("\n");
                     for(String s: idSet) {
-                       // Log.i(TAG, s);
+                        //Log.i(TAG, s);
                         int ind = s.indexOf(":");
                         idMap.put(s.substring(0, ind), s.substring(ind + 1));
                     }

@@ -57,6 +57,7 @@
     <string name="farm_log">庄园记录</string>
     <string name="other_log">其他记录</string>
     <string name="unactivated">未激活</string>
+    <string name="tips">小贴士</string>
     <string name="hide_the_application_icon">隐藏图标</string>
     <string name="export_the_statistic_file">导出统计</string>
     <string name="import_the_statistic_file">导入统计</string>
@@ -70,7 +71,7 @@
     <string name="use_double_card">使用双击卡</string>
     <string name="wait_when_exception">异常等待时间(分钟)</string>
     <string name="stay_awake_target">保活目标</string>
-    <string name="app_name">芝麻粒</string>
+    <string name="app_name">仙人掌</string>
     <string name="search">搜索</string>
     <string name="last">上一个</string>
     <string name="next">下一个</string>
@@ -86,8 +87,13 @@
     <string name="collect_watering_bubble">收金球</string>
     <string name="use_double_card_time">使用双击卡时间(比如“0000-0100,0700-0730”代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用)</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
-    <string name="ancient_tree_area_code_list">古树区划代码列表</string>
-    <string name="visit_github">访问GitHub</string>
-    <string name="tips">鸡汤</string>
+    <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
+    <string name="exchange_energy_double_click_count">兑换限时双击卡数量</string>
+    <string name="reserve">兑换保护地（会使用能量慎用！）</string>
+    <string name="reserve_list">保护地列表</string>
+    <string name="eco_life_tick">绿色行动打卡</string>
+    <string name="ancient_tree">保护古树（会使用能量慎用！）</string>
+    <string name="ancient_tree_citycode_list">保护古树城市列表</string>
+    <string name="ancient_tree_only_week">仅星期一、三、五运行保护古树</string>
 
 </resources>

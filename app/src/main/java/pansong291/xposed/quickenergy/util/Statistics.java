@@ -4,26 +4,24 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Statistics
-{
-    public enum TimeType
-    { YEAR, MONTH, DAY }
+public class Statistics {
+    public enum TimeType {
+        YEAR, MONTH, DAY
+    }
 
-    public enum DataType
-    { TIME, COLLECTED, HELPED, WATERED }
+    public enum DataType {
+        TIME, COLLECTED, HELPED, WATERED
+    }
 
-    private static class TimeStatistics
-    {
+    private static class TimeStatistics {
         int time;
         int collected, helped, watered;
 
-        TimeStatistics(int i)
-        {
+        TimeStatistics(int i) {
             reset(i);
         }
 
-        public void reset(int i)
-        {
+        public void reset(int i) {
             time = i;
             collected = 0;
             helped = 0;
@@ -31,33 +29,40 @@ public class Statistics
         }
     }
 
-    private static class WaterFriendLog
-    {
+    private static class WaterFriendLog {
         String userId;
         int waterCount = 0;
-        public WaterFriendLog(String id)
-        {
+
+        public WaterFriendLog(String id) {
             userId = id;
         }
     }
 
-    private static class FeedFriendLog
-    {
+    private static class ReserveLog {
+        String projectId;
+        int applyCount = 0;
+
+        public ReserveLog(String id) {
+            projectId = id;
+        }
+    }
+
+    private static class FeedFriendLog {
         String userId;
         int feedCount = 0;
-        public FeedFriendLog(String id)
-        {
+
+        public FeedFriendLog(String id) {
             userId = id;
         }
     }
 
     private static final String TAG = Statistics.class.getCanonicalName();
-    private static final String
-            jn_year = "year", jn_month = "month", jn_day = "day",
+    private static final String jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
             jn_answerQuestionList = "answerQuestionList",
             jn_questionHint = "questionHint", jn_donationEgg = "donationEgg", jn_memberSignIn = "memberSignIn",
-            jn_exchange = "exchange", jn_kbSignIn = "kbSignIn", jn_syncStep = "syncStep";
+            jn_exchange = "exchange", jn_kbSignIn = "kbSignIn", jn_syncStep = "syncStep",
+            jn_exchangeDoubleCard = "exchangeDoubleCard", jn_exchangeTimes = "exchangeTimes";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -66,6 +71,10 @@ public class Statistics
     // forest
     private ArrayList<WaterFriendLog> waterFriendLogList;
     private ArrayList<String> cooperateWaterList;
+    private ArrayList<ReserveLog> reserveLogList;
+    private ArrayList<String> ancientTreeCityCodeList;
+    private int exchangeDoubleCard = 0;
+    private int exchangeTimes = 0;
 
     // farm
     private ArrayList<String> answerQuestionList;
@@ -83,12 +92,10 @@ public class Statistics
 
     private static Statistics statistics;
 
-    public static void addData(DataType dt, int i)
-    {
+    public static void addData(DataType dt, int i) {
         Statistics stat = getStatistics();
         resetToday();
-        switch(dt)
-        {
+        switch (dt) {
             case COLLECTED:
                 stat.day.collected += i;
                 stat.month.collected += i;
@@ -108,13 +115,11 @@ public class Statistics
         save();
     }
 
-    public static int getData(TimeType tt, DataType dt)
-    {
+    public static int getData(TimeType tt, DataType dt) {
         Statistics stat = getStatistics();
         int data = 0;
         TimeStatistics ts = null;
-        switch(tt)
-        {
+        switch (tt) {
             case YEAR:
                 ts = stat.year;
                 break;
@@ -125,9 +130,8 @@ public class Statistics
                 ts = stat.day;
                 break;
         }
-        if(ts != null)
-            switch(dt)
-            {
+        if (ts != null)
+            switch (dt) {
                 case TIME:
                     data = ts.time;
                     break;
@@ -159,7 +163,7 @@ public class Statistics
         sb.append(getData(TimeType.DAY, DataType.COLLECTED));
         sb.append(",   帮 ").append(getData(TimeType.DAY, DataType.HELPED));
         sb.append(",   浇 ").append(getData(TimeType.DAY, DataType.WATERED));
-        if(stat.questionHint != null && !stat.questionHint.isEmpty()) {
+        if (stat.questionHint != null && !stat.questionHint.isEmpty()) {
             sb.append("\nquestion hint : ").append(stat.questionHint);
         }
         return sb.toString();
@@ -168,12 +172,13 @@ public class Statistics
     public static boolean canWaterFriendToday(String id, int count) {
         Statistics stat = getStatistics();
         int index = -1;
-        for(int i = 0; i < stat.waterFriendLogList.size(); i++)
-            if(stat.waterFriendLogList.get(i).userId.equals(id)) {
+        for (int i = 0; i < stat.waterFriendLogList.size(); i++)
+            if (stat.waterFriendLogList.get(i).userId.equals(id)) {
                 index = i;
                 break;
             }
-        if(index < 0) return true;
+        if (index < 0)
+            return true;
         WaterFriendLog wfl = stat.waterFriendLogList.get(index);
         return wfl.waterCount < count;
     }
@@ -182,18 +187,65 @@ public class Statistics
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
-        for(int i = 0; i < stat.waterFriendLogList.size(); i++)
-            if(stat.waterFriendLogList.get(i).userId.equals(id)) {
+        for (int i = 0; i < stat.waterFriendLogList.size(); i++)
+            if (stat.waterFriendLogList.get(i).userId.equals(id)) {
                 index = i;
                 break;
             }
-        if(index < 0) {
+        if (index < 0) {
             wfl = new WaterFriendLog(id);
             stat.waterFriendLogList.add(wfl);
         } else {
             wfl = stat.waterFriendLogList.get(index);
         }
         wfl.waterCount = count;
+        save();
+    }
+
+    public static int getReserveTimes(String id) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.reserveLogList.size(); i++)
+            if (stat.reserveLogList.get(i).projectId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return 0;
+        ReserveLog rl = stat.reserveLogList.get(index);
+        return rl.applyCount;
+    }
+
+    public static boolean canReserveToday(String id, int count) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.reserveLogList.size(); i++)
+            if (stat.reserveLogList.get(i).projectId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        ReserveLog rl = stat.reserveLogList.get(index);
+        return rl.applyCount < count;
+    }
+
+    public static void reserveToday(String id, int count) {
+        Statistics stat = getStatistics();
+        ReserveLog rl;
+        int index = -1;
+        for (int i = 0; i < stat.reserveLogList.size(); i++)
+            if (stat.reserveLogList.get(i).projectId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            rl = new ReserveLog(id);
+            stat.reserveLogList.add(rl);
+        } else {
+            rl = stat.reserveLogList.get(index);
+        }
+        rl.applyCount += count;
         save();
     }
 
@@ -205,8 +257,21 @@ public class Statistics
     public static void cooperateWaterToday(String uid, String coopId) {
         Statistics stat = getStatistics();
         String v = uid + "_" + coopId;
-        if(!stat.cooperateWaterList.contains(v)) {
+        if (!stat.cooperateWaterList.contains(v)) {
             stat.cooperateWaterList.add(v);
+            save();
+        }
+    }
+
+    public static boolean canAncientTreeToday(String cityCode) {
+        Statistics stat = getStatistics();
+        return !stat.ancientTreeCityCodeList.contains(cityCode);
+    }
+
+    public static void ancientTreeToday( String cityCode) {
+        Statistics stat = getStatistics();
+        if (!stat.ancientTreeCityCodeList.contains(cityCode)) {
+            stat.ancientTreeCityCodeList.add(cityCode);
             save();
         }
     }
@@ -218,7 +283,7 @@ public class Statistics
 
     public static void answerQuestionToday(String uid) {
         Statistics stat = getStatistics();
-        if(!stat.answerQuestionList.contains(uid)) {
+        if (!stat.answerQuestionList.contains(uid)) {
             stat.answerQuestionList.add(uid);
             save();
         }
@@ -226,7 +291,7 @@ public class Statistics
 
     public static void setQuestionHint(String s) {
         Statistics stat = getStatistics();
-        if(stat.questionHint == null) {
+        if (stat.questionHint == null) {
             stat.questionHint = s;
             save();
         }
@@ -235,12 +300,13 @@ public class Statistics
     public static boolean canFeedFriendToday(String id, int count) {
         Statistics stat = getStatistics();
         int index = -1;
-        for(int i = 0; i < stat.feedFriendLogList.size(); i++)
-            if(stat.feedFriendLogList.get(i).userId.equals(id)) {
+        for (int i = 0; i < stat.feedFriendLogList.size(); i++)
+            if (stat.feedFriendLogList.get(i).userId.equals(id)) {
                 index = i;
                 break;
             }
-        if(index < 0) return true;
+        if (index < 0)
+            return true;
         FeedFriendLog ffl = stat.feedFriendLogList.get(index);
         return ffl.feedCount < count;
     }
@@ -249,12 +315,12 @@ public class Statistics
         Statistics stat = getStatistics();
         FeedFriendLog ffl;
         int index = -1;
-        for(int i = 0; i < stat.feedFriendLogList.size(); i++)
-            if(stat.feedFriendLogList.get(i).userId.equals(id)) {
+        for (int i = 0; i < stat.feedFriendLogList.size(); i++)
+            if (stat.feedFriendLogList.get(i).userId.equals(id)) {
                 index = i;
                 break;
             }
-        if(index < 0) {
+        if (index < 0) {
             ffl = new FeedFriendLog(id);
             stat.feedFriendLogList.add(ffl);
         } else {
@@ -271,7 +337,7 @@ public class Statistics
 
     public static void memberSignInToday() {
         Statistics stat = getStatistics();
-        if(stat.memberSignIn != stat.day.time) {
+        if (stat.memberSignIn != stat.day.time) {
             stat.memberSignIn = stat.day.time;
             save();
         }
@@ -284,7 +350,7 @@ public class Statistics
 
     public static void donationEgg() {
         Statistics stat = getStatistics();
-        if(stat.donationEgg != stat.day.time) {
+        if (stat.donationEgg != stat.day.time) {
             stat.donationEgg = stat.day.time;
             save();
         }
@@ -297,10 +363,39 @@ public class Statistics
 
     public static void exchangeToday() {
         Statistics stat = getStatistics();
-        if(stat.exchange != stat.day.time) {
+        if (stat.exchange != stat.day.time) {
             stat.exchange = stat.day.time;
             save();
         }
+    }
+
+    public static boolean canExchangeDoubleCardToday() {
+        Statistics stat = getStatistics();
+        if (stat.exchangeDoubleCard < stat.day.time) {
+            return true;
+        } else if (stat.exchangeTimes < Config.getExchangeEnergyDoubleClickCount()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void exchangeDoubleCardToday(boolean iSsuccess) {
+        Statistics stat = getStatistics();
+        if (stat.exchangeDoubleCard != stat.day.time) {
+            stat.exchangeDoubleCard = stat.day.time;
+        }
+        if (iSsuccess) {
+            stat.exchangeTimes += 1;
+        } else {
+            stat.exchangeTimes = Config.getExchangeEnergyDoubleClickCount();
+        }
+        save();
+    }
+
+    public static int getExchangeTimes() {
+        Statistics stat = getStatistics();
+        return stat.exchangeTimes;
     }
 
     public static boolean canKbSignInToday() {
@@ -310,7 +405,7 @@ public class Statistics
 
     public static void KbSignInToday() {
         Statistics stat = getStatistics();
-        if(stat.kbSignIn != stat.day.time) {
+        if (stat.kbSignIn != stat.day.time) {
             stat.kbSignIn = stat.day.time;
             save();
         }
@@ -323,16 +418,16 @@ public class Statistics
 
     public static void SyncStepToday() {
         Statistics stat = getStatistics();
-        if(stat.syncStep != stat.day.time) {
+        if (stat.syncStep != stat.day.time) {
             stat.syncStep = stat.day.time;
             save();
         }
     }
 
     private static Statistics getStatistics() {
-        if(statistics == null) {
+        if (statistics == null) {
             String statJson = null;
-            if(FileUtils.getStatisticsFile().exists())
+            if (FileUtils.getStatisticsFile().exists())
                 statJson = FileUtils.readFromFile(FileUtils.getStatisticsFile());
             statistics = json2Statistics(statJson);
         }
@@ -346,26 +441,27 @@ public class Statistics
         int mo = Integer.parseInt(dateStr[1]);
         int da = Integer.parseInt(dateStr[2]);
 
-        if(ye > stat.year.time) {
+        if (ye > stat.year.time) {
             stat.year.reset(ye);
             stat.month.reset(mo);
             stat.day.reset(da);
             dayClear();
-        } else if(mo > stat.month.time) {
+        } else if (mo > stat.month.time) {
             stat.month.reset(mo);
             stat.day.reset(da);
             dayClear();
-        } else if(da > stat.day.time) {
+        } else if (da > stat.day.time) {
             stat.day.reset(da);
             dayClear();
         }
     }
 
-    private static void dayClear()
-    {
+    private static void dayClear() {
         Statistics stat = getStatistics();
         stat.waterFriendLogList.clear();
         stat.cooperateWaterList.clear();
+        stat.reserveLogList.clear();
+        stat.ancientTreeCityCodeList.clear();
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
         stat.questionHint = null;
@@ -374,27 +470,31 @@ public class Statistics
         stat.exchange = 0;
         stat.kbSignIn = 0;
         stat.syncStep = 0;
+        stat.exchangeDoubleCard = 0;
+        stat.exchangeTimes = 0;
         save();
         FileUtils.getForestLogFile().delete();
         FileUtils.getFarmLogFile().delete();
         FileUtils.getOtherLogFile().delete();
     }
 
-    private static Statistics defInit()  {
+    private static Statistics defInit() {
         Statistics stat = new Statistics();
         String[] date = Log.getFormatDate().split("-");
-        if(stat.year == null)
+        if (stat.year == null)
             stat.year = new TimeStatistics(Integer.parseInt(date[0]));
-        if(stat.month == null)
+        if (stat.month == null)
             stat.month = new TimeStatistics(Integer.parseInt(date[1]));
-        if(stat.day == null)
+        if (stat.day == null)
             stat.day = new TimeStatistics(Integer.parseInt(date[2]));
-        if(stat.cooperateWaterList == null)
+        if (stat.cooperateWaterList == null)
             stat.cooperateWaterList = new ArrayList<>();
-        if(stat.answerQuestionList == null)
+        if (stat.answerQuestionList == null)
             stat.answerQuestionList = new ArrayList<>();
-        if(stat.feedFriendLogList == null)
+        if (stat.feedFriendLogList == null)
             stat.feedFriendLogList = new ArrayList<>();
+        if (stat.ancientTreeCityCodeList == null)
+            stat.ancientTreeCityCodeList = new ArrayList<>();
         return stat;
     }
 
@@ -414,7 +514,6 @@ public class Statistics
 
             stat.year.watered = joo.getInt(jn_watered);
 
-
             joo = jo.getJSONObject(jn_month);
             stat.month = new TimeStatistics(joo.getInt(jn_month));
 
@@ -423,7 +522,6 @@ public class Statistics
             stat.month.helped = joo.getInt(jn_helped);
 
             stat.month.watered = joo.getInt(jn_watered);
-
 
             joo = jo.getJSONObject(jn_day);
             stat.day = new TimeStatistics(joo.getInt(jn_day));
@@ -434,12 +532,11 @@ public class Statistics
 
             stat.day.watered = joo.getInt(jn_watered);
 
-
             stat.waterFriendLogList = new ArrayList<>();
 
-            if(jo.has(Config.jn_waterFriendList)) {
+            if (jo.has(Config.jn_waterFriendList)) {
                 JSONArray ja = jo.getJSONArray(Config.jn_waterFriendList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     JSONArray jaa = ja.getJSONArray(i);
                     WaterFriendLog wfl = new WaterFriendLog(jaa.getString(0));
                     wfl.waterCount = jaa.getInt(1);
@@ -450,33 +547,54 @@ public class Statistics
 
             stat.cooperateWaterList = new ArrayList<>();
 
-            if(jo.has(Config.jn_cooperateWaterList)) {
+            if (jo.has(Config.jn_cooperateWaterList)) {
                 JSONArray ja = jo.getJSONArray(Config.jn_cooperateWaterList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     stat.cooperateWaterList.add(ja.getString(i));
 
                 }
             }
 
+            stat.ancientTreeCityCodeList = new ArrayList<>();
+
+            if (jo.has(Config.jn_ancientTreeCityCodeList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_ancientTreeCityCodeList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.ancientTreeCityCodeList.add(ja.getString(i));
+
+                }
+            }
+
+            stat.reserveLogList = new ArrayList<>();
+
+            if (jo.has(Config.jn_reserveList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_reserveList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    ReserveLog rl = new ReserveLog(jaa.getString(0));
+                    rl.applyCount = jaa.getInt(1);
+                    stat.reserveLogList.add(rl);
+                }
+            }
+
             stat.answerQuestionList = new ArrayList<>();
 
-            if(jo.has(jn_answerQuestionList)) {
+            if (jo.has(jn_answerQuestionList)) {
                 JSONArray ja = jo.getJSONArray(jn_answerQuestionList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     stat.answerQuestionList.add(ja.getString(i));
 
                 }
             }
 
-            if(jo.has(jn_questionHint))
+            if (jo.has(jn_questionHint))
                 stat.questionHint = jo.getString(jn_questionHint);
-
 
             stat.feedFriendLogList = new ArrayList<>();
 
-            if(jo.has(Config.jn_feedFriendAnimalList)) {
+            if (jo.has(Config.jn_feedFriendAnimalList)) {
                 JSONArray ja = jo.getJSONArray(Config.jn_feedFriendAnimalList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     JSONArray jaa = ja.getJSONArray(i);
                     FeedFriendLog ffl = new FeedFriendLog(jaa.getString(0));
                     ffl.feedCount = jaa.getInt(1);
@@ -485,49 +603,49 @@ public class Statistics
                 }
             }
 
-            if(jo.has(jn_donationEgg))
+            if (jo.has(jn_donationEgg))
                 stat.donationEgg = jo.getInt(jn_donationEgg);
 
-
-            if(jo.has(jn_memberSignIn))
+            if (jo.has(jn_memberSignIn))
                 stat.memberSignIn = jo.getInt(jn_memberSignIn);
 
-
-            if(jo.has(jn_exchange))
+            if (jo.has(jn_exchange))
                 stat.exchange = jo.getInt(jn_exchange);
 
-
-            if(jo.has(jn_kbSignIn))
+            if (jo.has(jn_kbSignIn))
                 stat.kbSignIn = jo.getInt(jn_kbSignIn);
 
-
-            if(jo.has(jn_syncStep))
+            if (jo.has(jn_syncStep))
                 stat.syncStep = jo.getInt(jn_syncStep);
 
+            if (jo.has(jn_exchangeDoubleCard))
+                stat.exchangeDoubleCard = jo.getInt(jn_exchangeDoubleCard);
+
+            if (jo.has(jn_exchangeTimes))
+                stat.exchangeTimes = jo.getInt(jn_exchangeTimes);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
-            if(json != null) {
+            if (json != null) {
                 Log.i(TAG, "统计文件格式有误，已重置统计文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getStatisticsFile()));
             }
             stat = defInit();
         }
         String formated = statistics2Json(stat);
-        if(!formated.equals(json)) {
+        if (!formated.equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
             FileUtils.write2File(formated, FileUtils.getStatisticsFile());
         }
         return stat;
     }
 
-    private static String statistics2Json(Statistics stat)
-    {
+    private static String statistics2Json(Statistics stat) {
         JSONObject jo = new JSONObject();
         JSONArray ja = null;
-        try
-        {
-            if(stat == null) stat = Statistics.defInit();
+        try {
+            if (stat == null)
+                stat = Statistics.defInit();
             JSONObject joo = new JSONObject();
             joo.put(jn_year, stat.year.time);
             joo.put(jn_collected, stat.year.collected);
@@ -550,8 +668,7 @@ public class Statistics
             jo.put(jn_day, joo);
 
             ja = new JSONArray();
-            for(int i = 0; i < stat.waterFriendLogList.size(); i++)
-            {
+            for (int i = 0; i < stat.waterFriendLogList.size(); i++) {
                 WaterFriendLog wfl = stat.waterFriendLogList.get(i);
                 JSONArray jaa = new JSONArray();
                 jaa.put(wfl.userId);
@@ -561,25 +678,38 @@ public class Statistics
             jo.put(Config.jn_waterFriendList, ja);
 
             ja = new JSONArray();
-            for(int i = 0; i < stat.cooperateWaterList.size(); i++)
-            {
+            for (int i = 0; i < stat.cooperateWaterList.size(); i++) {
                 ja.put(stat.cooperateWaterList.get(i));
             }
             jo.put(Config.jn_cooperateWaterList, ja);
 
             ja = new JSONArray();
-            for(int i = 0; i < stat.answerQuestionList.size(); i++)
-            {
+            for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {
+                ja.put(stat.ancientTreeCityCodeList.get(i));
+            }
+            jo.put(Config.jn_ancientTreeCityCodeList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.reserveLogList.size(); i++) {
+                ReserveLog rl = stat.reserveLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(rl.projectId);
+                jaa.put(rl.applyCount);
+                ja.put(jaa);
+            }
+            jo.put(Config.jn_reserveList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.answerQuestionList.size(); i++) {
                 ja.put(stat.answerQuestionList.get(i));
             }
             jo.put(jn_answerQuestionList, ja);
 
-            if(stat.questionHint != null)
+            if (stat.questionHint != null)
                 jo.put(jn_questionHint, stat.questionHint);
 
             ja = new JSONArray();
-            for(int i = 0; i < stat.feedFriendLogList.size(); i++)
-            {
+            for (int i = 0; i < stat.feedFriendLogList.size(); i++) {
                 FeedFriendLog ffl = stat.feedFriendLogList.get(i);
                 JSONArray jaa = new JSONArray();
                 jaa.put(ffl.userId);
@@ -597,15 +727,18 @@ public class Statistics
             jo.put(jn_kbSignIn, stat.kbSignIn);
 
             jo.put(jn_syncStep, stat.syncStep);
-        }catch(Throwable t)
-        {
+
+            jo.put(jn_exchangeDoubleCard, stat.exchangeDoubleCard);
+
+            jo.put(jn_exchangeTimes, stat.exchangeTimes);
+
+        } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
         return Config.formatJson(jo, false);
     }
 
-    private static void save()
-    {
+    private static void save() {
         FileUtils.write2File(statistics2Json(getStatistics()), FileUtils.getStatisticsFile());
     }
 

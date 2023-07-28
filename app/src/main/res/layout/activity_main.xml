@@ -65,19 +65,5 @@
 		android:gravity="center|start"
 		android:padding="12dp"/>
 
-	<Button
-		android:id="@+id/btn_github"
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="24dp"
-		android:background="@drawable/button"
-		android:gravity="center|start"
-		android:onClick="onClick"
-		android:padding="12dp"
-		android:text="@string/visit_github"
-		android:textAllCaps="false"
-		android:textColor="#FF000000" />
-
 </LinearLayout>
 

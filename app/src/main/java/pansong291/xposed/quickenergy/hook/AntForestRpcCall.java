@@ -2,6 +2,8 @@ package pansong291.xposed.quickenergy.hook;
 
 import pansong291.xposed.quickenergy.util.StringUtil;
 
+import pansong291.xposed.quickenergy.util.RandomUtils;
+
 import java.util.UUID;
 
 public class AntForestRpcCall {
@@ -114,4 +116,15 @@ public class AntForestRpcCall {
                         VERSION + "\"}]");
     }
 
+    public static String exchangeBenefit(String spuId, String skuId) {
+        return RpcUtil.request("com.alipay.antcommonweal.exchange.h5.exchangeBenefit",
+                "[{\"sceneCode\":\"ANTFOREST_VITALITY\",\"requestId\":\"" + System.currentTimeMillis()
+                        + "_" + RandomUtils.getRandom(17) + "\",\"spuId\":\"" +
+                        spuId + "\",\"skuId\":\"" + skuId + "\",\"source\":\"GOOD_DETAIL\"}]");
+    }
+
+
+    public static String testH5Rpc(String operationTpye, String requestDate) {
+        return RpcUtil.request(operationTpye,requestDate);
+    }
 }

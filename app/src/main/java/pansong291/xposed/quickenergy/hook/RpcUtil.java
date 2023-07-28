@@ -59,6 +59,7 @@ public class RpcUtil
                 if (jo.optString("memo", "").contains("系统繁忙")) {
                     isInterruptted = true;
                     AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
+                    Log.forest("系统繁忙，可能需要滑动验证");
                     return str;
                 }
             } catch (Throwable ignored) { }
@@ -82,9 +83,10 @@ public class RpcUtil
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
                             Config.setForestPauseTime(waitTime);
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            Log.forest("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
                     } else if (msg.contains("MMTPException")) {
-                        return "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
+                        return "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}"; 
                     }
                 }
             }
@@ -95,8 +97,20 @@ public class RpcUtil
     public static String getResponse(Object resp) throws Throwable {
         if(getResponseMethod == null)
             getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
-
-        return (String) getResponseMethod.invoke(resp);
+            return (String) getResponseMethod.invoke(resp);
     }
+
+/*     public static String getResponse(Object resp) {
+        try {
+            if(getResponseMethod == null)
+                getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
+
+            return (String) getResponseMethod.invoke(resp);
+        } catch(Throwable t) {
+            Log.i(TAG, "getResponse err:");
+            Log.printStackTrace(TAG, t);
+        }
+        return null;
+    } */
 
 }

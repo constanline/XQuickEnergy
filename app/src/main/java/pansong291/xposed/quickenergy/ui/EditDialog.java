@@ -12,7 +12,7 @@ public class EditDialog {
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
         COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, ANIMAL_SLEEP_TIME,
-        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
+        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION ,EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT }
     private static EditMode mode;
 
     public static void showEditDialog(Context c, CharSequence title, EditMode em) {
@@ -114,6 +114,12 @@ public class EditDialog {
                                             Config.setWaitWhenException(i * 60 * 1000);
                                             break;
 
+                                        case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
+                                            if (i > 0) {
+                                                Config.setExchangeEnergyDoubleClickCount(i);
+                                            }
+                                            break;
+
                                     }
                                 } catch(Throwable ignored) { }
                             }
@@ -136,7 +142,6 @@ public class EditDialog {
             case LIMIT_COUNT:
                 str = String.valueOf(Config.getLimitCount());
                 break;
-
             case DOUBLE_CARD_TIME:
                 str = Config.doubleCardTime();
                 break;
@@ -175,6 +180,10 @@ public class EditDialog {
 
             case WAIT_WHEN_EXCEPTION:
                 str = String.valueOf(Config.waitWhenException() / 60 / 1000);
+                break;
+
+            case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
+                str = String.valueOf(Config.getExchangeEnergyDoubleClickCount());
                 break;
         }
         edt.setText(str);

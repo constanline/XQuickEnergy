@@ -14,9 +14,10 @@ import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.ReserveIdMap;
+import pansong291.xposed.quickenergy.util.CityCodeMap;
 
-public class SettingsActivity extends Activity
-{
+public class SettingsActivity extends Activity {
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
             cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
@@ -26,17 +27,19 @@ public class SettingsActivity extends Activity
             cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
-            cb_kbSignIn, cb_limitCollect, cb_doubleCard;
+            cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
+            cb_ancientTree, cb_ancientTreeOnlyWeek;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         Config.shouldReload = true;
         FriendIdMap.shouldReload = true;
         CooperationIdMap.shouldReload = true;
+        ReserveIdMap.shouldReload = true;
+        CityCodeMap.shouldReload = true;
 
         cb_immediateEffect = findViewById(R.id.cb_immediateEffect);
         cb_recordLog = findViewById(R.id.cb_recordLog);
@@ -48,7 +51,9 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
         cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
         cb_cooperateWater = findViewById(R.id.cb_cooperateWater);
+        cb_ancientTree = findViewById(R.id.cb_ancientTree);
         cb_energyRain = findViewById(R.id.cb_energyRain);
+        cb_reserve = findViewById(R.id.cb_reserve);
         cb_enableFarm = findViewById(R.id.cb_enableFarm);
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
@@ -67,11 +72,13 @@ public class SettingsActivity extends Activity
         cb_kbSignIn = findViewById(R.id.cb_kbSignIn);
         cb_limitCollect = findViewById(R.id.cb_limitCollect);
         cb_doubleCard = findViewById(R.id.cb_doubleCard);
+        cb_ExchangeEnergyDoubleClick = findViewById(R.id.cb_ExchangeEnergyDoubleClick);
+        cb_ecoLifeTick = findViewById(R.id.cb_ecoLifeTick);
+        cb_ancientTreeOnlyWeek = findViewById(R.id.cb_ancientTreeOnlyWeek);
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         cb_immediateEffect.setChecked(Config.immediateEffect());
         cb_recordLog.setChecked(Config.recordLog());
@@ -83,7 +90,9 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
         cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
         cb_cooperateWater.setChecked(Config.cooperateWater());
+        cb_ancientTree.setChecked(Config.ancientTree());
         cb_energyRain.setChecked(Config.energyRain());
+        cb_reserve.setChecked(Config.reserve());
         cb_enableFarm.setChecked(Config.enableFarm());
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
@@ -102,15 +111,16 @@ public class SettingsActivity extends Activity
         cb_kbSignIn.setChecked(Config.kbSginIn());
         cb_limitCollect.setChecked(Config.isLimitCollect());
         cb_doubleCard.setChecked(Config.doubleCard());
+        cb_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
+        cb_ecoLifeTick.setChecked(Config.ecoLifeTick());
+        cb_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
     }
 
     @SuppressLint("NonConstantResourceId")
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         if (v instanceof CheckBox) {
-            CheckBox cb = (CheckBox)v;
-            switch(v.getId())
-            {
+            CheckBox cb = (CheckBox) v;
+            switch (v.getId()) {
                 case R.id.cb_immediateEffect:
                     Config.setImmediateEffect(cb.isChecked());
                     break;
@@ -159,8 +169,20 @@ public class SettingsActivity extends Activity
                     Config.setCooperateWater(cb.isChecked());
                     break;
 
+                case R.id.cb_ancientTree:
+                    Config.setAncientTree(cb.isChecked());
+                    break;
+
                 case R.id.cb_energyRain:
                     Config.setEnergyRain(cb.isChecked());
+                    break;
+
+                case R.id.cb_ExchangeEnergyDoubleClick:
+                    Config.setExchangeEnergyDoubleClick(cb.isChecked());
+                    break;
+
+                case R.id.cb_reserve:
+                    Config.setReserve(cb.isChecked());
                     break;
 
                 case R.id.cb_enableFarm:
@@ -226,10 +248,18 @@ public class SettingsActivity extends Activity
                 case R.id.cb_kbSignIn:
                     Config.setKbSginIn(cb.isChecked());
                     break;
+
+                case R.id.cb_ecoLifeTick:
+                    Config.setEcoLifeTick(cb.isChecked());
+                    break;
+
+                case R.id.cb_ancientTreeOnlyWeek:
+                    Config.setAncientTreeOnlyWeek(cb.isChecked());
+                    break;
             }
         } else if (v instanceof Button) {
-            Button btn = (Button)v;
-            switch(v.getId()) {
+            Button btn = (Button) v;
+            switch (v.getId()) {
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -283,19 +313,27 @@ public class SettingsActivity extends Activity
                     break;
 
                 case R.id.btn_waterFriendList:
-                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(), Config.getWaterCountList());
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(),
+                            Config.getWaterCountList());
                     break;
 
                 case R.id.btn_cooperateWaterList:
-                    ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(), Config.getcooperateWaterNumList());
+                    ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(),
+                            Config.getcooperateWaterNumList());
+                    break;
+
+                case R.id.btn_ancientTreeCityCodeList:
+                    ListDialog.show(this, btn.getText(), CityCode.getList(), Config.getAncientTreeCityCodeList(),
+                            null);
                     break;
 
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
 
-                case R.id.btn_ancientTreeAreaCodeList:
-                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
+                case R.id.btn_reserveList:
+                    ListDialog.show(this, btn.getText(), AlipayReserve.getList(), Config.getReserveList(),
+                            Config.getReserveCountList());
                     break;
 
                 case R.id.btn_sendType:
@@ -311,7 +349,8 @@ public class SettingsActivity extends Activity
                     break;
 
                 case R.id.btn_feedFriendAnimalList:
-                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(), Config.getFeedFriendCountList());
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(),
+                            Config.getFeedFriendCountList());
                     break;
 
                 case R.id.btn_dontNotifyFriendList:
@@ -330,7 +369,8 @@ public class SettingsActivity extends Activity
                     break;
 
                 case R.id.btn_donation_xqe_developer:
-                    Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
+                    Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                            "alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
                     startActivity(it2);
                     break;
 
@@ -349,6 +389,11 @@ public class SettingsActivity extends Activity
                 case R.id.btn_waitWhenException:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
+
+                case R.id.btn_ExchangeEnergyDoubleClickCount:
+                    EditDialog.showEditDialog(this, btn.getText(),
+                            EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
+                    break;
             }
         }
     }
@@ -356,13 +401,14 @@ public class SettingsActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        if(Config.hasChanged) {
+        if (Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
-            Toast.makeText(this, "Configuration saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();
         }
         FriendIdMap.saveIdMap();
         CooperationIdMap.saveIdMap();
+        ReserveIdMap.saveIdMap();
+        CityCodeMap.saveIdMap();
     }
 
 }
-

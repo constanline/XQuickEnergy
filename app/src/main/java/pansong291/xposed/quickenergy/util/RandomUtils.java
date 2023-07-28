@@ -15,4 +15,12 @@ public class RandomUtils
     {
         return rnd.nextInt(max - min) + min;
     }
+
+    public static String getRandom(int len) {
+        StringBuilder rs = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            rs.append(rnd.nextInt(10));
+        }
+        return rs.toString();
+    }
 }
