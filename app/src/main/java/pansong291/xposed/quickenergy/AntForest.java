@@ -905,7 +905,18 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean isGuangpan = false;
-                        if ("photoguangpan".equals(actionId))continue;
+                        // if ("photoguangpan".equals(actionId))continue;
+                        if ("photoguangpan".equals(actionId)) {
+                            isGuangpan = true;
+                            String s = EcoLifeRpcCall.uploadDishImageBeforeMeals("ALIPAY", dayPoint);
+                            Thread.sleep(200);
+                            s = EcoLifeRpcCall.uploadDishImageAfterMeals("ALIPAY", dayPoint);
+                            Thread.sleep(200);
+                            jo = new JSONObject(EcoLifeRpcCall.queryDish("ALIPAY", dayPoint));
+                            JSONObject queryDishData = jo.getJSONObject("data");
+                            if (!"S_SEC_PASS".equals(queryDishData.getString("status")))
+                                continue;
+                        }
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, isGuangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡[" + actionName + "]成功");
