@@ -1,0 +1,48 @@
+name: Android Cl
+
+on:
+
+release:
+
+types: [published]
+
+jobs:
+
+build:
+
+permissions: write-all runs-on: ubuntu-latest steps:
+
+- uses: actions/checkout@v3
+
+with:
+
+fetch-depth: 0- name: set up JDK 11
+
+uses: actions/setup-java@v3
+
+with:
+
+java-version: '11'
+
+distribution: 'temurin'
+
+cache: gradle
+
+- name: Grant execute permission for gradlew
+
+run: chmod +x gradlew
+
+name: Build with Gradle
+
+run: ./gradlew assembleDebug
+
+- name: Upload to Release Action
+
+uses: Shopify/upload-to-release@v1.0.1
+
+with:
+
+name: ppkk-${{ github.event.release.tag_name }}.apk
+
+path: app/build/outputs/apk/debug/app-debug.apk
+
