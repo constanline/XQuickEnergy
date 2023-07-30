@@ -905,21 +905,7 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean isGuangpan = false;
-                        if ("photoguangpan".equals(actionId))
-                            continue;
-                        /*
-                         * if ("photoguangpan".equals(actionId)) {
-                         * isGuangpan = true;
-                         * String s = EcoLifeRpcCall.uploadDishImageBeforeMeals("ALIPAY", dayPoint);
-                         * Thread.sleep(200);
-                         * s = EcoLifeRpcCall.uploadDishImageAfterMeals("ALIPAY", dayPoint);
-                         * Thread.sleep(200);
-                         * jo = new JSONObject(EcoLifeRpcCall.queryDish("ALIPAY", dayPoint));
-                         * JSONObject queryDishData = jo.getJSONObject("data");
-                         * if (!"S_SEC_PASS".equals(queryDishData.getString("status")))
-                         * continue;
-                         * }
-                         */
+                        if ("photoguangpan".equals(actionId))continue;
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, isGuangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡[" + actionName + "]成功");
@@ -1017,7 +1003,7 @@ public class AntForest {
                                 "a"),
                         "a", new Object[] { step, Boolean.FALSE, "system" });
                 if (booleanValue) {
-                    Log.recordLog("记录运动步数成功:" + step, "");
+                    Log.other("修改运动步数成功:" + step);
                 } else {
                     Log.recordLog("修改运动步数失败:" + step, "");
                 }

@@ -6,8 +6,8 @@ public class AntFarmRpcCall {
     public static String enterFarm(String farmId, String userId) {
         return RpcUtil.request("com.alipay.antfarm.enterFarm",
                 "[{\"animalId\":\"\",\"farmId\":\"" + farmId +
-                        "\",\"gotoneScene\":\"\",\"gotoneTemplateId\":\"\",\"masterFarmId\":\"\",\"queryLastRecordNum\":true,\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ANTFOREST\",\"touchRecordId\":\"\",\"userId\":\"" +
-                userId + "\",\"version\":\"" + VERSION + "\"}]");
+                        "\",\"gotoneScene\":\"\",\"gotoneTemplateId\":\"\",\"masterFarmId\":\"\",\"queryLastRecordNum\":true,\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ANTFOREST\",\"touchRecordId\":\"\",\"userId\":\""
+                        + userId + "\",\"version\":\"" + VERSION + "\"}]");
     }
 
     public static String syncAnimalStatus(String farmId) {
@@ -24,7 +24,7 @@ public class AntFarmRpcCall {
 
     public static String queryLoveCabin(String userId) {
         String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ENTERFARM\",\"userId\":\"" +
-                userId + "\",\"version\":\"unknown\"}]";
+                userId + "\",\"version\":\"" + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.queryLoveCabin", args1);
     }
 
@@ -66,7 +66,7 @@ public class AntFarmRpcCall {
         return RpcUtil.request("com.alipay.antfarm.harvestProduce", args1);
     }
 
-    public static String listActivityInfo()  {
+    public static String listActivityInfo() {
         String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
                 + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.listActivityInfo", args1);
@@ -98,8 +98,7 @@ public class AntFarmRpcCall {
         return RpcUtil.request("com.alipay.antfarm.doFarmTask", args1);
     }
 
-    public static String receiveFarmTaskAward(String taskId)
-    {
+    public static String receiveFarmTaskAward(String taskId) {
         String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskId\":\""
                 + taskId + "\",\"version\":\"" + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.receiveFarmTaskAward", args1);
@@ -135,7 +134,8 @@ public class AntFarmRpcCall {
 
     public static String useFarmTool(String targetFarmId, String toolId, String toolType) {
         String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"targetFarmId\":\""
-                + targetFarmId + "\",\"toolId\":\"" + toolId + "\",\"toolType\":\"" + toolType + "\",\"version\":\"" + VERSION + "\"}]";
+                + targetFarmId + "\",\"toolId\":\"" + toolId + "\",\"toolType\":\"" + toolType + "\",\"version\":\""
+                + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.useFarmTool", args1);
     }
 
@@ -166,8 +166,9 @@ public class AntFarmRpcCall {
     }
 
     public static String collectManurePot(String manurePotNO) {
-        return RpcUtil.request("com.alipay.antfarm.collectManurePot","[{\"manurePotNOs\":\"" + manurePotNO +
-                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION + "\"}]");
+        return RpcUtil.request("com.alipay.antfarm.collectManurePot", "[{\"manurePotNOs\":\"" + manurePotNO +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION
+                + "\"}]");
     }
 
 }

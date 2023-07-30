@@ -50,6 +50,7 @@
     <string name="other_configuration">OTHER CONFIGURATION</string>
     <string name="receive_point">Receive point</string>
     <string name="open_treasure_box">Open treasure box</string>
+    <string name="receive_coin_asset">Receive coin asset</string>
     <string name="donate_charity_coin">Donate charity coin</string>
     <string name="min_exchange_count">Min exchange count</string>
     <string name="latest_exchange_time_24_hour_system">Latest exchange time (24-hour system)</string>

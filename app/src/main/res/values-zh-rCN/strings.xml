@@ -44,8 +44,9 @@
     <string name="don_t_notify_friend_list">不要通知列表</string>
     <string name="other_configuration">其他配置</string>
     <string name="receive_point">领取积分</string>
-    <string name="open_treasure_box">开宝箱</string>
-    <string name="donate_charity_coin">捐硬币</string>
+    <string name="open_treasure_box">开启运动宝箱</string>
+    <string name="receive_coin_asset">收集运动币</string>
+    <string name="donate_charity_coin">捐运动币</string>
     <string name="min_exchange_count">最小捐步步数</string>
     <string name="latest_exchange_time_24_hour_system">最晚捐步时间(24小时制)</string>
     <string name="koubei_sign_in">口碑签到</string>

@@ -651,6 +651,14 @@
 		<CheckBox
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:text="@string/receive_coin_asset"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_receiveCoinAsset"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:text="@string/donate_charity_coin"
 			android:onClick="onClick"
 			android:minHeight="50dp"
