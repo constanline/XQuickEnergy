@@ -143,7 +143,8 @@ public class AntForest {
                             waterFriendEnergy(uid, waterCount);
                         }
                     }
-                    if (Statistics.canSyncStepToday(FriendIdMap.currentUid) && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
+                    if (Statistics.canSyncStepToday(FriendIdMap.currentUid)
+                            && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
                         new StepTask(loader).start();
                     }
                 }
@@ -908,7 +909,8 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean isGuangpan = false;
-                        if ("photoguangpan".equals(actionId))continue;
+                        if ("photoguangpan".equals(actionId))
+                            continue;
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, isGuangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡[" + actionName + "]成功");
@@ -931,13 +933,6 @@ public class AntForest {
             JSONObject jo = new JSONObject(s);
             if (jo.getString("resultCode").equals("SUCCESS")) {
                 JSONObject data = jo.getJSONObject("data");
-                // s = data.getString("homeState");
-                // if (s.equals("DODO_NOT_OPEN")) {
-                // collectAnimalCard();
-                // } else if (s.equals("DODO_NEW_BOOK")) {
-                // //taskEntrance();
-                // collectAnimalCard();
-                // } else if (s.equals("DODO_BOOK")) {//DODO_TAKE_LOOK
                 if (data.getBoolean("collect")) {
                     Log.recordLog("神奇物种卡片今日收集完成！", "");
                 } else {
@@ -987,22 +982,6 @@ public class AntForest {
             }
         } catch (Throwable t) {
             Log.i(TAG, "collect err:");
-            Log.printStackTrace(TAG, t);
-        }
-    }
-
-    private static void taskEntrance() {
-        try {
-            String s = AntForestRpcCall.taskEntrance();
-            JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
-                Log.recordLog("神奇物种卡片开启新图鉴！", "");
-                antdodoCollect();
-            } else {
-                Log.i(TAG, jo.getString("resultDesc"));
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "taskEntrance err:");
             Log.printStackTrace(TAG, t);
         }
     }

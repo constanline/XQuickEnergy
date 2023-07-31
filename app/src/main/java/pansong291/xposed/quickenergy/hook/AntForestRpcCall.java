@@ -150,11 +150,6 @@ public class AntForestRpcCall {
                 "[{}]");
     }
 
-    public static String taskEntrance() {
-        return RpcUtil.request("alipay.antdodo.rpc.h5.taskEntrance",
-                "[{\"statusList\":[\"TODO\",\"FINISHED\"]}]");
-    }
-
     public static String antdodoCollect() {
         return RpcUtil.request("alipay.antdodo.rpc.h5.collect",
                 "[{}]");
