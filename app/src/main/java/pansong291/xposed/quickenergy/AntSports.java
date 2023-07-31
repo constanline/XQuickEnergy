@@ -25,6 +25,8 @@ public class AntSports {
             @Override
             public void run() {
                 try {
+                    while(FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    Thread.sleep(100);
                     if (Config.openTreasureBox())
                         queryMyHomePage(loader);
 
@@ -34,7 +36,7 @@ public class AntSports {
                     if (Config.donateCharityCoin())
                         queryProjectList(loader);
 
-                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday() && times == 0)
+                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid) && times == 0)
                         queryWalkStep(loader);
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
@@ -299,7 +301,7 @@ public class AntSports {
                     JSONObject walkDonateHomeModel = jo.getJSONObject("walkDonateHomeModel");
                     JSONObject walkUserInfoModel = walkDonateHomeModel.getJSONObject("walkUserInfoModel");
                     if (!walkUserInfoModel.has("exchangeFlag")) {
-                        Statistics.exchangeToday();
+                        Statistics.exchangeToday(FriendIdMap.currentUid);
                         return;
                     }
 
@@ -314,10 +316,10 @@ public class AntSports {
                         int userCount = donateExchangeResultModel.getInt("userCount");
                         double amount = donateExchangeResultModel.getJSONObject("userAmount").getDouble("amount");
                         Log.other("捐出[" + userCount + "步]，兑换[" + amount + "元]公益金");
-                        Statistics.exchangeToday();
+                        Statistics.exchangeToday(FriendIdMap.currentUid);
 
                     } else if (s.contains("已捐步")) {
-                        Statistics.exchangeToday();
+                        Statistics.exchangeToday(FriendIdMap.currentUid);
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }

@@ -96,5 +96,6 @@
     <string name="ancient_tree">保护古树（会使用能量慎用！）</string>
     <string name="ancient_tree_citycode_list">保护古树城市列表</string>
     <string name="ancient_tree_only_week">仅星期一、三、五运行保护古树</string>
+    <string name="antdodo_collect">神奇物种开卡</string>
 
 </resources>

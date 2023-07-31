@@ -127,6 +127,9 @@ public class AntForest {
                     if (Config.ecoLifeTick()) {
                         ecoLifeTick();
                     }
+                    if (Config.antdodoCollect()) {
+                        antdodoCollect();
+                    }
                     for (int i = 0; i < Config.getWaterFriendList().size(); i++) {
                         String uid = Config.getWaterFriendList().get(i);
                         if (selfId.equals(uid))
@@ -140,7 +143,7 @@ public class AntForest {
                             waterFriendEnergy(uid, waterCount);
                         }
                     }
-                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
+                    if (Statistics.canSyncStepToday(FriendIdMap.currentUid) && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
                         new StepTask(loader).start();
                     }
                 }
@@ -912,13 +915,95 @@ public class AntForest {
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         }
-                        Thread.sleep(500);
+                        Thread.sleep(200);
                     }
                 }
             }
         } catch (Throwable th) {
             Log.i(TAG, "ecoLifeTick err:");
             Log.printStackTrace(TAG, th);
+        }
+    }
+
+    private static void antdodoCollect() {
+        try {
+            String s = AntForestRpcCall.queryAnimalStatus();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONObject data = jo.getJSONObject("data");
+                // s = data.getString("homeState");
+                // if (s.equals("DODO_NOT_OPEN")) {
+                // collectAnimalCard();
+                // } else if (s.equals("DODO_NEW_BOOK")) {
+                // //taskEntrance();
+                // collectAnimalCard();
+                // } else if (s.equals("DODO_BOOK")) {//DODO_TAKE_LOOK
+                if (data.getBoolean("collect")) {
+                    Log.recordLog("神奇物种卡片今日收集完成！", "");
+                } else {
+                    collectAnimalCard();
+                }
+                // }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "antdodoCollect err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void collectAnimalCard() {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.antdodoHomePage());
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONObject data = jo.getJSONObject("data");
+                JSONArray ja = data.getJSONArray("limit");
+                int index = -1;
+                for (int i = 0; i < ja.length(); i++) {
+                    jo = ja.getJSONObject(i);
+                    if (jo.getString("actionCode").equals("DAILY_COLLECT")) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index >= 0) {
+                    int leftFreeQuota = jo.getInt("leftFreeQuota");
+                    for (int j = 0; j < leftFreeQuota; j++) {
+                        jo = new JSONObject(AntForestRpcCall.antdodoCollect());
+                        if (jo.getString("resultCode").equals("SUCCESS")) {
+                            data = jo.getJSONObject("data");
+                            JSONObject animal = data.getJSONObject("animal");
+                            String ecosystem = animal.getString("ecosystem");
+                            String name = animal.getString("name");
+                            Log.forest("神奇物种获得[" + ecosystem + "-" + name + "]卡片");
+                        } else {
+                            Log.i(TAG, jo.getString("resultDesc"));
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "collect err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void taskEntrance() {
+        try {
+            String s = AntForestRpcCall.taskEntrance();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                Log.recordLog("神奇物种卡片开启新图鉴！", "");
+                antdodoCollect();
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "taskEntrance err:");
+            Log.printStackTrace(TAG, t);
         }
     }
 
@@ -1007,7 +1092,7 @@ public class AntForest {
                 } else {
                     Log.recordLog("修改运动步数失败:" + step, "");
                 }
-                Statistics.SyncStepToday();
+                Statistics.SyncStepToday(FriendIdMap.currentUid);
             } catch (Throwable t) {
                 Log.i(TAG, "StepTask.run err:");
                 Log.printStackTrace(TAG, t);

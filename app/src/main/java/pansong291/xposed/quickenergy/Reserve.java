@@ -24,6 +24,8 @@ public class Reserve {
             @Override
             public void run() {
                 try {
+                    while(FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    Thread.sleep(100);
                     String s = ReserveRpcCall.queryTreeItemsForExchange();
                     if (s == null) {
                         Thread.sleep(RandomUtils.delay());

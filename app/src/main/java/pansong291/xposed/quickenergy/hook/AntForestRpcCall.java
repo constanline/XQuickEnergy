@@ -17,17 +17,20 @@ public class AntForestRpcCall {
 
     public static String queryEnergyRanking() {
         return RpcUtil.request("alipay.antmember.forest.h5.queryEnergyRanking",
-                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryHomePage() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryHomePage",
-                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryFriendHomePage(String userId) {
         return RpcUtil.request("alipay.antforest.forest.h5.queryFriendHomePage",
-                "[{\"canRobFlags\":\"F,F,F,F,F\",\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\"" +
+                "[{\"canRobFlags\":\"F,F,F,F,F\",\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\""
+                        +
                         userId + "\",\"version\":\"" + VERSION + "\"}]");
     }
 
@@ -36,7 +39,8 @@ public class AntForestRpcCall {
         if (StringUtil.isEmpty(bizType)) {
             args1 = "[{\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
         } else {
-            args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId + "\"}]";
+            args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId + "],\"userId\":\"" + userId
+                    + "\"}]";
         }
         return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
     }
@@ -44,7 +48,8 @@ public class AntForestRpcCall {
     public static String transferEnergy(String targetUser, String bizNo, int energyId) {
         return RpcUtil.request("alipay.antmember.forest.h5.transferEnergy", "[{\"bizNo\":\"" +
                 bizNo + UUID.randomUUID().toString() + "\",\"energyId\":" + energyId +
-                ",\"extInfo\":{\"sendChat\":\"N\"},\"from\":\"friendIndex\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUser\":\"" +
+                ",\"extInfo\":{\"sendChat\":\"N\"},\"from\":\"friendIndex\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUser\":\""
+                +
                 targetUser + "\",\"transferType\":\"WATERING\",\"version\":\"" + VERSION + "\"}]");
     }
 
@@ -60,7 +65,8 @@ public class AntForestRpcCall {
 
     public static String queryTaskList() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryTaskList",
-                "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" +
+                "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        +
                         VERSION + "\"}]");
     }
 
@@ -80,6 +86,7 @@ public class AntForestRpcCall {
     public static String startEnergyRain() {
         return RpcUtil.request("alipay.antforest.forest.h5.startEnergyRain", "[{}]");
     }
+
     public static String energyRainSettlement(int saveEnergy, String token) {
         return RpcUtil.request("alipay.antforest.forest.h5.energyRainSettlement",
                 "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\"}]");
@@ -93,26 +100,30 @@ public class AntForestRpcCall {
 
     public static String popupTask() {
         return RpcUtil.request("alipay.antforest.forest.h5.popupTask",
-                "[{\"fromAct\":\"pop_task\",\"needInitSign\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"statusList\":[\"TODO\",\"FINISHED\"],\"version\":\"" +
+                "[{\"fromAct\":\"pop_task\",\"needInitSign\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"statusList\":[\"TODO\",\"FINISHED\"],\"version\":\""
+                        +
                         VERSION + "\"}]");
     }
 
     public static String antiepSign(String entityId, String userId) {
         return RpcUtil.request("com.alipay.antiep.sign",
                 "[{\"entityId\":\"" + entityId +
-                        "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\"" +
+                        "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\""
+                        +
                         userId + "\"}]");
     }
 
     public static String queryPropList() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryPropList",
-                "[{\"onlyGive\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"onlyGive\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION
+                        + "\"}]");
     }
 
     public static String consumeProp(String propId, String propType) {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
-                        "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"" +
+                        "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\""
+                        +
                         VERSION + "\"}]");
     }
 
@@ -123,8 +134,30 @@ public class AntForestRpcCall {
                         spuId + "\",\"skuId\":\"" + skuId + "\",\"source\":\"GOOD_DETAIL\"}]");
     }
 
-
     public static String testH5Rpc(String operationTpye, String requestDate) {
-        return RpcUtil.request(operationTpye,requestDate);
+        return RpcUtil.request(operationTpye, requestDate);
     }
+
+    /* 神奇物种 */
+
+    public static String queryAnimalStatus() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.queryAnimalStatus",
+                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+    }
+
+    public static String antdodoHomePage() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.homePage",
+                "[{}]");
+    }
+
+    public static String taskEntrance() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.taskEntrance",
+                "[{\"statusList\":[\"TODO\",\"FINISHED\"]}]");
+    }
+
+    public static String antdodoCollect() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.collect",
+                "[{}]");
+    }
+
 }

@@ -171,4 +171,10 @@ public class AntFarmRpcCall {
                 + "\"}]");
     }
 
+    public static String sign() {
+        return RpcUtil.request("com.alipay.antfarm.sign",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION
+                        + "\"}]");
+    }
+
 }

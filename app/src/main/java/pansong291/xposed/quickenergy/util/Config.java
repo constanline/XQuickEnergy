@@ -82,6 +82,8 @@ public class Config
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
+    public static final String jn_antdodoCollect = "antdodoCollect";
+
     /* other */
     public static final String jn_receivePoint = "receivePoint";
     public static final String jn_openTreasureBox = "openTreasureBox";
@@ -130,6 +132,7 @@ public class Config
     private List<Integer> waterCountList;
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
+    //private List<String> syncStepList;
     private List<Integer> cooperateWaterNumList;
     private boolean ancientTree;
     private List<String> ancientTreeCityCodeList;
@@ -145,6 +148,7 @@ public class Config
 
     private boolean exchangeEnergyDoubleClick;
     private int exchangeEnergyDoubleClickCount;
+    private boolean antdodoCollect;
 
     /* farm */
     private boolean enableFarm;
@@ -566,6 +570,17 @@ public class Config
         return getConfig().ancientTreeOnlyWeek;
     }
 
+    public static void setAntdodoCollect(boolean b)
+    {
+        getConfig().antdodoCollect = b;
+        hasChanged = true;
+    }
+
+    public static boolean antdodoCollect()
+    {
+        return getConfig().antdodoCollect;
+    }
+
     /* farm */
     public static void setEnableFarm(boolean b)
     {
@@ -859,7 +874,7 @@ public class Config
         return getConfig().kbSignIn;
     }
 
-        public static void setEcoLifeTick(boolean b)
+    public static void setEcoLifeTick(boolean b)
     {
         getConfig().ecoLifeTick = b;
         hasChanged = true;
@@ -919,6 +934,7 @@ public class Config
         if(c.waterCountList == null) c.waterCountList = new ArrayList<>();
         c.cooperateWater = true;
         if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
+        //if(c.syncStepList == null) c.syncStepList = new ArrayList<>();
         if(c.cooperateWaterNumList == null) c.cooperateWaterNumList = new ArrayList<>();
         c.ancientTree = true;
         if(c.ancientTreeCityCodeList == null) c.ancientTreeCityCodeList = new ArrayList<>();
@@ -930,6 +946,7 @@ public class Config
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
+        c.antdodoCollect = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1122,6 +1139,8 @@ public class Config
             config.exchangeEnergyDoubleClickCount = jo.optInt("exchangeEnergyDoubleClickCount", 6);
 
             config.ancientTreeOnlyWeek = jo.optBoolean(jn_ancientTreeOnlyWeek, true);
+
+            config.antdodoCollect = jo.optBoolean(jn_antdodoCollect, true);
 
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
@@ -1359,6 +1378,8 @@ public class Config
             jo.put("exchangeEnergyDoubleClickCount", config.exchangeEnergyDoubleClickCount);
 
             jo.put(jn_ancientTreeOnlyWeek, config.ancientTreeOnlyWeek);
+
+            jo.put(jn_antdodoCollect, config.antdodoCollect);
 
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);

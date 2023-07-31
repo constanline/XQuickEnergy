@@ -428,6 +428,14 @@
 			android:minHeight="50dp"
 			android:id="@+id/cb_ancientTreeOnlyWeek"/>
 
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/antdodo_collect"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_antdodoCollect"/>
+
 	</LinearLayout>
 
 	<LinearLayout
@@ -732,7 +740,6 @@
 			android:text="@string/more"
 			android:background="#FF9BCD9B"
 			android:textColor="#FFFFFFFF"
-			android:visibility="gone"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 		<Button
@@ -746,7 +753,6 @@
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_xqe_developer"
-			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 		<Button
@@ -760,7 +766,6 @@
 			android:gravity="start|center_vertical"
 			android:background="@drawable/button"
 			android:id="@+id/btn_donation_developer"
-			android:visibility="gone"
 			android:paddingStart="8dp"/>
 
 	</LinearLayout>
