@@ -566,7 +566,9 @@ public class AntFarm {
             String s = AntFarmRpcCall.listFarmTask();
             JSONObject jo = new JSONObject(s);
             String memo = jo.getString("memo");
-            if(memo.equals("SUCCESS")) {
+            if (memo.equals("SUCCESS")) {
+                JSONObject signList = jo.getJSONObject("signList");
+                sign(signList);
                 JSONArray jaFarmTaskList = jo.getJSONArray("farmTaskList");
                 for(int i = 0; i < jaFarmTaskList.length(); i++) {
                     jo = jaFarmTaskList.getJSONObject(i);
@@ -607,6 +609,36 @@ public class AntFarm {
             Log.i(TAG, "receiveFarmTaskAward err:");
             Log.printStackTrace(TAG, t);
         }
+    }
+
+    private static boolean sign(JSONObject signList) {
+        try {
+            JSONArray jaFarmsignList = signList.getJSONArray("signList");
+            boolean signed = true;
+            int awardCount = 0;
+            for (int i = 0; i < jaFarmsignList.length(); i++) {
+                JSONObject jo = jaFarmsignList.getJSONObject(i);
+                if (Log.getFormatDate().equals(jo.getString("signKey"))) {
+                    signed = jo.getBoolean("signed");
+                    awardCount = jo.getInt("awardCount");
+                    break;
+                }
+            }
+            if (!signed) {
+                JSONObject joSign = new JSONObject(AntFarmRpcCall.sign());
+                if (joSign.getString("memo").equals("SUCCESS")) {
+                    Log.farm("庄园签到获得饲料[" + awardCount + "g]");
+                } else {
+                    Log.i(TAG, joSign.toString());
+                }
+            } else {
+                Log.recordLog("庄园今日已签到", "");
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "Farmsign err:");
+            Log.printStackTrace(TAG, t);
+        }
+        return false;
     }
 
     private static void feedAnimal(String farmId) {

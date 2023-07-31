@@ -93,8 +93,12 @@ public class XposedHook implements IXposedHookLoadPackage {
                 } else {
                     AntCooperate.start();
                     AntFarm.start();
+                    Reserve.start();
+                    if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                        AncientTree.start();
+                    }
+                    AntSports.start(XposedHook.classLoader, times-1);
                     AntMember.receivePoint();
-                    AncientTree.start();
                     handler.postDelayed(this, Config.checkInterval());
                 }
             }

@@ -166,8 +166,15 @@ public class AntFarmRpcCall {
     }
 
     public static String collectManurePot(String manurePotNO) {
-        return RpcUtil.request("com.alipay.antfarm.collectManurePot","[{\"manurePotNOs\":\"" + manurePotNO +
-                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION + "\"}]");
+        return RpcUtil.request("com.alipay.antfarm.collectManurePot", "[{\"manurePotNOs\":\"" + manurePotNO +
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION
+                + "\"}]");
+    }
+
+    public static String sign() {
+        return RpcUtil.request("com.alipay.antfarm.sign",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION
+                        + "\"}]");
     }
 
 }

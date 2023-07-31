@@ -59,6 +59,7 @@ public class RpcUtil
                 if (jo.optString("memo", "").contains("系统繁忙")) {
                     isInterruptted = true;
                     AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
+                    Log.recordLog("系统繁忙，可能需要滑动验证");
                     return str;
                 }
             } catch (Throwable ignored) { }
@@ -82,6 +83,7 @@ public class RpcUtil
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
                             Config.setForestPauseTime(waitTime);
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
                     } else if (msg.contains("MMTPException")) {
                         return "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
