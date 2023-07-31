@@ -2,6 +2,8 @@ package pansong291.xposed.quickenergy.hook;
 
 import pansong291.xposed.quickenergy.util.StringUtil;
 
+import pansong291.xposed.quickenergy.util.RandomUtils;
+
 import java.util.UUID;
 
 public class AntForestRpcCall {
@@ -78,6 +80,7 @@ public class AntForestRpcCall {
     public static String startEnergyRain() {
         return RpcUtil.request("alipay.antforest.forest.h5.startEnergyRain", "[{}]");
     }
+
     public static String energyRainSettlement(int saveEnergy, String token) {
         return RpcUtil.request("alipay.antforest.forest.h5.energyRainSettlement",
                 "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\"}]");
@@ -112,6 +115,40 @@ public class AntForestRpcCall {
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
                         "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"" +
                         VERSION + "\"}]");
+    }
+
+    public static String exchangeBenefit(String spuId, String skuId) {
+        return RpcUtil.request("com.alipay.antcommonweal.exchange.h5.exchangeBenefit",
+                "[{\"sceneCode\":\"ANTFOREST_VITALITY\",\"requestId\":\"" + System.currentTimeMillis()
+                        + "_" + RandomUtils.getRandom(17) + "\",\"spuId\":\"" +
+                        spuId + "\",\"skuId\":\"" + skuId + "\",\"source\":\"GOOD_DETAIL\"}]");
+    }
+
+
+    public static String testH5Rpc(String operationTpye, String requestDate) {
+        return RpcUtil.request(operationTpye,requestDate);
+    }
+
+    /* 神奇物种 */
+
+    public static String queryAnimalStatus() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.queryAnimalStatus",
+                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+    }
+
+    public static String antdodoHomePage() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.homePage",
+                "[{}]");
+    }
+
+    public static String taskEntrance() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.taskEntrance",
+                "[{\"statusList\":[\"TODO\",\"FINISHED\"]}]");
+    }
+
+    public static String antdodoCollect() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.collect",
+                "[{}]");
     }
 
 }

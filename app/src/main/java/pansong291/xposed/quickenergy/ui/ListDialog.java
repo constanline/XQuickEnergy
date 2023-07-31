@@ -131,9 +131,9 @@ public class ListDialog
         }
         edtDialog.setTitle(curIdAndName.name);
         if(curIdAndName instanceof CooperateUser)
-            edt_count.setHint("grams");
+            edt_count.setHint("浇水克数");
         else
-            edt_count.setHint("count");
+            edt_count.setHint("次数");
         int i = selectedList.indexOf(curIdAndName.id);
         if(i >= 0)
             edt_count.setText(String.valueOf(countList.get(i)));
@@ -259,7 +259,7 @@ public class ListDialog
             deleteDialog = null;
             getDeleteDialog(c).show();
         }
-        deleteDialog.setTitle("Delete " + curIdAndName.name);
+        deleteDialog.setTitle("删除 " + curIdAndName.name);
     }
 
     private static AlertDialog getDeleteDialog(Context c)
@@ -324,7 +324,7 @@ public class ListDialog
             }
             if(index < 0)
             {
-                Toast.makeText(p1.getContext(), "Not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(p1.getContext(), "未找到", Toast.LENGTH_SHORT).show();
             }else
             {
                 lv_list.setSelection(index);

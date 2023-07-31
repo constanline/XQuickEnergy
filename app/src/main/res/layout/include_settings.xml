@@ -357,6 +357,56 @@
 			android:id="@+id/btn_giveEnergyRainList"
 			android:paddingStart="8dp"/>
 
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/exchange_energy_double_click"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_ExchangeEnergyDoubleClick"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/exchange_energy_double_click_count"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_ExchangeEnergyDoubleClickCount"
+			android:paddingStart="8dp"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/reserve"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_reserve"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:text="@string/reserve_list"
+			android:textAllCaps="false"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:gravity="start|center_vertical"
+			android:background="@drawable/button"
+			android:id="@+id/btn_reserveList"
+			android:paddingStart="8dp"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/ancient_tree"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_ancientTree"/>
+
 		<Button
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -369,6 +419,22 @@
 			android:background="@drawable/button"
 			android:id="@+id/btn_ancientTreeAreaCodeList"
 			android:paddingStart="8dp"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/ancient_tree_only_week"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_ancientTreeOnlyWeek"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/antdodo_collect"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_antdodoCollect"/>
 
 	</LinearLayout>
 
@@ -593,6 +659,14 @@
 		<CheckBox
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:text="@string/receive_coin_asset"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_receiveCoinAsset"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:text="@string/donate_charity_coin"
 			android:onClick="onClick"
 			android:minHeight="50dp"
@@ -644,6 +718,14 @@
 			android:onClick="onClick"
 			android:minHeight="50dp"
 			android:id="@+id/cb_kbSignIn"/>
+
+		<CheckBox
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/eco_life_tick"
+			android:onClick="onClick"
+			android:minHeight="50dp"
+			android:id="@+id/cb_ecoLifeTick"/>
 
 	</LinearLayout>
 
