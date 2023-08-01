@@ -98,5 +98,6 @@
     <string name="ancient_tree_area_code_list">古树区划代码列表</string>
     <string name="ancient_tree_only_week">仅星期一、三、五运行保护古树</string>
     <string name="antdodo_collect">神奇物种开卡</string>
+    <string name="ant_ocean">" 神奇海洋"</string>
 
 </resources>

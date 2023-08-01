@@ -27,7 +27,7 @@ public class SettingsActivity extends Activity {
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
             cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
-            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect;
+            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_antOcean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,7 @@ public class SettingsActivity extends Activity {
         cb_ecoLifeTick = findViewById(R.id.cb_ecoLifeTick);
         cb_ancientTreeOnlyWeek = findViewById(R.id.cb_ancientTreeOnlyWeek);
         cb_antdodoCollect = findViewById(R.id.cb_antdodoCollect);
+        cb_antOcean = findViewById(R.id.cb_antOcean);
     }
 
     @Override
@@ -116,6 +117,7 @@ public class SettingsActivity extends Activity {
         cb_ecoLifeTick.setChecked(Config.ecoLifeTick());
         cb_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         cb_antdodoCollect.setChecked(Config.antdodoCollect());
+        cb_antOcean.setChecked(Config.antOcean());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -265,6 +267,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.cb_antdodoCollect:
                     Config.setAntdodoCollect(cb.isChecked());
+                    break;
+
+                case R.id.cb_antOcean:
+                    Config.setAntOcean(cb.isChecked());
                     break;
             }
         } else if (v instanceof Button) {

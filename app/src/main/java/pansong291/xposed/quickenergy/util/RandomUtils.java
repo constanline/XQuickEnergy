@@ -16,6 +16,13 @@ public class RandomUtils
         return rnd.nextInt(max - min) + min;
     }
 
+    public static long nextLong() {
+        return rnd.nextLong();
+    }
+    public static double nextDouble() {
+        return rnd.nextDouble();
+    }
+
     public static String getRandom(int len) {
         StringBuilder rs = new StringBuilder();
         for (int i = 0; i < len; i++) {

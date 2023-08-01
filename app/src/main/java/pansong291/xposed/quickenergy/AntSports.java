@@ -25,8 +25,8 @@ public class AntSports {
             @Override
             public void run() {
                 try {
-                    while(FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                    Thread.sleep(100);
+                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                        Thread.sleep(100);
                     if (Config.openTreasureBox())
                         queryMyHomePage(loader);
 
@@ -36,7 +36,8 @@ public class AntSports {
                     if (Config.donateCharityCoin())
                         queryProjectList(loader);
 
-                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid) && times == 0)
+                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid)
+                            && times == 0)
                         queryWalkStep(loader);
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
@@ -83,33 +84,43 @@ public class AntSports {
                 s = jo.getString("pathJoinStatus");
                 if (s.equals("GOING")) {
                     FriendIdMap.currentUid = jo.getJSONObject("myPositionModel").getString("userId");
-                    String rankCacheKey = jo.getString("rankCacheKey");
-                    JSONArray ja = jo.getJSONArray("treasureBoxModelList");
-                    for (int i = 0; i < ja.length(); i++) {
-                        parseTreasureBoxModel(loader, ja.getJSONObject(i), rankCacheKey);
-                    }
-                    JSONObject joPathRender = jo.getJSONObject("pathRenderModel");
-                    String title = joPathRender.getString("title");
-                    int minGoStepCount = joPathRender.getInt("minGoStepCount");
-                    jo = jo.getJSONObject("dailyStepModel");
-                    int consumeQuantity = jo.getInt("consumeQuantity");
-                    int produceQuantity = jo.getInt("produceQuantity");
-                    String day = jo.getString("day");
-                    int canMoveStepCount = produceQuantity - consumeQuantity;
-                    if (canMoveStepCount >= minGoStepCount) {
-                        go(loader, day, rankCacheKey, canMoveStepCount, title);
+                    if (jo.has("pathCompleteStatus")) {
+                        if (jo.getString("pathCompleteStatus").equals("COMPLETED")) {
+                            jo = new JSONObject(AntSportsRpcCall.queryBaseList());
+                            if (jo.getString("resultCode").equals("SUCCESS")) {
+                                JSONArray allPathBaseInfoList = jo.getJSONArray("allPathBaseInfoList");
+                                JSONArray otherAllPathBaseInfoList = jo.getJSONArray("otherAllPathBaseInfoList")
+                                        .getJSONObject(0)
+                                        .getJSONArray("allPathBaseInfoList");
+                                join(loader, allPathBaseInfoList, otherAllPathBaseInfoList, "");
+                            } else {
+                                Log.i(TAG, jo.getString("resultDesc"));
+                            }
+                        }
+                    } else {
+                        String rankCacheKey = jo.getString("rankCacheKey");
+                        JSONArray ja = jo.getJSONArray("treasureBoxModelList");
+                        for (int i = 0; i < ja.length(); i++) {
+                            parseTreasureBoxModel(loader, ja.getJSONObject(i), rankCacheKey);
+                        }
+                        JSONObject joPathRender = jo.getJSONObject("pathRenderModel");
+                        String title = joPathRender.getString("title");
+                        int minGoStepCount = joPathRender.getInt("minGoStepCount");
+                        jo = jo.getJSONObject("dailyStepModel");
+                        int consumeQuantity = jo.getInt("consumeQuantity");
+                        int produceQuantity = jo.getInt("produceQuantity");
+                        String day = jo.getString("day");
+                        int canMoveStepCount = produceQuantity - consumeQuantity;
+                        if (canMoveStepCount >= minGoStepCount) {
+                            go(loader, day, rankCacheKey, canMoveStepCount, title);
+                        }
                     }
                 } else if (s.equals("NOT_JOIN")) {
                     String firstJoinPathTitle = jo.getString("firstJoinPathTitle");
-                    JSONArray ja = jo.getJSONArray("allPathBaseInfoList");
-                    for (int i = ja.length() - 1; i >= 0; i--) {
-                        jo = ja.getJSONObject(i);
-                        if (jo.getBoolean("unlocked"))
-                            break;
-                    }
-                    String title = jo.getString("title");
-                    String pathId = jo.getString("pathId");
-                    join(loader, pathId, title, firstJoinPathTitle);
+                    JSONArray allPathBaseInfoList = jo.getJSONArray("allPathBaseInfoList");
+                    JSONArray otherAllPathBaseInfoList = jo.getJSONArray("otherAllPathBaseInfoList").getJSONObject(0)
+                            .getJSONArray("allPathBaseInfoList");
+                    join(loader, allPathBaseInfoList, otherAllPathBaseInfoList, firstJoinPathTitle);
                 }
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
@@ -120,20 +131,45 @@ public class AntSports {
         }
     }
 
-    private static void join(ClassLoader loader, String pathId, String title, String firstJoinPathTitle) {
+    private static void join(ClassLoader loader, JSONArray allPathBaseInfoList, JSONArray otherAllPathBaseInfoList,
+            String firstJoinPathTitle) {
         try {
-            String s;
-            if (title.equals(firstJoinPathTitle)) {
-                s = AntSportsRpcCall.openAndJoinFirst();
-            } else {
-                s = AntSportsRpcCall.join(pathId);
+            int index = -1;
+            JSONObject jo = new JSONObject();
+            for (int i = allPathBaseInfoList.length() - 1; i >= 0; i--) {
+                jo = allPathBaseInfoList.getJSONObject(i);
+                if (jo.getBoolean("unlocked")) {
+                    index = i;
+                    break;
+                }
             }
-            JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
-                Log.other("成功加入[" + title + "]路线");
-                queryMyHomePage(loader);
+            if (index < 0) {
+                for (int j = otherAllPathBaseInfoList.length() - 1; j >= 0; j--) {
+                    jo = otherAllPathBaseInfoList.getJSONObject(j);
+                    if (jo.getBoolean("unlocked")) {
+                        index = j;
+                        break;
+                    }
+                }
+            }
+            if (index >= 0) {
+                String title = jo.getString("title");
+                String pathId = jo.getString("pathId");
+                String s;
+                if (title.equals(firstJoinPathTitle)) {
+                    s = AntSportsRpcCall.openAndJoinFirst();
+                } else {
+                    s = AntSportsRpcCall.join(pathId);
+                }
+                jo = new JSONObject(s);
+                if (jo.getString("resultCode").equals("SUCCESS")) {
+                    Log.other("成功加入[" + title + "]路线");
+                    queryMyHomePage(loader);
+                } else {
+                    Log.i(TAG, jo.getString("resultDesc"));
+                }
             } else {
-                Log.i(TAG, jo.getString("resultDesc"));
+                Log.recordLog("好像没有可走的线路了！", "");
             }
         } catch (Throwable t) {
             Log.i(TAG, "join err:");
