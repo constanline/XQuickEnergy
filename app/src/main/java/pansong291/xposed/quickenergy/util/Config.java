@@ -84,6 +84,8 @@ public class Config
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_antdodoCollect = "antdodoCollect";
 
+    public static final String jn_antOcean = "antOcean";
+
     /* other */
     public static final String jn_receivePoint = "receivePoint";
     public static final String jn_openTreasureBox = "openTreasureBox";
@@ -149,6 +151,8 @@ public class Config
     private boolean exchangeEnergyDoubleClick;
     private int exchangeEnergyDoubleClickCount;
     private boolean antdodoCollect;
+
+    private boolean antOcean;
 
     /* farm */
     private boolean enableFarm;
@@ -581,6 +585,17 @@ public class Config
         return getConfig().antdodoCollect;
     }
 
+    public static void setAntOcean(boolean b)
+    {
+        getConfig().antOcean = b;
+        hasChanged = true;
+    }
+
+    public static boolean antOcean()
+    {
+        return getConfig().antOcean;
+    }
+
     /* farm */
     public static void setEnableFarm(boolean b)
     {
@@ -942,6 +957,7 @@ public class Config
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
+        c.antOcean = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1126,6 +1142,8 @@ public class Config
             config.ancientTreeOnlyWeek = jo.optBoolean(jn_ancientTreeOnlyWeek, true);
 
             config.antdodoCollect = jo.optBoolean(jn_antdodoCollect, true);
+
+            config.antOcean = jo.optBoolean(jn_antOcean, true);
 
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
@@ -1354,6 +1372,8 @@ public class Config
             jo.put(jn_ancientTreeOnlyWeek, config.ancientTreeOnlyWeek);
 
             jo.put(jn_antdodoCollect, config.antdodoCollect);
+
+            jo.put(jn_antOcean, config.antOcean);
 
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);

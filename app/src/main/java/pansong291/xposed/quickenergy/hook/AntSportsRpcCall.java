@@ -41,7 +41,8 @@ public class AntSportsRpcCall {
                 return RpcUtil.request("alipay.antsports.walk.map.go", "[{\"chInfo\":\"" + chInfo
                                 + "\",\"clientOS\":\"android\",\"day\":\"" + day
                                 + "\",\"features\":[\"DAILY_STEPS_RANK_V2\",\"STEP_BATTLE\",\"CLUB_HOME_CARD\",\"NEW_HOME_PAGE_STATIC\",\"CLOUD_SDK_AUTH\",\"STAY_ON_COMPLETE\",\"EXTRA_TREASURE_BOX\",\"NEW_HOME_PAGE_STATIC\",\"SUPPORT_TAB3\",\"SUPPORT_FLYRABBIT\",\"PROP\",\"PROPV2\",\"ASIAN_GAMES\"],\"needAllBox\":true,\"rankCacheKey\":\""
-                                + chInfo + "\",\"timeZone\":\"" + timeZone + "\",\"useStepCount\":" + stepCount + "}]");
+                                + rankCacheKey + "\",\"timeZone\":\"" + timeZone + "\",\"useStepCount\":" + stepCount
+                                + "}]");
         }
 
         public static String openTreasureBox(String boxNo, String userId) {
@@ -49,6 +50,11 @@ public class AntSportsRpcCall {
                                 + "\",\"chInfo\":\"" + chInfo
                                 + "\",\"clientOS\":\"android\",\"features\":[\"DAILY_STEPS_RANK_V2\",\"STEP_BATTLE\",\"CLUB_HOME_CARD\",\"NEW_HOME_PAGE_STATIC\",\"CLOUD_SDK_AUTH\",\"STAY_ON_COMPLETE\",\"EXTRA_TREASURE_BOX\",\"NEW_HOME_PAGE_STATIC\",\"SUPPORT_TAB3\",\"SUPPORT_FLYRABBIT\",\"PROP\",\"PROPV2\",\"ASIAN_GAMES\"],\"userId\":\""
                                 + userId + "\"}]");
+        }
+
+        public static String queryBaseList() {
+                return RpcUtil.request("alipay.antsports.walk.path.queryBaseList", "[{\"chInfo\":\"" + chInfo
+                                + "\",\"clientOS\":\"android\",\"features\":[\"DAILY_STEPS_RANK_V2\",\"STEP_BATTLE\",\"CLUB_HOME_CARD\",\"NEW_HOME_PAGE_STATIC\",\"CLOUD_SDK_AUTH\",\"STAY_ON_COMPLETE\",\"EXTRA_TREASURE_BOX\",\"NEW_HOME_PAGE_STATIC\",\"SUPPORT_TAB3\",\"SUPPORT_FLYRABBIT\",\"PROP\",\"PROPV2\",\"ASIAN_GAMES\"]}]");
         }
 
         public static String queryProjectList(int index) {
