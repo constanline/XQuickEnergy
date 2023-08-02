@@ -5,9 +5,8 @@ import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.SendType;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Config
 {
@@ -53,6 +52,7 @@ public class Config
     public static final String jn_collectTimeout = "collectTimeout";
     public static final String jn_receiveForestTaskAward = "receiveForestTaskAward";
     public static final String jn_waterFriendList = "waterFriendList";
+    public static final String jn_waterFriendCount = "waterFriendCount";
     public static final String jn_cooperateWater = "cooperateWater";
     public static final String jn_cooperateWaterList = "cooperateWaterList";
     public static final String jn_ancientTree = "ancientTree";
@@ -132,6 +132,7 @@ public class Config
     private boolean receiveForestTaskAward;
     private List<String> waterFriendList;
     private List<Integer> waterCountList;
+    private int waterFriendCount;
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
     private List<String> syncStepList;
@@ -471,6 +472,17 @@ public class Config
         return getConfig().waterCountList;
     }
 
+
+    public static void setWaterFriendCount(int i)
+    {
+        getConfig().waterFriendCount = i;
+        hasChanged = true;
+    }
+
+    public static int waterFriendCount()
+    {
+        return getConfig().waterFriendCount;
+    }
     public static void setCooperateWater(boolean b)
     {
         getConfig().cooperateWater = b;
@@ -506,6 +518,26 @@ public class Config
     public static List<String> getAncientTreeAreaCodeList()
     {
         return getConfig().ancientTreeAreaCodeList;
+    }
+
+    public static void setAncientTreeOnlyWeek(boolean b)
+    {
+        getConfig().ancientTreeOnlyWeek = b;
+        hasChanged = true;
+    }
+
+    public static boolean ancientTreeOnlyWeek()
+    {
+        return getConfig().ancientTreeOnlyWeek;
+    }
+
+    public static boolean isAncientTreeWeek() {
+        if (!ancientTreeOnlyWeek()) {
+            return true;
+        }
+        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String week = sdf_week.format(new Date());
+        return "星期一".equals(week) || "星期三".equals(week) || "星期五".equals(week);
     }
 
     public static void setReserve(boolean b)
@@ -561,17 +593,6 @@ public class Config
     public static void setExchangeEnergyDoubleClickCount(int exchangeEnergyDoubleClickCount) {
         getConfig().exchangeEnergyDoubleClickCount = exchangeEnergyDoubleClickCount;
         hasChanged = true;
-    }
-
-        public static void setAncientTreeOnlyWeek(boolean b)
-    {
-        getConfig().ancientTreeOnlyWeek = b;
-        hasChanged = true;
-    }
-
-    public static boolean ancientTreeOnlyWeek()
-    {
-        return getConfig().ancientTreeOnlyWeek;
     }
 
     public static void setAntdodoCollect(boolean b)
@@ -901,8 +922,8 @@ public class Config
         if(config == null || shouldReload && config.immediateEffect) {
             shouldReload = false;
             String confJson = null;
-            if(FileUtils.getConfigFile().exists())
-                confJson = FileUtils.readFromFile(FileUtils.getConfigFile());
+            if (FileUtils.getConfigFile(FriendIdMap.currentUid).exists())
+                confJson = FileUtils.readFromFile(FileUtils.getConfigFile(FriendIdMap.currentUid));
             config = json2Config(confJson);
         }
         return config;
@@ -942,6 +963,7 @@ public class Config
         c.receiveForestTaskAward = true;
         if(c.waterFriendList == null) c.waterFriendList = new ArrayList<>();
         if(c.waterCountList == null) c.waterCountList = new ArrayList<>();
+        c.waterFriendCount = 66;
         c.cooperateWater = true;
         if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
         if(c.syncStepList == null) c.syncStepList = new ArrayList<>();
@@ -995,11 +1017,9 @@ public class Config
         return FileUtils.write2File(config2Json(config), FileUtils.getConfigFile());
     }
 
-    public static Config json2Config(String json)
-    {
-        Config config = null;
-        try
-        {
+    public static Config json2Config(String json) {
+        Config config;
+        try {
             JSONObject jo = new JSONObject(json);
             JSONArray ja, jaa;
             config = new Config();
@@ -1084,6 +1104,7 @@ public class Config
                     }
                 }
             }
+            config.waterFriendCount = jo.optInt(jn_waterFriendCount, 66);
 
             config.cooperateWater = jo.optBoolean(jn_cooperateWater, true);
 
@@ -1321,6 +1342,7 @@ public class Config
                 ja.put(jaa);
             }
             jo.put(jn_waterFriendList, ja);
+            jo.put(jn_waterFriendCount, config.waterFriendCount);
 
             jo.put(jn_cooperateWater, config.cooperateWater);
 

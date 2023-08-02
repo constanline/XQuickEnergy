@@ -57,6 +57,14 @@ public class AntOcean {
                 int rubbishNumber = userInfoVO.optInt("rubbishNumber");
                 String userId = userInfoVO.getString("userId");
                 cleanOcean(userId, rubbishNumber);
+
+                JSONObject ipVO = userInfoVO.optJSONObject("ipVO");
+                if (ipVO != null) {
+                    int surprisePieceNum = ipVO.optInt("surprisePieceNum", 0);
+                    if (surprisePieceNum > 0) {
+                        ipOpenSurprise();
+                    }
+                }
             } else {
                 Log.i(TAG, joHomePage.getString("resultDesc"));
             }
@@ -115,14 +123,50 @@ public class AntOcean {
         }
     }
 
+    private static void ipOpenSurprise() {
+        try {
+            String s = AntOceanRpcCall.ipOpenSurprise();
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray rewardVOS = jo.getJSONArray("surpriseRewardVOS");
+                checkReward(rewardVOS);
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch(Throwable t) {
+            Log.i(TAG, "ipOpenSurprise err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void checkReward(JSONArray rewards) {
         try {
             for (int i = 0; i < rewards.length(); i++) {
-                JSONObject cleanReward = rewards.getJSONObject(i);
-                JSONArray attachReward = cleanReward.getJSONArray("attachRewardBOList");
+                JSONObject reward = rewards.getJSONObject(i);
+                JSONArray attachReward = reward.getJSONArray("attachRewardBOList");
 
                 if (attachReward.length() > 0) {
                     Log.forest("【神奇海洋】获取碎片奖励");
+                    boolean canCombine = true;
+                    for (int j = 0; j < attachReward.length(); j++) {
+                        JSONObject detail = attachReward.getJSONObject(j);
+                        if (detail.optInt("count") == 0) {
+                            canCombine = false;
+                            break;
+                        }
+                    }
+                    if (canCombine && reward.optBoolean("unlock", false)) {
+                        String fishId = reward.getString("id");
+                        String s = AntOceanRpcCall.combineFish(fishId);
+                        JSONObject jo = new JSONObject(s);
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                            JSONObject fishDetailVO = jo.getJSONObject("fishDetailVO");
+                            String name = fishDetailVO.getString("name");
+                            Log.forest("【神奇海洋】合成海洋生物" + name);
+                        } else {
+                            Log.i(TAG, jo.getString("resultDesc"));
+                        }
+                    }
                 }
 
             }

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AncientTreeRpcCall;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.Statistics;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class AncientTree {
     private static boolean firstTime = true;
 
     public static void start() {
-        if (!firstTime) {
+        if (!Config.ancientTree() || !firstTime || !Config.isAncientTreeWeek()) {
             return;
         }
         new Thread() {
@@ -48,7 +49,7 @@ public class AncientTree {
                     firstTime = false;
                 }
             } catch (Throwable t) {
-                Log.i(TAG, "homePage err:");
+                Log.i(TAG, "home err:");
                 Log.printStackTrace(TAG, t);
             }
         }
@@ -73,7 +74,7 @@ public class AncientTree {
                         Log.forest("[保护古树]消耗" + protectExpense + "能量保护古树\"" + name + "\"成功");
                     }
                 } catch (Throwable t) {
-                    Log.i(TAG, "homePage err:");
+                    Log.i(TAG, "protect err:");
                     Log.printStackTrace(TAG, t);
                 }
             }
@@ -93,7 +94,7 @@ public class AncientTree {
                         protect(jo);
                     }
                 } catch (Throwable t) {
-                    Log.i(TAG, "homePage err:");
+                    Log.i(TAG, "projectDetail err:");
                     Log.printStackTrace(TAG, t);
                 }
             }

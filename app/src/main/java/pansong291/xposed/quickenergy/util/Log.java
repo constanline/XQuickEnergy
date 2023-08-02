@@ -55,10 +55,4 @@ public class Log
         return getFormatDateTime().split(" ")[1];
     }
 
-    public static boolean isAncientTreeWeek() {
-        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
-        String week = sdf_week.format(new Date());
-        return "星期一".equals(week) || "星期三".equals(week) || "星期五".equals(week);
-    }
-
 }

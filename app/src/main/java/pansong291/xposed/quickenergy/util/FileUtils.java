@@ -14,7 +14,7 @@ public class FileUtils
     private static final String TAG = FileUtils.class.getCanonicalName();
     private static File mainDirectory;
     private static File configDirectory;
-    private static Map<String,File> configFileMap = new HashMap<>();
+    private static final Map<String,File> configFileMap = new HashMap<>();
     private static File friendIdMapFile;
     private static File cooperationIdMapFile;
     private static File reserveIdMapFile;
@@ -45,12 +45,12 @@ public class FileUtils
         return mainDirectory;
     }
 
+    @SuppressWarnings("deprecation")
     public static File getConfigDirectoryFile() {
         if(configDirectory == null) {
             configDirectory = new File(Environment.getExternalStorageDirectory(), "xqe/config");
             if(configDirectory.exists()) {
-                if(configDirectory.isFile())
-                {
+                if(configDirectory.isFile()) {
                     configDirectory.delete();
                     configDirectory.mkdirs();
                 }
@@ -86,6 +86,8 @@ public class FileUtils
                     configFileMap.put(userId, configFile);
                     return configFile;
                 }
+            } else {
+                return configFileMap.get(userId);
             }
         }
         return configFileMap.get("Default");

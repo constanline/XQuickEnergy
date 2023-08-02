@@ -26,4 +26,14 @@ public class AntOceanRpcCall {
         return RpcUtil.request("alipay.antocean.ocean.h5.cleanOcean",
                 "[{\"cleanedUserId\":\"" + userId + "\",\"source\":\"ANT_FOREST\",\"uniqueId\":\"" + getUniqueId() + "\"}]");
     }
+
+    public static String combineFish(String fishId) {
+        return RpcUtil.request("alipay.antocean.ocean.h5.combineFish", "[{\"fishId\":\"" + fishId +
+                "\",\"source\":\"ANT_FOREST\",\"uniqueId\":\"" + getUniqueId() + "\"}]");
+    }
+
+    public static String ipOpenSurprise() {
+        return RpcUtil.request("alipay.antocean.ocean.h5.ipOpenSurprise",
+                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"uniqueId\":\"" + getUniqueId() + "\"}]");
+    }
 }

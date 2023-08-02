@@ -578,8 +578,7 @@ public class AntForest {
                 String bizNo = jo.getString("bizNo");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
-                Log.recordLog("尝试对【" + userName + "】浇水66g" + count + "次【" + bizNo + "】");
-                count = returnFriendWater(userId, userName, bizNo, count, 66);
+                count = returnFriendWater(userId, userName, bizNo, count, Config.waterFriendCount());
                 if (count > 0) Statistics.waterFriendToday(userId, count);
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);

@@ -124,7 +124,7 @@ public class ListAdapter extends BaseAdapter
             vh = (ViewHolder)p2.getTag();
         }
 
-        IdAndName ai = (IdAndName) list.get(p1);
+        IdAndName ai = list.get(p1);
         vh.tv.setText(ai.name);
         vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
         vh.cb.setChecked(selects != null && selects.contains(ai.id));

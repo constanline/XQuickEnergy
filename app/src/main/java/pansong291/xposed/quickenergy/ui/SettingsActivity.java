@@ -332,6 +332,10 @@ public class SettingsActivity extends Activity {
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(), Config.getWaterCountList());
                     break;
 
+                case R.id.btn_waterFriendCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT);
+                    break;
+
                 case R.id.btn_cooperateWaterList:
                     ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(),
                             Config.getcooperateWaterNumList());
