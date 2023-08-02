@@ -28,9 +28,9 @@ public class OptionsAdapter extends BaseAdapter
     {
         context = c;
         list = new ArrayList<>();
-        list.add("View the forest");
-        list.add("View the farm");
-        list.add("Delete");
+        list.add("查看森林");
+        list.add("查看庄园");
+        list.add("删除");
     }
 
     @Override
