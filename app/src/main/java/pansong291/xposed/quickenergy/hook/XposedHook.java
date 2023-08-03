@@ -47,7 +47,8 @@ public class XposedHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if ("pansong291.xposed.quickenergy.repair".equals(lpparam.packageName)) {
-            XposedHelpers.findAndHookMethod(MainActivity.class.getName(), lpparam.classLoader, "setModuleActive", boolean.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod(MainActivity.class.getName(), lpparam.classLoader,
+                    "setModuleActive", boolean.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) {
                     param.args[0] = true;
@@ -69,40 +70,39 @@ public class XposedHook implements IXposedHookLoadPackage {
             public void run() {
                 Config.shouldReload = true;
                 Statistics.resetToday();
+
                 AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
                 FriendManager.fillUser(XposedHook.classLoader);
+
+                if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                    AntCooperate.start();
+
+                    AntFarm.start();
+
+                    Reserve.start();
+
+                    if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                        AncientTree.start();
+                    }
+
+                    AntMember.receivePoint();
+
+                    AntSports.start(XposedHook.classLoader, times);
+
+                    AntOcean.start();
+                }
+
                 if (Config.collectEnergy() || Config.enableFarm()) {
                     handler.postDelayed(this, Config.checkInterval());
-                }
-                else {
+                } else {
                     AntForestNotification.stop(service, false);
                 }
                 times = (times + 1) % (3600_000 / Config.checkInterval());
             }
         };
-        if (Config.collectEnergy() || Config.enableFarm()) {
-            AntForestNotification.start(service);
-            handler.post(runnable);
-        }
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (TimeUtil.getTimeStr().compareTo("0700") >= 0 && TimeUtil.getTimeStr().compareTo("0730") <= 0) {
-                    handler.postDelayed(this, 10 * 60 * 1000);
-                } else {
-                    AntCooperate.start();
-                    AntFarm.start();
-                    Reserve.start();
-                    if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
-                        AncientTree.start();
-                    }
-                    AntSports.start(XposedHook.classLoader, times-1);
-                    AntMember.receivePoint();
-                    handler.postDelayed(this, Config.checkInterval());
-                }
-            }
-        });
+        AntForestNotification.start(service);
+        handler.post(runnable);
     }
 
     private void hookService(ClassLoader loader) {

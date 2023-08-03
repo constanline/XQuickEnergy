@@ -62,7 +62,7 @@
     <string name="hide_the_application_icon">隐藏图标</string>
     <string name="export_the_statistic_file">导出统计</string>
     <string name="import_the_statistic_file">导入统计</string>
-    <string name="settings">设置</string>
+    <string name="settings">设  置</string>
     <string name="limit_collect">限制收取</string>
     <string name="limit_count_per_minute">限制每分钟收取个数</string>
     <string name="energy_rain">能量雨</string>

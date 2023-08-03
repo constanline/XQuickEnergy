@@ -5,11 +5,11 @@ android {
 
     defaultConfig {
         applicationId "pansong291.xposed.quickenergy.repair"
-        minSdkVersion 23
+        minSdk 21
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 29
-        versionCode 29
-        versionName "1.0.12"
+        targetSdk 29
+        versionCode 32
+        versionName "1.0.13"
     }
     buildTypes {
         release {

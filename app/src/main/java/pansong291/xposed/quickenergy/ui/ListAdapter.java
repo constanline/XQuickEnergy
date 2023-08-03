@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ListAdapter extends BaseAdapter
         selects = l;
         Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
             if (selects.contains(o1.id) == selects.contains(o2.id)) {
-                return o1.id.compareTo(o2.id);
+                return IdAndName.Compare(o1, o2);
             }
             return selects.contains(o1.id) ? -1 : 1;
         });
