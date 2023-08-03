@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.util;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -267,66 +266,68 @@ public class HanziToPinyin {
     }
 
     private Token getToken(char character) {
-        Token token = new Token();
-        final String letter = Character.toString(character);
-        token.source = letter;
-        int offset = -1;
-        int cmp;
-        if (character < 256) {
-            token.type = Token.LATIN;
-            token.target = letter;
-            return token;
-        } else if (character < FIRST_UNIHAN) {
-            token.type = Token.UNKNOWN;
-            token.target = letter;
-            return token;
-        } else {
-            cmp = COLLATOR.compare(letter, FIRST_PINYIN_UNIHAN);
-            if (cmp < 0) {
+        try {
+            Token token = new Token();
+            final String letter = Character.toString(character);
+            token.source = letter;
+            int offset = -1;
+            int cmp;
+            if (character < 256) {
+                token.type = Token.LATIN;
+                token.target = letter;
+                return token;
+            } else if (character < FIRST_UNIHAN) {
                 token.type = Token.UNKNOWN;
                 token.target = letter;
                 return token;
-            } else if (cmp == 0) {
-                token.type = Token.PINYIN;
-                offset = 0;
             } else {
-                cmp = COLLATOR.compare(letter, LAST_PINYIN_UNIHAN);
-                if (cmp > 0) {
+                cmp = COLLATOR.compare(letter, FIRST_PINYIN_UNIHAN);
+                if (cmp < 0) {
                     token.type = Token.UNKNOWN;
                     token.target = letter;
                     return token;
                 } else if (cmp == 0) {
                     token.type = Token.PINYIN;
-                    offset = UNIHANS.length - 1;
-                }
-            }
-        }
-        token.type = Token.PINYIN;
-        if (offset < 0) {
-            int begin = 0;
-            int end = UNIHANS.length - 1;
-            while (begin <= end) {
-                offset = (begin + end) / 2;
-                final String unihan = Character.toString(UNIHANS[offset]);
-                cmp = COLLATOR.compare(letter, unihan);
-                if (cmp == 0) {
-                    break;
-                } else if (cmp > 0) {
-                    begin = offset + 1;
+                    offset = 0;
                 } else {
-                    end = offset - 1;
+                    cmp = COLLATOR.compare(letter, LAST_PINYIN_UNIHAN);
+                    if (cmp > 0) {
+                        token.type = Token.UNKNOWN;
+                        token.target = letter;
+                        return token;
+                    } else if (cmp == 0) {
+                        token.type = Token.PINYIN;
+                        offset = UNIHANS.length - 1;
+                    }
                 }
             }
+            token.type = Token.PINYIN;
+            if (offset < 0) {
+                int begin = 0;
+                int end = UNIHANS.length - 1;
+                while (begin <= end) {
+                    offset = (begin + end) / 2;
+                    final String unihan = Character.toString(UNIHANS[offset]);
+                    cmp = COLLATOR.compare(letter, unihan);
+                    if (cmp == 0) {
+                        break;
+                    } else if (cmp > 0) {
+                        begin = offset + 1;
+                    } else {
+                        end = offset - 1;
+                    }
+                }
+            }
+            StringBuilder pinyin = new StringBuilder();
+            for (int j = 0; j < PINYINS[offset].length && PINYINS[offset][j] != 0; j++) {
+                pinyin.append((char) PINYINS[offset][j]);
+            }
+            token.target = pinyin.toString();
+            return token;
+        } catch (Throwable th) {
+            Log.recordLog("字符'" + character + "'转换失败");
+            throw th;
         }
-        if (cmp < 0) {
-            offset--;
-        }
-        StringBuilder pinyin = new StringBuilder();
-        for (int j = 0; j < PINYINS[offset].length && PINYINS[offset][j] != 0; j++) {
-            pinyin.append((char) PINYINS[offset][j]);
-        }
-        token.target = pinyin.toString();
-        return token;
     }
     /**
      * Convert the input to a array of tokens. The sequence of ASCII or Unknown characters without
@@ -339,52 +340,58 @@ public class HanziToPinyin {
             // return empty tokens.
             return tokens;
         }
-        final int inputLength = input.length();
-        final StringBuilder sb = new StringBuilder();
-        int tokenType = Token.LATIN;
-        // Go through the input, create a new token when
-        // a. Token type changed
-        // b. Get the Pinyin of current charater.
-        // c. current character is space.
-        for (int i = 0; i < inputLength; i++) {
-            final char character = input.charAt(i);
-            if (character == ' ') {
-                if (sb.length() > 0) {
-                    addToken(sb, tokens, tokenType);
-                }
-            } else if (character < 256) {
-                if (tokenType != Token.LATIN && sb.length() > 0) {
-                    addToken(sb, tokens, tokenType);
-                }
-                tokenType = Token.LATIN;
-                sb.append(character);
-            } else if (character < FIRST_UNIHAN) {
-                if (tokenType != Token.UNKNOWN && sb.length() > 0) {
-                    addToken(sb, tokens, tokenType);
-                }
-                tokenType = Token.UNKNOWN;
-                sb.append(character);
-            } else {
-                Token t = getToken(character);
-                if (t.type == Token.PINYIN) {
+        try {
+            final int inputLength = input.length();
+            final StringBuilder sb = new StringBuilder();
+            int tokenType = Token.LATIN;
+            // Go through the input, create a new token when
+            // a. Token type changed
+            // b. Get the Pinyin of current charater.
+            // c. current character is space.
+            for (int i = 0; i < inputLength; i++) {
+                final char character = input.charAt(i);
+                if (character == ' ') {
                     if (sb.length() > 0) {
                         addToken(sb, tokens, tokenType);
                     }
-                    tokens.add(t);
-                    tokenType = Token.PINYIN;
-                } else {
-                    if (tokenType != t.type && sb.length() > 0) {
+                } else if (character < 256) {
+                    if (tokenType != Token.LATIN && sb.length() > 0) {
                         addToken(sb, tokens, tokenType);
                     }
-                    tokenType = t.type;
+                    tokenType = Token.LATIN;
                     sb.append(character);
+                } else if (character < FIRST_UNIHAN) {
+                    if (tokenType != Token.UNKNOWN && sb.length() > 0) {
+                        addToken(sb, tokens, tokenType);
+                    }
+                    tokenType = Token.UNKNOWN;
+                    sb.append(character);
+                } else {
+                    Token t = getToken(character);
+                    if (t.type == Token.PINYIN) {
+                        if (sb.length() > 0) {
+                            addToken(sb, tokens, tokenType);
+                        }
+                        tokens.add(t);
+                        tokenType = Token.PINYIN;
+                    } else {
+                        if (tokenType != t.type && sb.length() > 0) {
+                            addToken(sb, tokens, tokenType);
+                        }
+                        tokenType = t.type;
+                        sb.append(character);
+                    }
                 }
             }
+            if (sb.length() > 0) {
+                addToken(sb, tokens, tokenType);
+            }
+            return tokens;
+
+        } catch (Throwable th) {
+            Log.recordLog("字符串\"" + input + "\"转换失败");
+            throw th;
         }
-        if (sb.length() > 0) {
-            addToken(sb, tokens, tokenType);
-        }
-        return tokens;
     }
     private void addToken(
             final StringBuilder sb, final ArrayList<Token> tokens, final int tokenType) {

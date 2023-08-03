@@ -20,10 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.FileUtils;
-import pansong291.xposed.quickenergy.util.PermissionUtil;
-import pansong291.xposed.quickenergy.util.RandomUtils;
-import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.*;
 
 public class MainActivity extends Activity {
     private static String[] strArray;
@@ -102,7 +99,8 @@ public class MainActivity extends Activity {
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
-            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+//            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+            HanziToPinyin.getInstance().get("day|杜霭瑜(136******43)");
             return;
         }
 
