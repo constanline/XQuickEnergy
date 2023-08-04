@@ -103,5 +103,7 @@
     <string name="antdodo_collect">Antdodo collect</string>
     <string name="ant_ocean">Ant ocean</string>
     <string name="water_friend_count">Water friend count</string>
+    <string name="beach">Beach</string>
+    <string name="beach_list">Beach list</string>
 
 </resources>

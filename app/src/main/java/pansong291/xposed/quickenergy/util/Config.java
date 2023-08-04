@@ -59,6 +59,8 @@ public class Config
     public static final String jn_ancientTreeCityCodeList = "ancientTreeCityCodeList";
     public static final String jn_reserve = "reserve";
     public static final String jn_reserveList = "reserveList";
+    public static final String jn_beach = "beach";
+    public static final String jn_beachList = "beachList";
     public static final String jn_energyRain = "energyRain";
     public static final String jn_giveEnergyRainList = "giveEnergyRainList";
     public static final String jn_waitWhenException = "waitWhenException";
@@ -136,7 +138,6 @@ public class Config
     private List<Integer> waterCountList;
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
-    //private List<String> syncStepList;
     private List<Integer> cooperateWaterNumList;
     private boolean ancientTree;
     private List<String> ancientTreeCityCodeList;
@@ -144,6 +145,9 @@ public class Config
     private boolean reserve;
     private List<String> reserveList;
     private List<Integer> reserveCountList;
+    private boolean beach;
+    private List<String> beachList;
+    private List<Integer> beachCountList;
     private boolean ancientTreeOnlyWeek;
 
     private List<String> giveEnergyRainList;
@@ -541,6 +545,27 @@ public class Config
     public static List<Integer> getReserveCountList()
     {
         return getConfig().reserveCountList;
+    }
+
+    public static void setBeach(boolean b)
+    {
+        getConfig().beach = b;
+        hasChanged = true;
+    }
+
+    public static boolean beach()
+    {
+        return getConfig().beach;
+    }
+
+    public static List<String> getBeachList()
+    {
+        return getConfig().beachList;
+    }
+
+    public static List<Integer> getBeachCountList()
+    {
+        return getConfig().beachCountList;
     }
 
     public static void setEnergyRain(boolean b)
@@ -994,13 +1019,15 @@ public class Config
         c.waterFriendCount = 66;
         c.cooperateWater = true;
         if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
-        //if(c.syncStepList == null) c.syncStepList = new ArrayList<>();
         if(c.cooperateWaterNumList == null) c.cooperateWaterNumList = new ArrayList<>();
         c.ancientTree = true;
         if(c.ancientTreeCityCodeList == null) c.ancientTreeCityCodeList = new ArrayList<>();
         c.reserve = true;
         if(c.reserveList == null) c.reserveList = new ArrayList<>();
         if(c.reserveCountList == null) c.reserveCountList = new ArrayList<>();
+        c.beach = true;
+        if(c.beachList == null) c.beachList = new ArrayList<>();
+        if(c.beachCountList == null) c.beachCountList = new ArrayList<>();
         c.energyRain = true;
         if(c.giveEnergyRainList == null) c.giveEnergyRainList = new ArrayList<>();
         c.exchangeEnergyDoubleClick = false;
@@ -1195,6 +1222,23 @@ public class Config
                     } else {
                         config.reserveList.add(ja.getString(i));
                         config.reserveCountList.add(2);
+                    }
+                }
+            }
+
+            config.beach = jo.optBoolean(jn_beach, true);
+            config.beachList = new ArrayList<>();
+            config.beachCountList = new ArrayList<>();
+            if(jo.has(jn_beachList)) {
+                ja = jo.getJSONArray(jn_beachList);
+                for(int i = 0; i < ja.length(); i++) {
+                    if(ja.get(i) instanceof JSONArray) {
+                        jaa = ja.getJSONArray(i);
+                        config.beachList.add(jaa.getString(0));
+                        config.beachCountList.add(jaa.getInt(1));
+                    } else {
+                        config.beachList.add(ja.getString(i));
+                        config.beachCountList.add(2);
                     }
                 }
             }
@@ -1435,6 +1479,18 @@ public class Config
                 ja.put(jaa);
             }
             jo.put(jn_reserveList, ja);
+
+            jo.put(jn_beach, config.beach);
+
+            ja = new JSONArray();
+            for(int i = 0; i < config.beachList.size(); i++)
+            {
+                jaa = new JSONArray();
+                jaa.put(config.beachList.get(i));
+                jaa.put(config.beachCountList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_beachList, ja);
 
             jo.put(jn_energyRain, config.energyRain);
             ja = new JSONArray();

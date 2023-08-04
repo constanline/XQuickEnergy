@@ -63,6 +63,8 @@ public class AntFarm {
         public String currentFarmMasterUserId;
     }
 
+    public enum TaskStatus { TODO, FINISHED, RECEIVED }
+
     private static class RewardFriend {
         public String consistencyKey, friendId, time;
     }
