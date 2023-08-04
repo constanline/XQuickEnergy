@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
@@ -23,11 +25,11 @@ import pansong291.xposed.quickenergy.util.PermissionUtil;
 import pansong291.xposed.quickenergy.util.RandomUtils;
 import pansong291.xposed.quickenergy.util.Statistics;
 
-
 public class MainActivity extends Activity {
     private static String[] strArray;
     TextView tvStatistics;
     Button btnHelp;
+    TextView tv_version;
 
     public static String version = "";
 
@@ -72,6 +74,7 @@ public class MainActivity extends Activity {
 
         tvStatistics = findViewById(R.id.tv_statistics);
         btnHelp = findViewById(R.id.btn_help);
+        tv_version = findViewById(R.id.tv_version);
         if (strArray == null)
             strArray = getResources().getStringArray(R.array.sentences);
         if (strArray != null)
@@ -79,12 +82,12 @@ public class MainActivity extends Activity {
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            version = packageInfo.versionName + "-" + packageInfo.versionCode;
+            version = packageInfo.versionName;
+            tv_version.setText("v" + version);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         this.setTitle(this.getTitle());
-
     }
 
     @Override
@@ -97,6 +100,11 @@ public class MainActivity extends Activity {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
             sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+            return;
+        }
+
+        if (v.getId() == R.id.btn_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return;
         }
 
@@ -119,6 +127,7 @@ public class MainActivity extends Activity {
                 break;
 
         }
+
         Intent it = new Intent(this, HtmlViewerActivity.class);
         it.setData(Uri.parse(data));
         startActivity(it);
@@ -160,10 +169,11 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, "导入成功！", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
+                
             case 4:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

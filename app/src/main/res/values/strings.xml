@@ -37,6 +37,8 @@
     <string name="don_t_send_friend_list">Don\'t send friend list</string>
     <string name="recall_animal_type">Recall animal type</string>
     <string name="receive_farm_tool_reward">Receive farm tool reward</string>
+    <string name="record_farm_game">Record farm game</string>
+    <string name="kitchen">Kitchen</string>
     <string name="use_new_egg_tool">Use new egg tool</string>
     <string name="harvest_produce">Harvest produce</string>
     <string name="answer_question">Answer question</string>
@@ -94,10 +96,12 @@
     <string name="exchange_energy_double_click_count">Exchange energy double click count</string>
     <string name="reserve">Reserve</string>
     <string name="reserve_list">Reserve list</string>
-    <string name="eco_life_tick">Eco Life Tick</string>
-    <string name="ancient_tree">Ancient Tree</string>
-    <string name="ancient_tree_citycode_list">Ancient Tree Citycode List</string>
-    <string name="ancient_tree_only_week">Ancient Tree only week</string>
-    <string name="antdodo_collect">Antdodo Collect</string>
+    <string name="eco_life_tick">Eco life tick</string>
+    <string name="ancient_tree">Ancient tree</string>
+    <string name="ancient_tree_citycode_list">Ancient tree citycode list</string>
+    <string name="ancient_tree_only_week">Ancient tree only week</string>
+    <string name="antdodo_collect">Antdodo collect</string>
+    <string name="ant_ocean">Ant ocean</string>
+    <string name="water_friend_count">Water friend count</string>
 
 </resources>

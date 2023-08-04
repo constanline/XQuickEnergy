@@ -16,7 +16,7 @@ public class AncientTree {
     private static boolean firstTime = true;
 
     public static void start() {
-        if (!Config.ancientTree() || !firstTime || (Config.ancientTreeOnlyWeek() && !Log.isAncientTreeWeek()))
+        if (!Config.ancientTree() || !firstTime || !Config.isAncientTreeWeek())
             return;
         Log.recordLog("开始检测古树保护", "");
         new Thread() {

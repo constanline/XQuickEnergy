@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.Switch;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.util.Config;
@@ -18,7 +18,7 @@ import pansong291.xposed.quickenergy.util.ReserveIdMap;
 import pansong291.xposed.quickenergy.util.CityCodeMap;
 
 public class SettingsActivity extends Activity {
-    CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
+    Switch cb_immediateEffect, cb_recordLog, cb_showToast,
             cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
             cb_cooperateWater, cb_energyRain,
@@ -28,7 +28,8 @@ public class SettingsActivity extends Activity {
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
             cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
-            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect;
+            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_recordFarmGame,
+            cb_kitchen, cb_antOcean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class SettingsActivity extends Activity {
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
         cb_receiveFarmToolReward = findViewById(R.id.cb_receiveFarmToolReward);
+        cb_recordFarmGame = findViewById(R.id.cb_recordFarmGame);
+        cb_kitchen = findViewById(R.id.cb_kitchen);
         cb_useNewEggTool = findViewById(R.id.cb_useNewEggTool);
         cb_harvestProduce = findViewById(R.id.cb_harvestProduce);
         cb_donation = findViewById(R.id.cb_donation);
@@ -77,6 +80,7 @@ public class SettingsActivity extends Activity {
         cb_ecoLifeTick = findViewById(R.id.cb_ecoLifeTick);
         cb_ancientTreeOnlyWeek = findViewById(R.id.cb_ancientTreeOnlyWeek);
         cb_antdodoCollect = findViewById(R.id.cb_antdodoCollect);
+        cb_antOcean = findViewById(R.id.cb_antOcean);
     }
 
     @Override
@@ -99,6 +103,8 @@ public class SettingsActivity extends Activity {
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
         cb_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
+        cb_recordFarmGame.setChecked(Config.recordFarmGame());
+        cb_kitchen.setChecked(Config.kitchen());
         cb_useNewEggTool.setChecked(Config.useNewEggTool());
         cb_harvestProduce.setChecked(Config.harvestProduce());
         cb_donation.setChecked(Config.donation());
@@ -118,12 +124,13 @@ public class SettingsActivity extends Activity {
         cb_ecoLifeTick.setChecked(Config.ecoLifeTick());
         cb_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         cb_antdodoCollect.setChecked(Config.antdodoCollect());
+        cb_antOcean.setChecked(Config.antOcean());
     }
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-        if (v instanceof CheckBox) {
-            CheckBox cb = (CheckBox) v;
+        if (v instanceof Switch) {
+            Switch cb = (Switch) v;
             switch (v.getId()) {
                 case R.id.cb_immediateEffect:
                     Config.setImmediateEffect(cb.isChecked());
@@ -205,6 +212,14 @@ public class SettingsActivity extends Activity {
                     Config.setReceiveFarmToolReward(cb.isChecked());
                     break;
 
+                case R.id.cb_recordFarmGame:
+                    Config.setRecordFarmGame(cb.isChecked());
+                    break;
+
+                case R.id.cb_kitchen:
+                    Config.setKitchen(cb.isChecked());
+                    break;
+
                 case R.id.cb_useNewEggTool:
                     Config.setUseNewEggTool(cb.isChecked());
                     break;
@@ -268,6 +283,10 @@ public class SettingsActivity extends Activity {
                 case R.id.cb_antdodoCollect:
                     Config.setAntdodoCollect(cb.isChecked());
                     break;
+
+                case R.id.cb_antOcean:
+                    Config.setAntOcean(cb.isChecked());
+                    break;
             }
         } else if (v instanceof Button) {
             Button btn = (Button) v;
@@ -327,6 +346,10 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_waterFriendList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(),
                             Config.getWaterCountList());
+                    break;
+
+                case R.id.btn_waterFriendCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT);
                     break;
 
                 case R.id.btn_cooperateWaterList:

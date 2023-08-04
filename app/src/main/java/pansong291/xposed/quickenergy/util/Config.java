@@ -5,9 +5,8 @@ import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.SendType;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Config
 {
@@ -53,6 +52,7 @@ public class Config
     public static final String jn_collectTimeout = "collectTimeout";
     public static final String jn_receiveForestTaskAward = "receiveForestTaskAward";
     public static final String jn_waterFriendList = "waterFriendList";
+    public static final String jn_waterFriendCount = "waterFriendCount";
     public static final String jn_cooperateWater = "cooperateWater";
     public static final String jn_cooperateWaterList = "cooperateWaterList";
     public static final String jn_ancientTree = "ancientTree";
@@ -71,6 +71,8 @@ public class Config
     public static final String jn_dontSendFriendList = "dontSendFriendList";
     public static final String jn_recallAnimalType = "recallAnimalType";
     public static final String jn_receiveFarmToolReward = "receiveFarmToolReward";
+    public static final String jn_recordFarmGame = "recordFarmGame";
+    public static final String jn_kitchen = "kitchen";
     public static final String jn_useNewEggTool = "useNewEggTool";
     public static final String jn_harvestProduce = "harvestProduce";
     public static final String jn_donation = "donation";
@@ -83,6 +85,7 @@ public class Config
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_antdodoCollect = "antdodoCollect";
+    public static final String jn_antOcean = "antOcean";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -129,6 +132,7 @@ public class Config
     private List<String> dontHelpCollectList;
     private boolean receiveForestTaskAward;
     private List<String> waterFriendList;
+    private int waterFriendCount;
     private List<Integer> waterCountList;
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
@@ -149,6 +153,7 @@ public class Config
     private boolean exchangeEnergyDoubleClick;
     private int exchangeEnergyDoubleClickCount;
     private boolean antdodoCollect;
+    private boolean antOcean;
 
     /* farm */
     private boolean enableFarm;
@@ -158,6 +163,8 @@ public class Config
     private List<String> dontSendFriendList;
     private RecallAnimalType recallAnimalType;
     private boolean receiveFarmToolReward;
+    private boolean recordFarmGame;
+    private boolean kitchen;
     private boolean useNewEggTool;
     private boolean harvestProduce;
     private boolean donation;
@@ -467,6 +474,17 @@ public class Config
         return getConfig().waterCountList;
     }
 
+    public static void setWaterFriendCount(int i)
+    {
+        getConfig().waterFriendCount = i;
+        hasChanged = true;
+    }
+
+    public static int waterFriendCount()
+    {
+        return getConfig().waterFriendCount;
+    }
+
     public static void setCooperateWater(boolean b)
     {
         getConfig().cooperateWater = b;
@@ -570,6 +588,15 @@ public class Config
         return getConfig().ancientTreeOnlyWeek;
     }
 
+    public static boolean isAncientTreeWeek() {
+        if (!ancientTreeOnlyWeek()) {
+            return true;
+        }
+        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String week = sdf_week.format(new Date());
+        return "星期一".equals(week) || "星期三".equals(week) || "星期五".equals(week);
+    }
+
     public static void setAntdodoCollect(boolean b)
     {
         getConfig().antdodoCollect = b;
@@ -581,6 +608,16 @@ public class Config
         return getConfig().antdodoCollect;
     }
 
+    public static void setAntOcean(boolean b)
+    {
+        getConfig().antOcean = b;
+        hasChanged = true;
+    }
+
+    public static boolean antOcean()
+    {
+        return getConfig().antOcean;
+    }
     /* farm */
     public static void setEnableFarm(boolean b)
     {
@@ -651,6 +688,28 @@ public class Config
     public static boolean receiveFarmToolReward()
     {
         return getConfig().receiveFarmToolReward;
+    }
+
+    public static void setRecordFarmGame(boolean b)
+    {
+        getConfig().recordFarmGame = b;
+        hasChanged = true;
+    }
+
+    public static boolean recordFarmGame()
+    {
+        return getConfig().recordFarmGame;
+    }
+
+    public static void setKitchen(boolean b)
+    {
+        getConfig().kitchen = b;
+        hasChanged = true;
+    }
+
+    public static boolean kitchen()
+    {
+        return getConfig().kitchen;
     }
 
     public static void setUseNewEggTool(boolean b)
@@ -891,8 +950,8 @@ public class Config
         {
             shouldReload = false;
             String confJson = null;
-            if(FileUtils.getConfigFile().exists())
-                confJson = FileUtils.readFromFile(FileUtils.getConfigFile());
+            if (FileUtils.getConfigFile(FriendIdMap.currentUid).exists())
+                confJson = FileUtils.readFromFile(FileUtils.getConfigFile(FriendIdMap.currentUid));
             config = json2Config(confJson);
         }
         return config;
@@ -932,6 +991,7 @@ public class Config
         c.receiveForestTaskAward = true;
         if(c.waterFriendList == null) c.waterFriendList = new ArrayList<>();
         if(c.waterCountList == null) c.waterCountList = new ArrayList<>();
+        c.waterFriendCount = 66;
         c.cooperateWater = true;
         if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
         //if(c.syncStepList == null) c.syncStepList = new ArrayList<>();
@@ -947,6 +1007,7 @@ public class Config
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
+        c.antOcean = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -955,6 +1016,8 @@ public class Config
         if(c.dontSendFriendList == null) c.dontSendFriendList = new ArrayList<>();
         c.recallAnimalType = RecallAnimalType.ALWAYS;
         c.receiveFarmToolReward = true;
+        c.recordFarmGame = true;
+        c.kitchen = true;
         c.useNewEggTool = true;
         c.harvestProduce = true;
         c.donation = true;
@@ -985,7 +1048,7 @@ public class Config
 
     public static Config json2Config(String json)
     {
-        Config config = null;
+        Config config;
         try
         {
             JSONObject jo = new JSONObject(json);
@@ -1077,6 +1140,8 @@ public class Config
                 }
             }
 
+            config.waterFriendCount = jo.optInt(jn_waterFriendCount, 66);
+
             config.cooperateWater = jo.optBoolean(jn_cooperateWater, true);
 
             config.cooperateWaterList = new ArrayList<>();
@@ -1142,6 +1207,8 @@ public class Config
 
             config.antdodoCollect = jo.optBoolean(jn_antdodoCollect, true);
 
+            config.antOcean = jo.optBoolean(jn_antOcean, true);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1164,6 +1231,10 @@ public class Config
             config.recallAnimalType = RecallAnimalType.valueOf(jo.optString(jn_recallAnimalType, RecallAnimalType.ALWAYS.name()));
 
             config.receiveFarmToolReward = jo.optBoolean(jn_receiveFarmToolReward, true);
+
+            config.recordFarmGame = jo.optBoolean(jn_recordFarmGame, true);
+
+            config.kitchen = jo.optBoolean(jn_kitchen, true);
 
             config.useNewEggTool = jo.optBoolean(jn_useNewEggTool, true);
 
@@ -1328,6 +1399,8 @@ public class Config
             }
             jo.put(jn_waterFriendList, ja);
 
+            jo.put(jn_waterFriendCount, config.waterFriendCount);
+
             jo.put(jn_cooperateWater, config.cooperateWater);
 
             ja = new JSONArray();
@@ -1381,6 +1454,8 @@ public class Config
 
             jo.put(jn_antdodoCollect, config.antdodoCollect);
 
+            jo.put(jn_antOcean, config.antOcean);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -1400,6 +1475,10 @@ public class Config
             jo.put(jn_recallAnimalType, config.recallAnimalType);
 
             jo.put(jn_receiveFarmToolReward, config.receiveFarmToolReward);
+
+            jo.put(jn_recordFarmGame, config.recordFarmGame);
+
+            jo.put(jn_kitchen, config.kitchen);
 
             jo.put(jn_useNewEggTool, config.useNewEggTool);
 

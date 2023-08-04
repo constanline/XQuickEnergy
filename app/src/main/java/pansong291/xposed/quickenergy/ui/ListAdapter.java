@@ -9,10 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.util.Log;
 
 public class ListAdapter extends BaseAdapter
 {
@@ -42,12 +44,17 @@ public class ListAdapter extends BaseAdapter
 
     public void setSelectedList(List<String> l) {
         selects = l;
-        Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
-            if (selects.contains(o1.id) == selects.contains(o2.id)) {
-                return o1.id.compareTo(o2.id);
-            }
-            return selects.contains(o1.id) ? -1 : 1;
-        });
+        try {
+            Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
+                if (selects.contains(o1.id) == selects.contains(o2.id)) {
+                    return IdAndName.Compare(o1, o2);
+                }
+                return selects.contains(o1.id) ? -1 : 1;
+            });
+        } catch (Throwable t) {
+            Log.i("ListAdapter err", "");
+            Log.printStackTrace("setSelectedList", t);
+        }
     }
 
     public int findLast(CharSequence cs) {
@@ -80,7 +87,7 @@ public class ListAdapter extends BaseAdapter
         }
         for(int i = findIndex;;) {
             i = (i + 1) % list.size();
-            IdAndName ai = (IdAndName) list.get(i);
+            IdAndName ai = list.get(i);
             if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
@@ -124,7 +131,7 @@ public class ListAdapter extends BaseAdapter
             vh = (ViewHolder)p2.getTag();
         }
 
-        IdAndName ai = (IdAndName) list.get(p1);
+        IdAndName ai = list.get(p1);
         vh.tv.setText(ai.name);
         vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
         vh.cb.setChecked(selects != null && selects.contains(ai.id));

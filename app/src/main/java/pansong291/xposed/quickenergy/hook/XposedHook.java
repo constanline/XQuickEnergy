@@ -75,6 +75,19 @@ public class XposedHook implements IXposedHookLoadPackage {
                     AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
                     FriendManager.fillUser(XposedHook.classLoader);
+
+                    if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                        AntCooperate.start();
+                        AntFarm.start();
+                        Reserve.start();
+                        if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                            AncientTree.start();
+                        }
+                        AntSports.start(XposedHook.classLoader, times);
+                        AntMember.receivePoint();
+                        AntOcean.start();
+                    }
+
                     if (Config.collectEnergy() || Config.enableFarm()) {
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
@@ -83,28 +96,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     times = (times + 1) % (3600_000 / Config.checkInterval());
                 }
             };
-        if (Config.collectEnergy() || Config.enableFarm()) {
-            AntForestNotification.start(service);
-            handler.post(runnable);
-        }
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (TimeUtil.getTimeStr().compareTo("0700") >= 0 && TimeUtil.getTimeStr().compareTo("0730") <= 0) {
-                    handler.postDelayed(this, 10 * 60 * 1000);
-                } else {
-                    AntCooperate.start();
-                    AntFarm.start();
-                    Reserve.start();
-                    if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
-                        AncientTree.start();
-                    }
-                    AntSports.start(XposedHook.classLoader, times-1);
-                    AntMember.receivePoint();
-                    handler.postDelayed(this, Config.checkInterval());
-                }
-            }
-        });
+        AntForestNotification.start(service);
+        handler.post(runnable);
     }
 
     private void hookService(ClassLoader loader) {

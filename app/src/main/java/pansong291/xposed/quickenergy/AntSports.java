@@ -135,26 +135,32 @@ public class AntSports {
             String firstJoinPathTitle) {
         try {
             int index = -1;
+            String title = null;
+            String pathId = null;
             JSONObject jo = new JSONObject();
             for (int i = allPathBaseInfoList.length() - 1; i >= 0; i--) {
                 jo = allPathBaseInfoList.getJSONObject(i);
                 if (jo.getBoolean("unlocked")) {
+                    title = jo.getString("title");
+                    pathId = jo.getString("pathId");
                     index = i;
                     break;
                 }
             }
-            if (index < 0) {
+            if (index < 0 || index == allPathBaseInfoList.length() - 1) {
                 for (int j = otherAllPathBaseInfoList.length() - 1; j >= 0; j--) {
                     jo = otherAllPathBaseInfoList.getJSONObject(j);
                     if (jo.getBoolean("unlocked")) {
-                        index = j;
+                        if (j != otherAllPathBaseInfoList.length() - 1 || index != allPathBaseInfoList.length() - 1) {
+                            title = jo.getString("title");
+                            pathId = jo.getString("pathId");
+                            index = j;
+                        }
                         break;
                     }
                 }
             }
             if (index >= 0) {
-                String title = jo.getString("title");
-                String pathId = jo.getString("pathId");
                 String s;
                 if (title.equals(firstJoinPathTitle)) {
                     s = AntSportsRpcCall.openAndJoinFirst();

@@ -325,7 +325,7 @@ public class AntForest {
                         switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
                             case AVAILABLE:
                                 if (Config.getDontCollectList().contains(selfId))
-                                    Log.recordLog("不偷取[" + selfName + "]", ", userId=" + selfId);
+                                    Log.recordLog("不收取[" + selfName + "]", ", userId=" + selfId);
                                 else
                                     collectedEnergy += collectEnergy(selfId, bubbleId, selfName, null);
                                 break;
@@ -603,8 +603,9 @@ public class AntForest {
                 String bizNo = jo.getString("bizNo");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
-                Log.recordLog("尝试对[" + userName + "]浇水66g" + count + "次[" + bizNo + "]");
-                count = returnFriendWater(userId, userName, bizNo, count, 66);
+                // Log.recordLog("尝试对[" + userName + "]浇水"+Config.waterFriendCount()+"g" + count
+                // + "次[" + bizNo + "]");
+                count = returnFriendWater(userId, userName, bizNo, count, Config.waterFriendCount());
                 if (count > 0)
                     Statistics.waterFriendToday(userId, count);
             } else {
