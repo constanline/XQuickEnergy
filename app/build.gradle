@@ -9,7 +9,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
         versionCode 35
-        versionName "1.0.15"
+        versionName "1.0.15-fix1"
     }
     buildTypes {
         release {
