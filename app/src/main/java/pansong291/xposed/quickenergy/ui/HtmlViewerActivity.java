@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +46,7 @@ public class HtmlViewerActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, getString(R.string.open_with_other_browser));
+//        menu.add(0, 1, 0, getString(R.string.open_with_other_browser));
         menu.add(0, 2, 0, getString(R.string.copy_the_url));
         menu.add(0, 3, 0, getString(R.string.scroll_to_top));
         menu.add(0, 4, 0, getString(R.string.scroll_to_bottom));
@@ -56,11 +57,14 @@ public class HtmlViewerActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case 1:
-                Intent it = new Intent(Intent.ACTION_VIEW);
-                it.addCategory(Intent.CATEGORY_DEFAULT);
-                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                it.setDataAndType(getIntent().getData(), "text/html");
-                startActivity(Intent.createChooser(it, getString(R.string.choose_a_browser)));
+                Uri uri = Uri.parse(mWebView.getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+//                Intent it = new Intent(Intent.ACTION_VIEW);
+//                it.addCategory(Intent.CATEGORY_DEFAULT);
+//                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                it.setDataAndType(getIntent().getData(), "text/html");
+//                startActivity(Intent.createChooser(it, getString(R.string.choose_a_browser)));
                 break;
 
             case 2:
