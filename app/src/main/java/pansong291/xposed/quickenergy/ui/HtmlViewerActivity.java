@@ -60,11 +60,6 @@ public class HtmlViewerActivity extends Activity {
                 Uri uri = Uri.parse(mWebView.getUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-//                Intent it = new Intent(Intent.ACTION_VIEW);
-//                it.addCategory(Intent.CATEGORY_DEFAULT);
-//                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                it.setDataAndType(getIntent().getData(), "text/html");
-//                startActivity(Intent.createChooser(it, getString(R.string.choose_a_browser)));
                 break;
 
             case 2:

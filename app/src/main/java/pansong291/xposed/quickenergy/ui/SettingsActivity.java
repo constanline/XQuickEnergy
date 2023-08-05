@@ -29,7 +29,7 @@ public class SettingsActivity extends Activity {
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
             cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
-            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_recordFarmGame, sw_beach,
+            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_recordFarmGame, cb_beach,
             cb_kitchen, cb_antOcean;
 
     @Override
@@ -57,7 +57,7 @@ public class SettingsActivity extends Activity {
         cb_ancientTree = findViewById(R.id.cb_ancientTree);
         cb_energyRain = findViewById(R.id.cb_energyRain);
         cb_reserve = findViewById(R.id.cb_reserve);
-        sw_beach = findViewById(R.id.sw_beach);
+        cb_beach = findViewById(R.id.cb_beach);
         cb_enableFarm = findViewById(R.id.cb_enableFarm);
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
@@ -102,7 +102,7 @@ public class SettingsActivity extends Activity {
         cb_ancientTree.setChecked(Config.ancientTree());
         cb_energyRain.setChecked(Config.energyRain());
         cb_reserve.setChecked(Config.reserve());
-        sw_beach.setChecked(Config.beach());
+        cb_beach.setChecked(Config.beach());
         cb_enableFarm.setChecked(Config.enableFarm());
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
@@ -200,7 +200,7 @@ public class SettingsActivity extends Activity {
                     Config.setReserve(cb.isChecked());
                     break;
 
-                case R.id.sw_beach:
+                case R.id.cb_beach:
                     Config.setBeach(cb.isChecked());
                     break;
 
