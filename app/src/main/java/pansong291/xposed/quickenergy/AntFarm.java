@@ -3,7 +3,12 @@ package pansong291.xposed.quickenergy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
+import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 import pansong291.xposed.quickenergy.util.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -159,14 +164,12 @@ public class AntFarm {
 //                        receiveToolTaskReward(loader);
 //                    }
 
-                    if(Config.useNewEggTool())
-                    {
+                    if(Config.useNewEggTool()) {
                         useFarmTool(ownerFarmId, ToolType.NEWEGGTOOL);
                         syncAnimalStatus(ownerFarmId);
                     }
 
-                    if(Config.harvestProduce() && benevolenceScore >= 1)
-                    {
+                    if(Config.harvestProduce() && benevolenceScore >= 1) {
                         Log.recordLog("有可收取的爱心鸡蛋", "");
                         harvestProduce(ownerFarmId);
                     }
@@ -175,9 +178,9 @@ public class AntFarm {
                         donation();
                     }
 
-//                    if(Config.answerQuestion() && Statistics.canAnswerQuestionToday(FriendIdMap.currentUid)) {
-//                        answerQuestion(loader);
-//                    }
+                    if(Config.answerQuestion() && Statistics.canAnswerQuestionToday(FriendIdMap.currentUid)) {
+                        answerQuestion();
+                    }
 
                     if (Config.receiveFarmTaskAward()) receiveFarmTaskAward();
 
@@ -472,66 +475,77 @@ public class AntFarm {
         }
     }
 
-    private static void answerQuestion()
-    {
-        try
-        {
+    private static void answerQuestion() {
+        try {
             String s = AntFarmRpcCall.listFarmTask();
             JSONObject jo = new JSONObject(s);
-            String memo = jo.getString("memo");
-            if(memo.equals("SUCCESS"))
-            {
+            if ("SUCCESS".equals(jo.getString("memo"))) {
                 JSONArray jaFarmTaskList = jo.getJSONArray("farmTaskList");
-                for(int i = 0; i < jaFarmTaskList.length(); i++)
-                {
+                for (int i = 0; i < jaFarmTaskList.length(); i++) {
                     jo = jaFarmTaskList.getJSONObject(i);
-                    if(jo.getString("title").equals("庄园小课堂")) {
-                        switch(TaskStatus.valueOf((jo.getString("taskStatus")))) {
+                    if ("庄园小课堂".equals(jo.getString("title"))) {
+                        switch (TaskStatus.valueOf((jo.getString("taskStatus")))) {
                             case TODO:
-                                s = AntFarmRpcCall.getAnswerInfo();
+                                s = DadaDailyRpcCall.home("100");
                                 jo = new JSONObject(s);
-                                memo = jo.getString("memo");
-                                if(memo.equals("SUCCESS"))
-                                {
-                                    jo = jo.getJSONArray("answerInfoVOs").getJSONObject(0);
-                                    JSONArray jaOptionContents = jo.getJSONArray("optionContents");
-                                    String rightReply = jo.getString("rightReply");
-                                    Log.recordLog(jo.getString("questionContent"), "");
-                                    Log.recordLog(jaOptionContents.toString(), "");
-                                    String questionId = jo.getString("questionId");
-                                    int answer = 0;
-                                    for(int j = 0; j < jaOptionContents.length(); j++)
-                                    {
-                                        if(rightReply.contains(jaOptionContents.getString(j)))
-                                        {
-                                            answer += j + 1;
-                                            //break;
-                                        }
+                                if (jo.getBoolean("success")) {
+                                    JSONObject question = jo.getJSONObject("question");
+                                    Log.i("题目:" + question, "");
+                                    long questionId = question.getLong("questionId");
+                                    JSONArray labels = question.getJSONArray("label");
+                                    String answer = null;
+                                    String anotherAnswer = null;
+                                    boolean existsResult = false;
+                                    Set<String> dadaDailySet = Statistics.getDadaDailySet();
+                                    if (dadaDailySet.contains(TimeUtil.getDateStr() + labels.getString(0))) {
+                                        answer = labels.getString(0);
+                                        anotherAnswer = labels.getString(1);
+                                        existsResult = true;
+                                    } else if (dadaDailySet.contains(TimeUtil.getDateStr() + labels.getString(1))) {
+                                        answer = labels.getString(1);
+                                        anotherAnswer = labels.getString(0);
+                                        existsResult = true;
                                     }
-                                    if(0 < answer && answer < 3)
-                                    {
-                                        s = AntFarmRpcCall.answerQuestion(questionId, answer);
-                                        jo = new JSONObject(s);
-                                        memo = jo.getString("memo");
-                                        if(memo.equals("SUCCESS"))
-                                        {
-                                            s = jo.getBoolean("rightAnswer") ? "正确": "错误";
-                                            Log.farm("答题" + s + "，可领取［" + jo.getInt("awardCount") + "克］");
-                                            Statistics.answerQuestionToday(FriendIdMap.currentUid);
-                                        }else
-                                        {
-                                            Log.recordLog(memo, s);
+                                    if (!existsResult) {
+                                        answer = labels.getString(0);
+                                        anotherAnswer = labels.getString(1);
+                                    }
+
+                                    s = DadaDailyRpcCall.submit("100", answer, questionId);
+                                    JSONObject joDailySubmit = new JSONObject(s);
+                                    if (joDailySubmit.getBoolean("success")) {
+                                        Log.recordLog("提交结果", s);
+                                        dadaDailySet = new HashSet<>();
+                                        JSONObject extInfo = joDailySubmit.getJSONObject("extInfo");
+                                        boolean correct = joDailySubmit.getBoolean("correct");
+                                        if (!correct || !existsResult) {
+                                            dadaDailySet.add(TimeUtil.getDateStr() + anotherAnswer);
+                                        } else {
+                                            dadaDailySet.add(TimeUtil.getDateStr() + answer);
                                         }
-                                        Statistics.setQuestionHint(null);
-                                    }else
-                                    {
-                                        Statistics.setQuestionHint(rightReply);
-                                        Log.farm("未找到正确答案，放弃作答。提示：" + rightReply);
+                                        Log.recordLog("答题" + (correct ? "正确" : "错误") + "可领取［" + extInfo.getString("award") + "克］");
                                         Statistics.answerQuestionToday(FriendIdMap.currentUid);
+
+                                        JSONArray operationConfigList = joDailySubmit.getJSONArray("operationConfigList");
+                                        for (int j = 0; j < operationConfigList.length(); j++) {
+                                            JSONObject operationConfig = operationConfigList.getJSONObject(j);
+                                            if ("PREVIEW_QUESTION".equals(operationConfig.getString("type"))) {
+                                                JSONArray actionTitle = new JSONArray(operationConfig.getString("actionTitle"));
+                                                for (int k = 0; k < actionTitle.length(); k++) {
+                                                    JSONObject joActionTitle = actionTitle.getJSONObject(k);
+                                                    if (joActionTitle.getBoolean("correct")) {
+                                                        dadaDailySet.add(TimeUtil.getDateStr(1) + joActionTitle.getString("title"));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Statistics.setDadaDailySet(dadaDailySet);
+                                    } else {
+                                        Log.recordLog(TAG, s);
                                     }
-                                }else
-                                {
-                                    Log.recordLog(memo, s);
+                                    return;
+                                } else {
+                                    Log.recordLog(TAG, s);
                                 }
                                 break;
 
@@ -552,7 +566,7 @@ public class AntFarm {
                 }
             }else
             {
-                Log.recordLog(memo, s);
+                Log.recordLog(TAG, s);
             }
         }catch(Throwable t)
         {

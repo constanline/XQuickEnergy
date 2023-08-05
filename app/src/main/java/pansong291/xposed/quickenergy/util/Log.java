@@ -19,7 +19,7 @@ public class Log
 
     public static boolean forest(String s) {
         recordLog(s, "");
-        return FileUtils.append2File(getFormatTime() + " " + s + "\n", FileUtils.getForestLogFile());
+        return FileUtils.append2File(getFormatDateTime() + " " + s + "\n", FileUtils.getForestLogFile());
     }
 
     public static void farm(String s) {

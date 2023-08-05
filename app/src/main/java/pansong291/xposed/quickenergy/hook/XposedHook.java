@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.*;
+import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -206,13 +207,20 @@ public class XposedHook implements IXposedHookLoadPackage {
         }
     }
 
+    private static int getPendingIntentFlag() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
+        } else {
+            return PendingIntent.FLAG_UPDATE_CURRENT;
+        }
+    }
+
     public static void alarmBroadcast(Context context, long delayTime, boolean force) {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent("com.eg.android.AlipayGphone.xqe.broadcast");
             intent.putExtra("force", force);
-            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
-                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, getPendingIntentFlag());
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayTime, pi);
         } catch (Throwable th) {
             Log.printStackTrace(TAG, th);
@@ -226,13 +234,11 @@ public class XposedHook implements IXposedHookLoadPackage {
             if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
-                pi = PendingIntent.getActivity(context, 1, it,
-                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());
             } else {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
-                pi = PendingIntent.getService(context, 2, it,
-                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                pi = PendingIntent.getService(context, 2, it, getPendingIntentFlag());
             }
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayTime, pi);
         } catch (Throwable th) {

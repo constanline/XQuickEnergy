@@ -722,14 +722,12 @@ public class Config
         return getConfig().donation;
     }
 
-    public static void setAnswerQuestion(boolean b)
-    {
+    public static void setAnswerQuestion(boolean b) {
         getConfig().answerQuestion = b;
         hasChanged = true;
     }
 
-    public static boolean answerQuestion()
-    {
+    public static boolean answerQuestion() {
         return getConfig().answerQuestion;
     }
 

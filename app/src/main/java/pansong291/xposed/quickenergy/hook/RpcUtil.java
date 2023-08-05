@@ -75,6 +75,7 @@ public class RpcUtil
                         AntForestNotification.setContentText("登录超时");
                         if(AntForestToast.context != null) {
                             if (Config.timeoutRestart()) {
+                                Log.recordLog("尝试重启！");
                                 XposedHook.restartHook(true);
                             }
                         }
