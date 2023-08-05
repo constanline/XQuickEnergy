@@ -457,7 +457,7 @@
 			android:minHeight="50dp"
 			android:id="@+id/cb_antOcean"/>
 
-		<Switch
+		<CheckBox
 		    android:paddingStart="8dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
