@@ -18,6 +18,7 @@ public class FileUtils
     private static File friendIdMapFile;
     private static File cooperationIdMapFile;
     private static File reserveIdMapFile;
+    private static File beachIdMapFile;
     private static File cityCodeMapFile;
     private static File statisticsFile;
     private static File exportedStatisticsFile;
@@ -140,6 +141,15 @@ public class FileUtils
                 reserveIdMapFile.delete();
         }
         return reserveIdMapFile;
+    }
+
+    public static File getBeachIdMapFile() {
+        if (beachIdMapFile == null) {
+            beachIdMapFile = new File(getMainDirectoryFile(), "beachId.list");
+            if (beachIdMapFile.exists() && beachIdMapFile.isDirectory())
+                beachIdMapFile.delete();
+        }
+        return beachIdMapFile;
     }
 
     public static File getCityCodeMapFile() {

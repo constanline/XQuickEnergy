@@ -16,18 +16,15 @@ public class AntOcean {
     private static final String TAG = AntOcean.class.getCanonicalName();
 
     public static void start() {
-        if(!Config.antOcean())
+        if (!Config.antOcean())
             return;
-        new Thread()
-        {
+        new Thread() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     String s = AntOceanRpcCall.queryOceanStatus();
                     JSONObject jo = new JSONObject(s);
-                    if("SUCCESS".equals(jo.getString("resultCode"))) {
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         if (jo.getBoolean("opened")) {
                             queryHomePage();
                         } else {
@@ -37,7 +34,7 @@ public class AntOcean {
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }
-                } catch(Throwable t) {
+                } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
                 }
@@ -75,7 +72,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, joHomePage.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryHomePage err:");
             Log.printStackTrace(TAG, t);
         }
@@ -97,7 +94,8 @@ public class AntOcean {
                                 JSONObject retBubble = retBubbles.optJSONObject(j);
                                 if (retBubble != null) {
                                     int collectedEnergy = retBubble.getInt("collectedEnergy");
-                                    Log.forest("【神奇海洋】收取了 [" + FriendIdMap.getNameById(userId) + "] 的海洋能量 " + collectedEnergy + "克");
+                                    Log.forest("【神奇海洋】收取了 [" + FriendIdMap.getNameById(userId) + "] 的海洋能量 "
+                                            + collectedEnergy + "克");
                                 }
                             }
                         }
@@ -106,7 +104,7 @@ public class AntOcean {
                     }
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryHomePage err:");
             Log.printStackTrace(TAG, t);
         }
@@ -124,7 +122,7 @@ public class AntOcean {
                     Log.i(TAG, jo.getString("resultDesc"));
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "cleanOcean err:");
             Log.printStackTrace(TAG, t);
         }
@@ -140,7 +138,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "ipOpenSurprise err:");
             Log.printStackTrace(TAG, t);
         }
@@ -157,7 +155,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "combineFish err:");
             Log.printStackTrace(TAG, t);
         }
@@ -203,7 +201,7 @@ public class AntOcean {
                     Log.i(TAG, jo.getString("resultDesc"));
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "collectReplicaAsset err:");
             Log.printStackTrace(TAG, t);
         }
@@ -219,7 +217,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "unLockReplicaPhase err:");
             Log.printStackTrace(TAG, t);
         }
@@ -247,7 +245,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryReplicaHome err:");
             Log.printStackTrace(TAG, t);
         }
@@ -262,7 +260,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryOceanPropList err:");
             Log.printStackTrace(TAG, t);
         }
@@ -294,7 +292,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "querySeaAreaDetailList err:");
             Log.printStackTrace(TAG, t);
         }
@@ -313,7 +311,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryMiscInfo err:");
             Log.printStackTrace(TAG, t);
         }
@@ -339,7 +337,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryMiscInfo err:");
             Log.printStackTrace(TAG, t);
         }
@@ -358,7 +356,7 @@ public class AntOcean {
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryMiscInfo err:");
             Log.printStackTrace(TAG, t);
         }

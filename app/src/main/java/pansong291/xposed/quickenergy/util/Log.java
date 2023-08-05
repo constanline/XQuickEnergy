@@ -4,8 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Log
-{
+public class Log {
     private static final String TAG = Log.class.getCanonicalName();
     private static SimpleDateFormat sdf;
 
@@ -38,12 +37,14 @@ public class Log
 
     public static void recordLog(String str, String str2) {
         Log.i(TAG, str + str2);
-        if(!Config.recordLog()) return;
+        if (!Config.recordLog())
+            return;
         FileUtils.append2SimpleLogFile(str);
     }
 
     public static String getFormatDateTime() {
-        if(sdf == null) sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        if (sdf == null)
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return sdf.format(new Date());
     }
 

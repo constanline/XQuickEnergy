@@ -16,6 +16,7 @@ import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 import pansong291.xposed.quickenergy.util.ReserveIdMap;
+import pansong291.xposed.quickenergy.util.BeachIdMap;
 
 public class SettingsActivity extends Activity {
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
@@ -28,7 +29,8 @@ public class SettingsActivity extends Activity {
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
             cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
-            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_antOcean;
+            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_recordFarmGame, sw_beach,
+            cb_kitchen, cb_antOcean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class SettingsActivity extends Activity {
         FriendIdMap.shouldReload = true;
         CooperationIdMap.shouldReload = true;
         ReserveIdMap.shouldReload = true;
+        BeachIdMap.shouldReload = true;
 
         cb_immediateEffect = findViewById(R.id.cb_immediateEffect);
         cb_recordLog = findViewById(R.id.cb_recordLog);
@@ -54,10 +57,13 @@ public class SettingsActivity extends Activity {
         cb_ancientTree = findViewById(R.id.cb_ancientTree);
         cb_energyRain = findViewById(R.id.cb_energyRain);
         cb_reserve = findViewById(R.id.cb_reserve);
+        sw_beach = findViewById(R.id.sw_beach);
         cb_enableFarm = findViewById(R.id.cb_enableFarm);
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
         cb_receiveFarmToolReward = findViewById(R.id.cb_receiveFarmToolReward);
+        cb_recordFarmGame = findViewById(R.id.cb_recordFarmGame);
+        cb_kitchen = findViewById(R.id.cb_kitchen);
         cb_useNewEggTool = findViewById(R.id.cb_useNewEggTool);
         cb_harvestProduce = findViewById(R.id.cb_harvestProduce);
         cb_donation = findViewById(R.id.cb_donation);
@@ -96,10 +102,13 @@ public class SettingsActivity extends Activity {
         cb_ancientTree.setChecked(Config.ancientTree());
         cb_energyRain.setChecked(Config.energyRain());
         cb_reserve.setChecked(Config.reserve());
+        sw_beach.setChecked(Config.beach());
         cb_enableFarm.setChecked(Config.enableFarm());
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
         cb_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
+        cb_recordFarmGame.setChecked(Config.recordFarmGame());
+        cb_kitchen.setChecked(Config.kitchen());
         cb_useNewEggTool.setChecked(Config.useNewEggTool());
         cb_harvestProduce.setChecked(Config.harvestProduce());
         cb_donation.setChecked(Config.donation());
@@ -191,6 +200,10 @@ public class SettingsActivity extends Activity {
                     Config.setReserve(cb.isChecked());
                     break;
 
+                case R.id.sw_beach:
+                    Config.setBeach(cb.isChecked());
+                    break;
+
                 case R.id.cb_enableFarm:
                     Config.setEnableFarm(cb.isChecked());
                     break;
@@ -205,6 +218,14 @@ public class SettingsActivity extends Activity {
 
                 case R.id.cb_receiveFarmToolReward:
                     Config.setReceiveFarmToolReward(cb.isChecked());
+                    break;
+
+                case R.id.cb_recordFarmGame:
+                    Config.setRecordFarmGame(cb.isChecked());
+                    break;
+
+                case R.id.cb_kitchen:
+                    Config.setKitchen(cb.isChecked());
                     break;
 
                 case R.id.cb_useNewEggTool:
@@ -276,8 +297,8 @@ public class SettingsActivity extends Activity {
                     break;
             }
         } else if (v instanceof Button) {
-            Button btn = (Button)v;
-            switch(v.getId()) {
+            Button btn = (Button) v;
+            switch (v.getId()) {
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -356,6 +377,11 @@ public class SettingsActivity extends Activity {
                             Config.getReserveCountList());
                     break;
 
+                case R.id.btn_beachList:
+                    ListDialog.show(this, btn.getText(), AlipayBeach.getList(), Config.getBeachList(),
+                            Config.getBeachCountList());
+                    break;
+
                 case R.id.btn_sendType:
                     ChoiceDialog.showSendType(this, btn.getText());
                     break;
@@ -426,6 +452,7 @@ public class SettingsActivity extends Activity {
         FriendIdMap.saveIdMap();
         CooperationIdMap.saveIdMap();
         ReserveIdMap.saveIdMap();
+        BeachIdMap.saveIdMap();
     }
 
 }

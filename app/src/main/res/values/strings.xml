@@ -37,6 +37,8 @@
     <string name="don_t_send_friend_list">Don\'t send friend list</string>
     <string name="recall_animal_type">Recall animal type</string>
     <string name="receive_farm_tool_reward">Receive farm tool reward</string>
+    <string name="record_farm_game">Record farm game</string>
+    <string name="kitchen">Kitchen</string>
     <string name="use_new_egg_tool">Use new egg tool</string>
     <string name="harvest_produce">Harvest produce</string>
     <string name="answer_question">Answer question</string>
@@ -104,5 +106,6 @@
     <string name="water_friend_count">Water friend count</string>
     <string name="the_image_of_main" translatable="false">The image of main</string>
     <string name="the_image_of_unactivated" translatable="false">The image of unactivated</string>
-
+    <string name="beach">Beach</string>
+    <string name="beach_list">Beach list</string>
 </resources>

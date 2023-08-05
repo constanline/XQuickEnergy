@@ -17,12 +17,14 @@ public class AntForestRpcCall {
 
     public static String queryEnergyRanking() {
         return RpcUtil.request("alipay.antmember.forest.h5.queryEnergyRanking",
-                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryHomePage() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryHomePage",
-                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryFriendHomePage(String userId) {
