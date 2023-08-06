@@ -7,6 +7,7 @@ import pansong291.xposed.quickenergy.hook.AntOceanRpcCall;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
 
 /**
  * @author Constanline
@@ -29,7 +30,7 @@ public class AntOcean {
                             queryHomePage();
                         } else {
                             Config.setAntOcean(false);
-                            Log.recordLog("【神奇海洋】请先开启神奇海洋，并完成引导教程");
+                            Log.recordLog("请先开启神奇海洋，并完成引导教程");
                         }
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
@@ -69,6 +70,10 @@ public class AntOcean {
 
                 queryUserRanking();
 
+                doOceanDailyTask();
+
+                receiveTaskAward();
+
             } else {
                 Log.i(TAG, joHomePage.getString("resultDesc"));
             }
@@ -94,8 +99,8 @@ public class AntOcean {
                                 JSONObject retBubble = retBubbles.optJSONObject(j);
                                 if (retBubble != null) {
                                     int collectedEnergy = retBubble.getInt("collectedEnergy");
-                                    Log.forest("【神奇海洋】收取了 [" + FriendIdMap.getNameById(userId) + "] 的海洋能量 "
-                                            + collectedEnergy + "克");
+                                    Log.forest("神奇海洋🐳收取[" + FriendIdMap.getNameById(userId) + "]的海洋能量#"
+                                            + collectedEnergy + "g");
                                 }
                             }
                         }
@@ -151,7 +156,7 @@ public class AntOcean {
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONObject fishDetailVO = jo.getJSONObject("fishDetailVO");
                 String name = fishDetailVO.getString("name");
-                Log.forest("【神奇海洋】合成海洋生物" + name);
+                Log.forest("神奇海洋🐳[" + name + "]合成成功");
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
@@ -168,7 +173,7 @@ public class AntOcean {
                 JSONArray attachReward = reward.getJSONArray("attachRewardBOList");
 
                 if (attachReward.length() > 0) {
-                    Log.forest("【神奇海洋】获取碎片奖励");
+                    Log.forest("神奇海洋🐳[获取碎片奖励]");
                     boolean canCombine = true;
                     for (int j = 0; j < attachReward.length(); j++) {
                         JSONObject detail = attachReward.getJSONObject(j);
@@ -196,7 +201,7 @@ public class AntOcean {
                 String s = AntOceanRpcCall.collectReplicaAsset();
                 JSONObject jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                    Log.forest("【神奇海洋】学习海洋科普知识,潘多拉能量+1");
+                    Log.forest("神奇海洋🐳[学习海洋科普知识]#潘多拉能量+1");
                 } else {
                     Log.i(TAG, jo.getString("resultDesc"));
                 }
@@ -213,7 +218,7 @@ public class AntOcean {
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 String name = jo.getJSONObject("currentPhaseInfo").getJSONObject("extInfo").getString("name");
-                Log.forest("【神奇海洋】迎回[" + name + "]");
+                Log.forest("神奇海洋🐳迎回[" + name + "]");
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
@@ -361,4 +366,68 @@ public class AntOcean {
             Log.printStackTrace(TAG, t);
         }
     }
+
+    private static void doOceanDailyTask() {
+        try {
+            String s = AntOceanRpcCall.queryTaskList();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONArray jaTaskList = jo.getJSONArray("antOceanTaskVOList");
+                for (int i = 0; i < jaTaskList.length(); i++) {
+                    jo = jaTaskList.getJSONObject(i);
+                    if (!TaskStatus.TODO.name().equals(jo.getString("taskStatus")))
+                        continue;
+                    JSONObject bizInfo = new JSONObject(jo.getString("bizInfo"));
+                    if (!bizInfo.optBoolean("autoCompleteTask", false))
+                        continue;
+                    String taskType = jo.getString("taskType");
+                    String sceneCode = jo.getString("sceneCode");
+                    jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
+                    if (jo.getBoolean("success")) {
+                        String taskTitle = bizInfo.optString("taskTitle", taskType);
+                        Log.forest("完成任务🧾[" + taskTitle + "]");
+                    } else {
+                        Log.recordLog(jo.getString("desc"), jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultCode"), s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "doOceanDailyTask err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void receiveTaskAward() {
+        try {
+            String s = AntOceanRpcCall.queryTaskList();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONArray jaTaskList = jo.getJSONArray("antOceanTaskVOList");
+                for (int i = 0; i < jaTaskList.length(); i++) {
+                    jo = jaTaskList.getJSONObject(i);
+                    if (!TaskStatus.FINISHED.name().equals(jo.getString("taskStatus")))
+                        continue;
+                    JSONObject bizInfo = new JSONObject(jo.getString("bizInfo"));
+                    String taskType = jo.getString("taskType");
+                    String sceneCode = jo.getString("sceneCode");
+                    jo = new JSONObject(AntOceanRpcCall.receiveTaskAward(sceneCode, taskType));
+                    if (jo.getBoolean("success")) {
+                        String taskTitle = bizInfo.optString("taskTitle", taskType);
+                        String taskDesc = bizInfo.optString("taskDesc", taskType);
+                        Log.forest("领取奖励🎖️[" + taskTitle + "]#" + taskDesc );
+                    } else {
+                        Log.recordLog(jo.getString("desc"), jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultCode"), s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "receiveTaskAward err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
 }

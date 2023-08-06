@@ -14,9 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
@@ -98,10 +96,10 @@ public class MainActivity extends Activity {
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_help) {
+/*         if (v.getId() == R.id.btn_help) {
             sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
             return;
-        }
+        } */
 
         if (v.getId() == R.id.btn_settings) {
             startActivity(new Intent(this, SettingsActivity.class));

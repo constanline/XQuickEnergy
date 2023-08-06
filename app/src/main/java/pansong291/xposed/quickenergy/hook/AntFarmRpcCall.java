@@ -310,4 +310,10 @@ public class AntFarmRpcCall {
                         + "\",\"bizType\":\"CONTENT\",\"prizeFlowNum\":\"VIDEO_TASK\",\"prizeType\":\"farmFeed\"}]");
     }
 
+    /* 惊喜礼包 */
+        public static String drawLotteryPlus() {
+        return RpcUtil.request("com.alipay.antfarm.drawLotteryPlus",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5 \",\"version\":\"\"}]");
+    }
+
 }
