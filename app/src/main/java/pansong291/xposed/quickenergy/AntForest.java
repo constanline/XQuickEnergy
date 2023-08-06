@@ -666,7 +666,7 @@ public class AntForest {
                     if (signKey.equals(currentSignKey)) {
                         if (!signRecord.getBoolean("signed")) {
                             jo = new JSONObject(AntForestRpcCall.vitalitySign());
-                            if ("SUCCESS".equals(jo.getString("desc")))
+                            if ("SUCCESS".equals(jo.getString("resultCode")))
                                 Log.forest("签到成功");
                         }
                         break;
@@ -686,10 +686,10 @@ public class AntForest {
                         String sceneCode = taskBaseInfo.getString("sceneCode");
                         if (TaskStatus.FINISHED.name().equals(taskBaseInfo.getString("taskStatus"))) {
                             JSONObject joTaskAward = new JSONObject(AntForestRpcCall.receiveTaskAward(sceneCode, taskType));
-                            if ("SUCCESS".equals(joTaskAward.getString("desc")))
+                            if (joTaskAward.getBoolean("success"))
                                 Log.forest("已领取【" + awardCount + "个】【" + awardName + "】");
                             else
-                                Log.recordLog("领取失败，" + s, forestTask.toString());
+                                Log.recordLog("领取失败，" + s, joTaskAward.toString());
                         }
                     }
                 }

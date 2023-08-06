@@ -481,12 +481,12 @@ public class AntFarm {
             String memo = jo.getString("memo");
             if (memo.equals("SUCCESS")) {
                 JSONArray jaActivityInfos = jo.getJSONArray("activityInfos");
-                String activityId = null, activityName = null;
+                String activityId = null, projectName = null;
                 for (int i = 0; i < jaActivityInfos.length(); i++) {
                     jo = jaActivityInfos.getJSONObject(i);
                     if (!jo.get("donationTotal").equals(jo.get("donationLimit"))) {
                         activityId = jo.getString("activityId");
-                        activityName = jo.optString("activityName", activityId);
+                        projectName = jo.optString("projectName", activityId);
                         break;
                     }
                 }
@@ -499,7 +499,7 @@ public class AntFarm {
                     if (memo.equals("SUCCESS")) {
                         jo = jo.getJSONObject("donation");
                         harvestBenevolenceScore = jo.getDouble("harvestBenevolenceScore");
-                        Log.farm("捐赠活动[" + activityName + "]，累计捐赠[" + jo.getInt("donationTimesStat") + "次]");
+                        Log.farm("捐赠活动[" + projectName + "]，累计捐赠[" + jo.getInt("donationTimesStat") + "次]");
                         Statistics.donationEgg();
                     } else {
                         Log.recordLog(memo, s);
