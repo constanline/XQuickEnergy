@@ -4,23 +4,36 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
+
+import java.util.Map;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.core.feature_tool.AncientTree;
+import pansong291.xposed.quickenergy.core.feature_tool.AntCooperate;
+import pansong291.xposed.quickenergy.core.feature_tool.AntFarm;
+import pansong291.xposed.quickenergy.core.feature_tool.AntForest;
+import pansong291.xposed.quickenergy.core.feature_tool.AntForestNotification;
+import pansong291.xposed.quickenergy.core.feature_tool.AntForestToast;
+import pansong291.xposed.quickenergy.core.feature_tool.AntMember;
+import pansong291.xposed.quickenergy.core.feature_tool.AntOcean;
+import pansong291.xposed.quickenergy.core.feature_tool.AntSports;
+import pansong291.xposed.quickenergy.core.feature_tool.Reserve;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.Statistics;
 import pansong291.xposed.quickenergy.util.TimeUtil;
-
-import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {
     private static final String TAG = XposedHook.class.getCanonicalName();

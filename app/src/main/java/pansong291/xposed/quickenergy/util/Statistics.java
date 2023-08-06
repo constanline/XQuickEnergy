@@ -1,11 +1,11 @@
 package pansong291.xposed.quickenergy.util;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class Statistics {
     public enum TimeType {

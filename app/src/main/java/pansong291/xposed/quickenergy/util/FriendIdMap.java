@@ -1,9 +1,10 @@
 package pansong291.xposed.quickenergy.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();

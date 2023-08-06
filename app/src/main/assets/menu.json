@@ -1,0 +1,33 @@
+{
+  "basics": [
+    {
+      "name": "immediate_effect",
+      "switch": true
+    },
+    {
+      "name": "record_log",
+      "switch": true
+    },
+    {
+      "name": "show_toast",
+      "switch": true
+    },
+    {
+      "name": "stay_awake",
+      "switch": true
+    },
+    {
+      "name": "stay_awake_type"
+    },
+    {
+      "name": "stay_awake_target"
+    },
+    {
+      "name": "timeout_restart_activity",
+      "switch": true
+    },
+    {
+      "name": "wait_when_exception"
+    }
+  ]
+}

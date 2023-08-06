@@ -2,7 +2,6 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -17,15 +16,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.*;
+import pansong291.xposed.quickenergy.ui.setting.SettingsActivity;
+import pansong291.xposed.quickenergy.core.activity_tool.HtmlViewerActivity;
+import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.PermissionUtil;
+import pansong291.xposed.quickenergy.util.RandomUtils;
+import pansong291.xposed.quickenergy.util.Statistics;
 
 public class MainActivity extends Activity {
     private static String[] strArray;
     TextView tvStatistics;
     Button btnHelp;
-
-    public static String version = "";
 
     private static boolean isExpModuleActive(Context context) {
         boolean isExp = false;
@@ -73,19 +76,18 @@ public class MainActivity extends Activity {
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            version = " v" + packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        this.setTitle(this.getTitle() + version);
+        this.setTitle(this.getTitle());
 
         setModuleActive(isExpModuleActive(this));
         PermissionUtil.requestPermissions(this);
-        new AlertDialog.Builder(this)
+       /* new AlertDialog.Builder(this)
                 .setTitle("提示")
-                .setMessage("本APP是为了学习研究开发，免费提供，不得进行任何形式的转发、发布、传播。请于24小时内卸载本APP。如果您是购买的可能已经被骗，请联系卖家退款。")
+                .setMessage("")
                 .setNegativeButton("我知道了", null)
-                .create().show();
+                .create().show();*/
     }
 
     @Override
@@ -97,8 +99,7 @@ public class MainActivity extends Activity {
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
-//            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
-            HanziToPinyin.getInstance().get("day|杜霭瑜(136******43)");
+            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
             return;
         }
 
@@ -119,11 +120,6 @@ public class MainActivity extends Activity {
             case R.id.btn_help:
                 data = "https://github.com/pansong291/XQuickEnergy/wiki";
                 break;
-
-            case R.id.btn_github:
-                data = "https://github.com/constanline/XQuickEnergy";
-                break;
-
             case R.id.btn_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return;
@@ -142,7 +138,7 @@ public class MainActivity extends Activity {
                 .setChecked(state > PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
         menu.add(0, 2, 0, R.string.export_the_statistic_file);
         menu.add(0, 3, 0, R.string.import_the_statistic_file);
-        menu.add(0, 4, 0, R.string.settings);
+//        menu.add(0, 4, 0, R.string.settings);
         return super.onCreateOptionsMenu(menu);
     }
 

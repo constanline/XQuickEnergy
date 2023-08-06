@@ -4,7 +4,6 @@
     <string name="start_check_energy">Start check energy</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
-
     <string name="hello_user">Hello User!</string>
     <string name="base_configuration">BASE CONFIGURATION</string>
     <string name="immediate_effect">Immediate effect</string>
@@ -37,8 +36,6 @@
     <string name="don_t_send_friend_list">Don\'t send friend list</string>
     <string name="recall_animal_type">Recall animal type</string>
     <string name="receive_farm_tool_reward">Receive farm tool reward</string>
-    <string name="record_farm_game">Record farm game</string>
-    <string name="kitchen">Kitchen</string>
     <string name="use_new_egg_tool">Use new egg tool</string>
     <string name="harvest_produce">Harvest produce</string>
     <string name="answer_question">Answer question</string>
@@ -49,7 +46,6 @@
     <string name="feed_friend_animal_list">Feed friend animal list</string>
     <string name="notify_friend">Notify friend</string>
     <string name="don_t_notify_friend_list">Don\'t notify friend list</string>
-    <string name="other_configuration">OTHER CONFIGURATION</string>
     <string name="receive_point">Receive point</string>
     <string name="open_treasure_box">Open treasure box</string>
     <string name="receive_coin_asset">Receive coin asset</string>
@@ -90,7 +86,8 @@
     <string name="copy_success">Copy success</string>
     <string name="cancel">Cancel</string>
     <string name="collect_watering_bubble">Collect watering bubble</string>
-    <string name="use_double_card_time">Use double card time</string>
+    <string name="use_double_card_time">For example：(0000–0100, 0700–0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
+    <string name="use_double_click_card_time">Use double click card time</string>
     <string name="animal_sleep_time">Animal sleep time</string>
     <string name="visit_github">Visit GitHub</string>
     <string name="exchange_energy_double_click">Exchange energy double click</string>
@@ -104,8 +101,11 @@
     <string name="antdodo_collect">Antdodo Collect</string>
     <string name="ant_ocean">Ant ocean</string>
     <string name="water_friend_count">Water friend count</string>
+    <string name="other_settings">Other Settings</string>
     <string name="the_image_of_main" translatable="false">The image of main</string>
     <string name="the_image_of_unactivated" translatable="false">The image of unactivated</string>
-    <string name="beach">Beach</string>
-    <string name="beach_list">Beach list</string>
+    <string name="access_git_hub">Visit github</string>
+    <string name="about_sesame_seeds">About sesame seeds</string>
+    <string name="beach">净滩行动</string>
+    <string name="beach_list">净滩行动列表(总数)</string>
 </resources>

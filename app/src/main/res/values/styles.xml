@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
     <style name="AppTheme" parent="@android:style/Theme.Material.Light">
         <!--Appbar背景色-->
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <!--ToolBar上的Title颜色-->
         <item name="android:titleTextColor">@color/textColorPrimary</item>
-	</style>
+    </style>
+
+    <style name="SwitchSettingStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:minHeight">50dp</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="s_true" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#33da33</item>
+    </style>
+
+    <style name="s_false" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#9b9b9b</item>
+    </style>
 
 </resources>

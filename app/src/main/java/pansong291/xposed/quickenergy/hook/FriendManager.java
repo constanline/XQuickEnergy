@@ -1,11 +1,11 @@
 package pansong291.xposed.quickenergy.hook;
 
+import java.util.List;
+
 import de.robv.android.xposed.XposedHelpers;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.StringUtil;
-
-import java.util.List;
 
 public class FriendManager {
     private static final String TAG = FriendManager.class.getCanonicalName();
