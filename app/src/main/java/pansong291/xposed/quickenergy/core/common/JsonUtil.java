@@ -1,11 +1,17 @@
 package pansong291.xposed.quickenergy.core.common;
 
+import static android.content.ContentValues.TAG;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.Log;
 
 
 /**
@@ -15,6 +21,21 @@ import java.io.InputStreamReader;
  * @since 2023/08/03
  */
 public class JsonUtil {
+
+    /**
+     * 获取配置文件
+     *
+     * @return json
+     */
+    public static JSONObject getConfig() {
+        try {
+            String confJson = FileUtils.readFromFile(FileUtils.getConfigFile(FriendIdMap.currentUid));
+            return new JSONObject(confJson);
+        } catch (Exception e) {
+            Log.i("ERROR", e.getMessage());
+            return null;
+        }
+    }
 
     /**
      * 从输入流中获取指定节点的json数组

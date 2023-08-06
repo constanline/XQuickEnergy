@@ -5,13 +5,16 @@ import android.content.res.Resources;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import pansong291.xposed.quickenergy.ui.basics.BasicsActivity;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
@@ -40,44 +43,62 @@ public abstract class UnifyActivity extends Activity {
 
     /**
      * 初始 ListView 数据
+     *
+     * @param menu 菜单
      */
-    public void initList() {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("assets/" + "menu.json");
-        JSONArray basics = JsonUtil.fileJsonArray(is, "basics");
-        if (basics == null) return;
-        for (int i = 0; i < basics.length(); i++) {
-            try {
-                JSONObject data = new JSONObject(basics.get(i).toString());
-                Resources res = getBaseContext().getResources();
-                String name = data.get("name").toString();
-                int string = res.getIdentifier(name, "string", "pansong291.xposed.quickenergy.repair");
-                list.add(string);
-                /*这一块：待适配Config存储类再优化*/
-                if (!data.isNull("switch")) {
-                    switch (name) {
-                        case "immediate_effect":
-                            selectedMap.put(list.get(i), Config.immediateEffect());
-                            break;
-                        case "record_log":
-                            selectedMap.put(list.get(i), Config.recordLog());
-                            break;
-                        case "show_toast":
-                            selectedMap.put(list.get(i), Config.showToast());
-                            break;
-                        case "stay_awake":
-                            selectedMap.put(list.get(i), Config.stayAwake());
-                            break;
-                        case "timeout_restart_activity":
-                            selectedMap.put(list.get(i), Config.timeoutRestart());
-                            break;
-                    }
-                }
-                /*这一块：待适配Config存储类再优化*/
-            } catch (Exception ignored) {
-            }
+    public void initList(JSONArray menu) {
+        try {
+            if (menu == null) throw new NullPointerException();
+            for (int i = 0; i < menu.length(); i++) {
+                JSONObject data = new JSONObject(menu.get(i).toString());
 
+                //动态获取资源id
+                Resources res = getBaseContext().getResources();
+                int string = res.getIdentifier(data.get("titleName").toString(), "string", "pansong291.xposed.quickenergy.repair");
+                list.add(string);
+                if (!data.isNull("api")) {
+                    JSONObject config = JsonUtil.getConfig();
+                    if (config == null) throw new NullPointerException();
+                    String api = data.get("api").toString();
+                    if (!config.isNull(api)) {
+                        Object o = config.get(api);
+                        selectedMap.put(list.get(i), o);
+                    } else {
+                        /*
+                         * 特殊的列表：Config文件中没有该参数
+                         * 理论上配置文件不应该没有的
+                         * 待处理
+                         */
+                        switch (api) {
+                            case "kbSginIn":
+                                selectedMap.put(list.get(i), Config.kbSginIn());
+                                break;
+                            case "isLimitCollect":
+                                selectedMap.put(list.get(i), Config.isLimitCollect());
+                                break;
+                            case "ExchangeEnergyDoubleClick":
+                                selectedMap.put(list.get(i), Config.ExchangeEnergyDoubleClick());
+                                break;
+                            default:
+                                throw new RuntimeException();
+                        }
+
+                    }
+
+                }
+                if (!data.isNull("tag")) {
+                    selectedMap.put(list.get(i), data.get("tag"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    /**
+     * 用于初始视图列表
+     */
+    public abstract void init() throws JSONException;
 
     /**
      * 保存配置

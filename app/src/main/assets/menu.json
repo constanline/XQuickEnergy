@@ -1,33 +1,320 @@
 {
   "basics": [
     {
-      "name": "immediate_effect",
-      "switch": true
+      "titleName": "immediate_effect",
+      "api": "immediateEffect"
     },
     {
-      "name": "record_log",
-      "switch": true
+      "titleName": "record_log",
+      "api": "recordLog"
     },
     {
-      "name": "show_toast",
-      "switch": true
+      "titleName": "show_toast",
+      "api": "showToast"
     },
     {
-      "name": "stay_awake",
-      "switch": true
+      "titleName": "stay_awake",
+      "api": "stayAwake"
     },
     {
-      "name": "stay_awake_type"
+      "titleName": "stay_awake_type",
+      "tag": "setting"
     },
     {
-      "name": "stay_awake_target"
+      "titleName": "stay_awake_target",
+      "tag": "setting"
     },
     {
-      "name": "timeout_restart_activity",
-      "switch": true
+      "titleName": "timeout_restart_activity",
+      "api": "timeoutRestart"
     },
     {
-      "name": "wait_when_exception"
+      "titleName": "wait_when_exception",
+      "tag": "setting"
+    }
+  ],
+  "setting": [
+    {
+      "titleName": "base_configuration",
+      "tag": "setting"
+    },
+    {
+      "titleName": "forest_configuration",
+      "tag": "setting"
+    },
+    {
+      "titleName": "farm_configuration",
+      "tag": "setting"
+    },
+    {
+      "titleName": "other_settings",
+      "tag": "setting"
+    },
+    {
+      "titleName": "support_xqe_developer",
+      "tag": "setting"
+    },
+    {
+      "titleName": "support_developer",
+      "tag": "setting"
+    },
+    {
+      "titleName": "access_git_hub",
+      "tag": "url"
+    },
+    {
+      "titleName": "about_sesame_seeds",
+      "tag": "concerning"
+    }
+  ],
+  "other": [
+    {
+      "titleName": "receive_point",
+      "api": "receivePoint"
+    },
+    {
+      "titleName": "open_treasure_box",
+      "api": "openTreasureBox"
+    },
+    {
+      "titleName": "receive_coin_asset",
+      "api": "receiveCoinAsset"
+    },
+    {
+      "titleName": "donate_charity_coin",
+      "api": "donateCharityCoin"
+    },
+    {
+      "titleName": "min_exchange_count",
+      "tag": "setting"
+    },
+    {
+      "titleName": "latest_exchange_time_24_hour_system",
+      "tag": "setting"
+    },
+    {
+      "titleName": "sync_step_count",
+      "tag": "setting"
+    },
+    {
+      "titleName": "koubei_sign_in",
+      "api": "kbSginIn"
+    },
+    {
+      "titleName": "eco_life_tick",
+      "api": "ecoLifeTick"
+    }
+  ],
+  "forest": [
+    {
+      "titleName": "collect_energy",
+      "api": "collectEnergy"
+    },
+    {
+      "titleName": "check_interval_minutes",
+      "tag": "setting"
+    },
+    {
+      "titleName": "collect_watering_bubble",
+      "api": "collectWateringBubble"
+    },
+    {
+      "titleName": "advance_time_milliseconds",
+      "tag": "setting"
+    },
+    {
+      "titleName": "collect_interval_milliseconds",
+      "tag": "setting"
+    },
+    {
+      "titleName": "collect_timeout_seconds",
+      "tag": "setting"
+    },
+    {
+      "titleName": "limit_collect",
+      "api": "isLimitCollect"
+    },
+    {
+      "titleName": "limit_count_per_minute",
+      "tag": "setting"
+    },
+    {
+      "titleName": "use_double_card",
+      "api": "doubleCard"
+    },
+    {
+      "titleName": "use_double_click_card_time",
+      "tag": "setting"
+    },
+    {
+      "titleName": "return_water_10",
+      "tag": "setting"
+    },
+    {
+      "titleName": "return_water_18",
+      "tag": "setting"
+    },
+    {
+      "titleName": "return_water_33",
+      "tag": "setting"
+    },
+    {
+      "titleName": "help_friend_collect",
+      "api": "helpFriendCollect"
+    },
+    {
+      "titleName": "don_t_collect_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "don_t_help_collect_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "receive_forest_task_award",
+      "api": "receiveForestTaskAward"
+    },
+    {
+      "titleName": "water_friend_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "water_friend_count",
+      "tag": "setting"
+    },
+    {
+      "titleName": "cooperate_water",
+      "api": "cooperateWater"
+    },
+    {
+      "titleName": "cooperate_water_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "energy_rain",
+      "api": "energyRain"
+    },
+    {
+      "titleName": "give_energy_rain_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "exchange_energy_double_click",
+      "api": "ExchangeEnergyDoubleClick"
+    },
+    {
+      "titleName": "exchange_energy_double_click_count",
+      "tag": "setting"
+    },
+    {
+      "titleName": "reserve",
+      "api": "reserve"
+    },
+    {
+      "titleName": "reserve_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "ancient_tree",
+      "api": "ancientTree"
+    },
+    {
+      "titleName": "ancient_tree_area_code_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "ancient_tree_only_week",
+      "api": "ancientTreeOnlyWeek"
+    },
+    {
+      "titleName": "antdodo_collect",
+      "api": "antdodoCollect"
+    },
+    {
+      "titleName": "ant_ocean",
+      "api": "antOcean"
+    },
+    {
+      "titleName": "beach",
+      "api": "beach"
+    },
+    {
+      "titleName": "beach_list",
+      "tag": "setting"
+    }
+  ],
+  "farm": [
+    {
+      "titleName": "enable_farm",
+      "api": "enableFarm"
+    },
+    {
+      "titleName": "reward_friend",
+      "api": "rewardFriend"
+    },
+    {
+      "titleName": "send_back_animal",
+      "api": "sendBackAnimal"
+    },
+    {
+      "titleName": "send_type",
+      "tag": "setting"
+    },
+    {
+      "titleName": "don_t_send_friend_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "recall_animal_type",
+      "tag": "setting"
+    },
+    {
+      "titleName": "receive_farm_tool_reward",
+      "api": "receiveFarmToolReward"
+    },
+    {
+      "titleName": "use_new_egg_tool",
+      "api": "useNewEggTool"
+    },
+    {
+      "titleName": "harvest_produce",
+      "api": "harvestProduce"
+    },
+    {
+      "titleName": "donation",
+      "api": "donation"
+    },
+    {
+      "titleName": "answer_question",
+      "api": "answerQuestion"
+    },
+    {
+      "titleName": "receive_farm_task_award",
+      "api": "receiveFarmTaskAward"
+    },
+    {
+      "titleName": "feed_animal",
+      "api": "feedAnimal"
+    },
+    {
+      "titleName": "use_accelerate_tool",
+      "api": "useAccelerateTool"
+    },
+    {
+      "titleName": "feed_friend_animal_list",
+      "tag": "setting"
+    },
+    {
+      "titleName": "animal_sleep_time",
+      "tag": "setting"
+    },
+    {
+      "titleName": "notify_friend",
+      "api": "notifyFriend"
+    },
+    {
+      "titleName": "don_t_notify_friend_list",
+      "tag": "setting"
     }
   ]
 }
