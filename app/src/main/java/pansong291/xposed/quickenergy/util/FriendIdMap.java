@@ -10,7 +10,7 @@ public class FriendIdMap {
 
     public static boolean shouldReload = false;
 
-    public static String currentUid;
+    public static String currentUid = null;
 
     private static Map<String, String> idMap;
     private static boolean hasChanged = false;

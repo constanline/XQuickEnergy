@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
@@ -14,9 +15,10 @@ import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.ReserveIdMap;
+import pansong291.xposed.quickenergy.util.BeachIdMap;
 
-public class SettingsActivity extends Activity
-{
+public class SettingsActivity extends Activity {
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
             cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
@@ -26,17 +28,21 @@ public class SettingsActivity extends Activity
             cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
             cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
             cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
-            cb_kbSignIn, cb_limitCollect, cb_doubleCard;
+            cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
+            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect, cb_recordFarmGame, cb_beach,
+            cb_kitchen, cb_antOcean;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_settings);
 
         Config.shouldReload = true;
         FriendIdMap.shouldReload = true;
         CooperationIdMap.shouldReload = true;
+        ReserveIdMap.shouldReload = true;
+        BeachIdMap.shouldReload = true;
 
         cb_immediateEffect = findViewById(R.id.cb_immediateEffect);
         cb_recordLog = findViewById(R.id.cb_recordLog);
@@ -48,11 +54,16 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
         cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
         cb_cooperateWater = findViewById(R.id.cb_cooperateWater);
+        cb_ancientTree = findViewById(R.id.cb_ancientTree);
         cb_energyRain = findViewById(R.id.cb_energyRain);
+        cb_reserve = findViewById(R.id.cb_reserve);
+        cb_beach = findViewById(R.id.cb_beach);
         cb_enableFarm = findViewById(R.id.cb_enableFarm);
         cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
         cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
         cb_receiveFarmToolReward = findViewById(R.id.cb_receiveFarmToolReward);
+        cb_recordFarmGame = findViewById(R.id.cb_recordFarmGame);
+        cb_kitchen = findViewById(R.id.cb_kitchen);
         cb_useNewEggTool = findViewById(R.id.cb_useNewEggTool);
         cb_harvestProduce = findViewById(R.id.cb_harvestProduce);
         cb_donation = findViewById(R.id.cb_donation);
@@ -63,15 +74,20 @@ public class SettingsActivity extends Activity
         cb_notifyFriend = findViewById(R.id.cb_notifyFriend);
         cb_receivePoint = findViewById(R.id.cb_receivePoint);
         cb_openTreasureBox = findViewById(R.id.cb_openTreasureBox);
+        cb_receiveCoinAsset = findViewById(R.id.cb_receiveCoinAsset);
         cb_donateCharityCoin = findViewById(R.id.cb_donateCharityCoin);
         cb_kbSignIn = findViewById(R.id.cb_kbSignIn);
         cb_limitCollect = findViewById(R.id.cb_limitCollect);
         cb_doubleCard = findViewById(R.id.cb_doubleCard);
+        cb_ExchangeEnergyDoubleClick = findViewById(R.id.cb_ExchangeEnergyDoubleClick);
+        cb_ecoLifeTick = findViewById(R.id.cb_ecoLifeTick);
+        cb_ancientTreeOnlyWeek = findViewById(R.id.cb_ancientTreeOnlyWeek);
+        cb_antdodoCollect = findViewById(R.id.cb_antdodoCollect);
+        cb_antOcean = findViewById(R.id.cb_antOcean);
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         cb_immediateEffect.setChecked(Config.immediateEffect());
         cb_recordLog.setChecked(Config.recordLog());
@@ -83,11 +99,16 @@ public class SettingsActivity extends Activity
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
         cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
         cb_cooperateWater.setChecked(Config.cooperateWater());
+        cb_ancientTree.setChecked(Config.ancientTree());
         cb_energyRain.setChecked(Config.energyRain());
+        cb_reserve.setChecked(Config.reserve());
+        cb_beach.setChecked(Config.beach());
         cb_enableFarm.setChecked(Config.enableFarm());
         cb_rewardFriend.setChecked(Config.rewardFriend());
         cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
         cb_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
+        cb_recordFarmGame.setChecked(Config.recordFarmGame());
+        cb_kitchen.setChecked(Config.kitchen());
         cb_useNewEggTool.setChecked(Config.useNewEggTool());
         cb_harvestProduce.setChecked(Config.harvestProduce());
         cb_donation.setChecked(Config.donation());
@@ -98,19 +119,23 @@ public class SettingsActivity extends Activity
         cb_notifyFriend.setChecked(Config.notifyFriend());
         cb_receivePoint.setChecked(Config.receivePoint());
         cb_openTreasureBox.setChecked(Config.openTreasureBox());
+        cb_receiveCoinAsset.setChecked(Config.receiveCoinAsset());
         cb_donateCharityCoin.setChecked(Config.donateCharityCoin());
         cb_kbSignIn.setChecked(Config.kbSginIn());
         cb_limitCollect.setChecked(Config.isLimitCollect());
         cb_doubleCard.setChecked(Config.doubleCard());
+        cb_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
+        cb_ecoLifeTick.setChecked(Config.ecoLifeTick());
+        cb_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
+        cb_antdodoCollect.setChecked(Config.antdodoCollect());
+        cb_antOcean.setChecked(Config.antOcean());
     }
 
     @SuppressLint("NonConstantResourceId")
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         if (v instanceof CheckBox) {
-            CheckBox cb = (CheckBox)v;
-            switch(v.getId())
-            {
+            CheckBox cb = (CheckBox) v;
+            switch (v.getId()) {
                 case R.id.cb_immediateEffect:
                     Config.setImmediateEffect(cb.isChecked());
                     break;
@@ -159,8 +184,24 @@ public class SettingsActivity extends Activity
                     Config.setCooperateWater(cb.isChecked());
                     break;
 
+                case R.id.cb_ancientTree:
+                    Config.setAncientTree(cb.isChecked());
+                    break;
+
                 case R.id.cb_energyRain:
                     Config.setEnergyRain(cb.isChecked());
+                    break;
+
+                case R.id.cb_ExchangeEnergyDoubleClick:
+                    Config.setExchangeEnergyDoubleClick(cb.isChecked());
+                    break;
+
+                case R.id.cb_reserve:
+                    Config.setReserve(cb.isChecked());
+                    break;
+
+                case R.id.cb_beach:
+                    Config.setBeach(cb.isChecked());
                     break;
 
                 case R.id.cb_enableFarm:
@@ -177,6 +218,14 @@ public class SettingsActivity extends Activity
 
                 case R.id.cb_receiveFarmToolReward:
                     Config.setReceiveFarmToolReward(cb.isChecked());
+                    break;
+
+                case R.id.cb_recordFarmGame:
+                    Config.setRecordFarmGame(cb.isChecked());
+                    break;
+
+                case R.id.cb_kitchen:
+                    Config.setKitchen(cb.isChecked());
                     break;
 
                 case R.id.cb_useNewEggTool:
@@ -219,6 +268,10 @@ public class SettingsActivity extends Activity
                     Config.setOpenTreasureBox(cb.isChecked());
                     break;
 
+                case R.id.cb_receiveCoinAsset:
+                    Config.setReceiveCoinAsset(cb.isChecked());
+                    break;
+
                 case R.id.cb_donateCharityCoin:
                     Config.setDonateCharityCoin(cb.isChecked());
                     break;
@@ -226,10 +279,26 @@ public class SettingsActivity extends Activity
                 case R.id.cb_kbSignIn:
                     Config.setKbSginIn(cb.isChecked());
                     break;
+
+                case R.id.cb_ecoLifeTick:
+                    Config.setEcoLifeTick(cb.isChecked());
+                    break;
+
+                case R.id.cb_ancientTreeOnlyWeek:
+                    Config.setAncientTreeOnlyWeek(cb.isChecked());
+                    break;
+
+                case R.id.cb_antdodoCollect:
+                    Config.setAntdodoCollect(cb.isChecked());
+                    break;
+
+                case R.id.cb_antOcean:
+                    Config.setAntOcean(cb.isChecked());
+                    break;
             }
         } else if (v instanceof Button) {
-            Button btn = (Button)v;
-            switch(v.getId()) {
+            Button btn = (Button) v;
+            switch (v.getId()) {
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -286,16 +355,31 @@ public class SettingsActivity extends Activity
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(), Config.getWaterCountList());
                     break;
 
+                case R.id.btn_waterFriendCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT);
+                    break;
+
                 case R.id.btn_cooperateWaterList:
-                    ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(), Config.getcooperateWaterNumList());
+                    ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(),
+                            Config.getcooperateWaterNumList());
+                    break;
+
+                case R.id.btn_ancientTreeAreaCodeList:
+                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
                     break;
 
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
 
-                case R.id.btn_ancientTreeAreaCodeList:
-                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
+                case R.id.btn_reserveList:
+                    ListDialog.show(this, btn.getText(), AlipayReserve.getList(), Config.getReserveList(),
+                            Config.getReserveCountList());
+                    break;
+
+                case R.id.btn_beachList:
+                    ListDialog.show(this, btn.getText(), AlipayBeach.getList(), Config.getBeachList(),
+                            Config.getBeachCountList());
                     break;
 
                 case R.id.btn_sendType:
@@ -349,6 +433,11 @@ public class SettingsActivity extends Activity
                 case R.id.btn_waitWhenException:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
+
+                case R.id.btn_ExchangeEnergyDoubleClickCount:
+                    EditDialog.showEditDialog(this, btn.getText(),
+                            EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
+                    break;
             }
         }
     }
@@ -358,10 +447,12 @@ public class SettingsActivity extends Activity
         super.onPause();
         if(Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
-            Toast.makeText(this, "Configuration saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();
         }
         FriendIdMap.saveIdMap();
         CooperationIdMap.saveIdMap();
+        ReserveIdMap.saveIdMap();
+        BeachIdMap.saveIdMap();
     }
 
 }

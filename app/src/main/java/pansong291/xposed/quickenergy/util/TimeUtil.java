@@ -1,6 +1,8 @@
 package pansong291.xposed.quickenergy.util;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -8,16 +10,31 @@ import java.util.Calendar;
  * @since 2023/07/17
  */
 public class TimeUtil {
+
+    public static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
+
     public static String getTimeStr() {
         return getTimeStr(0);
     }
-    public static String getTimeStr(int ms) {
+    public static String getTimeStr(int plusMs) {
         Calendar c = Calendar.getInstance();
-        if (ms != 0) {
-            c.add(Calendar.MILLISECOND, ms);
+        if (plusMs != 0) {
+            c.add(Calendar.MILLISECOND, plusMs);
         }
         return StringUtil.padLeft(c.get(Calendar.HOUR_OF_DAY), 2, '0') +
                 StringUtil.padLeft(c.get(Calendar.MINUTE), 2, '0');
+    }
+
+    public static String getDateStr() {
+        return getDateStr(0);
+    }
+
+    public static String getDateStr(int plusDay) {
+        Calendar c = Calendar.getInstance();
+        if (plusDay != 0) {
+            c.add(Calendar.DATE, plusDay);
+        }
+        return DATE_FORMAT.format(c.getTime());
     }
 
     public static boolean checkInTime(int ms, String strTime) {

@@ -11,8 +11,8 @@ import pansong291.xposed.quickenergy.util.Config;
 public class EditDialog {
     public enum EditMode {
         CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
-        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, ANIMAL_SLEEP_TIME,
-        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION }
+        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,ANIMAL_SLEEP_TIME,
+        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION ,EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT }
     private static EditMode mode;
 
     public static void showEditDialog(Context c, CharSequence title, EditMode em) {
@@ -89,6 +89,11 @@ public class EditDialog {
                                                 Config.setReturnWater10(i);
                                             break;
 
+                                        case WATER_FRIEND_COUNT:
+                                            if(i >= 0)
+                                                Config.setWaterFriendCount(i);
+                                            break;
+
                                         case ANIMAL_SLEEP_TIME:
                                             Config.setAnimalSleepTime(edt.getText().toString());
                                             break;
@@ -112,6 +117,12 @@ public class EditDialog {
                                         case WAIT_WHEN_EXCEPTION:
                                             if (i < 0) i = 0;
                                             Config.setWaitWhenException(i * 60 * 1000);
+                                            break;
+
+                                        case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
+                                            if (i > 0) {
+                                                Config.setExchangeEnergyDoubleClickCount(i);
+                                            }
                                             break;
 
                                     }
@@ -157,6 +168,10 @@ public class EditDialog {
                 str = String.valueOf(Config.returnWater10());
                 break;
 
+            case WATER_FRIEND_COUNT:
+                str = String.valueOf(Config.waterFriendCount());
+                break;
+
             case ANIMAL_SLEEP_TIME:
                 str = Config.animalSleepTime();
                 break;
@@ -175,6 +190,10 @@ public class EditDialog {
 
             case WAIT_WHEN_EXCEPTION:
                 str = String.valueOf(Config.waitWhenException() / 60 / 1000);
+                break;
+
+            case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
+                str = String.valueOf(Config.getExchangeEnergyDoubleClickCount());
                 break;
         }
         edt.setText(str);

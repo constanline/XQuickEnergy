@@ -18,10 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.FileUtils;
-import pansong291.xposed.quickenergy.util.PermissionUtil;
-import pansong291.xposed.quickenergy.util.RandomUtils;
-import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.*;
 
 public class MainActivity extends Activity {
     private static String[] strArray;
@@ -66,8 +63,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setModuleActive(isExpModuleActive(this));
-        PermissionUtil.requestPermissions(this);
 
         tvStatistics = findViewById(R.id.tv_statistics);
         btnHelp = findViewById(R.id.btn_help);
@@ -78,12 +73,14 @@ public class MainActivity extends Activity {
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            version = packageInfo.versionName + "-" + packageInfo.versionCode;
+            version = " v" + packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        this.setTitle(this.getTitle() + "[" + version + "]");
+        this.setTitle(this.getTitle() + version);
 
+        setModuleActive(isExpModuleActive(this));
+        PermissionUtil.requestPermissions(this);
         new AlertDialog.Builder(this)
                 .setTitle("提示")
                 .setMessage("本APP是为了学习研究开发，免费提供，不得进行任何形式的转发、发布、传播。请于24小时内卸载本APP。如果您是购买的可能已经被骗，请联系卖家退款。")
@@ -100,7 +97,8 @@ public class MainActivity extends Activity {
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v.getId() == R.id.btn_help) {
-            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+//            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+            HanziToPinyin.getInstance().get("day|杜霭瑜(136******43)");
             return;
         }
 
@@ -125,6 +123,10 @@ public class MainActivity extends Activity {
             case R.id.btn_github:
                 data = "https://github.com/constanline/XQuickEnergy";
                 break;
+
+            case R.id.btn_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return;
         }
         Intent it = new Intent(this, HtmlViewerActivity.class);
         it.setData(Uri.parse(data));
@@ -156,13 +158,13 @@ public class MainActivity extends Activity {
 
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
-                    Toast.makeText(this, "Export success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "导出成功！", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3:
                 if (FileUtils.copyTo(FileUtils.getExportedStatisticsFile(), FileUtils.getStatisticsFile())) {
                     tvStatistics.setText(Statistics.getText());
-                    Toast.makeText(this, "Import success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "导入成功！", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -174,8 +176,10 @@ public class MainActivity extends Activity {
     }
 
     private void setModuleActive(boolean b) {
-        TextView tvUnActive = findViewById(R.id.tv_unactive);
-        tvUnActive.setVisibility(b ? View.GONE : View.VISIBLE);
+//        ImageView ivUnactivated = findViewById(R.id.iv_unactivated);
+//        ivUnactivated.setVisibility(b ? View.GONE : View.VISIBLE);
+
+        this.setTitle(this.getTitle() + (b ? "【已激活】" : "【未激活】"));
     }
 
 }

@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.*;
+import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -47,12 +48,13 @@ public class XposedHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if ("pansong291.xposed.quickenergy.repair".equals(lpparam.packageName)) {
-            XposedHelpers.findAndHookMethod(MainActivity.class.getName(), lpparam.classLoader, "setModuleActive", boolean.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) {
-                    param.args[0] = true;
-                }
-            });
+            XposedHelpers.findAndHookMethod(MainActivity.class.getName(), lpparam.classLoader, "setModuleActive",
+                    boolean.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) {
+                            param.args[0] = true;
+                        }
+                    });
         }
 
         if (ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
@@ -63,42 +65,40 @@ public class XposedHook implements IXposedHookLoadPackage {
     }
 
     private static void initHandler() {
-        if (handler == null) handler = new Handler();
-        if (runnable == null) runnable = new Runnable() {
-            @Override
-            public void run() {
-                Config.shouldReload = true;
-                Statistics.resetToday();
-                AntForest.checkEnergyRanking(XposedHook.classLoader, times);
+        if (handler == null)
+            handler = new Handler();
+        if (runnable == null)
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Config.shouldReload = true;
+                    Statistics.resetToday();
+                    AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
-                FriendManager.fillUser(XposedHook.classLoader);
-                if (Config.collectEnergy() || Config.enableFarm()) {
-                    handler.postDelayed(this, Config.checkInterval());
+                    FriendManager.fillUser(XposedHook.classLoader);
+
+                    if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                        AntCooperate.start();
+                        AntFarm.start();
+                        Reserve.start();
+                        if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                            AncientTree.start();
+                        }
+                        AntSports.start(XposedHook.classLoader, times);
+                        AntMember.receivePoint();
+                        AntOcean.start();
+                    }
+
+                    if (Config.collectEnergy() || Config.enableFarm()) {
+                        handler.postDelayed(this, Config.checkInterval());
+                    } else {
+                        AntForestNotification.stop(service, false);
+                    }
+                    times = (times + 1) % (3600_000 / Config.checkInterval());
                 }
-                else {
-                    AntForestNotification.stop(service, false);
-                }
-                times = (times + 1) % (3600_000 / Config.checkInterval());
-            }
-        };
-        if (Config.collectEnergy() || Config.enableFarm()) {
-            AntForestNotification.start(service);
-            handler.post(runnable);
-        }
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (TimeUtil.getTimeStr().compareTo("0700") >= 0 && TimeUtil.getTimeStr().compareTo("0730") <= 0) {
-                    handler.postDelayed(this, 10 * 60 * 1000);
-                } else {
-                    AntCooperate.start();
-                    AntFarm.start();
-                    AntMember.receivePoint();
-                    AncientTree.start();
-                    handler.postDelayed(this, Config.checkInterval());
-                }
-            }
-        });
+            };
+        AntForestNotification.start(service);
+        handler.post(runnable);
     }
 
     private void hookService(ClassLoader loader) {
@@ -149,23 +149,23 @@ public class XposedHook implements IXposedHookLoadPackage {
         }
         try {
             XposedHelpers.findAndHookMethod("android.app.Service", loader, "onDestroy", new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) {
-                            Service service = (Service) param.thisObject;
-                            if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
-                                return;
-                            }
-                            if (wakeLock != null) {
-                                wakeLock.release();
-                                wakeLock = null;
-                            }
-                            AntForestNotification.stop(service, false);
-                            AntForestNotification.setContentText("支付宝前台服务被销毁");
-                            Log.recordLog("支付宝前台服务被销毁", "");
-                            handler.removeCallbacks(runnable);
-                            alarmHook(AntForestToast.context, 3000, false);
-                        }
-                    });
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    Service service = (Service) param.thisObject;
+                    if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
+                        return;
+                    }
+                    if (wakeLock != null) {
+                        wakeLock.release();
+                        wakeLock = null;
+                    }
+                    AntForestNotification.stop(service, false);
+                    AntForestNotification.setContentText("支付宝前台服务被销毁");
+                    Log.recordLog("支付宝前台服务被销毁", "");
+                    handler.removeCallbacks(runnable);
+                    alarmHook(AntForestToast.context, 3000, false);
+                }
+            });
             Log.i(TAG, "hook onDestroy successfully");
         } catch (Throwable t) {
             Log.i(TAG, "hook onDestroy err:");
@@ -202,13 +202,20 @@ public class XposedHook implements IXposedHookLoadPackage {
         }
     }
 
+    private static int getPendingIntentFlag() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
+        } else {
+            return PendingIntent.FLAG_UPDATE_CURRENT;
+        }
+    }
+
     public static void alarmBroadcast(Context context, long delayTime, boolean force) {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent("com.eg.android.AlipayGphone.xqe.broadcast");
             intent.putExtra("force", force);
-            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
-                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, getPendingIntentFlag());
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayTime, pi);
         } catch (Throwable th) {
             Log.printStackTrace(TAG, th);
@@ -222,13 +229,11 @@ public class XposedHook implements IXposedHookLoadPackage {
             if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
-                pi = PendingIntent.getActivity(context, 1, it,
-                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());
             } else {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
-                pi = PendingIntent.getService(context, 2, it,
-                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                pi = PendingIntent.getService(context, 2, it, getPendingIntentFlag());
             }
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayTime, pi);
         } catch (Throwable th) {
@@ -256,7 +261,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             intentFilter.addAction("com.eg.android.AlipayGphone.xqe.broadcast");
             intentFilter.addAction("com.eg.android.AlipayGphone.xqe.test");
             context.registerReceiver(new AlipayBroadcastReceiver(), intentFilter);
-            Log.recordLog("注册广播接收器成功" , context.toString());
+            Log.recordLog("注册广播接收器成功", context.toString());
         } catch (Throwable th) {
             Log.i(TAG, "hook registerBroadcastReceiver err:");
             Log.printStackTrace(TAG, th);

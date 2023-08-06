@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
+import pansong291.xposed.quickenergy.hook.EcoLifeRpcCall;
 import pansong291.xposed.quickenergy.util.*;
 
 import java.util.*;
@@ -117,17 +118,31 @@ public class AntForest {
                     if (Config.energyRain()) {
                         energyRain();
                     }
+                    if (Config.ExchangeEnergyDoubleClick() && Statistics.canExchangeDoubleCardToday()) {
+                        int exchangeCount = Config.getExchangeEnergyDoubleClickCount();
+                        int exchangeTimes = exchangeEnergyDoubleClick(exchangeCount);
+                    }
+                    if (Config.ecoLifeTick()) {
+                        ecoLifeTick();
+                    }
+                    if (Config.antdodoCollect()) {
+                        antdodoCollect();
+                    }
                     for (int i = 0; i < Config.getWaterFriendList().size(); i++) {
                         String uid = Config.getWaterFriendList().get(i);
-                        if (selfId.equals(uid)) continue;
+                        if (selfId.equals(uid))
+                            continue;
                         int waterCount = Config.getWaterCountList().get(i);
-                        if (waterCount <= 0) continue;
-                        if (waterCount > 3) waterCount = 3;
+                        if (waterCount <= 0)
+                            continue;
+                        if (waterCount > 3)
+                            waterCount = 3;
                         if (Statistics.canWaterFriendToday(uid, waterCount)) {
                             waterFriendEnergy(uid, waterCount);
                         }
                     }
-                    if (Statistics.canSyncStepToday() && TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                    if (Statistics.canSyncStepToday(FriendIdMap.currentUid)
+                            && TimeUtil.getTimeStr().compareTo("0600") >= 0) {
                         new StepTask(loader).start();
                     }
                 }
@@ -563,8 +578,7 @@ public class AntForest {
                 String bizNo = jo.getString("bizNo");
                 jo = jo.getJSONObject("userEnergy");
                 String userName = jo.getString("displayName");
-                Log.recordLog("尝试对【" + userName + "】浇水66g" + count + "次【" + bizNo + "】");
-                count = returnFriendWater(userId, userName, bizNo, count, 66);
+                count = returnFriendWater(userId, userName, bizNo, count, Config.waterFriendCount());
                 if (count > 0) Statistics.waterFriendToday(userId, count);
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
@@ -604,6 +618,37 @@ public class AntForest {
             Log.printStackTrace(TAG, t);
         }
         return wateredTimes;
+    }
+
+    private static int exchangeEnergyDoubleClick(int count) {
+        int exchangedTimes = 0;
+        try {
+            String s;
+            JSONObject jo;
+            for (int exchangeCount = 1; exchangeCount <= count; exchangeCount++) {
+                if (Statistics.canExchangeDoubleCardToday()) {
+                    s = AntForestRpcCall.exchangeBenefit("CR20230516000362", "CR20230516000363");
+                    jo = new JSONObject(s);
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        exchangedTimes = Statistics.getExchangeTimes() + 1;
+                        Log.forest("活力值兑换[限时双击卡]成功！[第" + exchangedTimes + "次]");
+                        Statistics.exchangeDoubleCardToday(true);
+                    } else {
+                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                        Statistics.exchangeDoubleCardToday(false);
+                        break;
+                    }
+                    Thread.sleep(1000);
+                } else {
+                    break;
+                }
+
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "exchangeEnergyDoubleClick err:");
+            Log.printStackTrace(TAG, t);
+        }
+        return exchangedTimes;
     }
 
     private static void receiveTaskAward() {
@@ -770,6 +815,7 @@ public class AntForest {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
                 String propType = null;
+                String propName = null;
                 for (int i = 0; i < forestPropVOList.length(); i++) {
                     JSONObject forestPropVO = forestPropVOList.getJSONObject(i);
                     String tmpPropType = forestPropVO.getString("propType");
@@ -777,22 +823,22 @@ public class AntForest {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
                         propType = tmpPropType;
-                        Log.forest("检测到【限时双击卡】" + propId);
+                        propName = "限时双击卡";
                         break;
                     }
                     if ("ENERGY_DOUBLE_CLICK".equals(tmpPropType)) {
                         JSONArray propIdList = forestPropVO.getJSONArray("propIdList");
                         propId = propIdList.getString(0);
                         propType = tmpPropType;
-                        Log.forest("检测到【双击卡】" + propId);
+                        propName = "双击卡";
                     }
                 }
                 if (!StringUtil.isEmpty(propId)) {
-                    Log.forest("尝试使用【双击卡】【" + propType + "】" + propId);
+                    // Log.forest("尝试使用[双击卡][" + propType + "]" + propId);
                     jo = new JSONObject(AntForestRpcCall.consumeProp(propId, propType));
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
-                        Log.forest("使用【双击卡】成功");
+                        Log.forest("使用[" + propName + "]成功");
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         updateDoubleTime();
@@ -802,6 +848,124 @@ public class AntForest {
         } catch (Throwable th) {
             Log.i(TAG, "useDoubleCard err:");
             Log.printStackTrace(TAG, th);
+        }
+    }
+
+    private static void ecoLifeTick() {
+        try {
+            JSONObject jo = new JSONObject(EcoLifeRpcCall.queryHomePage());
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONObject data = jo.getJSONObject("data");
+                String dayPoint = data.getString("dayPoint");
+                JSONArray actionListVO = data.getJSONArray("actionListVO");
+                for (int i = 0; i < actionListVO.length(); i++) {
+                    JSONObject actionVO = actionListVO.getJSONObject(i);
+                    JSONArray actionItemList = actionVO.getJSONArray("actionItemList");
+                    for (int j = 0; j < actionItemList.length(); j++) {
+                        JSONObject actionItem = actionItemList.getJSONObject(j);
+                        if (!actionItem.has("actionId"))
+                            continue;
+                        if (actionItem.getBoolean("actionStatus"))
+                            continue;
+                        String actionId = actionItem.getString("actionId");
+                        String actionName = actionItem.getString("actionName");
+                        boolean isGuangpan = false;
+                        if ("photoguangpan".equals(actionId))continue;
+                        jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, isGuangpan));
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                            Log.forest("绿色打卡[" + actionName + "]成功");
+                        } else {
+                            Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                        }
+                        Thread.sleep(500);
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "ecoLifeTick err:");
+            Log.printStackTrace(TAG, th);
+        }
+    }
+
+    private static void antdodoCollect() {
+        try {
+            String s = AntForestRpcCall.queryAnimalStatus();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONObject data = jo.getJSONObject("data");
+                // s = data.getString("homeState");
+                // if (s.equals("DODO_NOT_OPEN")) {
+                // collectAnimalCard();
+                // } else if (s.equals("DODO_NEW_BOOK")) {
+                // //taskEntrance();
+                // collectAnimalCard();
+                // } else if (s.equals("DODO_BOOK")) {//DODO_TAKE_LOOK
+                if (data.getBoolean("collect")) {
+                    Log.recordLog("神奇物种卡片今日收集完成！", "");
+                } else {
+                    collectAnimalCard();
+                }
+                // }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "antdodoCollect err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void collectAnimalCard() {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.antdodoHomePage());
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                JSONObject data = jo.getJSONObject("data");
+                JSONArray ja = data.getJSONArray("limit");
+                int index = -1;
+                for (int i = 0; i < ja.length(); i++) {
+                    jo = ja.getJSONObject(i);
+                    if (jo.getString("actionCode").equals("DAILY_COLLECT")) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index >= 0) {
+                    int leftFreeQuota = jo.getInt("leftFreeQuota");
+                    for (int j = 0; j < leftFreeQuota; j++) {
+                        jo = new JSONObject(AntForestRpcCall.antdodoCollect());
+                        if (jo.getString("resultCode").equals("SUCCESS")) {
+                            data = jo.getJSONObject("data");
+                            JSONObject animal = data.getJSONObject("animal");
+                            String ecosystem = animal.getString("ecosystem");
+                            String name = animal.getString("name");
+                            Log.forest("神奇物种获得[" + ecosystem + "-" + name + "]卡片");
+                        } else {
+                            Log.i(TAG, jo.getString("resultDesc"));
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "collect err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void taskEntrance() {
+        try {
+            String s = AntForestRpcCall.taskEntrance();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getString("resultCode").equals("SUCCESS")) {
+                Log.recordLog("神奇物种卡片开启新图鉴！", "");
+                antdodoCollect();
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "taskEntrance err:");
+            Log.printStackTrace(TAG, t);
         }
     }
 
@@ -883,11 +1047,11 @@ public class AntForest {
                                         loader.loadClass("com.alibaba.health.pedometer.intergation.rpc.RpcManager"),
                                         "a"), "a", new Object[]{ step, Boolean.FALSE, "system" });
                 if (booleanValue) {
-                    Log.recordLog("记录运动步数成功:" + step, "");
+                    Log.recordLog("同步运动步数成功:" + step, "");
                 } else {
-                    Log.recordLog("修改运动步数失败:" + step, "");
+                    Log.recordLog("同步运动步数失败:" + step, "");
                 }
-                Statistics.SyncStepToday();
+                Statistics.SyncStepToday(FriendIdMap.currentUid);
             } catch (Throwable t) {
                 Log.i(TAG, "StepTask.run err:");
                 Log.printStackTrace(TAG, t);

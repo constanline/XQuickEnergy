@@ -11,7 +11,8 @@
         android:theme="@style/AppTheme"
         android:allowBackup="true"
         android:requestLegacyExternalStorage="true"
-        android:icon="@android:drawable/sym_def_app_icon"
+        android:icon="@drawable/icon"
+        android:roundIcon="@drawable/icon"
         android:label="@string/app_name"
         tools:targetApi="q">
 
@@ -59,7 +60,8 @@
             android:name=".ui.HtmlViewerActivity"
             android:resizeableActivity="true"
             tools:targetApi="n" />
-        
+
     </application>
+
 
 </manifest>

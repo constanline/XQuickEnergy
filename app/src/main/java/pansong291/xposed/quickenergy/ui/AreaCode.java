@@ -3,16 +3,11 @@ package pansong291.xposed.quickenergy.ui;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pansong291.xposed.quickenergy.AntFarm;
-import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FileUtils;
 import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class AreaCode extends IdAndName {
     private static final String TAG = AreaCode.class.getCanonicalName();
@@ -35,6 +30,7 @@ public class AreaCode extends IdAndName {
                         "{\"cityCode\":\"330100\",\"cityName\":\"杭州市\"}," +
                         "{\"cityCode\":\"350100\",\"cityName\":\"福州市\"}," +
                         "{\"cityCode\":\"370100\",\"cityName\":\"济南市\"}," +
+                        "{\"cityCode\":\"430100\",\"cityName\":\"长沙市\"}," +
                         "{\"cityCode\":\"440100\",\"cityName\":\"广州市\"}" +
                         "]";
                 try {
