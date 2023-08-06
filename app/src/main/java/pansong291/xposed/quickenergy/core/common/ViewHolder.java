@@ -23,18 +23,6 @@ public class ViewHolder {
     private TextView title;
     /*标签名称*/
     private TextView tagName;
-//    /*列表选择标签*/
-//    private TextView tagSwitch;
-//    /*列表URL标签*/
-//    private TextView tagUrl;
-//    /*列表设置标签*/
-//    private TextView tagSetting;
-//    /*列表关于标签*/
-//    private TextView tagConcerning;
-//    /*列表按钮标签*/
-//    private TextView tagBtn;
-//    /*列表其它标签*/
-//    private TextView tagOther;
 
     /**
      * 动态初始化列表视图
