@@ -88,7 +88,7 @@
     <string name="cancel">取消</string>
     <string name="start_check_energy">开始检测能量</string>
     <string name="collect_watering_bubble">收金球</string>
-    <string name="use_double_card_time">使用双击卡时间(比如“0000-0100,0700-0730”代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用)</string>
+    <string name="use_double_card_time">使用双击卡时间(比如“0000–0100,0700-0730”代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用)</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
     <string name="visit_github">访问GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
@@ -104,5 +104,8 @@
     <string name="water_friend_count">每次浇水克数(10 18 33 66)</string>
     <string name="beach">净滩行动</string>
     <string name="beach_list">净滩行动列表(总数)</string>
+    <string name="test">测试</string>
+    <string name="timeout_restart_type">超时重启方式</string>
+    <string name="start_at_7_o_clock">7点时启动(实验性功能)</string>
 
 </resources>

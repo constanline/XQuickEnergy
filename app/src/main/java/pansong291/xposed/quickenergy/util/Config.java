@@ -1,25 +1,28 @@
 package pansong291.xposed.quickenergy.util;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.SendType;
+import pansong291.xposed.quickenergy.hook.ClassMember;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Config
-{
+public class Config {
 
-    public enum RecallAnimalType
-    {
+    public enum RecallAnimalType {
         ALWAYS, WHEN_THIEF, WHEN_HUNGRY, NEVER;
         public static final CharSequence[] nickNames = {"始终召回", "作贼时召回", "饥饿时召回", "不召回"};
         public static final CharSequence[] names =
                 {ALWAYS.nickName(), WHEN_THIEF.nickName(), WHEN_HUNGRY.nickName(), NEVER.nickName()};
 
-        public CharSequence nickName()
-        {
+        public CharSequence nickName() {
             return nickNames[ordinal()];
         }
     }
@@ -34,6 +37,8 @@ public class Config
     public static final String jn_timeoutRestart = "timeoutRestart";
     public static final String jn_stayAwakeType = "stayAwakeType";
     public static final String jn_stayAwakeTarget = "stayAwakeTarget";
+    public static final String jn_timeoutType = "timeoutType";
+    public static final String jn_startAt7 = "startAt7";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
@@ -116,6 +121,8 @@ public class Config
     private XposedHook.StayAwakeType stayAwakeType;
     private XposedHook.StayAwakeTarget stayAwakeTarget;
     private boolean timeoutRestart;
+    private XposedHook.StayAwakeType timeoutType;
+    private boolean startAt7;
 
     /* forest */
     private boolean collectEnergy;
@@ -285,6 +292,30 @@ public class Config
 
     public static boolean timeoutRestart() {
         return getConfig().timeoutRestart;
+    }
+
+    public static void setTimeoutType(int i)
+    {
+        getConfig().timeoutType = XposedHook.StayAwakeType.values()[i];
+        hasChanged = true;
+    }
+
+    public static XposedHook.StayAwakeType timeoutType() {
+        return getConfig().timeoutType;
+    }
+
+    public static void setStartAt7(Context context, boolean b) {
+        getConfig().startAt7 = b;
+        if (b) {
+            setAlarm7(context);
+        } else {
+            cancelAlarm7(context);
+        }
+        hasChanged = true;
+    }
+
+    public static boolean startAt7() {
+        return getConfig().startAt7;
     }
 
     /* forest */
@@ -993,6 +1024,8 @@ public class Config
         c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
         c.stayAwakeTarget = XposedHook.StayAwakeTarget.SERVICE;
         c.timeoutRestart = true;
+        c.timeoutType = XposedHook.StayAwakeType.ALARM;
+        c.startAt7 = false;
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
@@ -1096,6 +1129,10 @@ public class Config
             config.stayAwakeTarget = XposedHook.StayAwakeTarget.valueOf(jo.optString(jn_stayAwakeTarget, XposedHook.StayAwakeTarget.SERVICE.name()));
 
             config.timeoutRestart = jo.optBoolean(jn_timeoutRestart, true);
+
+            config.timeoutType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
+
+            config.startAt7 = jo.optBoolean(jn_startAt7, false);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
@@ -1365,6 +1402,10 @@ public class Config
 
             jo.put(jn_timeoutRestart, config.timeoutRestart);
 
+            jo.put(jn_timeoutType, config.timeoutType);
+
+            jo.put(jn_startAt7, config.startAt7);
+
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
 
@@ -1572,27 +1613,21 @@ public class Config
         return formatJson(jo, false);
     }
 
-    public static String formatJson(JSONObject jo, boolean removeQuote)
-    {
-        String formated = null;
-        try
-        {
+    public static String formatJson(JSONObject jo, boolean removeQuote) {
+        String formated;
+        try {
             formated = jo.toString(4);
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             return jo.toString();
         }
         if(!removeQuote) return formated;
         StringBuilder sb = new StringBuilder(formated);
         char currentChar, lastNonSpaceChar = 0;
-        for(int i = 0; i < sb.length(); i++)
-        {
+        for(int i = 0; i < sb.length(); i++) {
             currentChar = sb.charAt(i);
-            switch(currentChar)
-            {
+            switch(currentChar) {
                 case '"':
-                    switch(lastNonSpaceChar)
-                    {
+                    switch(lastNonSpaceChar) {
                         case ':':
                         case '[':
                             sb.deleteCharAt(i);
@@ -1613,6 +1648,60 @@ public class Config
         }
         formated = sb.toString();
         return formated;
+    }
+
+    private static PendingIntent alarm7Pi;
+
+    private static PendingIntent getAlarm7Pi(Context context) {
+        if (alarm7Pi == null) {
+            Intent it = new Intent();
+            it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+            int piFlag;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                piFlag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
+            } else {
+                piFlag = PendingIntent.FLAG_UPDATE_CURRENT;
+            }
+            alarm7Pi = PendingIntent.getActivity(context, 999, it, piFlag);
+        }
+        return alarm7Pi;
+    }
+
+    public static void setAlarm7(Context context) {
+        try {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = getAlarm7Pi(context);
+            Calendar calendar = Calendar.getInstance();
+//            calendar.add(Calendar.SECOND, 10);
+            if (calendar.get(Calendar.HOUR_OF_DAY) >= 7) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+            }
+//            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), null), pi);
+        } catch (Throwable th) {
+            Log.printStackTrace("alarm7", th);
+        }
+    }
+
+    public static void cancelAlarm7(Context context) {
+        try {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = getAlarm7Pi(context);
+            alarmManager.cancel(pi);
+
+            context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+        } catch (Throwable th) {
+            Log.printStackTrace("alarm7", th);
+        }
     }
 
 }

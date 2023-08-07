@@ -18,7 +18,7 @@ public class RpcUtil
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
 
-    public static boolean isInterruptted = false;
+    public static boolean isInterrupted = false;
 
     public static void init(ClassLoader loader) {
         if(rpcCallMethod == null) {
@@ -39,7 +39,7 @@ public class RpcUtil
     }
 
     public static String request(String args0, String args1) {
-        if (isInterruptted) {
+        if (isInterrupted) {
             return null;
         }
         try {
@@ -57,7 +57,7 @@ public class RpcUtil
             try {
                 JSONObject jo = new JSONObject(str);
                 if (jo.optString("memo", "").contains("系统繁忙")) {
-                    isInterruptted = true;
+                    isInterrupted = true;
                     AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
                     Log.recordLog("系统繁忙，可能需要滑动验证");
                     return str;
@@ -71,12 +71,16 @@ public class RpcUtil
                 String msg = t.getCause().getMessage();
                 if (!StringUtil.isEmpty(msg)) {
                     if (msg.contains("登录超时")) {
-                        isInterruptted = true;
+                        isInterrupted = true;
                         AntForestNotification.setContentText("登录超时");
                         if(AntForestToast.context != null) {
                             if (Config.timeoutRestart()) {
                                 Log.recordLog("尝试重启！");
-                                XposedHook.restartHook(true);
+                                if (Config.timeoutType() == XposedHook.StayAwakeType.ALARM) {
+                                    XposedHook.alarmHook(AntForestToast.context, 3000,true);
+                                } else {
+                                    XposedHook.alarmBroadcast(AntForestToast.context, 3000, true);
+                                }
                             }
                         }
                     } else if (msg.contains("请求不合法")) {

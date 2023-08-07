@@ -6,21 +6,36 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TabHost;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.CooperationIdMap;
-import pansong291.xposed.quickenergy.util.FriendIdMap;
-import pansong291.xposed.quickenergy.util.ReserveIdMap;
-import pansong291.xposed.quickenergy.util.BeachIdMap;
+import pansong291.xposed.quickenergy.util.*;
 
 public class SettingsActivity extends Activity {
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private static final int MAX_TAB_INDEX = 3;
+
+    private TabHost tabHost;
+    private int currentView = 0;
+    private GestureDetector gestureDetector;
+    private Animation slideLeftIn;
+    private Animation slideLeftOut;
+    private Animation slideRightIn;
+    private Animation slideRightOut;
+
     CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
-            cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
+            cb_stayAwake, cb_timeoutRestart, cb_startAt7, cb_collectWateringBubble,
             cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
             cb_cooperateWater, cb_energyRain,
             cb_enableFarm, cb_rewardFriend, cb_sendBackAnimal,
@@ -38,17 +53,111 @@ public class SettingsActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_settings);
 
+        initTabHost();
+
+        initFlipper();
+
         Config.shouldReload = true;
         FriendIdMap.shouldReload = true;
         CooperationIdMap.shouldReload = true;
         ReserveIdMap.shouldReload = true;
         BeachIdMap.shouldReload = true;
 
+        initCheckBox();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event)) {
+            event.setAction(MotionEvent.ACTION_CANCEL);
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    private void setCurrentTab(int lastView, int currentView) {
+        if (lastView == currentView) return;
+        if (lastView < currentView) {
+            tabHost.getCurrentView().startAnimation(slideLeftOut);
+        } else {
+            tabHost.getCurrentView().startAnimation(slideRightOut);
+        }
+
+        tabHost.setCurrentTab(currentView);
+
+        if (lastView < currentView) {
+            tabHost.getCurrentView().startAnimation(slideRightIn);
+        } else {
+            tabHost.getCurrentView().startAnimation(slideLeftIn);
+        }
+    }
+    private void initFlipper() {
+        slideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
+        slideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+        slideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
+        slideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
+
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                   float velocityY) {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                int lastView = currentView;
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (currentView < MAX_TAB_INDEX) {
+                        currentView++;
+                    }
+                    setCurrentTab(lastView, currentView);
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (currentView > 0) {
+                        currentView--;
+                    }
+                    setCurrentTab(lastView, currentView);
+                }
+                return true;
+            }
+        });
+    }
+
+    private void initTabHost() {
+        tabHost = findViewById(R.id.tab_settings);
+        tabHost.setup();
+
+        TabHost.TabSpec tabSpec;
+
+        tabSpec = tabHost.newTabSpec("base")
+                .setIndicator(getString(R.string.base_configuration))
+                .setContent(R.id.tab_base);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("forest")
+                .setIndicator(getString(R.string.forest_configuration))
+                .setContent(R.id.tab_forest);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("farm")
+                .setIndicator(getString(R.string.farm_configuration))
+                .setContent(R.id.tab_farm);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("other")
+                .setIndicator(getString(R.string.other_configuration))
+                .setContent(R.id.tab_other);
+        tabHost.addTab(tabSpec);
+
+        currentView = 0;
+        tabHost.setCurrentTab(currentView);
+    }
+
+    private void initCheckBox() {
         cb_immediateEffect = findViewById(R.id.cb_immediateEffect);
         cb_recordLog = findViewById(R.id.cb_recordLog);
         cb_showToast = findViewById(R.id.cb_showToast);
         cb_stayAwake = findViewById(R.id.cb_stayAwake);
         cb_timeoutRestart = findViewById(R.id.cb_timeoutRestart);
+        cb_startAt7 = findViewById(R.id.cb_startAt7);
         cb_collectEnergy = findViewById(R.id.cb_collectEnergy);
         cb_collectWateringBubble = findViewById(R.id.cb_collectWateringBubble);
         cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
@@ -94,6 +203,7 @@ public class SettingsActivity extends Activity {
         cb_showToast.setChecked(Config.showToast());
         cb_stayAwake.setChecked(Config.stayAwake());
         cb_timeoutRestart.setChecked(Config.timeoutRestart());
+        cb_startAt7.setChecked(Config.startAt7());
         cb_collectEnergy.setChecked(Config.collectEnergy());
         cb_collectWateringBubble.setChecked(Config.collectWateringBubble());
         cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
@@ -154,6 +264,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.cb_timeoutRestart:
                     Config.setTimeoutRestart(cb.isChecked());
+                    break;
+
+                case R.id.cb_startAt7:
+                    Config.setStartAt7(this.getApplicationContext(), cb.isChecked());
                     break;
 
                 case R.id.cb_collectEnergy:
@@ -307,6 +421,14 @@ public class SettingsActivity extends Activity {
                     ChoiceDialog.showStayAwakeTarget(this, btn.getText());
                     break;
 
+                case R.id.btn_timeoutRestartType:
+                    ChoiceDialog.showTimeoutRestartType(this, btn.getText());
+                    break;
+
+                case R.id.btn_waitWhenException:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
+                    break;
+
                 case R.id.btn_checkInterval:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.CHECK_INTERVAL);
                     break;
@@ -428,10 +550,6 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_syncStepCount:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT);
-                    break;
-
-                case R.id.btn_waitWhenException:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
 
                 case R.id.btn_ExchangeEnergyDoubleClickCount:

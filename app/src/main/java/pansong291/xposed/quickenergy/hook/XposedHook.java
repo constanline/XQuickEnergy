@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -65,8 +68,10 @@ public class XposedHook implements IXposedHookLoadPackage {
     }
 
     private static void initHandler() {
-        if (handler == null)
+        if (handler == null) {
             handler = new Handler();
+            Config.setAlarm7(AntForestToast.context);
+        }
         if (runnable == null)
             runnable = new Runnable() {
                 @Override
@@ -119,7 +124,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
                             }
-                            RpcUtil.isInterruptted = false;
+                            RpcUtil.isInterrupted = false;
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
                             XposedHook.classLoader = loader;
@@ -188,17 +193,22 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     }
 
-    public static void restartHook(boolean force) {
-        Intent intent = new Intent();
-        if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
-            intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
-            if (force) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    public static void restartHook(Context context, boolean force) {
+        try {
+            Intent intent = new Intent();
+            if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+                intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+                if (force) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                context.startActivity(intent);
+            } else {
+                intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
+                context.startService(intent);
             }
-            AntForestToast.context.startActivity(intent);
-        } else {
-            intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
-            AntForestToast.context.startService(intent);
+        } catch (Throwable t) {
+            Log.i(TAG, "restartHook err:");
+            Log.printStackTrace(TAG, t);
         }
     }
 
@@ -247,10 +257,12 @@ public class XposedHook implements IXposedHookLoadPackage {
             String action = intent.getAction();
             if ("com.eg.android.AlipayGphone.xqe.broadcast".equals(action)) {
                 boolean force = intent.getBooleanExtra("force", false);
-                restartHook(force);
+                restartHook(AntForestToast.context, force);
             } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
                 Log.recordLog("收到测试消息");
-                XposedHook.restartHook(false);
+                alarmHook(AntForestToast.context, 3000, true);
+            } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
+                Config.cancelAlarm7(AntForestToast.context);
             }
         }
     }
@@ -260,6 +272,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("com.eg.android.AlipayGphone.xqe.broadcast");
             intentFilter.addAction("com.eg.android.AlipayGphone.xqe.test");
+            intentFilter.addAction("com.eg.android.AlipayGphone.xqe.cancelAlarm7");
             context.registerReceiver(new AlipayBroadcastReceiver(), intentFilter);
             Log.recordLog("注册广播接收器成功", context.toString());
         } catch (Throwable th) {
@@ -267,5 +280,4 @@ public class XposedHook implements IXposedHookLoadPackage {
             Log.printStackTrace(TAG, th);
         }
     }
-
 }

@@ -123,7 +123,8 @@ public class ListAdapter extends BaseAdapter
         ViewHolder vh;
         if (p2 == null) {
             vh = new ViewHolder();
-            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            p2 = View.inflate(context, R.layout.list_item, null);
+//            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
             p2.setTag(vh);
