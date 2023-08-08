@@ -187,6 +187,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -201,6 +202,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;

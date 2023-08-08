@@ -12,17 +12,18 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.hook.XposedHook;
-import pansong291.xposed.quickenergy.util.*;
+import pansong291.xposed.quickenergy.entity.FriendWatch;
+import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.PermissionUtil;
+import pansong291.xposed.quickenergy.util.Statistics;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     TextView tvStatistics;
@@ -133,6 +134,9 @@ public class MainActivity extends Activity {
 
             case R.id.btn_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return;
+            case R.id.btn_friend_watch:
+                ListDialog.show(this, getString(R.string.friend_watch), FriendWatch.getList(), new ArrayList<>(), null);
                 return;
         }
         Intent it = new Intent(this, HtmlViewerActivity.class);

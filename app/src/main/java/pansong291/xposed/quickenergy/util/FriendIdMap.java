@@ -86,6 +86,17 @@ public class FriendIdMap {
         return idList;
     }
 
+    public static List<String> getFriendIds() {
+        List<String> idList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : getIdMap().entrySet()) {
+            if ("我".equals(entry.getValue()) || entry.getKey().equals(currentUid)) {
+                continue;
+            }
+            idList.add(entry.getKey());
+        }
+        return idList;
+    }
+
     public static Map<String, String> getIdMap() {
         if (idMap == null || shouldReload) {
             shouldReload = false;

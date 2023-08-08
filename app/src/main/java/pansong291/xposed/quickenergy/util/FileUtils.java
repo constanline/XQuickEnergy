@@ -28,6 +28,7 @@ public class FileUtils
     private static File simpleLogFile;
     private static File runtimeLogFile;
     private static File cityCodeFile;
+    private static File friendWatchFile;
 
     private static void copyFile(File srcDir, File dstDir, String filename) {
         File file = new File(srcDir, filename);
@@ -91,6 +92,15 @@ public class FileUtils
                 cityCodeFile.delete();
         }
         return cityCodeFile;
+    }
+
+    public static File getFriendWatchFile() {
+        if(friendWatchFile == null) {
+            friendWatchFile = new File(getMainDirectoryFile(), "friendWatch.json");
+            if(friendWatchFile.exists() && friendWatchFile.isDirectory())
+                friendWatchFile.delete();
+        }
+        return friendWatchFile;
     }
 
     public static File getConfigFile() {

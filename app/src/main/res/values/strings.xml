@@ -111,4 +111,5 @@
     <string name="test">Test</string>
     <string name="timeout_restart_type">Timeout restart type</string>
     <string name="start_at_7_o_clock">Start at 7 o\'clock</string>
+    <string name="friend_watch">Friend watch</string>
 </resources>

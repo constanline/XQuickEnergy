@@ -27,37 +27,45 @@
                     android:id="@+id/tab_base"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/immediate_effect"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_immediateEffect"/>
+                        android:id="@+id/sw_immediateEffect"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/record_log"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_recordLog"/>
+                        android:id="@+id/sw_recordLog"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/show_toast"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_showToast"/>
+                        android:id="@+id/sw_showToast"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/stay_awake"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_stayAwake"/>
+                        android:id="@+id/sw_stayAwake"/>
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,13 +93,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp" />
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/timeout_restart_activity"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_timeoutRestart"/>
+                        android:id="@+id/sw_timeoutRestart"/>
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -106,13 +116,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp" />
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/start_at_7_o_clock"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_startAt7"/>
+                        android:id="@+id/sw_startAt7"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -135,13 +147,15 @@
                     android:id="@+id/tab_forest"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/collect_energy"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_collectEnergy"/>
+                        android:id="@+id/sw_collectEnergy"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -157,13 +171,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/collect_watering_bubble"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_collectWateringBubble"/>
+                        android:id="@+id/sw_collectWateringBubble"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -207,13 +223,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/limit_collect"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_limitCollect"/>
+                        android:id="@+id/sw_limitCollect"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -229,13 +247,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/use_double_card"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_doubleCard"/>
+                        android:id="@+id/sw_doubleCard"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -248,6 +268,44 @@
                         android:gravity="start|center_vertical"
                         android:background="@drawable/button"
                         android:id="@+id/btn_doubleCardTime"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
+
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/help_friend_collect"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_helpFriendCollect"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/don_t_collect_list"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_dontCollectList"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/don_t_help_collect_list"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_dontHelpCollectList"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
@@ -292,49 +350,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/help_friend_collect"
-                        android:onClick="onClick"
-                        android:minHeight="50dp"
-                        android:id="@+id/cb_helpFriendCollect"/>
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:text="@string/don_t_collect_list"
-                        android:textAllCaps="false"
-                        android:onClick="onClick"
-                        android:minHeight="50dp"
-                        android:gravity="start|center_vertical"
-                        android:background="@drawable/button"
-                        android:id="@+id/btn_dontCollectList"
+                    <Switch
                         android:paddingStart="8dp"
-                        android:paddingEnd="8dp"/>
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:text="@string/don_t_help_collect_list"
-                        android:textAllCaps="false"
-                        android:onClick="onClick"
-                        android:minHeight="50dp"
-                        android:gravity="start|center_vertical"
-                        android:background="@drawable/button"
-                        android:id="@+id/btn_dontHelpCollectList"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"/>
-
-                    <CheckBox
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receive_forest_task_award"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_receiveForestTaskAward"/>
+                        android:id="@+id/sw_receiveForestTaskAward"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -364,13 +388,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/cooperate_water"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_cooperateWater"/>
+                        android:id="@+id/sw_cooperateWater"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -386,13 +412,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/energy_rain"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_energyRain"/>
+                        android:id="@+id/sw_energyRain"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -408,13 +436,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/exchange_energy_double_click"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_ExchangeEnergyDoubleClick"/>
+                        android:id="@+id/sw_ExchangeEnergyDoubleClick"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -430,13 +460,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/reserve"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_reserve"/>
+                        android:id="@+id/sw_reserve"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -452,13 +484,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/ancient_tree"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_ancientTree"/>
+                        android:id="@+id/sw_ancientTree"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -474,37 +508,45 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/ancient_tree_only_week"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_ancientTreeOnlyWeek"/>
+                        android:id="@+id/sw_ancientTreeOnlyWeek"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/antdodo_collect"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_antdodoCollect"/>
+                        android:id="@+id/sw_antdodoCollect"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/ant_ocean"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_antOcean"/>
+                        android:id="@+id/sw_antOcean"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/beach"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_beach"/>
+                        android:id="@+id/sw_beach"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -528,29 +570,35 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/enable_farm"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_enableFarm"/>
+                        android:id="@+id/sw_enableFarm"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/reward_friend"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_rewardFriend"/>
+                        android:id="@+id/sw_rewardFriend"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/send_back_animal"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_sendBackAnimal"/>
+                        android:id="@+id/sw_sendBackAnimal"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -594,85 +642,105 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receive_farm_tool_reward"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_receiveFarmToolReward"/>
+                        android:id="@+id/sw_receiveFarmToolReward"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/record_farm_game"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_recordFarmGame"/>
+                        android:id="@+id/sw_recordFarmGame"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/kitchen"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_kitchen"/>
+                        android:id="@+id/sw_kitchen"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/use_new_egg_tool"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_useNewEggTool"/>
+                        android:id="@+id/sw_useNewEggTool"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/harvest_produce"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_harvestProduce"/>
+                        android:id="@+id/sw_harvestProduce"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/donation"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_donation"/>
+                        android:id="@+id/sw_donation"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/answer_question"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_answerQuestion"/>
+                        android:id="@+id/sw_answerQuestion"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receive_farm_task_award"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_receiveFarmTaskAward"/>
+                        android:id="@+id/sw_receiveFarmTaskAward"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/feed_animal"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_feedAnimal"/>
+                        android:id="@+id/sw_feedAnimal"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/use_accelerate_tool"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_useAccelerateTool"/>
+                        android:id="@+id/sw_useAccelerateTool"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -702,13 +770,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/notify_friend"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_notifyFriend"/>
+                        android:id="@+id/sw_notifyFriend"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -731,37 +801,45 @@
                     android:id="@+id/tab_other"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receive_point"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_receivePoint"/>
+                        android:id="@+id/sw_receivePoint"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/open_treasure_box"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_openTreasureBox"/>
+                        android:id="@+id/sw_openTreasureBox"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receive_coin_asset"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_receiveCoinAsset"/>
+                        android:id="@+id/sw_receiveCoinAsset"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/donate_charity_coin"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_donateCharityCoin"/>
+                        android:id="@+id/sw_donateCharityCoin"/>
 
                     <Button
                         android:layout_width="match_parent"
@@ -805,22 +883,26 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/koubei_sign_in"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_kbSignIn"
+                        android:id="@+id/sw_kbSignIn"
                         tools:ignore="TooManyViews"/>
 
-                    <CheckBox
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/eco_life_tick"
                         android:onClick="onClick"
                         android:minHeight="50dp"
-                        android:id="@+id/cb_ecoLifeTick" />
+                        android:id="@+id/sw_ecoLifeTick" />
 
                     <Button
                         android:layout_width="match_parent"

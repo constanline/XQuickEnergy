@@ -44,3 +44,4 @@
 
 ## 授权说明
 本项目基于 [XQuickEnergy](https://github.com/pansong291/XQuickEnergy) 开发，遵循 Apache-2.0 协议
+所有图片由 ༒激༙྇流༙྇泉༙྇༒ 授权使用

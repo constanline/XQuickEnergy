@@ -1,145 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:padding="6dp"
+    android:gravity="center_horizontal"
     android:background="@color/background">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF000000" />
+
+    <ImageView
+        android:id="@+id/btn_test"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="0dp"
+        android:layout_margin="50dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/the_image_of_main"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:scaleType="centerInside"
+        android:src="@drawable/main" />
 
-        <TextView
-            android:id="@+id/tv_statistics"
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lyt_bottom1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_forest_log"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#FF000000" />
-
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="18dp"
-            android:contentDescription="@string/the_image_of_main"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/forest"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:onClick="onClick"
-            android:scaleType="centerInside"
-            android:src="@drawable/main"
-            android:id="@+id/btn_test"/>
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/forest_log"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_farm_log"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/farm"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/farm_log"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_other_log"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/other"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/other_log"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lyt_bottom2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_friend_watch"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/friend"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/friend_watch"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btn_github"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/button"
-            android:drawableStart="@drawable/github"
-            android:drawablePadding="10dp"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:padding="6dp"
-            android:text="@string/visit_github"
-            android:textAllCaps="false"
-            android:textColor="#FF000000"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:id="@+id/lyt_bottom"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:baselineAligned="false"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/github"
+            android:drawablePadding="5dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/visit_github"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/btn_forest_log"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_main"
-                android:drawableTop="@drawable/forest"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/forest_log"
-                android:textAlignment="gravity"
-                android:textColor="@color/main_button_text"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btn_farm_log"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_main"
-                android:drawableTop="@drawable/farm"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/farm_log"
-                android:textAlignment="gravity"
-                android:textColor="@color/main_button_text"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btn_other_log"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_main"
-                android:drawableTop="@drawable/other"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/other_log"
-                android:textAlignment="gravity"
-                android:textColor="@color/main_button_text"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btn_settings"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_main"
-                android:drawableTop="@drawable/setting"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/settings"
-                android:textAlignment="gravity"
-                android:textColor="@color/main_button_text"
-                android:textSize="14sp" />
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/btn_settings"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_main"
+            android:drawableTop="@drawable/setting"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/settings"
+            android:textAlignment="gravity"
+            android:textColor="@color/main_button_text"
+            android:textSize="14sp" />
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
