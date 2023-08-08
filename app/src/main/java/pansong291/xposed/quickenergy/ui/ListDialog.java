@@ -56,7 +56,7 @@ public class ListDialog
     }
 
     private static AlertDialog getListDialog(Context c) {
-        if(listDialog == null)
+        if(listDialog == null || listDialog.getContext() != c)
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(getListView(c))
