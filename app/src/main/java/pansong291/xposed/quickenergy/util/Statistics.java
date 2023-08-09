@@ -761,7 +761,6 @@ public class Statistics {
                 JSONArray ja = jo.getJSONArray(jn_dailyAnswerList);
                 for (int i = 0; i < ja.length(); i++) {
                     stat.dailyAnswerList.add(ja.getString(i));
-
                 }
             }
 
@@ -773,10 +772,10 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formated = statistics2Json(stat);
-        if (!formated.equals(json)) {
+        String formatted = statistics2Json(stat);
+        if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
-            FileUtils.write2File(formated, FileUtils.getStatisticsFile());
+            FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
     }

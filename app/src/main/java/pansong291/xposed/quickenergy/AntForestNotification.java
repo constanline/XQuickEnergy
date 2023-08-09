@@ -13,40 +13,26 @@ import pansong291.xposed.quickenergy.util.Config;
 
 import java.text.DateFormat;
 
-public class AntForestNotification
-{
-    public static final int ANTFOREST_NOTIFICATION_ID = 66;
-    private static NotificationManager mNotifyManager;
+public class AntForestNotification {
+    public static final int NOTIFICATION_ID = 66;
     public static final String CHANNEL_ID = "pansong291.xposed.quickenergy.repair.ANTFOREST_NOTIFY_CHANNEL";
+    private static NotificationManager mNotifyManager;
     private static Notification mNotification;
     private static Notification.Builder builder;
     private static boolean isStart = false;
 
-    private AntForestNotification()
-    {}
+    private AntForestNotification() {}
 
     public static void start(Context context) {
         initNotification(context);
         if (!isStart) {
             if(context instanceof Service)
-                ((Service)context).startForeground(ANTFOREST_NOTIFICATION_ID, mNotification);
+                ((Service)context).startForeground(NOTIFICATION_ID, mNotification);
             else
-                getNotificationManager(context).notify(ANTFOREST_NOTIFICATION_ID, mNotification);
+                getNotificationManager(context).notify(NOTIFICATION_ID, mNotification);
             isStart = true;
-        } else {
-            setContentText("开始检测能量");
         }
-    }
-
-    public static void setContentText(CharSequence cs) {
-        if (isStart) {
-            if (Config.forestPauseTime() > System.currentTimeMillis()) {
-                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(Config.forestPauseTime());
-            }
-            mNotification = builder.setContentText(cs).build();
-            if(mNotifyManager != null)
-                mNotifyManager.notify(ANTFOREST_NOTIFICATION_ID, mNotification);
-        }
+        setContentText("开始检测能量");
     }
 
     public static void stop(Context context, boolean remove) {
@@ -54,10 +40,16 @@ public class AntForestNotification
             if(context instanceof Service)
                 ((Service)context).stopForeground(remove);
             else
-                getNotificationManager(context).cancel(ANTFOREST_NOTIFICATION_ID);
+                getNotificationManager(context).cancel(NOTIFICATION_ID);
             isStart = false;
             mNotification = null;
         }
+    }
+
+    private static NotificationManager getNotificationManager(Context context) {
+        if(mNotifyManager == null)
+            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        return mNotifyManager;
     }
 
     private static void initNotification(Context context) {
@@ -68,7 +60,7 @@ public class AntForestNotification
                     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "XQuickEnergy能量提醒",
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "芝麻粒能量提醒",
                         NotificationManager.IMPORTANCE_LOW);
                 notificationChannel.enableLights(false);
                 notificationChannel.enableVibration(false);
@@ -83,18 +75,22 @@ public class AntForestNotification
             mNotification = builder
                     .setSmallIcon(android.R.drawable.sym_def_app_icon)
                     .setContentTitle("芝麻粒")
-                    .setContentText("开始检测能量")
                     .setAutoCancel(false)
+                    .setOngoing(true)
                     .setContentIntent(pi)
                     .build();
         }
     }
 
-    private static NotificationManager getNotificationManager(Context context)
-    {
-        if(mNotifyManager == null)
-            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        return mNotifyManager;
+    public static void setContentText(CharSequence cs) {
+        if (isStart) {
+            if (Config.forestPauseTime() > System.currentTimeMillis()) {
+                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(Config.forestPauseTime());
+            }
+            mNotification = builder.setContentText(cs).build();
+            if(mNotifyManager != null)
+                mNotifyManager.notify(NOTIFICATION_ID, mNotification);
+        }
     }
 
 }

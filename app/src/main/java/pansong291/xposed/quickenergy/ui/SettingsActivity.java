@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TabHost;
+import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.hook.FriendManager;
+import pansong291.xposed.quickenergy.entity.*;
 import pansong291.xposed.quickenergy.util.*;
 
 public class SettingsActivity extends Activity {
@@ -47,8 +49,8 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_settings);
+        setTitle(R.string.settings);
 
         initTabHost();
 
@@ -560,7 +562,6 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        boolean test = FriendManager.needUpdateAll(FileUtils.getFriendWatchFile().lastModified());
         if(Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
             Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();

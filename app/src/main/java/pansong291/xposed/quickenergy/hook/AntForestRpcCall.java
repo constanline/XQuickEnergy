@@ -94,6 +94,13 @@ public class AntForestRpcCall {
                         "\",\"source\":\"ANTFOREST\",\"taskType\":\"" + taskType + "\"}]");
     }
 
+    public static String finishTask(String sceneCode, String taskType) {
+        String outBizNo = taskType + "_" + RandomUtils.nextDouble();
+        return RpcUtil.request("com.alipay.antiep.finishTask",
+                "[{\"outBizNo\":\"" + outBizNo + "\",\"requestType\":\"H5\",\"sceneCode\":\"" +
+                        sceneCode + "\",\"source\":\"ANTFOREST\",\"taskType\":\"" + taskType + "\"}]");
+    }
+
     public static String popupTask() {
         return RpcUtil.request("alipay.antforest.forest.h5.popupTask",
                 "[{\"fromAct\":\"pop_task\",\"needInitSign\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"statusList\":[\"TODO\",\"FINISHED\"],\"version\":\"" +
@@ -152,5 +159,4 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antdodo.rpc.h5.collect",
                 "[{}]");
     }
-
 }

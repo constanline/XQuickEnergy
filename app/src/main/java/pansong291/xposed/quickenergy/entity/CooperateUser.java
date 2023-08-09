@@ -1,9 +1,10 @@
-package pansong291.xposed.quickenergy.ui;
+package pansong291.xposed.quickenergy.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 
 public class CooperateUser extends IdAndName {

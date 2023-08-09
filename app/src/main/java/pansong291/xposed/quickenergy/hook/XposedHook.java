@@ -18,10 +18,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.Statistics;
-import pansong291.xposed.quickenergy.util.TimeUtil;
+import pansong291.xposed.quickenergy.util.*;
 
 import java.util.Map;
 
@@ -62,6 +59,7 @@ public class XposedHook implements IXposedHookLoadPackage {
 
         if (ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
             Log.i(TAG, lpparam.packageName);
+            classLoader = lpparam.classLoader;
             hookRpcCall(lpparam.classLoader);
             hookService(lpparam.classLoader);
         }
@@ -72,7 +70,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             handler = new Handler();
             Config.setAlarm7(AntForestToast.context);
         }
-        if (runnable == null)
+        if (runnable == null) {
             runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -102,11 +100,35 @@ public class XposedHook implements IXposedHookLoadPackage {
                     times = (times + 1) % (3600_000 / Config.checkInterval());
                 }
             };
+        }
+        handler.removeCallbacks(runnable);
+        AntForest.stop();
+        AntForestNotification.stop(service, false);
         AntForestNotification.start(service);
         handler.post(runnable);
     }
 
     private void hookService(ClassLoader loader) {
+        try {
+            XposedHelpers.findAndHookMethod("com.alipay.mobile.quinox.LauncherActivity", loader,
+                    "onResume", new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) {
+                            String targetUid = RpcUtil.getUserId(loader);
+                            if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
+                                return;
+                            }
+                            FriendIdMap.currentUid = targetUid;
+                            if (handler != null) {
+                                initHandler();
+                            }
+                        }
+                    });
+            Log.i(TAG, "hook login successfully");
+        } catch (Throwable t) {
+            Log.i(TAG, "hook login err:");
+            Log.printStackTrace(TAG, t);
+        }
         try {
             XposedHelpers.findAndHookMethod(
                     "android.app.Service", loader, "onCreate", new XC_MethodHook() {
@@ -127,7 +149,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                             RpcUtil.isInterrupted = false;
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
-                            XposedHook.classLoader = loader;
                             AntForestToast.context = service.getApplicationContext();
                             RpcUtil.init(loader);
                             times = 0;

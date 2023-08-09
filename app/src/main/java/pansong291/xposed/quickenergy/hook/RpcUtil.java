@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
+import de.robv.android.xposed.XposedHelpers;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
@@ -10,6 +11,7 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
+import java.util.Objects;
 
 public class RpcUtil
 {
@@ -36,6 +38,28 @@ public class RpcUtil
                 Log.printStackTrace(TAG, t);
             }
         }
+    }
+
+    public static Object getMicroApplicationContext(ClassLoader classLoader) {
+        return XposedHelpers.callMethod(
+                XposedHelpers.callStaticMethod(
+                        XposedHelpers.findClass("com.alipay.mobile.framework.AlipayApplication", classLoader),
+                        "getInstance"), "getMicroApplicationContext");
+    }
+
+    public static String getUserId(ClassLoader classLoader) {
+        try {
+            Object callMethod =
+                    XposedHelpers.callMethod(XposedHelpers.callMethod(getMicroApplicationContext(classLoader),
+                            "findServiceByInterface",
+                            XposedHelpers.findClass("com.alipay.mobile.personalbase.service.SocialSdkContactService",
+                                    classLoader).getName()), "getMyAccountInfoModelByLocal");
+            return (String) XposedHelpers.getObjectField(callMethod, "userId");
+        } catch (Throwable th) {
+            Log.i(TAG, "getUserId err:" + Objects.requireNonNull(th.getCause()).getMessage());
+            Log.printStackTrace(TAG, th);
+        }
+        return null;
     }
 
     public static String request(String args0, String args1) {

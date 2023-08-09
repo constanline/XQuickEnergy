@@ -562,14 +562,12 @@ public class Config {
         return getConfig().ancientTreeAreaCodeList;
     }
 
-    public static void setReserve(boolean b)
-    {
+    public static void setReserve(boolean b) {
         getConfig().reserve = b;
         hasChanged = true;
     }
 
-    public static boolean reserve()
-    {
+    public static boolean reserve() {
         return getConfig().reserve;
     }
 
@@ -785,25 +783,21 @@ public class Config {
         return getConfig().useNewEggTool;
     }
 
-    public static void setHarvestProduce(boolean b)
-    {
+    public static void setHarvestProduce(boolean b) {
         getConfig().harvestProduce = b;
         hasChanged = true;
     }
 
-    public static boolean harvestProduce()
-    {
+    public static boolean harvestProduce() {
         return getConfig().harvestProduce;
     }
 
-    public static void setDonation(boolean b)
-    {
+    public static void setDonation(boolean b) {
         getConfig().donation = b;
         hasChanged = true;
     }
 
-    public static boolean donation()
-    {
+    public static boolean donation() {
         return getConfig().donation;
     }
 

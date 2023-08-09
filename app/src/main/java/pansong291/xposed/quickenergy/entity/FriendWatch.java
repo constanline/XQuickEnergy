@@ -1,14 +1,12 @@
 package pansong291.xposed.quickenergy.entity;
 
 import org.json.JSONObject;
-import pansong291.xposed.quickenergy.ui.IdAndName;
 import pansong291.xposed.quickenergy.util.FileUtils;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
