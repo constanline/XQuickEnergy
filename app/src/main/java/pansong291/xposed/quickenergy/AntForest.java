@@ -98,6 +98,7 @@ public class AntForest {
             }
             taskThreads.clear();
         }
+        isScanning = false;
     }
 
     /**
@@ -131,9 +132,6 @@ public class AntForest {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                        Thread.sleep(100);
-
                     canCollectSelfEnergy(times);
                     queryEnergyRanking();
                     isScanning = false;
@@ -321,6 +319,7 @@ public class AntForest {
                 JSONArray jaBubbles = joHomePage.getJSONArray("bubbles");
                 JSONObject userEnergy = joHomePage.getJSONObject("userEnergy");
                 selfId = userEnergy.getString("userId");
+                FriendIdMap.currentUid = selfId;
                 String selfName = userEnergy.getString("displayName");
                 if (selfName.isEmpty())
                     selfName = "我";
