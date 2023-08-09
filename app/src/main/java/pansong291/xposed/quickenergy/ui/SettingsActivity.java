@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.hook.FriendManager;
 import pansong291.xposed.quickenergy.util.*;
 
 public class SettingsActivity extends Activity {
@@ -59,7 +60,7 @@ public class SettingsActivity extends Activity {
         ReserveIdMap.shouldReload = true;
         BeachIdMap.shouldReload = true;
 
-        initCheckBox();
+        initSwitch();
     }
 
     @Override
@@ -147,7 +148,7 @@ public class SettingsActivity extends Activity {
         tabHost.setCurrentTab(0);
     }
 
-    private void initCheckBox() {
+    private void initSwitch() {
         sw_immediateEffect = findViewById(R.id.sw_immediateEffect);
         sw_recordLog = findViewById(R.id.sw_recordLog);
         sw_showToast = findViewById(R.id.sw_showToast);
@@ -239,8 +240,8 @@ public class SettingsActivity extends Activity {
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-        if (v instanceof CheckBox) {
-            CheckBox cb = (CheckBox) v;
+        if (v instanceof Switch) {
+            Switch cb = (Switch) v;
             switch (v.getId()) {
                 case R.id.sw_immediateEffect:
                     Config.setImmediateEffect(cb.isChecked());
@@ -559,6 +560,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        boolean test = FriendManager.needUpdateAll(FileUtils.getFriendWatchFile().lastModified());
         if(Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
             Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();

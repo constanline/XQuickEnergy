@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -202,29 +203,23 @@ public class ListDialog
         }
     }
 
-    private static AlertDialog getOptionsDialog(Context c)
-    {
-        if(optionsDialog == null)
-        {
+    private static AlertDialog getOptionsDialog(Context c) {
+        if (optionsDialog == null || optionsDialog.getContext() != c) {
             optionsDialog = new AlertDialog.Builder(c)
                     .setTitle("Options")
                     .setAdapter(
-                            OptionsAdapter.get(c), new OnClickListener()
-                            {
+                            OptionsAdapter.get(c), new OnClickListener() {
                                 Context c;
 
-                                public OnClickListener setContext(Context c)
-                                {
+                                public OnClickListener setContext(Context c) {
                                     this.c = c;
                                     return this;
                                 }
 
                                 @Override
-                                public void onClick(DialogInterface p1, int p2)
-                                {
+                                public void onClick(DialogInterface p1, int p2) {
                                     String url = null;
-                                    switch(p2)
-                                    {
+                                    switch(p2) {
                                         case 0:
                                             url = "alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2F60000002.h5app.alipay.com%2Fwww%2Fhome.html%3FuserId%3D";
                                             break;
@@ -236,8 +231,7 @@ public class ListDialog
                                         case 2:
                                             showDeleteDialog(c);
                                     }
-                                    if(url != null)
-                                    {
+                                    if(url != null) {
                                         Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url + curIdAndName.id));
                                         c.startActivity(it);
                                     }
@@ -249,36 +243,28 @@ public class ListDialog
         return optionsDialog;
     }
 
-    private static void showDeleteDialog(Context c)
-    {
-        try
-        {
+    private static void showDeleteDialog(Context c) {
+        try {
             getDeleteDialog(c).show();
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             deleteDialog = null;
             getDeleteDialog(c).show();
         }
         deleteDialog.setTitle("删除 " + curIdAndName.name);
     }
 
-    private static AlertDialog getDeleteDialog(Context c)
-    {
-        if(deleteDialog == null)
-        {
-            OnClickListener listener = new OnClickListener()
-            {
+    private static AlertDialog getDeleteDialog(Context c) {
+        if(deleteDialog == null) {
+            OnClickListener listener = new OnClickListener() {
                 Context c;
 
-                public OnClickListener setContext(Context c)
-                {
+                public OnClickListener setContext(Context c) {
                     this.c = c;
                     return this;
                 }
 
                 @Override
-                public void onClick(DialogInterface p1, int p2)
-                {
+                public void onClick(DialogInterface p1, int p2) {
                     if (p2 == DialogInterface.BUTTON_POSITIVE) {
                         if (curIdAndName instanceof AlipayUser) {
                             FriendIdMap.removeIdMap(curIdAndName.id);
@@ -304,6 +290,7 @@ public class ListDialog
 
     static class OnBtnClickListener implements View.OnClickListener
     {
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View p1)
         {

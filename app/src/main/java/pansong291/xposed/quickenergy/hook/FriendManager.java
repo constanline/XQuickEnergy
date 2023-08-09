@@ -52,11 +52,13 @@ public class FriendManager {
         }
     }
 
-    private static boolean needUpdateAll(long last, long now) {
+    public static boolean needUpdateAll(long last) {
+        if (last == 0L) {
+            return true;
+        }
         Calendar cLast = Calendar.getInstance();
         cLast.setTimeInMillis(last);
         Calendar cNow = Calendar.getInstance();
-        cNow.setTimeInMillis(now);
         if (cLast.get(Calendar.DAY_OF_YEAR) == cNow.get(Calendar.DAY_OF_YEAR)) {
             return false;
         }
@@ -78,7 +80,7 @@ public class FriendManager {
                     joFriendWatch = new JSONObject();
                 }
             }
-            if (needUpdateAll(FileUtils.getFriendWatchFile().lastModified(), System.currentTimeMillis())) {
+            if (needUpdateAll(FileUtils.getFriendWatchFile().lastModified())) {
                 friendWatchNewWeek();
             }
             friendWatchSingle(id, collectedEnergy);
