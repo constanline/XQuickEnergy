@@ -60,7 +60,7 @@
             android:name=".ui.HtmlViewerActivity"
             android:resizeableActivity="true"
             tools:targetApi="n" />
-        
+            
     </application>
 
 </manifest>

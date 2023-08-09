@@ -1,8 +1,12 @@
 package pansong291.xposed.quickenergy.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 
 public class Statistics {
     public enum TimeType {
@@ -72,7 +76,7 @@ public class Statistics {
             jn_exchangeList = "exchangeList", jn_beachTodayList = "beachTodayList",
             jn_questionHint = "questionHint", jn_donationEgg = "donationEgg", jn_memberSignIn = "memberSignIn",
             jn_kbSignIn = "kbSignIn", jn_exchangeDoubleCard = "exchangeDoubleCard",
-            jn_exchangeTimes = "exchangeTimes";
+            jn_exchangeTimes = "exchangeTimes", jn_dailyAnswerList = "dailyAnswerList";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -94,6 +98,7 @@ public class Statistics {
     private ArrayList<String> answerQuestionList;
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
+    private Set<String> dailyAnswerList;
 
     private int donationEgg = 0;
 
@@ -471,6 +476,17 @@ public class Statistics {
         }
     }
 
+    public static Set<String> getDadaDailySet() {
+        Statistics stat = getStatistics();
+        return stat.dailyAnswerList;
+    }
+
+    public static void setDadaDailySet(Set<String> dailyAnswerList) {
+        Statistics stat = getStatistics();
+        stat.dailyAnswerList = dailyAnswerList;
+        save();
+    }
+
     public static boolean canSyncStepToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.syncStepList.contains(uid);
@@ -576,6 +592,8 @@ public class Statistics {
             stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
+        if (stat.dailyAnswerList == null)
+            stat.dailyAnswerList = new HashSet<>();
         return stat;
     }
 
@@ -741,6 +759,14 @@ public class Statistics {
             if (jo.has(jn_exchangeTimes))
                 stat.exchangeTimes = jo.getInt(jn_exchangeTimes);
 
+            stat.dailyAnswerList = new HashSet<>();
+            if (jo.has(jn_dailyAnswerList)) {
+                JSONArray ja = jo.getJSONArray(jn_dailyAnswerList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.dailyAnswerList.add(ja.getString(i));
+                }
+            }
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -872,6 +898,13 @@ public class Statistics {
             jo.put(jn_exchangeDoubleCard, stat.exchangeDoubleCard);
 
             jo.put(jn_exchangeTimes, stat.exchangeTimes);
+
+            ja = new JSONArray();
+            for (String item : stat.dailyAnswerList) {
+                ja.put(item);
+            }
+            jo.put(jn_dailyAnswerList, ja);
+
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

@@ -7,7 +7,7 @@ import pansong291.xposed.quickenergy.util.RandomUtils;
  * @since 2023/08/01
  */
 public class AntOceanRpcCall {
-    private static final String VERSION = "20220707";
+    private static final String VERSION = "20230730";
     private static String getUniqueId() {
         return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();
     }
