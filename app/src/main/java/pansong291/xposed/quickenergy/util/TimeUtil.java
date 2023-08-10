@@ -1,9 +1,7 @@
 package pansong291.xposed.quickenergy.util;
 
-
 import java.util.Calendar;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * @author Constanline
@@ -16,6 +14,7 @@ public class TimeUtil {
     public static String getTimeStr() {
         return getTimeStr(0);
     }
+
     public static String getTimeStr(int plusMs) {
         Calendar c = Calendar.getInstance();
         if (plusMs != 0) {

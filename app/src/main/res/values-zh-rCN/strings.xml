@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="base_configuration">基础设置</string>
+    <string name="base_configuration">基础</string>
     <string name="immediate_effect">立即生效</string>
     <string name="record_log">记录日志</string>
     <string name="show_toast">气泡提示</string>
     <string name="stay_awake">保持唤醒</string>
     <string name="timeout_restart_activity">超时时重启Activity</string>
-    <string name="forest_configuration">森林设置</string>
+    <string name="forest_configuration">森林</string>
     <string name="collect_energy">收集能量</string>
     <string name="check_interval_minutes">检测间隔(分钟)</string>
     <string name="thread_count">线程数</string>
@@ -18,33 +18,33 @@
     <string name="return_water_18">返水18g</string>
     <string name="return_water_10">返水10g</string>
     <string name="help_friend_collect">帮收能量</string>
-    <string name="don_t_help_collect_list">不要帮收能量名单</string>
-    <string name="don_t_collect_list">不要收取能量名单</string>
+    <string name="don_t_help_collect_list">不帮收能量名单</string>
+    <string name="don_t_collect_list">不收取能量名单</string>
     <string name="receive_forest_task_award">收取森林任务奖励</string>
     <string name="water_friend_list">好友浇水列表</string>
     <string name="cooperate_water">合种浇水</string>
     <string name="cooperate_water_list">合种浇水列表</string>
-    <string name="farm_configuration">农场设置</string>
+    <string name="farm_configuration">庄园</string>
     <string name="enable_farm">开启庄园</string>
-    <string name="reward_friend">奖励好友</string>
+    <string name="reward_friend">回报好友</string>
     <string name="send_back_animal">遣返小鸡</string>
     <string name="send_type">遣返方式</string>
-    <string name="don_t_send_friend_list">不要遣返列表</string>
+    <string name="don_t_send_friend_list">不遣返小鸡名单</string>
     <string name="recall_animal_type">召回类型</string>
-    <string name="receive_farm_tool_reward">收取庄园工具奖励</string>
+    <string name="receive_farm_tool_reward">收取道具奖励</string>
     <string name="record_farm_game">游戏改分(星星球、登山赛)</string>
     <string name="kitchen">小鸡厨房</string>
     <string name="use_new_egg_tool">使用新蛋卡</string>
-    <string name="harvest_produce">收获农产品</string>
+    <string name="harvest_produce">收获爱心鸡蛋</string>
     <string name="answer_question">回答问题</string>
-    <string name="donation">捐赠</string>
-    <string name="receive_farm_task_award">收取庄园任务奖励</string>
+    <string name="donation">捐赠爱心鸡蛋</string>
+    <string name="receive_farm_task_award">收取饲料奖励</string>
     <string name="feed_animal">喂小鸡</string>
     <string name="use_accelerate_tool">使用加速卡</string>
     <string name="feed_friend_animal_list">喂好友小鸡列表</string>
-    <string name="notify_friend">通知好友</string>
-    <string name="don_t_notify_friend_list">不要通知列表</string>
-    <string name="other_configuration">其他配置</string>
+    <string name="notify_friend">通知好友赶鸡</string>
+    <string name="don_t_notify_friend_list">不通知赶鸡名单</string>
+    <string name="other_configuration">其他</string>
     <string name="receive_point">领取积分</string>
     <string name="open_treasure_box">开启运动宝箱</string>
     <string name="receive_coin_asset">收集运动币</string>
@@ -88,8 +88,10 @@
     <string name="cancel">取消</string>
     <string name="start_check_energy">开始检测能量</string>
     <string name="collect_watering_bubble">收金球</string>
-    <string name="use_double_card_time">使用双击卡时间(比如“0000-0100,0700-0730”代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用)</string>
+    <string name="use_double_card_time">使用双击卡时间</string>
+    <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
+    <string name="visit_github">访问GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
     <string name="exchange_energy_double_click_count">兑换限时双击卡数量</string>
     <string name="reserve">每日兑换保护地(会使用能量慎用)</string>
@@ -103,5 +105,11 @@
     <string name="water_friend_count">每次浇水克数(10 18 33 66)</string>
     <string name="beach">净滩行动</string>
     <string name="beach_list">净滩行动列表(总数)</string>
+    <string name="test">测试</string>
+    <string name="timeout_restart_type">超时重启方式</string>
+    <string name="start_at_7_o_clock">7点时启动(实验性功能)</string>
+    <string name="tiyubiz">文体中心</string>
+    <string name="friend_watch">好友统计</string>
+    <string name="user_patrol">巡护森林</string>
 
 </resources>

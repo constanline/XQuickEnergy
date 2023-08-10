@@ -31,7 +31,7 @@ public class AntCooperate {
                         s = AntCooperateRpcCall.queryUserCooperatePlantList();
                     }
                     JSONObject jo = new JSONObject(s);
-                    if (jo.getString("resultCode").equals("SUCCESS")) {
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         int userCurrentEnergy = jo.getInt("userCurrentEnergy");
                         JSONArray ja = jo.getJSONArray("cooperatePlants");
                         for (int i = 0; i < ja.length(); i++) {
@@ -80,7 +80,7 @@ public class AntCooperate {
         try {
             String s = AntCooperateRpcCall.cooperateWater(uid, coopId, count);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 Log.forest("合种浇水🚿[" + name + "]" + jo.getString("barrageText"));
                 Statistics.cooperateWaterToday(FriendIdMap.currentUid, coopId);
             } else {

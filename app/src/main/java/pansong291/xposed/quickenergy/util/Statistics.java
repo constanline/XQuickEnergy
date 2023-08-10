@@ -188,6 +188,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -202,6 +203,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
@@ -775,10 +777,10 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formated = statistics2Json(stat);
-        if (!formated.equals(json)) {
+        String formatted  = statistics2Json(stat);
+        if (!formatted .equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
-            FileUtils.write2File(formated, FileUtils.getStatisticsFile());
+            FileUtils.write2File(formatted , FileUtils.getStatisticsFile());
         }
         return stat;
     }

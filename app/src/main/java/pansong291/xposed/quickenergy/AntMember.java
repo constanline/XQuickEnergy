@@ -21,9 +21,9 @@ public class AntMember {
             public void run() {
                 try {
                     if (Statistics.canMemberSignInToday()) {
-                        String s = AntMemberRpcCall.memberSignin();
+                        String s = AntMemberRpcCall.memberSignIn();
                         JSONObject jo = new JSONObject(s);
-                        if (jo.getString("resultCode").equals("SUCCESS")) {
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.other("每日签到📅[" + jo.getString("signinPoint") + "积分]#已签到" + jo.getString("signinSumDay")
                                     + "天");
                             Statistics.memberSignInToday();
@@ -32,6 +32,8 @@ public class AntMember {
                         }
                     }
                     queryPointCert(1, 8);
+
+                    anXinDou();
                 } catch (Throwable t) {
                     Log.i(TAG, "receivePoint.run err:");
                     Log.printStackTrace(TAG, t);
@@ -41,11 +43,34 @@ public class AntMember {
         }.start();
     }
 
+    private static void anXinDou() {
+        try {
+            String appletId = "AP16150326";
+            String s = AntMemberRpcCall.taskProcess(appletId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject result = jo.getJSONObject("result");
+                if (result.getBoolean("canPush")) {
+                    s = AntMemberRpcCall.taskTrigger(appletId, "insportal-marketing");
+                    JSONObject joTrigger = new JSONObject(s);
+                    if (joTrigger.getBoolean("success")) {
+                        Log.other("安心豆任务触发成功");
+                    }
+                }
+            } else {
+                Log.recordLog("anXinDou", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "anXinDou err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void queryPointCert(int page, int pageSize) {
         try {
             String s = AntMemberRpcCall.queryPointCert(page, pageSize);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 boolean hasNextPage = jo.getBoolean("hasNextPage");
                 JSONArray jaCertList = jo.getJSONArray("certList");
                 for (int i = 0; i < jaCertList.length(); i++) {
@@ -55,7 +80,7 @@ public class AntMember {
                     int pointAmount = jo.getInt("pointAmount");
                     s = AntMemberRpcCall.receivePointByUser(id);
                     jo = new JSONObject(s);
-                    if (jo.getString("resultCode").equals("SUCCESS")) {
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         Log.other("领取奖励🎖️[" + bizTitle + "]#" + pointAmount + "积分");
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), s);

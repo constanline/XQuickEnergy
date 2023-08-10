@@ -1,4 +1,4 @@
-package pansong291.xposed.quickenergy.ui;
+package pansong291.xposed.quickenergy.entity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,8 @@ package pansong291.xposed.quickenergy.hook;
 
 public class AntSportsRpcCall {
         private static final String chInfo = "ch_appcenter__chsub_9patch",
-                        timeZone = "Asia\\/Shanghai", version = "3.0.1.2", alipayAppVersion = "0.0.852";
+                        timeZone = "Asia\\/Shanghai", version = "3.0.1.2", alipayAppVersion = "0.0.852",
+                        cityCode = "330100", appId = "2021002116659397";
 
         public static String queryCoinBubbleModule() {
                 return RpcUtil.request("com.alipay.sportshealth.biz.rpc.sportsHealthHomeRpc.queryCoinBubbleModule",
@@ -101,4 +102,78 @@ public class AntSportsRpcCall {
                                 + "\",\"timezone\":\"GMT+08:00\",\"version\":\"" + version + "\"}]";
                 return RpcUtil.request("alipay.charity.mobile.donate.exchange.success", args1);
         }
+
+        /* 文体中心 */
+        public static String userTaskGroupQuery(String groupId) {
+                return RpcUtil.request("alipay.tiyubiz.sports.userTaskGroup.query",
+                                "[{\"cityCode\":\"" + cityCode + "\",\"groupId\":\"" + groupId + "\"}]");
+        }
+
+        public static String userTaskComplete(String bizType, String taskId) {
+                return RpcUtil.request("alipay.tiyubiz.sports.userTask.complete",
+                                "[{\"bizType\":\"" + bizType + "\",\"cityCode\":\"" + cityCode + "\",\"completedTime\":"
+                                                + System.currentTimeMillis() + ",\"taskId\":\"" + taskId + "\"}]");
+        }
+
+        public static String userTaskRightsReceive(String taskId, String userTaskId) {
+                return RpcUtil.request("alipay.tiyubiz.sports.userTaskRights.receive",
+                                "[{\"taskId\":\"" + taskId + "\",\"userTaskId\":\"" + userTaskId + "\"}]");
+        }
+
+        public static String queryAccount() {
+                return RpcUtil.request("alipay.tiyubiz.user.asset.query.account",
+                                "[{\"accountType\":\"TIYU_SEED\"}]");
+        }
+
+        public static String queryRoundList() {
+                return RpcUtil.request("alipay.tiyubiz.wenti.walk.queryRoundList",
+                                "[{}]");
+        }
+
+        public static String participate(int bettingPoints, String InstanceId, String ResultId, String roundId) {
+                return RpcUtil.request("alipay.tiyubiz.wenti.walk.participate",
+                                "[{\"bettingPoints\":" + bettingPoints + ",\"guessInstanceId\":\"" + InstanceId
+                                                + "\",\"guessResultId\":\"" + ResultId
+                                                + "\",\"newParticipant\":false,\"roundId\":\"" + roundId
+                                                + "\",\"stepTimeZone\":\"Asia/Shanghai\"}]");
+        }
+
+        public static String pathFeatureQuery() {
+                return RpcUtil.request("alipay.tiyubiz.path.feature.query",
+                                "[{\"appId\":\"" + appId
+                                                + "\",\"features\":[\"USER_CURRENT_PATH_SIMPLE\"],\"sceneCode\":\"wenti_shijiebei\"}]");
+        }
+
+        public static String pathMapJoin(String pathId) {
+                return RpcUtil.request("alipay.tiyubiz.path.map.join",
+                                "[{\"appId\":\"" + appId + "\",\"pathId\":\"" + pathId + "\"}]");
+        }
+
+        public static String pathMapHomepage(String pathId) {
+                return RpcUtil.request("alipay.tiyubiz.path.map.homepage",
+                                "[{\"appId\":\"" + appId + "\",\"pathId\":\"" + pathId + "\"}]");
+        }
+
+        public static String stepQuery(String countDate, String pathId) {
+                return RpcUtil.request("alipay.tiyubiz.path.map.step.query",
+                                "[{\"appId\":\"" + appId + "\",\"countDate\":\"" + countDate
+                                                + "\",\"pathId\":\""
+                                                + pathId + "\",\"timeZone\":\"Asia/Shanghai\"}]");
+        }
+
+        public static String tiyubizGo(String countDate, int goStepCount, String pathId, String userPathRecordId) {
+                return RpcUtil.request("alipay.tiyubiz.path.map.go",
+                                "[{\"appId\":\"" + appId + "\",\"countDate\":\"" + countDate
+                                                + "\",\"goStepCount\":"
+                                                + goStepCount + ",\"pathId\":\"" + pathId
+                                                + "\",\"timeZone\":\"Asia/Shanghai\",\"userPathRecordId\":\""
+                                                + userPathRecordId + "\"}]");
+        }
+
+        public static String rewardReceive(String pathId, String userPathRewardId) {
+                return RpcUtil.request("alipay.tiyubiz.path.map.reward.receive",
+                                "[{\"appId\":\"" + appId + "\",\"pathId\":\"" + pathId + "\",\"userPathRewardId\":\""
+                                                + userPathRewardId + "\"}]");
+        }
+
 }
