@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AncientTreeRpcCall;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.Statistics;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class AncientTree {
     }
     private static void home() {
         List<String> list = Config.getAncientTreeAreaCodeList();
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return;
         }
         for (String code : list) {
@@ -41,11 +40,15 @@ public class AncientTree {
                 JSONObject jo = new JSONObject(s);
                 if (jo.getString("resultCode").equals("SUCCESS")) {
                     JSONObject data = jo.getJSONObject("data");
-                    JSONObject targetDistrictDetailInfo = data.getJSONObject("targetDistrictDetailInfo");
-                    JSONObject districtInfo = targetDistrictDetailInfo.getJSONObject("districtInfo");
-                    String cityCode = districtInfo.getString("cityCode");
-                    JSONArray ancientTreeList = targetDistrictDetailInfo.getJSONArray("ancientTreeList");
-                    projectDetail(cityCode, ancientTreeList);
+                    if (data.has("targetDistrictDetailInfo")) {
+                        JSONObject targetDistrictDetailInfo = data.getJSONObject("targetDistrictDetailInfo");
+                        JSONObject districtInfo = targetDistrictDetailInfo.getJSONObject("districtInfo");
+                        String cityCode = districtInfo.getString("cityCode");
+                        JSONArray ancientTreeList = targetDistrictDetailInfo.getJSONArray("ancientTreeList");
+                        projectDetail(cityCode, ancientTreeList);
+                    } else {
+                        Log.recordLog("targetDistrictDetailInfo不存在", s);
+                    }
                     firstTime = false;
                 }
             } catch (Throwable t) {

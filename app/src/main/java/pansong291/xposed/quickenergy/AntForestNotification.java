@@ -21,13 +21,14 @@ public class AntForestNotification {
     private static Notification.Builder builder;
     private static boolean isStart = false;
 
-    private AntForestNotification() {}
+    private AntForestNotification() {
+    }
 
     public static void start(Context context) {
         initNotification(context);
         if (!isStart) {
-            if(context instanceof Service)
-                ((Service)context).startForeground(NOTIFICATION_ID, mNotification);
+            if (context instanceof Service)
+                ((Service) context).startForeground(NOTIFICATION_ID, mNotification);
             else
                 getNotificationManager(context).notify(NOTIFICATION_ID, mNotification);
             isStart = true;
@@ -36,9 +37,9 @@ public class AntForestNotification {
     }
 
     public static void stop(Context context, boolean remove) {
-        if(isStart) {
-            if(context instanceof Service)
-                ((Service)context).stopForeground(remove);
+        if (isStart) {
+            if (context instanceof Service)
+                ((Service) context).stopForeground(remove);
             else
                 getNotificationManager(context).cancel(NOTIFICATION_ID);
             isStart = false;
@@ -47,20 +48,20 @@ public class AntForestNotification {
     }
 
     private static NotificationManager getNotificationManager(Context context) {
-        if(mNotifyManager == null)
+        if (mNotifyManager == null)
             mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         return mNotifyManager;
     }
 
     private static void initNotification(Context context) {
-        if(mNotification == null) {
+        if (mNotification == null) {
             Intent it = new Intent(Intent.ACTION_VIEW);
             it.setData(Uri.parse("alipays://platformapi/startapp?appId="));
             PendingIntent pi = PendingIntent.getActivity(context, 0, it,
                     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "芝麻粒能量提醒",
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "仙人掌能量提醒",
                         NotificationManager.IMPORTANCE_LOW);
                 notificationChannel.enableLights(false);
                 notificationChannel.enableVibration(false);
@@ -88,7 +89,7 @@ public class AntForestNotification {
                 cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(Config.forestPauseTime());
             }
             mNotification = builder.setContentText(cs).build();
-            if(mNotifyManager != null)
+            if (mNotifyManager != null)
                 mNotifyManager.notify(NOTIFICATION_ID, mNotification);
         }
     }

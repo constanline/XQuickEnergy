@@ -7,5 +7,4 @@
         <item name="android:titleTextColor">@color/textColorPrimary</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
 	</style>
-
 </resources>

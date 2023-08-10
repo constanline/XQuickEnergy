@@ -57,6 +57,20 @@
                         android:minHeight="50dp"
                         android:id="@+id/sw_showToast"/>
 
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/toast_vertical_offset"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_toastOffsetY"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp" />
+
                     <Switch
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
@@ -561,6 +575,15 @@
                         android:id="@+id/btn_beachList"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"/>
+
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_patrol"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_userPatrol" />
                 </LinearLayout>
                 <!--庄园设置-->
                 <LinearLayout
@@ -651,6 +674,21 @@
                         android:onClick="onClick"
                         android:minHeight="50dp"
                         android:id="@+id/sw_receiveFarmToolReward"/>
+
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/animal_game_time"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_farmGameTime"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
 
                     <Switch
                         android:paddingStart="8dp"
@@ -903,6 +941,15 @@
                         android:onClick="onClick"
                         android:minHeight="50dp"
                         android:id="@+id/sw_ecoLifeTick" />
+
+                    <Switch
+                        android:paddingStart="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tiyubiz"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_tiyubiz" />
 
                     <Button
                         android:layout_width="match_parent"

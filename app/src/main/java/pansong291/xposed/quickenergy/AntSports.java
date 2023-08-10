@@ -1,5 +1,7 @@
 package pansong291.xposed.quickenergy;
 
+import java.util.HashSet;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntSportsRpcCall;
@@ -10,6 +12,8 @@ import pansong291.xposed.quickenergy.util.Statistics;
 
 public class AntSports {
     private static final String TAG = AntSports.class.getCanonicalName();
+
+    private static final HashSet<String> waitOpenBoxNos = new HashSet<>();
 
     public static void start(ClassLoader loader, int times) {
         new Thread() {
@@ -39,6 +43,14 @@ public class AntSports {
                     if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid)
                             && times == 0)
                         queryWalkStep(loader);
+
+                    if (Config.tiyubiz()) {
+                        userTaskGroupQuery("SPORTS_DAILY_SIGN_GROUP");
+                        userTaskGroupQuery("SPORTS_DAILY_GROUP");
+                        userTaskRightsReceive();
+                        pathFeatureQuery();
+                        participate();
+                    }
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
@@ -80,13 +92,13 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.queryMyHomePage();
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 s = jo.getString("pathJoinStatus");
-                if (s.equals("GOING")) {
+                if ("GOING".equals(s)) {
                     if (jo.has("pathCompleteStatus")) {
-                        if (jo.getString("pathCompleteStatus").equals("COMPLETED")) {
+                        if ("COMPLETED".equals(jo.getString("pathCompleteStatus"))) {
                             jo = new JSONObject(AntSportsRpcCall.queryBaseList());
-                            if (jo.getString("resultCode").equals("SUCCESS")) {
+                            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                                 JSONArray allPathBaseInfoList = jo.getJSONArray("allPathBaseInfoList");
                                 JSONArray otherAllPathBaseInfoList = jo.getJSONArray("otherAllPathBaseInfoList")
                                         .getJSONObject(0)
@@ -114,7 +126,7 @@ public class AntSports {
                             go(loader, day, rankCacheKey, canMoveStepCount, title);
                         }
                     }
-                } else if (s.equals("NOT_JOIN")) {
+                } else if ("NOT_JOIN".equals(s)) {
                     String firstJoinPathTitle = jo.getString("firstJoinPathTitle");
                     JSONArray allPathBaseInfoList = jo.getJSONArray("allPathBaseInfoList");
                     JSONArray otherAllPathBaseInfoList = jo.getJSONArray("otherAllPathBaseInfoList").getJSONObject(0)
@@ -167,7 +179,7 @@ public class AntSports {
                     s = AntSportsRpcCall.join(pathId);
                 }
                 jo = new JSONObject(s);
-                if (jo.getString("resultCode").equals("SUCCESS")) {
+                if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     Log.other("加入线路🚶🏻‍♂️[" + title + "]");
                     queryMyHomePage(loader);
                 } else {
@@ -186,9 +198,9 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.go(day, rankCacheKey, stepCount);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 Log.other("行走线路🚶🏻‍♂️[" + title + "]#前进了" + jo.getInt("goStepCount") + "步");
-                boolean completed = jo.getString("completeStatus").equals("COMPLETED");
+                boolean completed = "COMPLETED".equals(jo.getString("completeStatus"));
                 JSONArray ja = jo.getJSONArray("allTreasureBoxModelList");
                 for (int i = 0; i < ja.length(); i++) {
                     parseTreasureBoxModel(loader, ja.getJSONObject(i), rankCacheKey);
@@ -220,6 +232,10 @@ public class AntSports {
                 long delay = cot - now;
                 Log.recordLog("还有 " + delay + "ms 才能开宝箱", "");
                 if (delay < Config.checkInterval()) {
+                    if (waitOpenBoxNos.contains(boxNo)) {
+                        return;
+                    }
+                    waitOpenBoxNos.add(boxNo);
                     new Thread() {
                         long delay;
                         ClassLoader loader;
@@ -265,16 +281,17 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.openTreasureBox(boxNo, userId);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                waitOpenBoxNos.remove(boxNo);
                 JSONArray ja = jo.getJSONArray("treasureBoxAwards");
                 int num = 0;
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
                     num += jo.getInt("num");
-                   Log.other("运动宝箱🎁[" + num + jo.getString("name") + "]");
+                    Log.other("运动宝箱🎁[" + num + jo.getString("name") + "]");
                 }
                 return num;
-            } else if (jo.getString("resultCode").equals("TREASUREBOX_NOT_EXIST")) {
+            } else if ("TREASUREBOX_NOT_EXIST".equals(jo.getString("resultCode"))) {
                 Log.recordLog(jo.getString("resultDesc"), "");
                 return 1;
             } else {
@@ -291,7 +308,7 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.queryProjectList(0);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 int charityCoinCount = jo.getInt("charityCoinCount");
                 if (charityCoinCount < 10)
                     return;
@@ -299,7 +316,7 @@ public class AntSports {
                 JSONArray ja = jo.getJSONArray("data");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i).getJSONObject("basicModel");
-                    if (jo.getString("footballFieldStatus").equals("OPENING_DONATE")) {
+                    if ("OPENING_DONATE".equals(jo.getString("footballFieldStatus"))) {
                         donate(loader, charityCoinCount / 10 * 10, jo.getString("projectId"), jo.getString("title"));
                         break;
                     }
@@ -317,7 +334,7 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.donate(donateCharityCoin, projectId);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 Log.other("捐赠活动❤️[" + title + "][" + donateCharityCoin + "运动币]");
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
@@ -332,7 +349,7 @@ public class AntSports {
         try {
             String s = AntSportsRpcCall.queryWalkStep();
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 jo = jo.getJSONObject("dailyStepModel");
                 int produceQuantity = jo.getInt("produceQuantity");
                 int hour = Integer.parseInt(Log.getFormatTime().split(":")[0]);
@@ -373,6 +390,239 @@ public class AntSports {
             }
         } catch (Throwable t) {
             Log.i(TAG, "queryWalkStep err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    /* 文体中心 */// SPORTS_DAILY_SIGN_GROUP SPORTS_DAILY_GROUP
+    private static void userTaskGroupQuery(String groupId) {
+        try {
+            String s = AntSportsRpcCall.userTaskGroupQuery(groupId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                jo = jo.getJSONObject("group");
+                JSONArray userTaskList = jo.getJSONArray("userTaskList");
+                for (int i = 0; i < userTaskList.length(); i++) {
+                    jo = userTaskList.getJSONObject(i);
+                    if (!"TODO".equals(jo.getString("status")))
+                        continue;
+                    JSONObject taskInfo = jo.getJSONObject("taskInfo");
+                    String bizType = taskInfo.getString("bizType");
+                    String taskId = taskInfo.getString("taskId");
+                    jo = new JSONObject(AntSportsRpcCall.userTaskComplete(bizType, taskId));
+                    if (jo.getBoolean("success")) {
+                        String taskName = taskInfo.optString("taskName", taskId);
+                        Log.other("完成任务🧾[" + taskName + "]");
+                    } else {
+                        Log.recordLog("文体每日任务", jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog("文体每日任务", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "userTaskGroupQuery err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void participate() {
+        try {
+            String s = AntSportsRpcCall.queryAccount();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                double balance = jo.getDouble("balance");
+                if (balance < 100)
+                    return;
+                jo = new JSONObject(AntSportsRpcCall.queryRoundList());
+                if (jo.getBoolean("success")) {
+                    JSONArray dataList = jo.getJSONArray("dataList");
+                    for (int i = 0; i < dataList.length(); i++) {
+                        jo = dataList.getJSONObject(i);
+                        if (!"P".equals(jo.getString("status")))
+                            continue;
+                        if (jo.has("userRecord"))
+                            continue;
+                        JSONArray instanceList = jo.getJSONArray("instanceList");
+                        int pointOptions = 0;
+                        String roundId = jo.getString("id");
+                        String InstanceId = null;
+                        String ResultId = null;
+                        for (int j = instanceList.length() - 1; j >= 0; j--) {
+                            jo = instanceList.getJSONObject(j);
+                            if (jo.getInt("pointOptions") < pointOptions)
+                                continue;
+                            pointOptions = jo.getInt("pointOptions");
+                            InstanceId = jo.getString("id");
+                            ResultId = jo.getString("instanceResultId");
+                        }
+                        jo = new JSONObject(AntSportsRpcCall.participate(pointOptions, InstanceId, ResultId, roundId));
+                        if (jo.getBoolean("success")) {
+                            jo = jo.getJSONObject("data");
+                            String roundDescription = jo.getString("roundDescription");
+                            int targetStepCount = jo.getInt("targetStepCount");
+                            Log.other("走路挑战🚶🏻‍♂️[" + roundDescription + "]#" + targetStepCount);
+                        } else {
+                            Log.recordLog("走路挑战赛", jo.toString());
+                        }
+                    }
+                } else {
+                    Log.recordLog("queryRoundList", jo.toString());
+                }
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "participate err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void userTaskRightsReceive() {
+        try {
+            String s = AntSportsRpcCall.userTaskGroupQuery("SPORTS_DAILY_GROUP");
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                jo = jo.getJSONObject("group");
+                JSONArray userTaskList = jo.getJSONArray("userTaskList");
+                for (int i = 0; i < userTaskList.length(); i++) {
+                    jo = userTaskList.getJSONObject(i);
+                    if (!"COMPLETED".equals(jo.getString("status")))
+                        continue;
+                    String userTaskId = jo.getString("userTaskId");
+                    JSONObject taskInfo = jo.getJSONObject("taskInfo");
+                    String taskId = taskInfo.getString("taskId");
+                    jo = new JSONObject(AntSportsRpcCall.userTaskRightsReceive(taskId, userTaskId));
+                    if (jo.getBoolean("success")) {
+                        String taskName = taskInfo.optString("taskName", taskId);
+                        JSONArray rightsRuleList = taskInfo.getJSONArray("rightsRuleList");
+                        StringBuilder award = new StringBuilder();
+                        for (int j = 0; j < rightsRuleList.length(); j++) {
+                            jo = rightsRuleList.getJSONObject(j);
+                            award.append(jo.getString("rightsName")).append("*").append(jo.getInt("baseAwardCount"));
+                        }
+                        Log.other("领取奖励🎖️[" + taskName + "]#" + award);
+                    } else {
+                        Log.recordLog("文体中心领取奖励", jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog("文体中心领取奖励", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "userTaskRightsReceive err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void pathFeatureQuery() {
+        try {
+            String s = AntSportsRpcCall.pathFeatureQuery();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject path = jo.getJSONObject("path");
+                String pathId = path.getString("pathId");
+                String title = path.getString("title");
+                int minGoStepCount = path.getInt("minGoStepCount");
+                if (jo.has("userPath")) {
+                    JSONObject userPath = jo.getJSONObject("userPath");
+                    FriendIdMap.currentUid = userPath.getString("userId");
+                    String userPathRecordStatus = userPath.getString("userPathRecordStatus");
+                    if ("COMPLETED".equals(userPathRecordStatus)) {
+                        pathMapHomepage(pathId);
+                        pathMapJoin(title, pathId);
+                    } else if ("GOING".equals(userPathRecordStatus)) {
+                        pathMapHomepage(pathId);
+                        String countDate = Log.getFormatDate();
+                        jo = new JSONObject(AntSportsRpcCall.stepQuery(countDate, pathId));
+                        if (jo.getBoolean("success")) {
+                            int canGoStepCount = jo.getInt("canGoStepCount");
+                            if (canGoStepCount >= minGoStepCount) {
+                                String userPathRecordId = userPath.getString("userPathRecordId");
+                                tiyubizGo(countDate, title, canGoStepCount, pathId, userPathRecordId);
+                            }
+                        }
+                    }
+                } else {
+                    pathMapJoin(title, pathId);
+                }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "pathFeatureQuery err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void pathMapHomepage(String pathId) {
+        try {
+            String s = AntSportsRpcCall.pathMapHomepage(pathId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                if (!jo.has("userPathGoRewardList"))
+                    return;
+                JSONArray userPathGoRewardList = jo.getJSONArray("userPathGoRewardList");
+                for (int i = 0; i < userPathGoRewardList.length(); i++) {
+                    jo = userPathGoRewardList.getJSONObject(i);
+                    if (!"UNRECEIVED".equals(jo.getString("status")))
+                        continue;
+                    String userPathRewardId = jo.getString("userPathRewardId");
+                    jo = new JSONObject(AntSportsRpcCall.rewardReceive(pathId, userPathRewardId));
+                    if (jo.getBoolean("success")) {
+                        jo = jo.getJSONObject("userPathRewardDetail");
+                        JSONArray rightsRuleList = jo.getJSONArray("userPathRewardRightsList");
+                        StringBuilder award = new StringBuilder();
+                        for (int j = 0; j < rightsRuleList.length(); j++) {
+                            jo = rightsRuleList.getJSONObject(j).getJSONObject("rightsContent");
+                            award.append(jo.getString("name")).append("*").append(jo.getInt("count"));
+                        }
+                        Log.other("文体宝箱🎁[" + award + "]");
+                    } else {
+                        Log.recordLog("文体中心开宝箱", jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog("文体中心开宝箱", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "pathMapHomepage err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void pathMapJoin(String title, String pathId) {
+        try {
+            JSONObject jo = new JSONObject(AntSportsRpcCall.pathMapJoin(pathId));
+            if (jo.getBoolean("success")) {
+                Log.other("加入线路🚶🏻‍♂️[" + title + "]");
+                pathFeatureQuery();
+            } else {
+                Log.i(TAG, jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "pathMapJoin err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void tiyubizGo(String countDate, String title, int goStepCount, String pathId,
+            String userPathRecordId) {
+        try {
+            String s = AntSportsRpcCall.tiyubizGo(countDate, goStepCount, pathId, userPathRecordId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                jo = jo.getJSONObject("userPath");
+                Log.other("行走线路🚶🏻‍♂️[" + title + "]#前进了" + jo.getInt("userPathRecordForwardStepCount") + "步");
+                pathMapHomepage(pathId);
+                boolean completed = "COMPLETED".equals(jo.getString("userPathRecordStatus"));
+                if (completed) {
+                    Log.other("完成线路🚶🏻‍♂️[" + title + "]");
+                    pathFeatureQuery();
+                }
+            } else {
+                Log.i(TAG, s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "tiyubizGo err:");
             Log.printStackTrace(TAG, t);
         }
     }

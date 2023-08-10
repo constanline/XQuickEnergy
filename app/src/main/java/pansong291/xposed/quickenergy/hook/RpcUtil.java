@@ -13,8 +13,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Objects;
 
-public class RpcUtil
-{
+public class RpcUtil {
     private static final String TAG = RpcUtil.class.getCanonicalName();
     private static Method rpcCallMethod;
     private static Method getResponseMethod;
@@ -23,7 +22,7 @@ public class RpcUtil
     public static boolean isInterrupted = false;
 
     public static void init(ClassLoader loader) {
-        if(rpcCallMethod == null) {
+        if (rpcCallMethod == null) {
             try {
                 Class<?> h5PageClazz = loader.loadClass(ClassMember.com_alipay_mobile_h5container_api_H5Page);
                 Class<?> jsonClazz = loader.loadClass(ClassMember.com_alibaba_fastjson_JSONObject);
@@ -88,20 +87,20 @@ public class RpcUtil
                 }
             } catch (Throwable ignored) { }
             return str;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "invoke err:");
             Log.printStackTrace(TAG, t);
-            if(t instanceof InvocationTargetException) {
+            if (t instanceof InvocationTargetException) {
                 String msg = t.getCause().getMessage();
                 if (!StringUtil.isEmpty(msg)) {
                     if (msg.contains("登录超时")) {
                         isInterrupted = true;
                         AntForestNotification.setContentText("登录超时");
-                        if(AntForestToast.context != null) {
+                        if (AntForestToast.context != null) {
                             if (Config.timeoutRestart()) {
                                 Log.recordLog("尝试重启！");
                                 if (Config.timeoutType() == XposedHook.StayAwakeType.ALARM) {
-                                    XposedHook.alarmHook(AntForestToast.context, 3000,true);
+                                    XposedHook.alarmHook(AntForestToast.context, 3000, true);
                                 } else {
                                     XposedHook.alarmBroadcast(AntForestToast.context, 3000, true);
                                 }
@@ -124,7 +123,7 @@ public class RpcUtil
     }
 
     public static String getResponse(Object resp) throws Throwable {
-        if(getResponseMethod == null)
+        if (getResponseMethod == null)
             getResponseMethod = resp.getClass().getMethod(ClassMember.getResponse);
 
         return (String) getResponseMethod.invoke(resp);

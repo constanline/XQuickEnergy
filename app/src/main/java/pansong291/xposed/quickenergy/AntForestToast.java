@@ -2,6 +2,7 @@ package pansong291.xposed.quickenergy;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
@@ -15,7 +16,7 @@ public class AntForestToast {
 
     public static void show(CharSequence cs) {
         try {
-            if(context != null && Config.showToast()) {
+            if (context != null && Config.showToast()) {
                 XposedHook.handler.post(
                         new Runnable() {
                             CharSequence cs;
@@ -28,15 +29,17 @@ public class AntForestToast {
                             @Override
                             public void run() {
                                 try {
-                                    Toast.makeText(context, cs, Toast.LENGTH_SHORT).show();
-                                } catch(Throwable t) {
+                                    Toast toast = Toast.makeText(context, cs, Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, Config.toastOffsetY());
+                                    toast.show();
+                                } catch (Throwable t) {
                                     Log.i(TAG, "show.run err:");
                                     Log.printStackTrace(TAG, t);
                                 }
                             }
                         }.setData(cs));
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "show err:");
             Log.printStackTrace(TAG, t);
         }

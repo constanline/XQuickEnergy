@@ -43,8 +43,9 @@ public class SettingsActivity extends Activity {
             sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend,
             sw_receivePoint, sw_openTreasureBox, sw_donateCharityCoin,
             sw_kbSignIn, sw_limitCollect, sw_doubleCard, sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick,
+            sw_tiyubiz,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
-            sw_kitchen, sw_antOcean;
+            sw_kitchen, sw_antOcean, sw_userPatrol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,8 @@ public class SettingsActivity extends Activity {
     }
 
     private void setCurrentTab(int lastView, int currentView) {
-        if (lastView == currentView) return;
+        if (lastView == currentView)
+            return;
         if (lastView < currentView) {
             tabHost.getCurrentView().startAnimation(slideLeftOut);
         } else {
@@ -89,6 +91,7 @@ public class SettingsActivity extends Activity {
             tabHost.getCurrentView().startAnimation(slideLeftIn);
         }
     }
+
     private void initFlipper() {
         slideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
         slideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
@@ -189,9 +192,11 @@ public class SettingsActivity extends Activity {
         sw_doubleCard = findViewById(R.id.sw_doubleCard);
         sw_ExchangeEnergyDoubleClick = findViewById(R.id.sw_ExchangeEnergyDoubleClick);
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
+        sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
         sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
         sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
         sw_antOcean = findViewById(R.id.sw_antOcean);
+        sw_userPatrol = findViewById(R.id.sw_userPatrol);
     }
 
     @Override
@@ -235,183 +240,196 @@ public class SettingsActivity extends Activity {
         sw_doubleCard.setChecked(Config.doubleCard());
         sw_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
+        sw_tiyubiz.setChecked(Config.tiyubiz());
         sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         sw_antdodoCollect.setChecked(Config.antdodoCollect());
         sw_antOcean.setChecked(Config.antOcean());
+        sw_userPatrol.setChecked(Config.userPatrol());
     }
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
         if (v instanceof Switch) {
-            Switch cb = (Switch) v;
+            Switch sw = (Switch) v;
             switch (v.getId()) {
                 case R.id.sw_immediateEffect:
-                    Config.setImmediateEffect(cb.isChecked());
+                    Config.setImmediateEffect(sw.isChecked());
                     break;
 
                 case R.id.sw_recordLog:
-                    Config.setRecordLog(cb.isChecked());
+                    Config.setRecordLog(sw.isChecked());
                     break;
 
                 case R.id.sw_showToast:
-                    Config.setShowToast(cb.isChecked());
+                    Config.setShowToast(sw.isChecked());
                     break;
 
                 case R.id.sw_stayAwake:
-                    Config.setStayAwake(cb.isChecked());
+                    Config.setStayAwake(sw.isChecked());
                     break;
 
                 case R.id.sw_timeoutRestart:
-                    Config.setTimeoutRestart(cb.isChecked());
+                    Config.setTimeoutRestart(sw.isChecked());
                     break;
 
                 case R.id.sw_startAt7:
-                    Config.setStartAt7(this.getApplicationContext(), cb.isChecked());
+                    Config.setStartAt7(this.getApplicationContext(), sw.isChecked());
                     break;
 
                 case R.id.sw_collectEnergy:
-                    Config.setCollectEnergy(cb.isChecked());
+                    Config.setCollectEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectWateringBubble:
-                    Config.setCollectWateringBubble(cb.isChecked());
+                    Config.setCollectWateringBubble(sw.isChecked());
                     break;
 
                 case R.id.sw_limitCollect:
-                    Config.setLimitCollect(cb.isChecked());
+                    Config.setLimitCollect(sw.isChecked());
                     break;
 
                 case R.id.sw_doubleCard:
-                    Config.setDoubleCard(cb.isChecked());
+                    Config.setDoubleCard(sw.isChecked());
                     break;
 
                 case R.id.sw_helpFriendCollect:
-                    Config.setHelpFriendCollect(cb.isChecked());
+                    Config.setHelpFriendCollect(sw.isChecked());
                     break;
 
                 case R.id.sw_receiveForestTaskAward:
-                    Config.setReceiveForestTaskAward(cb.isChecked());
+                    Config.setReceiveForestTaskAward(sw.isChecked());
                     break;
 
                 case R.id.sw_cooperateWater:
-                    Config.setCooperateWater(cb.isChecked());
+                    Config.setCooperateWater(sw.isChecked());
                     break;
 
                 case R.id.sw_ancientTree:
-                    Config.setAncientTree(cb.isChecked());
+                    Config.setAncientTree(sw.isChecked());
                     break;
 
                 case R.id.sw_energyRain:
-                    Config.setEnergyRain(cb.isChecked());
+                    Config.setEnergyRain(sw.isChecked());
                     break;
 
                 case R.id.sw_ExchangeEnergyDoubleClick:
-                    Config.setExchangeEnergyDoubleClick(cb.isChecked());
+                    Config.setExchangeEnergyDoubleClick(sw.isChecked());
                     break;
 
                 case R.id.sw_reserve:
-                    Config.setReserve(cb.isChecked());
+                    Config.setReserve(sw.isChecked());
                     break;
 
                 case R.id.sw_beach:
-                    Config.setBeach(cb.isChecked());
+                    Config.setBeach(sw.isChecked());
                     break;
 
                 case R.id.sw_enableFarm:
-                    Config.setEnableFarm(cb.isChecked());
+                    Config.setEnableFarm(sw.isChecked());
                     break;
 
                 case R.id.sw_rewardFriend:
-                    Config.setRewardFriend(cb.isChecked());
+                    Config.setRewardFriend(sw.isChecked());
                     break;
 
                 case R.id.sw_sendBackAnimal:
-                    Config.setSendBackAnimal(cb.isChecked());
+                    Config.setSendBackAnimal(sw.isChecked());
                     break;
 
                 case R.id.sw_receiveFarmToolReward:
-                    Config.setReceiveFarmToolReward(cb.isChecked());
+                    Config.setReceiveFarmToolReward(sw.isChecked());
                     break;
 
                 case R.id.sw_recordFarmGame:
-                    Config.setRecordFarmGame(cb.isChecked());
+                    Config.setRecordFarmGame(sw.isChecked());
                     break;
 
                 case R.id.sw_kitchen:
-                    Config.setKitchen(cb.isChecked());
+                    Config.setKitchen(sw.isChecked());
                     break;
 
                 case R.id.sw_useNewEggTool:
-                    Config.setUseNewEggTool(cb.isChecked());
+                    Config.setUseNewEggTool(sw.isChecked());
                     break;
 
                 case R.id.sw_harvestProduce:
-                    Config.setHarvestProduce(cb.isChecked());
+                    Config.setHarvestProduce(sw.isChecked());
                     break;
 
                 case R.id.sw_donation:
-                    Config.setDonation(cb.isChecked());
+                    Config.setDonation(sw.isChecked());
                     break;
 
                 case R.id.sw_answerQuestion:
-                    Config.setAnswerQuestion(cb.isChecked());
+                    Config.setAnswerQuestion(sw.isChecked());
                     break;
 
                 case R.id.sw_receiveFarmTaskAward:
-                    Config.setReceiveFarmTaskAward(cb.isChecked());
+                    Config.setReceiveFarmTaskAward(sw.isChecked());
                     break;
 
                 case R.id.sw_feedAnimal:
-                    Config.setFeedAnimal(cb.isChecked());
+                    Config.setFeedAnimal(sw.isChecked());
                     break;
 
                 case R.id.sw_useAccelerateTool:
-                    Config.setUseAccelerateTool(cb.isChecked());
+                    Config.setUseAccelerateTool(sw.isChecked());
                     break;
 
                 case R.id.sw_notifyFriend:
-                    Config.setNotifyFriend(cb.isChecked());
+                    Config.setNotifyFriend(sw.isChecked());
                     break;
 
                 case R.id.sw_receivePoint:
-                    Config.setReceivePoint(cb.isChecked());
+                    Config.setReceivePoint(sw.isChecked());
                     break;
 
                 case R.id.sw_openTreasureBox:
-                    Config.setOpenTreasureBox(cb.isChecked());
+                    Config.setOpenTreasureBox(sw.isChecked());
                     break;
 
                 case R.id.sw_receiveCoinAsset:
-                    Config.setReceiveCoinAsset(cb.isChecked());
+                    Config.setReceiveCoinAsset(sw.isChecked());
                     break;
 
                 case R.id.sw_donateCharityCoin:
-                    Config.setDonateCharityCoin(cb.isChecked());
+                    Config.setDonateCharityCoin(sw.isChecked());
                     break;
 
                 case R.id.sw_kbSignIn:
-                    Config.setKbSginIn(cb.isChecked());
+                    Config.setKbSginIn(sw.isChecked());
                     break;
 
                 case R.id.sw_ecoLifeTick:
-                    Config.setEcoLifeTick(cb.isChecked());
+                    Config.setEcoLifeTick(sw.isChecked());
+                    break;
+
+                case R.id.sw_tiyubiz:
+                    Config.setTiyubiz(sw.isChecked());
                     break;
 
                 case R.id.sw_ancientTreeOnlyWeek:
-                    Config.setAncientTreeOnlyWeek(cb.isChecked());
+                    Config.setAncientTreeOnlyWeek(sw.isChecked());
                     break;
 
                 case R.id.sw_antdodoCollect:
-                    Config.setAntdodoCollect(cb.isChecked());
+                    Config.setAntdodoCollect(sw.isChecked());
                     break;
 
                 case R.id.sw_antOcean:
-                    Config.setAntOcean(cb.isChecked());
+                    Config.setAntOcean(sw.isChecked());
+                    break;
+
+                case R.id.sw_userPatrol:
+                    Config.setUserPatrol(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
             Button btn = (Button) v;
             switch (v.getId()) {
+                case R.id.btn_toastOffsetY:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.TOAST_OFFSET_Y);
+                    break;
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -449,7 +467,8 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_doubleCardTime:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME,
+                            this.getString(R.string.use_double_card_time_desc));
                     break;
 
                 case R.id.btn_returnWater30:
@@ -514,6 +533,9 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_recallAnimalType:
                     ChoiceDialog.showRecallAnimalType(this, btn.getText());
                     break;
+                case R.id.btn_farmGameTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.FARM_GAME_TIME);
+                    break;
 
                 case R.id.btn_feedFriendAnimalList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(), Config.getFeedFriendCountList());
@@ -562,7 +584,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(Config.hasChanged) {
+        if (Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
             Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();
         }

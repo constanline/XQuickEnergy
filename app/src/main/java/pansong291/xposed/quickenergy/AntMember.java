@@ -23,7 +23,7 @@ public class AntMember {
                     if (Statistics.canMemberSignInToday()) {
                         String s = AntMemberRpcCall.memberSignIn();
                         JSONObject jo = new JSONObject(s);
-                        if (jo.getString("resultCode").equals("SUCCESS")) {
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.other("每日签到📅[" + jo.getString("signinPoint") + "积分]#已签到" + jo.getString("signinSumDay")
                                     + "天");
                             Statistics.memberSignInToday();
@@ -70,7 +70,7 @@ public class AntMember {
         try {
             String s = AntMemberRpcCall.queryPointCert(page, pageSize);
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 boolean hasNextPage = jo.getBoolean("hasNextPage");
                 JSONArray jaCertList = jo.getJSONArray("certList");
                 for (int i = 0; i < jaCertList.length(); i++) {
@@ -80,7 +80,7 @@ public class AntMember {
                     int pointAmount = jo.getInt("pointAmount");
                     s = AntMemberRpcCall.receivePointByUser(id);
                     jo = new JSONObject(s);
-                    if (jo.getString("resultCode").equals("SUCCESS")) {
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         Log.other("领取奖励🎖️[" + bizTitle + "]#" + pointAmount + "积分");
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), s);

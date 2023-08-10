@@ -17,7 +17,7 @@ public class Reserve {
     private static boolean firstTime = true;
 
     public static void start() {
-        if (!Config.reserve() && !Config.beach())
+        if ((!Config.reserve() || !firstTime) && !Config.beach())
             return;
         Log.recordLog("开始检测保护地", "");
         new Thread() {
@@ -51,16 +51,16 @@ public class Reserve {
                 s = ReserveRpcCall.queryTreeItemsForExchange();
             }
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONObject userBaseInfo = jo.getJSONObject("userBaseInfo");
                 JSONArray ja = jo.getJSONArray("treeItems");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
                     if (!jo.has("projectType"))
                         continue;
-                    if (!jo.getString("projectType").equals("RESERVE"))
+                    if (!"RESERVE".equals(jo.getString("projectType")))
                         continue;
-                    if (!jo.getString("applyAction").equals("AVAILABLE"))
+                    if (!"AVAILABLE".equals(jo.getString("applyAction")))
                         continue;
                     String projectId = jo.getString("itemId");
                     String itemName = jo.getString("itemName");
@@ -131,10 +131,6 @@ public class Reserve {
             if (!canApply)
                 return;
             for (int applyCount = 1; applyCount <= count; applyCount++) {
-                /*
-                 * if (!Statistics.canReserveToday(projectId, count))
-                 * continue;
-                 */
                 s = ReserveRpcCall.exchangeTree(projectId);
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -158,6 +154,8 @@ public class Reserve {
                 } else {
                     Thread.sleep(200);
                 }
+                if (!Statistics.canReserveToday(projectId, count))
+                    break;
             }
         } catch (Throwable t) {
             Log.i(TAG, "exchangeTree err:");
@@ -175,15 +173,15 @@ public class Reserve {
                 s = ReserveRpcCall.queryCultivationList();
             }
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray ja = jo.getJSONArray("cultivationItemVOList");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
                     if (!jo.has("templateSubType"))
                         continue;
-                    if (!jo.getString("templateSubType").equals("BEACH"))
+                    if (!"BEACH".equals(jo.getString("templateSubType")))
                         continue;
-                    if (!jo.getString("applyAction").equals("AVAILABLE"))
+                    if (!"AVAILABLE".equals(jo.getString("applyAction")))
                         continue;
                     String cultivationName = jo.getString("cultivationName");
                     String templateCode = jo.getString("templateCode");
@@ -260,14 +258,14 @@ public class Reserve {
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     JSONArray awardInfos = jo.getJSONArray("rewardItemVOs");
-                    String award = "";
+                    StringBuilder award = new StringBuilder();
                     for (int i = 0; i < awardInfos.length(); i++) {
                         jo = awardInfos.getJSONObject(i);
-                        award = award + jo.getString("name") + "*" + jo.getInt("num");
+                        award.append(jo.getString("name")).append("*").append(jo.getInt("num"));
                     }
                     appliedTimes = Statistics.getBeachTimes(cultivationCode) + 1;
                     String str = "净滩行动🏖️[" + itemName + "]#第" + appliedTimes + "次"
-                            + "-获得奖励" + award ;
+                            + "-获得奖励" + award;
                     Log.forest(str);
                     Statistics.beachRecord(cultivationCode, 1);
                 } else {
@@ -284,6 +282,8 @@ public class Reserve {
                 } else {
                     Thread.sleep(200);
                 }
+                if (!Statistics.canBeach(cultivationCode, count) || !Statistics.canBeachToday(cultivationCode))
+                    break;
             }
         } catch (Throwable t) {
             Log.i(TAG, "oceanExchangeTree err:");

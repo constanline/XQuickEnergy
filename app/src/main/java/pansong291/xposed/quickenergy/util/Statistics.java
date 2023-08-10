@@ -589,8 +589,8 @@ public class Statistics {
             stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
-
-        stat.dailyAnswerList = new HashSet<>();
+        if (stat.dailyAnswerList == null)
+            stat.dailyAnswerList = new HashSet<>();
         return stat;
     }
 
@@ -772,8 +772,8 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formatted = statistics2Json(stat);
-        if (!formatted.equals(json)) {
+        String formatted  = statistics2Json(stat);
+        if (!formatted .equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
             FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }

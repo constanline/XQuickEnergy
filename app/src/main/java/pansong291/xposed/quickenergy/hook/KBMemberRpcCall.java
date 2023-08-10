@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
-public class KBMemberRpcCall
-{
+public class KBMemberRpcCall {
     private static final String version = "2.0";
 
     public static String rpcCall_signIn() {

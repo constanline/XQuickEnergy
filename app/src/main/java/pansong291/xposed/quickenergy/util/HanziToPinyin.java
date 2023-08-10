@@ -13,7 +13,8 @@ import java.util.Locale;
 public class HanziToPinyin {
     private static final String TAG = "HanziToPinyin";
     /**
-     * Unihans array. Each unihans is the first one within same pinyin. Use it to determine pinyin
+     * Unihans array. Each unihans is the first one within same pinyin. Use it to
+     * determine pinyin
      * for all ~20k unihans.
      */
     public static final char[] UNIHANS = {
@@ -70,7 +71,8 @@ public class HanziToPinyin {
             '宒', '卓', '孜', '宗', '邹', '租', '钻', '厜',
             '尊', '昨', };
     /**
-     * Pinyin array. Each pinyin is corresponding to unihans of same offset in the unihans array.
+     * Pinyin array. Each pinyin is corresponding to unihans of same offset in the
+     * unihans array.
      */
     public static final byte[][] PINYINS = {
             { 65, 0, 0, 0, 0, 0 }, { 65, 73, 0, 0, 0, 0 }, { 65, 78, 0, 0, 0, 0 },
@@ -209,7 +211,9 @@ public class HanziToPinyin {
             { 90, 72, 85, 79, 0, 0 }, { 90, 73, 0, 0, 0, 0 }, { 90, 79, 78, 71, 0, 0 },
             { 90, 79, 85, 0, 0, 0 }, { 90, 85, 0, 0, 0, 0 }, { 90, 85, 65, 78, 0, 0 },
             { 90, 85, 73, 0, 0, 0 }, { 90, 85, 78, 0, 0, 0 }, { 90, 85, 79, 0, 0, 0 }, };
-    /** First and last Chinese character with known Pinyin according to zh collation */
+    /**
+     * First and last Chinese character with known Pinyin according to zh collation
+     */
     private static final String FIRST_PINYIN_UNIHAN = "阿";
     private static final String LAST_PINYIN_UNIHAN = "蓙";
     /** The first Chinese character in Unicode block */
@@ -217,17 +221,21 @@ public class HanziToPinyin {
     private static final Collator COLLATOR = Collator.getInstance(Locale.CHINA);
     private static HanziToPinyin sInstance;
     private final boolean mHasChinaCollator;
+
     public static class Token {
         public static final int LATIN = 1;
         public static final int PINYIN = 2;
         public static final int UNKNOWN = 3;
+
         public Token() {
         }
+
         public Token(int type, String source, String target) {
             this.type = type;
             this.source = source;
             this.target = target;
         }
+
         /**
          * Type of this token, ASCII, PINYIN or UNKNOWN.
          */
@@ -237,29 +245,32 @@ public class HanziToPinyin {
          */
         public String source;
         /**
-         * Translated string of source. For Han, target is corresponding Pinyin. Otherwise target is
+         * Translated string of source. For Han, target is corresponding Pinyin.
+         * Otherwise target is
          * original string in source.
          */
         public String target;
     }
+
     protected HanziToPinyin(boolean hasChinaCollator) {
         mHasChinaCollator = hasChinaCollator;
     }
+
     public static HanziToPinyin getInstance() {
         synchronized (HanziToPinyin.class) {
             if (sInstance != null) {
                 return sInstance;
             }
-//            // Check if zh_CN collation data is available
-//            final Locale[] locale = Collator.getAvailableLocales();
-//            for (Locale value : locale) {
-//                if (value.equals(Locale.CHINA)) {
-//                    sInstance = new HanziToPinyin(true);
-//                    return sInstance;
-//                }
-//            }
-//            Log.w(TAG, "There is no Chinese collator, HanziToPinyin is disabled");
-//            sInstance = new HanziToPinyin(false);
+            // // Check if zh_CN collation data is available
+            // final Locale[] locale = Collator.getAvailableLocales();
+            // for (Locale value : locale) {
+            // if (value.equals(Locale.CHINA)) {
+            // sInstance = new HanziToPinyin(true);
+            // return sInstance;
+            // }
+            // }
+            // Log.w(TAG, "There is no Chinese collator, HanziToPinyin is disabled");
+            // sInstance = new HanziToPinyin(false);
             sInstance = new HanziToPinyin(true);
             return sInstance;
         }
@@ -329,9 +340,12 @@ public class HanziToPinyin {
             throw th;
         }
     }
+
     /**
-     * Convert the input to a array of tokens. The sequence of ASCII or Unknown characters without
-     * space will be put into a Token, One Hanzi character which has pinyin will be treated as a
+     * Convert the input to a array of tokens. The sequence of ASCII or Unknown
+     * characters without
+     * space will be put into a Token, One Hanzi character which has pinyin will be
+     * treated as a
      * Token. If these is no China collator, the empty token array is returned.
      */
     public ArrayList<Token> get(final String input) {
@@ -393,6 +407,7 @@ public class HanziToPinyin {
             throw th;
         }
     }
+
     private void addToken(
             final StringBuilder sb, final ArrayList<Token> tokens, final int tokenType) {
         String str = sb.toString();
