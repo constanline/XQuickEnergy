@@ -1,4 +1,4 @@
-package pansong291.xposed.quickenergy.ui;
+package pansong291.xposed.quickenergy.entity;
 
 import pansong291.xposed.quickenergy.util.HanziToPinyin;
 

@@ -200,7 +200,7 @@ public class AntFarmRpcCall {
     }
 
     public static String recordFarmGame(String gameType) {
-        String uuid = getuuid();
+        String uuid = getUuid();
         String md5String = getMD5(uuid);
         int score = RandomScore(gameType);
         return RpcUtil.request("com.alipay.antfarm.recordFarmGame",
@@ -210,11 +210,10 @@ public class AntFarmRpcCall {
                         + "\"}]");
     }
 
-    private static String getuuid() {
-        String[] split;
+    private static String getUuid() {
         StringBuilder sb = new StringBuilder();
         for (String str : UUID.randomUUID().toString().split("-")) {
-            sb.append(str.substring(str.length() / 2, str.length()));
+            sb.append(str.substring(str.length() / 2));
         }
         return sb.toString();
     }
@@ -224,7 +223,7 @@ public class AntFarmRpcCall {
             // 得到一个信息摘要器
             MessageDigest digest = MessageDigest.getInstance("md5");
             byte[] result = digest.digest(password.getBytes());
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder  buffer = new StringBuilder ();
             // 把没一个byte 做一个与运算 0xff;
             for (byte b : result) {
                 // 与运算
@@ -311,7 +310,7 @@ public class AntFarmRpcCall {
     }
 
     /* 惊喜礼包 */
-        public static String drawLotteryPlus() {
+    public static String drawLotteryPlus() {
         return RpcUtil.request("com.alipay.antfarm.drawLotteryPlus",
                 "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5 \",\"version\":\"\"}]");
     }

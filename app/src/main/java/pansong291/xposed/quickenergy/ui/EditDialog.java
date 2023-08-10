@@ -15,10 +15,15 @@ public class EditDialog {
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION ,EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT }
     private static EditMode mode;
 
-    public static void showEditDialog(Context c, CharSequence title, EditMode em) {
+    public static void showEditDialog(Context c, CharSequence title, EditMode em, String msg) {
         mode = em;
         AlertDialog editDialog = getEditDialog(c);
-        editDialog.setTitle(title);
+        if (msg != null) {
+            editDialog.setTitle(title);
+            editDialog.setMessage(msg);
+        } else {
+            editDialog.setTitle(title);
+        }
         editDialog.show();
     }
 

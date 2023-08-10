@@ -48,7 +48,7 @@ public class AntOcean {
             JSONObject joHomePage = new JSONObject(AntOceanRpcCall.queryHomePage());
             if ("SUCCESS".equals(joHomePage.getString("resultCode"))) {
                 if (Config.collectEnergy() && joHomePage.has("bubbleVOList")) {
-                    collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
+                    // collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
                 }
 
                 JSONObject userInfoVO = joHomePage.getJSONObject("userInfoVO");
@@ -371,7 +371,7 @@ public class AntOcean {
         try {
             String s = AntOceanRpcCall.queryTaskList();
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray jaTaskList = jo.getJSONArray("antOceanTaskVOList");
                 for (int i = 0; i < jaTaskList.length(); i++) {
                     jo = jaTaskList.getJSONObject(i);
@@ -403,7 +403,7 @@ public class AntOcean {
         try {
             String s = AntOceanRpcCall.queryTaskList();
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray jaTaskList = jo.getJSONArray("antOceanTaskVOList");
                 for (int i = 0; i < jaTaskList.length(); i++) {
                     jo = jaTaskList.getJSONObject(i);
@@ -416,7 +416,7 @@ public class AntOcean {
                     if (jo.getBoolean("success")) {
                         String taskTitle = bizInfo.optString("taskTitle", taskType);
                         String taskDesc = bizInfo.optString("taskDesc", taskType);
-                        Log.forest("领取奖励🎖️[" + taskTitle + "]#" + taskDesc );
+                        Log.forest("领取奖励🎖️[" + taskTitle + "]#" + taskDesc);
                     } else {
                         Log.recordLog(jo.getString("desc"), jo.toString());
                     }

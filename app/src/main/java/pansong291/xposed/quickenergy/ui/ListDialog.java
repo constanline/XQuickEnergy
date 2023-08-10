@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,12 +16,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.entity.AlipayUser;
+import pansong291.xposed.quickenergy.entity.CityCode;
+import pansong291.xposed.quickenergy.entity.CooperateUser;
+import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 
-public class ListDialog
-{
+public class ListDialog {
     static AlertDialog listDialog;
     static Button btn_find_last, btn_find_next;
     static EditText edt_find;
@@ -36,7 +40,8 @@ public class ListDialog
     static AlertDialog optionsDialog;
     static AlertDialog deleteDialog;
 
-    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl, List<Integer> cl) {
+    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl,
+            List<Integer> cl) {
         selectedList = sl;
         countList = cl;
         ListAdapter la = ListAdapter.get(c);
@@ -48,7 +53,7 @@ public class ListDialog
     private static void showListDialog(Context c, CharSequence title) {
         try {
             getListDialog(c).show();
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             listDialog = null;
             getListDialog(c).show();
         }
@@ -56,7 +61,7 @@ public class ListDialog
     }
 
     private static AlertDialog getListDialog(Context c) {
-        if(listDialog == null)
+        if (listDialog == null || listDialog.getContext() != c)
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(getListView(c))
@@ -66,15 +71,13 @@ public class ListDialog
                 new OnShowListener() {
                     Context c;
 
-                    public OnShowListener setContext(Context c)
-                    {
+                    public OnShowListener setContext(Context c) {
                         this.c = c;
                         return this;
                     }
 
                     @Override
-                    public void onShow(DialogInterface p1)
-                    {
+                    public void onShow(DialogInterface p1) {
                         ListAdapter.get(c).notifyDataSetChanged();
                     }
                 }.setContext(c));
@@ -91,16 +94,16 @@ public class ListDialog
         edt_find = v.findViewById(R.id.edt_find);
         lv_list = v.findViewById(R.id.lv_list);
         lv_list.setAdapter(ListAdapter.get(c));
-        lv_list.setOnItemClickListener (
+        lv_list.setOnItemClickListener(
                 (p1, p2, p3, p4) -> {
                     curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                     curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
-                    if(countList == null) {
-                        if(curViewHolder.cb.isChecked()) {
+                    if (countList == null) {
+                        if (curViewHolder.cb.isChecked()) {
                             selectedList.remove(curIdAndName.id);
                             curViewHolder.cb.setChecked(false);
                         } else {
-                            if(!selectedList.contains(curIdAndName.id))
+                            if (!selectedList.contains(curIdAndName.id))
                                 selectedList.add(curIdAndName.id);
                             curViewHolder.cb.setChecked(true);
                         }
@@ -112,7 +115,7 @@ public class ListDialog
         lv_list.setOnItemLongClickListener(
                 (p1, p2, p3, p4) -> {
                     curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
-                    if(curIdAndName instanceof CooperateUser) {
+                    if (curIdAndName instanceof CooperateUser) {
                         showDeleteDialog(p1.getContext());
                     } else {
                         showOptionsDialog(p1.getContext());
@@ -125,24 +128,24 @@ public class ListDialog
     private static void showEdtDialog(Context c) {
         try {
             getEdtDialog(c).show();
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             edtDialog = null;
             getEdtDialog(c).show();
         }
         edtDialog.setTitle(curIdAndName.name);
-        if(curIdAndName instanceof CooperateUser)
+        if (curIdAndName instanceof CooperateUser)
             edt_count.setHint("浇水克数");
         else
             edt_count.setHint("次数");
         int i = selectedList.indexOf(curIdAndName.id);
-        if(i >= 0)
+        if (i >= 0)
             edt_count.setText(String.valueOf(countList.get(i)));
         else
             edt_count.getText().clear();
     }
 
-    private static AlertDialog getEdtDialog(Context c)  {
-        if(edtDialog == null) {
+    private static AlertDialog getEdtDialog(Context c) {
+        if (edtDialog == null) {
             OnClickListener listener = new OnClickListener() {
                 Context c;
 
@@ -196,35 +199,29 @@ public class ListDialog
     private static void showOptionsDialog(Context c) {
         try {
             getOptionsDialog(c).show();
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             optionsDialog = null;
             getOptionsDialog(c).show();
         }
     }
 
-    private static AlertDialog getOptionsDialog(Context c)
-    {
-        if(optionsDialog == null)
-        {
+    private static AlertDialog getOptionsDialog(Context c) {
+        if (optionsDialog == null || optionsDialog.getContext() != c) {
             optionsDialog = new AlertDialog.Builder(c)
-                    .setTitle("Options")
+                    .setTitle("选项")
                     .setAdapter(
-                            OptionsAdapter.get(c), new OnClickListener()
-                            {
+                            OptionsAdapter.get(c), new OnClickListener() {
                                 Context c;
 
-                                public OnClickListener setContext(Context c)
-                                {
+                                public OnClickListener setContext(Context c) {
                                     this.c = c;
                                     return this;
                                 }
 
                                 @Override
-                                public void onClick(DialogInterface p1, int p2)
-                                {
+                                public void onClick(DialogInterface p1, int p2) {
                                     String url = null;
-                                    switch(p2)
-                                    {
+                                    switch (p2) {
                                         case 0:
                                             url = "alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2F60000002.h5app.alipay.com%2Fwww%2Fhome.html%3FuserId%3D";
                                             break;
@@ -236,8 +233,7 @@ public class ListDialog
                                         case 2:
                                             showDeleteDialog(c);
                                     }
-                                    if(url != null)
-                                    {
+                                    if (url != null) {
                                         Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(url + curIdAndName.id));
                                         c.startActivity(it);
                                     }
@@ -249,36 +245,28 @@ public class ListDialog
         return optionsDialog;
     }
 
-    private static void showDeleteDialog(Context c)
-    {
-        try
-        {
+    private static void showDeleteDialog(Context c) {
+        try {
             getDeleteDialog(c).show();
-        }catch(Throwable t)
-        {
+        } catch (Throwable t) {
             deleteDialog = null;
             getDeleteDialog(c).show();
         }
         deleteDialog.setTitle("删除 " + curIdAndName.name);
     }
 
-    private static AlertDialog getDeleteDialog(Context c)
-    {
-        if(deleteDialog == null)
-        {
-            OnClickListener listener = new OnClickListener()
-            {
+    private static AlertDialog getDeleteDialog(Context c) {
+        if (deleteDialog == null) {
+            OnClickListener listener = new OnClickListener() {
                 Context c;
 
-                public OnClickListener setContext(Context c)
-                {
+                public OnClickListener setContext(Context c) {
                     this.c = c;
                     return this;
                 }
 
                 @Override
-                public void onClick(DialogInterface p1, int p2)
-                {
+                public void onClick(DialogInterface p1, int p2) {
                     if (p2 == DialogInterface.BUTTON_POSITIVE) {
                         if (curIdAndName instanceof AlipayUser) {
                             FriendIdMap.removeIdMap(curIdAndName.id);
@@ -302,16 +290,15 @@ public class ListDialog
         return deleteDialog;
     }
 
-    static class OnBtnClickListener implements View.OnClickListener
-    {
+    static class OnBtnClickListener implements View.OnClickListener {
+        @SuppressLint("NonConstantResourceId")
         @Override
-        public void onClick(View p1)
-        {
-            if(edt_find.length() <= 0) return;
+        public void onClick(View p1) {
+            if (edt_find.length() <= 0)
+                return;
             ListAdapter la = ListAdapter.get(p1.getContext());
             int index = -1;
-            switch(p1.getId())
-            {
+            switch (p1.getId()) {
                 case R.id.btn_find_last:
                     // 下面Text要转String，不然判断equals会出问题
                     index = la.findLast(edt_find.getText().toString());
@@ -322,11 +309,9 @@ public class ListDialog
                     index = la.findNext(edt_find.getText().toString());
                     break;
             }
-            if(index < 0)
-            {
+            if (index < 0) {
                 Toast.makeText(p1.getContext(), "未搜到", Toast.LENGTH_SHORT).show();
-            }else
-            {
+            } else {
                 lv_list.setSelection(index);
             }
         }

@@ -10,18 +10,20 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.entity.FriendWatch;
 import pansong291.xposed.quickenergy.util.FileUtils;
 import pansong291.xposed.quickenergy.util.PermissionUtil;
-import pansong291.xposed.quickenergy.util.RandomUtils;
 import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.RandomUtils;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private static String[] strArray;
@@ -96,16 +98,6 @@ public class MainActivity extends Activity {
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-/*         if (v.getId() == R.id.btn_help) {
-            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
-            return;
-        } */
-
-        if (v.getId() == R.id.btn_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return;
-        }
-
         String data = "file://";
         switch (v.getId()) {
             case R.id.btn_forest_log:
@@ -123,6 +115,18 @@ public class MainActivity extends Activity {
             case R.id.btn_help:
                 data = "https://github.com/pansong291/XQuickEnergy/wiki";
                 break;
+
+            case R.id.btn_github:
+                data = "https://github.com/constanline/XQuickEnergy";
+                break;
+
+            case R.id.btn_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return;
+
+            case R.id.btn_friend_watch:
+                ListDialog.show(this, getString(R.string.friend_watch), FriendWatch.getList(), new ArrayList<>(), null);
+                return;
 
         }
 
@@ -167,7 +171,7 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, "导入成功！", Toast.LENGTH_SHORT).show();
                 }
                 break;
-                
+
             case 4:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;

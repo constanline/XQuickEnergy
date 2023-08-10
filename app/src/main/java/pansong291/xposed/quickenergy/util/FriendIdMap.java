@@ -16,7 +16,8 @@ public class FriendIdMap {
     private static boolean hasChanged = false;
 
     public static void putIdMapIfEmpty(String key, String value) {
-        if (key == null || key.isEmpty()) return;
+        if (key == null || key.isEmpty())
+            return;
         if (!getIdMap().containsKey(key)) {
             getIdMap().put(key, value);
             hasChanged = true;
@@ -24,7 +25,8 @@ public class FriendIdMap {
     }
 
     public static void putIdMap(String key, String value) {
-        if (key == null || key.isEmpty()) return;
+        if (key == null || key.isEmpty())
+            return;
         if (getIdMap().containsKey(key)) {
             if (!getIdMap().get(key).equals(value)) {
                 getIdMap().remove(key);
@@ -38,7 +40,8 @@ public class FriendIdMap {
     }
 
     public static void removeIdMap(String key) {
-        if (key == null || key.isEmpty()) return;
+        if (key == null || key.isEmpty())
+            return;
         if (getIdMap().containsKey(key)) {
             getIdMap().remove(key);
             hasChanged = true;
@@ -60,12 +63,15 @@ public class FriendIdMap {
     }
 
     public static String getNameById(String id) {
-        if (id == null || id.isEmpty()) return id;
+        if (id == null || id.isEmpty())
+            return id;
         if (getIdMap().containsKey(id)) {
             String n = getIdMap().get(id);
             int ind = n.lastIndexOf('(');
-            if (ind > 0) n = n.substring(0, ind);
-            if (!n.equals("*")) return n;
+            if (ind > 0)
+                n = n.substring(0, ind);
+            if (!n.equals("*"))
+                return n;
         } else {
             putIdMap(id, "*(*)");
         }
@@ -80,8 +86,19 @@ public class FriendIdMap {
             }
             if (entry.getValue().split("\\|").length < 2) {
                 idList.add(entry.getKey());
-                //Log.i(TAG, "未知id: " + entry.getKey());
+                // Log.i(TAG, "未知id: " + entry.getKey());
             }
+        }
+        return idList;
+    }
+
+    public static List<String> getFriendIds() {
+        List<String> idList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : getIdMap().entrySet()) {
+            if ("我".equals(entry.getValue()) || entry.getKey().equals(currentUid)) {
+                continue;
+            }
+            idList.add(entry.getKey());
         }
         return idList;
     }
@@ -95,7 +112,7 @@ public class FriendIdMap {
                 try {
                     String[] idSet = str.split("\n");
                     for (String s : idSet) {
-                        //Log.i(TAG, s);
+                        // Log.i(TAG, s);
                         int ind = s.indexOf(":");
                         idMap.put(s.substring(0, ind), s.substring(ind + 1));
                     }

@@ -1,25 +1,25 @@
-package pansong291.xposed.quickenergy.ui;
+package pansong291.xposed.quickenergy.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.BeachIdMap;
 
-public class AlipayUser extends IdAndName {
-    private static List<AlipayUser> list;
+public class AlipayBeach extends IdAndName {
+    private static List<AlipayBeach> list;
 
-    public AlipayUser(String i, String n) {
+    public AlipayBeach(String i, String n) {
         id = i;
         name = n;
     }
 
-    public static List<AlipayUser> getList() {
-        if (list == null || FriendIdMap.shouldReload) {
+    public static List<AlipayBeach> getList() {
+        if (list == null || BeachIdMap.shouldReload) {
             list = new ArrayList<>();
-            Set<Map.Entry<String, String>> idSet = FriendIdMap.getIdMap().entrySet();
+            Set<Map.Entry<String, String>> idSet = BeachIdMap.getIdMap().entrySet();
             for (Map.Entry<String, String> entry: idSet) {
-                list.add(new AlipayUser(entry.getKey(), entry.getValue()));
+                list.add(new AlipayBeach(entry.getKey(), entry.getValue()));
             }
         }
         return list;

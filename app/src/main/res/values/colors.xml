@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="red">#FFFF0000</color>
-    <color name="blue">#E8BFEFF4</color>
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#BFEFF4</color>
 
-    <color name="background">#E8BFEFF4</color>
+    <color name="background">#BFEFF4</color>
     <color name="text_or_icon">#FFFFFF</color>
     <color name="secondary_text">#868997</color>
     <color name="dashboard_item_1">#01CD98</color>
     <color name="dashboard_item_2">#5351FC</color>
     <color name="dashboard_item_3">#E64000</color>
-    <color name="dashboard_item_4">#F6B900</color>
+    <color name="dashboard_item_4">#00BFFF</color>
+    <color name="dashboard_item_5">#FFC0CB</color>
+    <color name="dashboard_item_6">#F6B900</color>
 
     <color name="colorPrimary">#8DDEDF</color>
     <color name="textColorPrimary">#000000</color>
 
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#12a4e7</color>
     
 </resources>

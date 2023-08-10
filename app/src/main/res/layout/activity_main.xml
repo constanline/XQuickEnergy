@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -30,31 +31,30 @@
         android:textColor="@color/text_or_icon"
         android:textSize="@dimen/_12sdp"
         android:textStyle="bold"
-		android:gravity="center"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_unactive" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
-        android:layout_width="@dimen/_150sdp"
-        android:layout_height="@dimen/_150sdp"
-        android:layout_marginTop="@dimen/_32sdp"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
         android:src="@drawable/boy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_unactive"
+        app:layout_constraintTop_toBottomOf="@id/tv_statistics"
         app:layout_constraintBottom_toTopOf="@id/btn_help"
         app:riv_oval="true" />
 
-	<Button
+    <Button
         android:id="@+id/btn_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		style="?android:attr/buttonBarButtonStyle"
-        android:layout_marginBottom="@dimen/_16sdp"
-		android:text="@string/tips"
-		android:onClick="onClick"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:text="@string/tips"
+        android:onClick="onClick"
         android:textColor="@color/secondary_text"
         android:textSize="@dimen/_11ssp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,9 +67,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_1sdp"
         android:layout_marginEnd="@dimen/_1sdp"
-        app:constraint_referenced_ids="btn_forest_log,btn_farm_log,btn_other_log,btn_settings"
+        app:constraint_referenced_ids="btn_forest_log,btn_farm_log,btn_other_log,btn_friend_watch,btn_github,btn_settings"
         app:flow_horizontalGap="@dimen/_1sdp"
-        app:flow_maxElementsWrap="4"
+        app:flow_maxElementsWrap="3"
         app:flow_verticalGap="@dimen/_1sdp"
         app:flow_wrapMode="aligned"
         android:layout_marginBottom="@dimen/_16sdp"
@@ -79,7 +79,7 @@
         android:id="@+id/btn_forest_log"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-		android:onClick="onClick"
+        android:onClick="onClick"
         app:cardBackgroundColor="@color/dashboard_item_1"
         app:cardCornerRadius="@dimen/_12sdp"
         app:cardUseCompatPadding="true">
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_3sdp"
                 android:gravity="center"
-		        android:text="@string/forest_log"
+                android:text="@string/forest_log"
                 android:textStyle="bold"
                 android:textColor="@color/text_or_icon"
                 android:textSize="@dimen/_11ssp" />
@@ -117,7 +117,7 @@
         android:id="@+id/btn_farm_log"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-		android:onClick="onClick"
+        android:onClick="onClick"
         app:cardBackgroundColor="@color/dashboard_item_2"
         app:cardCornerRadius="@dimen/_12sdp"
         app:cardUseCompatPadding="true">
@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_3sdp"
-		        android:text="@string/farm_log"
+                android:text="@string/farm_log"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/text_or_icon"
@@ -155,7 +155,7 @@
         android:id="@+id/btn_other_log"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-		android:onClick="onClick"
+        android:onClick="onClick"
         app:cardBackgroundColor="@color/dashboard_item_3"
         app:cardCornerRadius="@dimen/_12sdp"
         app:cardUseCompatPadding="true">
@@ -190,11 +190,87 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/btn_friend_watch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        app:cardBackgroundColor="@color/dashboard_item_4"
+        app:cardCornerRadius="@dimen/_12sdp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_2sdp">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imageFriends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:gravity="center"
+                android:src="@drawable/friends"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:riv_oval="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_3sdp"
+                android:text="@string/friend_watch"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/text_or_icon"
+                android:textSize="@dimen/_11ssp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_github"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        app:cardBackgroundColor="@color/dashboard_item_5"
+        app:cardCornerRadius="@dimen/_12sdp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_2sdp">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imageGtihub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:gravity="center"
+                android:src="@drawable/github"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:riv_oval="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_3sdp"
+                android:text="@string/visit_github"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/text_or_icon"
+                android:textSize="@dimen/_11ssp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/btn_settings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-		android:onClick="onClick"
-        app:cardBackgroundColor="@color/dashboard_item_4"
+        android:onClick="onClick"
+        app:cardBackgroundColor="@color/dashboard_item_6"
         app:cardCornerRadius="@dimen/_12sdp"
         app:cardUseCompatPadding="true">
 
@@ -236,7 +312,7 @@
         android:textSize="@dimen/_11ssp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"  />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
