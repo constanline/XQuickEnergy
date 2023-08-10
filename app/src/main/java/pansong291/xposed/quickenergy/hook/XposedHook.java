@@ -120,7 +120,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 return;
                             }
                             FriendIdMap.currentUid = targetUid;
-                            Log.recordLog("onResume");
                             if (handler != null) {
                                 Log.recordLog("尝试初始化");
                                 initHandler();
@@ -176,33 +175,30 @@ public class XposedHook implements IXposedHookLoadPackage {
             Log.i(TAG, "hook onCreate err:");
             Log.printStackTrace(TAG, t);
         }
-        // try {
-        // XposedHelpers.findAndHookMethod("android.app.Service", loader, "onDestroy",
-        // new XC_MethodHook() {
-        // @Override
-        // protected void afterHookedMethod(MethodHookParam param) {
-        // Service service = (Service) param.thisObject;
-        // if
-        // (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName()))
-        // {
-        // return;
-        // }
-        // if (wakeLock != null) {
-        // wakeLock.release();
-        // wakeLock = null;
-        // }
-        // AntForestNotification.stop(service, false);
-        // AntForestNotification.setContentText("支付宝前台服务被销毁");
-        // Log.recordLog("支付宝前台服务被销毁", "");
-        // handler.removeCallbacks(runnable);
-        // alarmHook(AntForestToast.context, 3000, false);
-        // }
-        // });
-        // Log.i(TAG, "hook onDestroy successfully");
-        // } catch (Throwable t) {
-        // Log.i(TAG, "hook onDestroy err:");
-        // Log.printStackTrace(TAG, t);
-        // }
+        try {
+            XposedHelpers.findAndHookMethod("android.app.Service", loader, "onDestroy", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    Service service = (Service) param.thisObject;
+                    if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
+                        return;
+                    }
+                    if (wakeLock != null) {
+                        wakeLock.release();
+                        wakeLock = null;
+                    }
+                    AntForestNotification.stop(service, false);
+                    AntForestNotification.setContentText("支付宝前台服务被销毁");
+                    Log.recordLog("支付宝前台服务被销毁", "");
+                    handler.removeCallbacks(runnable);
+                    alarmHook(AntForestToast.context, 3000, false);
+                }
+            });
+            Log.i(TAG, "hook onDestroy successfully");
+        } catch (Throwable t) {
+            Log.i(TAG, "hook onDestroy err:");
+            Log.printStackTrace(TAG, t);
+        }
     }
 
     private void hookRpcCall(ClassLoader loader) {

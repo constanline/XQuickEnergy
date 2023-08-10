@@ -33,6 +33,7 @@ public class Config {
     public static final String jn_immediateEffect = "immediateEffect";
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
+    public static final String jn_toastOffsetY = "toastOffsetY";
     public static final String jn_stayAwake = "stayAwake";
     public static final String jn_timeoutRestart = "timeoutRestart";
     public static final String jn_stayAwakeType = "stayAwakeType";
@@ -89,6 +90,7 @@ public class Config {
     public static final String jn_feedAnimal = "feedAnimal";
     public static final String jn_useAccelerateTool = "useAccelerateTool";
     public static final String jn_feedFriendAnimalList = "feedFriendAnimalList";
+    public static final String jn_farmGameTime = "farmGameTime";
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
@@ -117,6 +119,7 @@ public class Config {
     private boolean immediateEffect;
     private boolean recordLog;
     private boolean showToast;
+    private int toastOffsetY;
     private boolean stayAwake;
     private XposedHook.StayAwakeType stayAwakeType;
     private XposedHook.StayAwakeTarget stayAwakeTarget;
@@ -190,9 +193,11 @@ public class Config {
     private List<String> feedFriendAnimalList;
     private List<Integer> feedFriendCountList;
 
+    private List<String> farmGameTime;
     private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
+
 
     /* other */
     private boolean receivePoint;
@@ -244,6 +249,15 @@ public class Config {
 
     public static boolean showToast() {
         return getConfig().showToast;
+    }
+
+    public static void setToastOffsetY(int i) {
+        getConfig().toastOffsetY = i;
+        hasChanged = true;
+    }
+
+    public static int toastOffsetY() {
+        return getConfig().toastOffsetY;
     }
 
     public static void setStayAwake(boolean b) {
@@ -771,6 +785,23 @@ public class Config {
         return getConfig().feedFriendCountList;
     }
 
+    public static void setFarmGameTime(String i) {
+        getConfig().farmGameTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+
+    public static String farmGameTime() {
+        return String.join(",", getConfig().farmGameTime);
+    }
+
+    public static boolean isFarmGameTime() {
+        for (String doubleTime : getConfig().farmGameTime) {
+            if (checkInTimeSpan(doubleTime))
+                return true;
+        }
+        return false;
+    }
+
     public static void setAnimalSleepTime(String i) {
         getConfig().animalSleepTime = Arrays.asList(i.split(","));
         hasChanged = true;
@@ -923,6 +954,7 @@ public class Config {
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;
+        c.toastOffsetY = 0;
         c.stayAwake = true;
         c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
         c.stayAwakeTarget = XposedHook.StayAwakeTarget.SERVICE;
@@ -1040,6 +1072,8 @@ public class Config {
             config.recordLog = jo.optBoolean(jn_recordLog, true);
 
             config.showToast = jo.optBoolean(jn_showToast, true);
+
+            config.toastOffsetY = jo.optInt(jn_toastOffsetY, 0);
 
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
 
@@ -1259,6 +1293,8 @@ public class Config {
                 }
             }
 
+            config.farmGameTime = Arrays.asList(jo.optString(jn_farmGameTime, "2200-2400").split(","));
+
             config.animalSleepTime = Arrays.asList(jo.optString(jn_animalSleepTime, "2200-2400,0000-0559").split(","));
 
             config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
@@ -1322,6 +1358,8 @@ public class Config {
             jo.put(jn_recordLog, config.recordLog);
 
             jo.put(jn_showToast, config.showToast);
+
+            jo.put(jn_toastOffsetY, config.toastOffsetY);
 
             jo.put(jn_stayAwake, config.stayAwake);
 
@@ -1500,6 +1538,8 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_feedFriendAnimalList, ja);
+
+            jo.put(jn_farmGameTime, String.join(",", config.farmGameTime));
 
             jo.put(jn_animalSleepTime, String.join(",", config.animalSleepTime));
 

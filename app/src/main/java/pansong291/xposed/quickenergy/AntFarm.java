@@ -206,7 +206,7 @@ public class AntFarm {
                     // receiveToolTaskReward(loader);
                     // }
 
-                    if (Config.recordFarmGame()) {
+                    if (Config.recordFarmGame() &&  Config.isFarmGameTime()) {
                         recordFarmGame(GameType.starGame);
                         recordFarmGame(GameType.jumpGame);
                     }

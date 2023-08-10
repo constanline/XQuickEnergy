@@ -47,9 +47,9 @@ public class AntOcean {
         try {
             JSONObject joHomePage = new JSONObject(AntOceanRpcCall.queryHomePage());
             if ("SUCCESS".equals(joHomePage.getString("resultCode"))) {
-                if (Config.collectEnergy() && joHomePage.has("bubbleVOList")) {
-                    // collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
-                }
+                // if (Config.collectEnergy() && joHomePage.has("bubbleVOList")) {
+                // collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
+                // }
 
                 JSONObject userInfoVO = joHomePage.getJSONObject("userInfoVO");
                 int rubbishNumber = userInfoVO.optInt("rubbishNumber");

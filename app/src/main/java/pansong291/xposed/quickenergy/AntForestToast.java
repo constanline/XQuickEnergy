@@ -2,6 +2,7 @@ package pansong291.xposed.quickenergy;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
@@ -28,7 +29,9 @@ public class AntForestToast {
                             @Override
                             public void run() {
                                 try {
-                                    Toast.makeText(context, cs, Toast.LENGTH_SHORT).show();
+                                    Toast toast = Toast.makeText(context, cs, Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, Config.toastOffsetY());
+                                    toast.show();
                                 } catch (Throwable t) {
                                     Log.i(TAG, "show.run err:");
                                     Log.printStackTrace(TAG, t);

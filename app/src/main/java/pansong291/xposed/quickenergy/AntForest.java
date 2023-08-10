@@ -787,11 +787,13 @@ public class AntForest {
                     startEnergyRain();
                 }
                 if (joEnergyRainHome.getBoolean("canGrantStatus")) {
+                    Log.recordLog("有送能量雨的机会");
                     JSONObject joEnergyRainCanGrantList = new JSONObject(
                             AntForestRpcCall.queryEnergyRainCanGrantList());
                     JSONArray grantInfos = joEnergyRainCanGrantList.getJSONArray("grantInfos");
                     List<String> list = Config.getGiveEnergyRainList();
                     String userId;
+                    boolean granted = false;
                     for (int j = 0; j < grantInfos.length(); j++) {
                         JSONObject grantInfo = grantInfos.getJSONObject(j);
                         if (grantInfo.getBoolean("canGrantedStatus")) {
@@ -799,15 +801,22 @@ public class AntForest {
                             if (list.contains(userId)) {
                                 JSONObject joEnergyRainChance = new JSONObject(
                                         AntForestRpcCall.grantEnergyRainChance(userId));
+                                Log.recordLog("尝试送能量雨给【" + FriendIdMap.getNameById(userId) + "】");
+                                granted = true;
                                 // 20230724能量雨调整为列表中没有可赠送的好友则不赠送
                                 if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
                                     Log.forest("送能量雨🌧️[" + FriendIdMap.getNameById(userId) + "]#"
                                             + FriendIdMap.getNameById(FriendIdMap.currentUid));
                                     startEnergyRain();
+                                } else {
+                                    Log.recordLog("送能量雨失败", joEnergyRainChance.toString());
                                 }
                                 break;
                             }
                         }
+                    }
+                    if (!granted) {
+                        Log.recordLog("没有可以送的用户");
                     }
                     // if (userId != null) {
                     // JSONObject joEnergyRainChance = new
@@ -920,6 +929,10 @@ public class AntForest {
             JSONObject jo = new JSONObject(EcoLifeRpcCall.queryHomePage());
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONObject data = jo.getJSONObject("data");
+                if (!data.has("dayPoint")) {
+                    Log.recordLog("dayPoint为不存在", jo.toString());
+                    return;
+                }
                 String dayPoint = data.getString("dayPoint");
                 JSONArray actionListVO = data.getJSONArray("actionListVO");
                 for (int i = 0; i < actionListVO.length(); i++) {
@@ -1375,7 +1388,7 @@ public class AntForest {
                 Log.recordLog("[" + FriendIdMap.getNameById(userId) + "]蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
                 // 20230725收取失败不再继续尝试
-                // collectEnergy(userId, bubbleId, userName, bizNo);
+                // collectEnergy(userId, bubbleId, bizNo);
 
                 long time = System.currentTimeMillis();
                 while (System.currentTimeMillis() - time < Config.collectTimeout()) {

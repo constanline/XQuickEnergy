@@ -427,6 +427,9 @@ public class SettingsActivity extends Activity {
         } else if (v instanceof Button) {
             Button btn = (Button) v;
             switch (v.getId()) {
+                case R.id.btn_toastOffsetY:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.TOAST_OFFSET_Y);
+                    break;
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -531,6 +534,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_recallAnimalType:
                     ChoiceDialog.showRecallAnimalType(this, btn.getText());
+                    break;
+
+                case R.id.btn_farmGameTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.FARM_GAME_TIME);
                     break;
 
                 case R.id.btn_feedFriendAnimalList:

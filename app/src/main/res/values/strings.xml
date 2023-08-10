@@ -113,5 +113,7 @@
     <string name="tiyubiz">Tiyubiz</string>
     <string name="friend_watch">Friend watch</string>
     <string name="user_patrol">User patrol</string>
+    <string name="toast_vertical_offset">Toast vertical offset</string>
+    <string name="animal_game_time">Animal game time</string>
 
 </resources>

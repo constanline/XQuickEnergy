@@ -56,6 +56,20 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_showToast" />
 
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/toast_vertical_offset"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_toastOffsetY"
+						android:paddingStart="8dp"
+						android:paddingEnd="8dp" />
+
 					<Switch
 						android:paddingStart="8dp"
 						android:layout_width="match_parent"
@@ -625,6 +639,20 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_recordFarmGame" />
 
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/animal_game_time"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_farmGameTime"
+						android:paddingStart="8dp"
+						android:paddingEnd="8dp" />
+
 					<Switch
 						android:paddingStart="8dp"
 						android:layout_width="match_parent"
@@ -853,19 +881,6 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_tiyubiz" />
-				</LinearLayout>
-				<LinearLayout
-					android:orientation="vertical"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
-
-					<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:text="@string/more"
-						android:background="@color/background"
-						android:textColor="#FFFFFFFF"
-						android:textAppearance="?android:attr/textAppearanceMedium" />
 
 					<Button
 						android:layout_width="match_parent"
