@@ -1,6 +1,9 @@
 package pansong291.xposed.quickenergy.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,6 +50,15 @@ public class Statistics {
         }
     }
 
+    private static class BeachLog {
+        String cultivationCode;
+        int applyCount = 0;
+
+        public BeachLog(String id) {
+            cultivationCode = id;
+        }
+    }
+
     private static class FeedFriendLog {
         String userId;
         int feedCount = 0;
@@ -60,10 +72,10 @@ public class Statistics {
     private static final String jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
             jn_answerQuestionList = "answerQuestionList", jn_syncStepList = "syncStepList",
-            jn_exchangeList = "exchangeList",
+            jn_exchangeList = "exchangeList", jn_beachTodayList = "beachTodayList",
             jn_questionHint = "questionHint", jn_donationEgg = "donationEgg", jn_memberSignIn = "memberSignIn",
             jn_kbSignIn = "kbSignIn", jn_exchangeDoubleCard = "exchangeDoubleCard",
-            jn_exchangeTimes = "exchangeTimes";
+            jn_exchangeTimes = "exchangeTimes", jn_dailyAnswerList = "dailyAnswerList";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -74,7 +86,9 @@ public class Statistics {
     private ArrayList<String> cooperateWaterList;
     private ArrayList<String> syncStepList;
     private ArrayList<ReserveLog> reserveLogList;
-//    private ArrayList<String> ancientTreeCityCodeList;
+    private ArrayList<BeachLog> beachLogList;
+    private ArrayList<String> beachTodayList;
+    private ArrayList<String> ancientTreeCityCodeList;
     private ArrayList<String> exchangeList;
     private int exchangeDoubleCard = 0;
     private int exchangeTimes = 0;
@@ -83,6 +97,7 @@ public class Statistics {
     private ArrayList<String> answerQuestionList;
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
+    private Set<String> dailyAnswerList;
 
     private int donationEgg = 0;
 
@@ -90,7 +105,6 @@ public class Statistics {
     private int memberSignIn = 0;
     private int kbSignIn = 0;
 
-    private int syncStep = 0;
 
     private static Statistics statistics;
 
@@ -172,6 +186,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -186,6 +201,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
@@ -248,6 +264,53 @@ public class Statistics {
             rl = stat.reserveLogList.get(index);
         }
         rl.applyCount += count;
+        save();
+    }
+
+    public static int getBeachTimes(String id) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return 0;
+        BeachLog bl = stat.beachLogList.get(index);
+        return bl.applyCount;
+    }
+
+    public static boolean canBeach(String id, int count) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        BeachLog bl = stat.beachLogList.get(index);
+        return bl.applyCount < count;
+    }
+
+    public static void beachRecord(String id, int count) {
+        Statistics stat = getStatistics();
+        BeachLog bl;
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            bl = new BeachLog(id);
+            stat.beachLogList.add(bl);
+        } else {
+            bl = stat.beachLogList.get(index);
+        }
+        bl.applyCount += count;
         save();
     }
 
@@ -409,6 +472,17 @@ public class Statistics {
         }
     }
 
+    public static Set<String> getDadaDailySet() {
+        Statistics stat = getStatistics();
+        return stat.dailyAnswerList;
+    }
+
+    public static void setDadaDailySet(Set<String> dailyAnswerList) {
+        Statistics stat = getStatistics();
+        stat.dailyAnswerList = dailyAnswerList;
+        save();
+    }
+
     public static boolean canSyncStepToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.syncStepList.contains(uid);
@@ -418,6 +492,19 @@ public class Statistics {
         Statistics stat = getStatistics();
         if (!stat.syncStepList.contains(uid)) {
             stat.syncStepList.add(uid);
+            save();
+        }
+    }
+
+    public static boolean canBeachToday(String cultivationCode) {
+        Statistics stat = getStatistics();
+        return !stat.beachTodayList.contains(cultivationCode);
+    }
+
+    public static void beachToday(String cultivationCode) {
+        Statistics stat = getStatistics();
+        if (!stat.beachTodayList.contains(cultivationCode)) {
+            stat.beachTodayList.add(cultivationCode);
             save();
         }
     }
@@ -461,14 +548,14 @@ public class Statistics {
         stat.syncStepList.clear();
         stat.exchangeList.clear();
         stat.reserveLogList.clear();
-//        stat.ancientTreeCityCodeList.clear();
+        stat.beachTodayList.clear();
+        stat.ancientTreeCityCodeList.clear();
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
         stat.questionHint = null;
         stat.donationEgg = 0;
         stat.memberSignIn = 0;
         stat.kbSignIn = 0;
-        stat.syncStep = 0;
         stat.exchangeDoubleCard = 0;
         stat.exchangeTimes = 0;
         save();
@@ -492,12 +579,16 @@ public class Statistics {
             stat.answerQuestionList = new ArrayList<>();
         if (stat.feedFriendLogList == null)
             stat.feedFriendLogList = new ArrayList<>();
-//        if (stat.ancientTreeCityCodeList == null)
-//            stat.ancientTreeCityCodeList = new ArrayList<>();
+        if (stat.ancientTreeCityCodeList == null)
+            stat.ancientTreeCityCodeList = new ArrayList<>();
         if (stat.syncStepList == null)
             stat.syncStepList = new ArrayList<>();
+        if (stat.beachTodayList == null)
+            stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
+        if (stat.dailyAnswerList == null)
+            stat.dailyAnswerList = new HashSet<>();
         return stat;
     }
 
@@ -558,12 +649,32 @@ public class Statistics {
                 }
             }
 
+            stat.ancientTreeCityCodeList = new ArrayList<>();
+
+            if (jo.has(Config.jn_ancientTreeCityCodeList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_ancientTreeCityCodeList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.ancientTreeCityCodeList.add(ja.getString(i));
+
+                }
+            }
+
             stat.syncStepList = new ArrayList<>();
 
             if (jo.has(jn_syncStepList)) {
                 JSONArray ja = jo.getJSONArray(jn_syncStepList);
                 for (int i = 0; i < ja.length(); i++) {
                     stat.syncStepList.add(ja.getString(i));
+
+                }
+            }
+
+            stat.beachTodayList = new ArrayList<>();
+
+            if (jo.has(jn_beachTodayList)) {
+                JSONArray ja = jo.getJSONArray(jn_beachTodayList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.beachTodayList.add(ja.getString(i));
 
                 }
             }
@@ -587,6 +698,18 @@ public class Statistics {
                     ReserveLog rl = new ReserveLog(jaa.getString(0));
                     rl.applyCount = jaa.getInt(1);
                     stat.reserveLogList.add(rl);
+                }
+            }
+
+            stat.beachLogList = new ArrayList<>();
+
+            if (jo.has(Config.jn_beachList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_beachList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    BeachLog bl = new BeachLog(jaa.getString(0));
+                    bl.applyCount = jaa.getInt(1);
+                    stat.beachLogList.add(bl);
                 }
             }
 
@@ -631,6 +754,14 @@ public class Statistics {
             if (jo.has(jn_exchangeTimes))
                 stat.exchangeTimes = jo.getInt(jn_exchangeTimes);
 
+            stat.dailyAnswerList = new HashSet<>();
+            if (jo.has(jn_dailyAnswerList)) {
+                JSONArray ja = jo.getJSONArray(jn_dailyAnswerList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.dailyAnswerList.add(ja.getString(i));
+                }
+            }
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -639,10 +770,10 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formated = statistics2Json(stat);
-        if (!formated.equals(json)) {
+        String formatted  = statistics2Json(stat);
+        if (!formatted .equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
-            FileUtils.write2File(formated, FileUtils.getStatisticsFile());
+            FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
     }
@@ -697,16 +828,22 @@ public class Statistics {
             jo.put(jn_syncStepList, ja);
 
             ja = new JSONArray();
+            for (int i = 0; i < stat.beachTodayList.size(); i++) {
+                ja.put(stat.beachTodayList.get(i));
+            }
+            jo.put(jn_beachTodayList, ja);
+
+            ja = new JSONArray();
             for (int i = 0; i < stat.exchangeList.size(); i++) {
                 ja.put(stat.exchangeList.get(i));
             }
             jo.put(jn_exchangeList, ja);
 
-//            ja = new JSONArray();
-//            for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {
-//                ja.put(stat.ancientTreeCityCodeList.get(i));
-//            }
-//            jo.put(Config.jn_ancientTreeCityCodeList, ja);
+            ja = new JSONArray();
+            for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {
+                ja.put(stat.ancientTreeCityCodeList.get(i));
+            }
+            jo.put(Config.jn_ancientTreeCityCodeList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.reserveLogList.size(); i++) {
@@ -717,6 +854,16 @@ public class Statistics {
                 ja.put(jaa);
             }
             jo.put(Config.jn_reserveList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.beachLogList.size(); i++) {
+                BeachLog bl = stat.beachLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(bl.cultivationCode);
+                jaa.put(bl.applyCount);
+                ja.put(jaa);
+            }
+            jo.put(Config.jn_beachList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.answerQuestionList.size(); i++) {
@@ -746,6 +893,12 @@ public class Statistics {
             jo.put(jn_exchangeDoubleCard, stat.exchangeDoubleCard);
 
             jo.put(jn_exchangeTimes, stat.exchangeTimes);
+
+            ja = new JSONArray();
+            for (String item : stat.dailyAnswerList) {
+                ja.put(item);
+            }
+            jo.put(jn_dailyAnswerList, ja);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

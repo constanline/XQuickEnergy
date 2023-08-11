@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
 
 public class PermissionUtil {
@@ -17,8 +18,10 @@ public class PermissionUtil {
 
     public static boolean checkPermissions(Context context) {
         for (String permission : PERMISSIONS_STORAGE) {
-            if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
             }
         }
         return true;
@@ -27,7 +30,9 @@ public class PermissionUtil {
     public static void requestPermissions(Activity activity) {
         try {
             if (!checkPermissions(activity)) {
-                activity.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    activity.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+                }
             }
         } catch (Exception e) {
             Log.printStackTrace(TAG, e);

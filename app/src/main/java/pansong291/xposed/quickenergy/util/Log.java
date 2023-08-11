@@ -4,8 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Log
-{
+public class Log {
     private static final String TAG = Log.class.getCanonicalName();
     private static SimpleDateFormat sdf;
 
@@ -19,7 +18,7 @@ public class Log
 
     public static boolean forest(String s) {
         recordLog(s, "");
-        return FileUtils.append2File(getFormatTime() + " " + s + "\n", FileUtils.getForestLogFile());
+        return FileUtils.append2File(getFormatDateTime() + " " + s + "\n", FileUtils.getForestLogFile());
     }
 
     public static void farm(String s) {
@@ -38,12 +37,14 @@ public class Log
 
     public static void recordLog(String str, String str2) {
         Log.i(TAG, str + str2);
-        if(!Config.recordLog()) return;
+        if (!Config.recordLog())
+            return;
         FileUtils.append2SimpleLogFile(str);
     }
 
     public static String getFormatDateTime() {
-        if(sdf == null) sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        if (sdf == null)
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return sdf.format(new Date());
     }
 
@@ -53,12 +54,6 @@ public class Log
 
     public static String getFormatTime() {
         return getFormatDateTime().split(" ")[1];
-    }
-
-    public static boolean isAncientTreeWeek() {
-        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
-        String week = sdf_week.format(new Date());
-        return "星期一".equals(week) || "星期三".equals(week) || "星期五".equals(week);
     }
 
 }

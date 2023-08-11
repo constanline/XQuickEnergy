@@ -6,276 +6,444 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.Switch;
+import android.widget.TabHost;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.CooperationIdMap;
-import pansong291.xposed.quickenergy.util.FriendIdMap;
-import pansong291.xposed.quickenergy.util.ReserveIdMap;
+import pansong291.xposed.quickenergy.entity.*;
+import pansong291.xposed.quickenergy.util.*;
 
 public class SettingsActivity extends Activity {
-    CheckBox cb_immediateEffect, cb_recordLog, cb_showToast,
-            cb_stayAwake, cb_timeoutRestart, cb_collectWateringBubble,
-            cb_collectEnergy, cb_helpFriendCollect, cb_receiveForestTaskAward,
-            cb_cooperateWater, cb_energyRain,
-            cb_enableFarm, cb_rewardFriend, cb_sendBackAnimal,
-            cb_receiveFarmToolReward, cb_useNewEggTool, cb_harvestProduce,
-            cb_donation, cb_answerQuestion, cb_receiveFarmTaskAward,
-            cb_feedAnimal, cb_useAccelerateTool, cb_notifyFriend,
-            cb_receivePoint, cb_openTreasureBox, cb_donateCharityCoin,
-            cb_kbSignIn, cb_limitCollect, cb_doubleCard, cb_ExchangeEnergyDoubleClick, cb_reserve, cb_ecoLifeTick,
-            cb_ancientTree, cb_ancientTreeOnlyWeek, cb_receiveCoinAsset, cb_antdodoCollect;
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private static final int MAX_TAB_INDEX = 3;
+
+    private TabHost tabHost;
+    private GestureDetector gestureDetector;
+    private Animation slideLeftIn;
+    private Animation slideLeftOut;
+    private Animation slideRightIn;
+    private Animation slideRightOut;
+
+    Switch sw_immediateEffect, sw_recordLog, sw_showToast,
+            sw_stayAwake, sw_timeoutRestart, sw_startAt7, sw_collectWateringBubble,
+            sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
+            sw_cooperateWater, sw_energyRain,
+            sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
+            sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce,
+            sw_donation, sw_answerQuestion, sw_receiveFarmTaskAward,
+            sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend,
+            sw_receivePoint, sw_openTreasureBox, sw_donateCharityCoin,
+            sw_kbSignIn, sw_limitCollect, sw_doubleCard, sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick,
+            sw_tiyubiz,
+            sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
+            sw_kitchen, sw_antOcean, sw_userPatrol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        setTitle(R.string.settings);
+
+        initTabHost();
+
+        initFlipper();
 
         Config.shouldReload = true;
         FriendIdMap.shouldReload = true;
         CooperationIdMap.shouldReload = true;
         ReserveIdMap.shouldReload = true;
+        BeachIdMap.shouldReload = true;
 
-        cb_immediateEffect = findViewById(R.id.cb_immediateEffect);
-        cb_recordLog = findViewById(R.id.cb_recordLog);
-        cb_showToast = findViewById(R.id.cb_showToast);
-        cb_stayAwake = findViewById(R.id.cb_stayAwake);
-        cb_timeoutRestart = findViewById(R.id.cb_timeoutRestart);
-        cb_collectEnergy = findViewById(R.id.cb_collectEnergy);
-        cb_collectWateringBubble = findViewById(R.id.cb_collectWateringBubble);
-        cb_helpFriendCollect = findViewById(R.id.cb_helpFriendCollect);
-        cb_receiveForestTaskAward = findViewById(R.id.cb_receiveForestTaskAward);
-        cb_cooperateWater = findViewById(R.id.cb_cooperateWater);
-        cb_ancientTree = findViewById(R.id.cb_ancientTree);
-        cb_energyRain = findViewById(R.id.cb_energyRain);
-        cb_reserve = findViewById(R.id.cb_reserve);
-        cb_enableFarm = findViewById(R.id.cb_enableFarm);
-        cb_rewardFriend = findViewById(R.id.cb_rewardFriend);
-        cb_sendBackAnimal = findViewById(R.id.cb_sendBackAnimal);
-        cb_receiveFarmToolReward = findViewById(R.id.cb_receiveFarmToolReward);
-        cb_useNewEggTool = findViewById(R.id.cb_useNewEggTool);
-        cb_harvestProduce = findViewById(R.id.cb_harvestProduce);
-        cb_donation = findViewById(R.id.cb_donation);
-        cb_answerQuestion = findViewById(R.id.cb_answerQuestion);
-        cb_receiveFarmTaskAward = findViewById(R.id.cb_receiveFarmTaskAward);
-        cb_feedAnimal = findViewById(R.id.cb_feedAnimal);
-        cb_useAccelerateTool = findViewById(R.id.cb_useAccelerateTool);
-        cb_notifyFriend = findViewById(R.id.cb_notifyFriend);
-        cb_receivePoint = findViewById(R.id.cb_receivePoint);
-        cb_openTreasureBox = findViewById(R.id.cb_openTreasureBox);
-        cb_receiveCoinAsset = findViewById(R.id.cb_receiveCoinAsset);
-        cb_donateCharityCoin = findViewById(R.id.cb_donateCharityCoin);
-        cb_kbSignIn = findViewById(R.id.cb_kbSignIn);
-        cb_limitCollect = findViewById(R.id.cb_limitCollect);
-        cb_doubleCard = findViewById(R.id.cb_doubleCard);
-        cb_ExchangeEnergyDoubleClick = findViewById(R.id.cb_ExchangeEnergyDoubleClick);
-        cb_ecoLifeTick = findViewById(R.id.cb_ecoLifeTick);
-        cb_ancientTreeOnlyWeek = findViewById(R.id.cb_ancientTreeOnlyWeek);
-        cb_antdodoCollect = findViewById(R.id.cb_antdodoCollect);
+        initSwitch();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event)) {
+            event.setAction(MotionEvent.ACTION_CANCEL);
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    private void setCurrentTab(int lastView, int currentView) {
+        if (lastView == currentView)
+            return;
+        if (lastView < currentView) {
+            tabHost.getCurrentView().startAnimation(slideLeftOut);
+        } else {
+            tabHost.getCurrentView().startAnimation(slideRightOut);
+        }
+
+        tabHost.setCurrentTab(currentView);
+
+        if (lastView < currentView) {
+            tabHost.getCurrentView().startAnimation(slideRightIn);
+        } else {
+            tabHost.getCurrentView().startAnimation(slideLeftIn);
+        }
+    }
+
+    private void initFlipper() {
+        slideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
+        slideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+        slideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
+        slideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
+
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                   float velocityY) {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                int lastView = tabHost.getCurrentTab();
+                int currentView = lastView;
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (currentView < MAX_TAB_INDEX) {
+                        currentView++;
+                    }
+                    setCurrentTab(lastView, currentView);
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (currentView > 0) {
+                        currentView--;
+                    }
+                    setCurrentTab(lastView, currentView);
+                }
+                return true;
+            }
+        });
+    }
+
+    private void initTabHost() {
+        tabHost = findViewById(R.id.tab_settings);
+        tabHost.setup();
+
+        TabHost.TabSpec tabSpec;
+
+        tabSpec = tabHost.newTabSpec("base")
+                .setIndicator(getString(R.string.base_configuration))
+                .setContent(R.id.tab_base);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("forest")
+                .setIndicator(getString(R.string.forest_configuration))
+                .setContent(R.id.tab_forest);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("farm")
+                .setIndicator(getString(R.string.farm_configuration))
+                .setContent(R.id.tab_farm);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("other")
+                .setIndicator(getString(R.string.other_configuration))
+                .setContent(R.id.tab_other);
+        tabHost.addTab(tabSpec);
+
+        tabHost.setCurrentTab(0);
+    }
+
+    private void initSwitch() {
+        sw_immediateEffect = findViewById(R.id.sw_immediateEffect);
+        sw_recordLog = findViewById(R.id.sw_recordLog);
+        sw_showToast = findViewById(R.id.sw_showToast);
+        sw_stayAwake = findViewById(R.id.sw_stayAwake);
+        sw_timeoutRestart = findViewById(R.id.sw_timeoutRestart);
+        sw_startAt7 = findViewById(R.id.sw_startAt7);
+        sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
+        sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
+        sw_helpFriendCollect = findViewById(R.id.sw_helpFriendCollect);
+        sw_receiveForestTaskAward = findViewById(R.id.sw_receiveForestTaskAward);
+        sw_cooperateWater = findViewById(R.id.sw_cooperateWater);
+        sw_ancientTree = findViewById(R.id.sw_ancientTree);
+        sw_energyRain = findViewById(R.id.sw_energyRain);
+        sw_reserve = findViewById(R.id.sw_reserve);
+        sw_beach = findViewById(R.id.sw_beach);
+        sw_enableFarm = findViewById(R.id.sw_enableFarm);
+        sw_rewardFriend = findViewById(R.id.sw_rewardFriend);
+        sw_sendBackAnimal = findViewById(R.id.sw_sendBackAnimal);
+        sw_receiveFarmToolReward = findViewById(R.id.sw_receiveFarmToolReward);
+        sw_recordFarmGame = findViewById(R.id.sw_recordFarmGame);
+        sw_kitchen = findViewById(R.id.sw_kitchen);
+        sw_useNewEggTool = findViewById(R.id.sw_useNewEggTool);
+        sw_harvestProduce = findViewById(R.id.sw_harvestProduce);
+        sw_donation = findViewById(R.id.sw_donation);
+        sw_answerQuestion = findViewById(R.id.sw_answerQuestion);
+        sw_receiveFarmTaskAward = findViewById(R.id.sw_receiveFarmTaskAward);
+        sw_feedAnimal = findViewById(R.id.sw_feedAnimal);
+        sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
+        sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
+        sw_receivePoint = findViewById(R.id.sw_receivePoint);
+        sw_openTreasureBox = findViewById(R.id.sw_openTreasureBox);
+        sw_receiveCoinAsset = findViewById(R.id.sw_receiveCoinAsset);
+        sw_donateCharityCoin = findViewById(R.id.sw_donateCharityCoin);
+        sw_kbSignIn = findViewById(R.id.sw_kbSignIn);
+        sw_limitCollect = findViewById(R.id.sw_limitCollect);
+        sw_doubleCard = findViewById(R.id.sw_doubleCard);
+        sw_ExchangeEnergyDoubleClick = findViewById(R.id.sw_ExchangeEnergyDoubleClick);
+        sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
+        sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
+        sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
+        sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
+        sw_antOcean = findViewById(R.id.sw_antOcean);
+        sw_userPatrol = findViewById(R.id.sw_userPatrol);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cb_immediateEffect.setChecked(Config.immediateEffect());
-        cb_recordLog.setChecked(Config.recordLog());
-        cb_showToast.setChecked(Config.showToast());
-        cb_stayAwake.setChecked(Config.stayAwake());
-        cb_timeoutRestart.setChecked(Config.timeoutRestart());
-        cb_collectEnergy.setChecked(Config.collectEnergy());
-        cb_collectWateringBubble.setChecked(Config.collectWateringBubble());
-        cb_helpFriendCollect.setChecked(Config.helpFriendCollect());
-        cb_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
-        cb_cooperateWater.setChecked(Config.cooperateWater());
-        cb_ancientTree.setChecked(Config.ancientTree());
-        cb_energyRain.setChecked(Config.energyRain());
-        cb_reserve.setChecked(Config.reserve());
-        cb_enableFarm.setChecked(Config.enableFarm());
-        cb_rewardFriend.setChecked(Config.rewardFriend());
-        cb_sendBackAnimal.setChecked(Config.sendBackAnimal());
-        cb_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
-        cb_useNewEggTool.setChecked(Config.useNewEggTool());
-        cb_harvestProduce.setChecked(Config.harvestProduce());
-        cb_donation.setChecked(Config.donation());
-        cb_answerQuestion.setChecked(Config.answerQuestion());
-        cb_receiveFarmTaskAward.setChecked(Config.receiveFarmTaskAward());
-        cb_feedAnimal.setChecked(Config.feedAnimal());
-        cb_useAccelerateTool.setChecked(Config.useAccelerateTool());
-        cb_notifyFriend.setChecked(Config.notifyFriend());
-        cb_receivePoint.setChecked(Config.receivePoint());
-        cb_openTreasureBox.setChecked(Config.openTreasureBox());
-        cb_receiveCoinAsset.setChecked(Config.receiveCoinAsset());
-        cb_donateCharityCoin.setChecked(Config.donateCharityCoin());
-        cb_kbSignIn.setChecked(Config.kbSginIn());
-        cb_limitCollect.setChecked(Config.isLimitCollect());
-        cb_doubleCard.setChecked(Config.doubleCard());
-        cb_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
-        cb_ecoLifeTick.setChecked(Config.ecoLifeTick());
-        cb_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
-        cb_antdodoCollect.setChecked(Config.antdodoCollect());
+        sw_immediateEffect.setChecked(Config.immediateEffect());
+        sw_recordLog.setChecked(Config.recordLog());
+        sw_showToast.setChecked(Config.showToast());
+        sw_stayAwake.setChecked(Config.stayAwake());
+        sw_timeoutRestart.setChecked(Config.timeoutRestart());
+        sw_startAt7.setChecked(Config.startAt7());
+        sw_collectEnergy.setChecked(Config.collectEnergy());
+        sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
+        sw_helpFriendCollect.setChecked(Config.helpFriendCollect());
+        sw_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
+        sw_cooperateWater.setChecked(Config.cooperateWater());
+        sw_ancientTree.setChecked(Config.ancientTree());
+        sw_energyRain.setChecked(Config.energyRain());
+        sw_reserve.setChecked(Config.reserve());
+        sw_beach.setChecked(Config.beach());
+        sw_enableFarm.setChecked(Config.enableFarm());
+        sw_rewardFriend.setChecked(Config.rewardFriend());
+        sw_sendBackAnimal.setChecked(Config.sendBackAnimal());
+        sw_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
+        sw_recordFarmGame.setChecked(Config.recordFarmGame());
+        sw_kitchen.setChecked(Config.kitchen());
+        sw_useNewEggTool.setChecked(Config.useNewEggTool());
+        sw_harvestProduce.setChecked(Config.harvestProduce());
+        sw_donation.setChecked(Config.donation());
+        sw_answerQuestion.setChecked(Config.answerQuestion());
+        sw_receiveFarmTaskAward.setChecked(Config.receiveFarmTaskAward());
+        sw_feedAnimal.setChecked(Config.feedAnimal());
+        sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
+        sw_notifyFriend.setChecked(Config.notifyFriend());
+        sw_receivePoint.setChecked(Config.receivePoint());
+        sw_openTreasureBox.setChecked(Config.openTreasureBox());
+        sw_receiveCoinAsset.setChecked(Config.receiveCoinAsset());
+        sw_donateCharityCoin.setChecked(Config.donateCharityCoin());
+        sw_kbSignIn.setChecked(Config.kbSginIn());
+        sw_limitCollect.setChecked(Config.isLimitCollect());
+        sw_doubleCard.setChecked(Config.doubleCard());
+        sw_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
+        sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
+        sw_tiyubiz.setChecked(Config.tiyubiz());
+        sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
+        sw_antdodoCollect.setChecked(Config.antdodoCollect());
+        sw_antOcean.setChecked(Config.antOcean());
+        sw_userPatrol.setChecked(Config.userPatrol());
     }
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-        if (v instanceof CheckBox) {
-            CheckBox cb = (CheckBox) v;
+        if (v instanceof Switch) {
+            Switch sw = (Switch) v;
             switch (v.getId()) {
-                case R.id.cb_immediateEffect:
-                    Config.setImmediateEffect(cb.isChecked());
+                case R.id.sw_immediateEffect:
+                    Config.setImmediateEffect(sw.isChecked());
                     break;
 
-                case R.id.cb_recordLog:
-                    Config.setRecordLog(cb.isChecked());
+                case R.id.sw_recordLog:
+                    Config.setRecordLog(sw.isChecked());
                     break;
 
-                case R.id.cb_showToast:
-                    Config.setShowToast(cb.isChecked());
+                case R.id.sw_showToast:
+                    Config.setShowToast(sw.isChecked());
                     break;
 
-                case R.id.cb_stayAwake:
-                    Config.setStayAwake(cb.isChecked());
+                case R.id.sw_stayAwake:
+                    Config.setStayAwake(sw.isChecked());
                     break;
 
-                case R.id.cb_timeoutRestart:
-                    Config.setTimeoutRestart(cb.isChecked());
+                case R.id.sw_timeoutRestart:
+                    Config.setTimeoutRestart(sw.isChecked());
                     break;
 
-                case R.id.cb_collectEnergy:
-                    Config.setCollectEnergy(cb.isChecked());
+                case R.id.sw_startAt7:
+                    Config.setStartAt7(this.getApplicationContext(), sw.isChecked());
                     break;
 
-                case R.id.cb_collectWateringBubble:
-                    Config.setCollectWateringBubble(cb.isChecked());
+                case R.id.sw_collectEnergy:
+                    Config.setCollectEnergy(sw.isChecked());
                     break;
 
-                case R.id.cb_limitCollect:
-                    Config.setLimitCollect(cb.isChecked());
+                case R.id.sw_collectWateringBubble:
+                    Config.setCollectWateringBubble(sw.isChecked());
                     break;
 
-                case R.id.cb_doubleCard:
-                    Config.setDoubleCard(cb.isChecked());
+                case R.id.sw_limitCollect:
+                    Config.setLimitCollect(sw.isChecked());
                     break;
 
-                case R.id.cb_helpFriendCollect:
-                    Config.setHelpFriendCollect(cb.isChecked());
+                case R.id.sw_doubleCard:
+                    Config.setDoubleCard(sw.isChecked());
                     break;
 
-                case R.id.cb_receiveForestTaskAward:
-                    Config.setReceiveForestTaskAward(cb.isChecked());
+                case R.id.sw_helpFriendCollect:
+                    Config.setHelpFriendCollect(sw.isChecked());
                     break;
 
-                case R.id.cb_cooperateWater:
-                    Config.setCooperateWater(cb.isChecked());
+                case R.id.sw_receiveForestTaskAward:
+                    Config.setReceiveForestTaskAward(sw.isChecked());
                     break;
 
-                case R.id.cb_ancientTree:
-                    Config.setAncientTree(cb.isChecked());
+                case R.id.sw_cooperateWater:
+                    Config.setCooperateWater(sw.isChecked());
                     break;
 
-                case R.id.cb_energyRain:
-                    Config.setEnergyRain(cb.isChecked());
+                case R.id.sw_ancientTree:
+                    Config.setAncientTree(sw.isChecked());
                     break;
 
-                case R.id.cb_ExchangeEnergyDoubleClick:
-                    Config.setExchangeEnergyDoubleClick(cb.isChecked());
+                case R.id.sw_energyRain:
+                    Config.setEnergyRain(sw.isChecked());
                     break;
 
-                case R.id.cb_reserve:
-                    Config.setReserve(cb.isChecked());
+                case R.id.sw_ExchangeEnergyDoubleClick:
+                    Config.setExchangeEnergyDoubleClick(sw.isChecked());
                     break;
 
-                case R.id.cb_enableFarm:
-                    Config.setEnableFarm(cb.isChecked());
+                case R.id.sw_reserve:
+                    Config.setReserve(sw.isChecked());
                     break;
 
-                case R.id.cb_rewardFriend:
-                    Config.setRewardFriend(cb.isChecked());
+                case R.id.sw_beach:
+                    Config.setBeach(sw.isChecked());
                     break;
 
-                case R.id.cb_sendBackAnimal:
-                    Config.setSendBackAnimal(cb.isChecked());
+                case R.id.sw_enableFarm:
+                    Config.setEnableFarm(sw.isChecked());
                     break;
 
-                case R.id.cb_receiveFarmToolReward:
-                    Config.setReceiveFarmToolReward(cb.isChecked());
+                case R.id.sw_rewardFriend:
+                    Config.setRewardFriend(sw.isChecked());
                     break;
 
-                case R.id.cb_useNewEggTool:
-                    Config.setUseNewEggTool(cb.isChecked());
+                case R.id.sw_sendBackAnimal:
+                    Config.setSendBackAnimal(sw.isChecked());
                     break;
 
-                case R.id.cb_harvestProduce:
-                    Config.setHarvestProduce(cb.isChecked());
+                case R.id.sw_receiveFarmToolReward:
+                    Config.setReceiveFarmToolReward(sw.isChecked());
                     break;
 
-                case R.id.cb_donation:
-                    Config.setDonation(cb.isChecked());
+                case R.id.sw_recordFarmGame:
+                    Config.setRecordFarmGame(sw.isChecked());
                     break;
 
-                case R.id.cb_answerQuestion:
-                    Config.setAnswerQuestion(cb.isChecked());
+                case R.id.sw_kitchen:
+                    Config.setKitchen(sw.isChecked());
                     break;
 
-                case R.id.cb_receiveFarmTaskAward:
-                    Config.setReceiveFarmTaskAward(cb.isChecked());
+                case R.id.sw_useNewEggTool:
+                    Config.setUseNewEggTool(sw.isChecked());
                     break;
 
-                case R.id.cb_feedAnimal:
-                    Config.setFeedAnimal(cb.isChecked());
+                case R.id.sw_harvestProduce:
+                    Config.setHarvestProduce(sw.isChecked());
                     break;
 
-                case R.id.cb_useAccelerateTool:
-                    Config.setUseAccelerateTool(cb.isChecked());
+                case R.id.sw_donation:
+                    Config.setDonation(sw.isChecked());
                     break;
 
-                case R.id.cb_notifyFriend:
-                    Config.setNotifyFriend(cb.isChecked());
+                case R.id.sw_answerQuestion:
+                    Config.setAnswerQuestion(sw.isChecked());
                     break;
 
-                case R.id.cb_receivePoint:
-                    Config.setReceivePoint(cb.isChecked());
+                case R.id.sw_receiveFarmTaskAward:
+                    Config.setReceiveFarmTaskAward(sw.isChecked());
                     break;
 
-                case R.id.cb_openTreasureBox:
-                    Config.setOpenTreasureBox(cb.isChecked());
+                case R.id.sw_feedAnimal:
+                    Config.setFeedAnimal(sw.isChecked());
                     break;
 
-                case R.id.cb_receiveCoinAsset:
-                    Config.setReceiveCoinAsset(cb.isChecked());
+                case R.id.sw_useAccelerateTool:
+                    Config.setUseAccelerateTool(sw.isChecked());
                     break;
 
-                case R.id.cb_donateCharityCoin:
-                    Config.setDonateCharityCoin(cb.isChecked());
+                case R.id.sw_notifyFriend:
+                    Config.setNotifyFriend(sw.isChecked());
                     break;
 
-                case R.id.cb_kbSignIn:
-                    Config.setKbSginIn(cb.isChecked());
+                case R.id.sw_receivePoint:
+                    Config.setReceivePoint(sw.isChecked());
                     break;
 
-                case R.id.cb_ecoLifeTick:
-                    Config.setEcoLifeTick(cb.isChecked());
+                case R.id.sw_openTreasureBox:
+                    Config.setOpenTreasureBox(sw.isChecked());
                     break;
 
-                case R.id.cb_ancientTreeOnlyWeek:
-                    Config.setAncientTreeOnlyWeek(cb.isChecked());
+                case R.id.sw_receiveCoinAsset:
+                    Config.setReceiveCoinAsset(sw.isChecked());
                     break;
 
-                case R.id.cb_antdodoCollect:
-                    Config.setAntdodoCollect(cb.isChecked());
+                case R.id.sw_donateCharityCoin:
+                    Config.setDonateCharityCoin(sw.isChecked());
+                    break;
+
+                case R.id.sw_kbSignIn:
+                    Config.setKbSginIn(sw.isChecked());
+                    break;
+
+                case R.id.sw_ecoLifeTick:
+                    Config.setEcoLifeTick(sw.isChecked());
+                    break;
+
+                case R.id.sw_tiyubiz:
+                    Config.setTiyubiz(sw.isChecked());
+                    break;
+
+                case R.id.sw_ancientTreeOnlyWeek:
+                    Config.setAncientTreeOnlyWeek(sw.isChecked());
+                    break;
+
+                case R.id.sw_antdodoCollect:
+                    Config.setAntdodoCollect(sw.isChecked());
+                    break;
+
+                case R.id.sw_antOcean:
+                    Config.setAntOcean(sw.isChecked());
+                    break;
+
+                case R.id.sw_userPatrol:
+                    Config.setUserPatrol(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
-            Button btn = (Button)v;
-            switch(v.getId()) {
+            Button btn = (Button) v;
+            switch (v.getId()) {
+                case R.id.btn_toastOffsetY:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.TOAST_OFFSET_Y);
+                    break;
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
 
                 case R.id.btn_stayAwakeTarget:
                     ChoiceDialog.showStayAwakeTarget(this, btn.getText());
+                    break;
+
+                case R.id.btn_timeoutRestartType:
+                    ChoiceDialog.showTimeoutRestartType(this, btn.getText());
+                    break;
+
+                case R.id.btn_waitWhenException:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
 
                 case R.id.btn_checkInterval:
@@ -299,7 +467,8 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_doubleCardTime:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME,
+                            this.getString(R.string.use_double_card_time_desc));
                     break;
 
                 case R.id.btn_returnWater30:
@@ -326,6 +495,10 @@ public class SettingsActivity extends Activity {
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(), Config.getWaterCountList());
                     break;
 
+                case R.id.btn_waterFriendCount:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT);
+                    break;
+
                 case R.id.btn_cooperateWaterList:
                     ListDialog.show(this, btn.getText(), CooperateUser.getList(), Config.getCooperateWaterList(),
                             Config.getcooperateWaterNumList());
@@ -344,6 +517,11 @@ public class SettingsActivity extends Activity {
                             Config.getReserveCountList());
                     break;
 
+                case R.id.btn_beachList:
+                    ListDialog.show(this, btn.getText(), AlipayBeach.getList(), Config.getBeachList(),
+                            Config.getBeachCountList());
+                    break;
+
                 case R.id.btn_sendType:
                     ChoiceDialog.showSendType(this, btn.getText());
                     break;
@@ -354,6 +532,9 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_recallAnimalType:
                     ChoiceDialog.showRecallAnimalType(this, btn.getText());
+                    break;
+                case R.id.btn_farmGameTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.FARM_GAME_TIME);
                     break;
 
                 case R.id.btn_feedFriendAnimalList:
@@ -392,10 +573,6 @@ public class SettingsActivity extends Activity {
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT);
                     break;
 
-                case R.id.btn_waitWhenException:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
-                    break;
-
                 case R.id.btn_ExchangeEnergyDoubleClickCount:
                     EditDialog.showEditDialog(this, btn.getText(),
                             EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
@@ -407,13 +584,14 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(Config.hasChanged) {
+        if (Config.hasChanged) {
             Config.hasChanged = !Config.saveConfigFile();
             Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show();
         }
         FriendIdMap.saveIdMap();
         CooperationIdMap.saveIdMap();
         ReserveIdMap.saveIdMap();
+        BeachIdMap.saveIdMap();
     }
 
 }

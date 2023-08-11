@@ -7,36 +7,34 @@ import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.Statistics;
 import pansong291.xposed.quickenergy.util.Config;
 
-public class AntMember
-{
+public class AntMember {
     private static final String TAG = AntMember.class.getCanonicalName();
 
     private static boolean firstTime = true;
 
-    public static void receivePoint()
-    {
-        if(!Config.receivePoint() || !firstTime)
+    public static void receivePoint() {
+        if (!Config.receivePoint() || !firstTime)
             return;
 
-        new Thread()
-        {
+        new Thread() {
             @Override
             public void run() {
                 try {
-                    if(Statistics.canMemberSignInToday()) {
-                        String s = AntMemberRpcCall.memberSignin();
+                    if (Statistics.canMemberSignInToday()) {
+                        String s = AntMemberRpcCall.memberSignIn();
                         JSONObject jo = new JSONObject(s);
-                        if(jo.getString("resultCode").equals("SUCCESS")) {
-                            Log.other (
-                                    "领取〈每日签到〉〈" + jo.getString("signinPoint") +
-                                            "积分〉，已签到〈" + jo.getString("signinSumDay") + "天〉");
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                            Log.other("每日签到📅[" + jo.getString("signinPoint") + "积分]#已签到" + jo.getString("signinSumDay")
+                                    + "天");
                             Statistics.memberSignInToday();
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), s);
                         }
                     }
                     queryPointCert(1, 8);
-                } catch(Throwable t) {
+
+                    anXinDou();
+                } catch (Throwable t) {
                     Log.i(TAG, "receivePoint.run err:");
                     Log.printStackTrace(TAG, t);
                 }
@@ -45,11 +43,34 @@ public class AntMember
         }.start();
     }
 
+    private static void anXinDou() {
+        try {
+            String appletId = "AP16150326";
+            String s = AntMemberRpcCall.taskProcess(appletId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject result = jo.getJSONObject("result");
+                if (result.getBoolean("canPush")) {
+                    s = AntMemberRpcCall.taskTrigger(appletId, "insportal-marketing");
+                    JSONObject joTrigger = new JSONObject(s);
+                    if (joTrigger.getBoolean("success")) {
+                        Log.other("安心豆任务触发成功");
+                    }
+                }
+            } else {
+                Log.recordLog("anXinDou", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "anXinDou err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void queryPointCert(int page, int pageSize) {
         try {
             String s = AntMemberRpcCall.queryPointCert(page, pageSize);
             JSONObject jo = new JSONObject(s);
-            if(jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 boolean hasNextPage = jo.getBoolean("hasNextPage");
                 JSONArray jaCertList = jo.getJSONArray("certList");
                 for (int i = 0; i < jaCertList.length(); i++) {
@@ -59,18 +80,18 @@ public class AntMember
                     int pointAmount = jo.getInt("pointAmount");
                     s = AntMemberRpcCall.receivePointByUser(id);
                     jo = new JSONObject(s);
-                    if(jo.getString("resultCode").equals("SUCCESS")) {
-                        Log.other("领取〈" + bizTitle + "〉〈" + pointAmount + "积分〉");
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        Log.other("领取奖励🎖️[" + bizTitle + "]#" + pointAmount + "积分");
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), s);
                     }
                 }
-                if(hasNextPage)
+                if (hasNextPage)
                     queryPointCert(page + 1, pageSize);
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.i(TAG, "queryPointCert err:");
             Log.printStackTrace(TAG, t);
         }

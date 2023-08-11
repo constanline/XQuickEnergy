@@ -2,7 +2,6 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,13 +12,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.entity.IdAndName;
+import pansong291.xposed.quickenergy.util.Log;
 
-public class ListAdapter extends BaseAdapter
-{
+public class ListAdapter extends BaseAdapter {
     private static ListAdapter adapter;
 
-    public static ListAdapter get(Context c)
-    {
+    public static ListAdapter get(Context c) {
         if(adapter == null)
             adapter = new ListAdapter(c);
         return adapter;
@@ -42,16 +41,21 @@ public class ListAdapter extends BaseAdapter
 
     public void setSelectedList(List<String> l) {
         selects = l;
-        Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
-            if (selects.contains(o1.id) == selects.contains(o2.id)) {
-                return o1.id.compareTo(o2.id);
-            }
-            return selects.contains(o1.id) ? -1 : 1;
-        });
+        try {
+            Collections.sort(list, (o1, o2) -> {
+                if (selects.contains(o1.id) == selects.contains(o2.id)) {
+                    return o1.compareTo(o2);
+                }
+                return selects.contains(o1.id) ? -1 : 1;
+            });
+        } catch (Throwable t) {
+            Log.i("ListAdapter err", "");
+            Log.printStackTrace("setSelectedList", t);
+        }
     }
 
     public int findLast(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
@@ -73,14 +77,14 @@ public class ListAdapter extends BaseAdapter
     }
 
     public int findNext(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
         }
         for(int i = findIndex;;) {
             i = (i + 1) % list.size();
-            IdAndName ai = (IdAndName) list.get(i);
+            IdAndName ai = list.get(i);
             if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
@@ -116,7 +120,8 @@ public class ListAdapter extends BaseAdapter
         ViewHolder vh;
         if (p2 == null) {
             vh = new ViewHolder();
-            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            p2 = View.inflate(context, R.layout.list_item, null);
+//            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
             p2.setTag(vh);
@@ -124,7 +129,7 @@ public class ListAdapter extends BaseAdapter
             vh = (ViewHolder)p2.getTag();
         }
 
-        IdAndName ai = (IdAndName) list.get(p1);
+        IdAndName ai = list.get(p1);
         vh.tv.setText(ai.name);
         vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
         vh.cb.setChecked(selects != null && selects.contains(ai.id));
