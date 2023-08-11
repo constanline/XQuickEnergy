@@ -7,23 +7,29 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.*;
+import pansong291.xposed.quickenergy.entity.FriendWatch;
+import pansong291.xposed.quickenergy.entity.IdAndName;
+import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.PermissionUtil;
+import pansong291.xposed.quickenergy.util.Statistics;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MainActivity extends Activity {
-    private static String[] strArray;
     TextView tvStatistics;
-    Button btnHelp;
 
     public static String version = "";
 
@@ -58,6 +64,17 @@ public class MainActivity extends Activity {
         }
         return isExp;
     }
+    /**
+     * 判断当前应用是否是debug状态
+     */
+    public static boolean isApkInDebug(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +82,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         tvStatistics = findViewById(R.id.tv_statistics);
-        btnHelp = findViewById(R.id.btn_help);
-        if (strArray == null)
-            strArray = getResources().getStringArray(R.array.sentences);
-        if (strArray != null)
-            btnHelp.setText(strArray[RandomUtils.nextInt(0, strArray.length)]);
+//        Button btnGithub = findViewById(R.id.btn_github);
+//        DisplayMetrics metrics = this.getResources().getDisplayMetrics();
+//        int height = metrics.heightPixels;
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -96,9 +111,13 @@ public class MainActivity extends Activity {
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_help) {
-//            sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
-            HanziToPinyin.getInstance().get("day|杜霭瑜(136******43)");
+        if (v.getId() == R.id.btn_test) {
+            if (isApkInDebug(this)) {
+                Toast toast = Toast.makeText(this, "测试", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, Config.toastOffsetY());
+                toast.show();
+//                sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.test"));
+            }
             return;
         }
 
@@ -116,16 +135,15 @@ public class MainActivity extends Activity {
                 data += FileUtils.getOtherLogFile().getAbsolutePath();
                 break;
 
-            case R.id.btn_help:
-                data = "https://github.com/pansong291/XQuickEnergy/wiki";
-                break;
-
             case R.id.btn_github:
                 data = "https://github.com/constanline/XQuickEnergy";
                 break;
 
             case R.id.btn_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return;
+            case R.id.btn_friend_watch:
+                ListDialog.show(this, getString(R.string.friend_watch), FriendWatch.getList(), new ArrayList<>(), null);
                 return;
         }
         Intent it = new Intent(this, HtmlViewerActivity.class);

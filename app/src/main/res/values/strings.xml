@@ -91,6 +91,7 @@
     <string name="cancel">Cancel</string>
     <string name="collect_watering_bubble">Collect watering bubble</string>
     <string name="use_double_card_time">Use double card time</string>
+    <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
     <string name="animal_sleep_time">Animal sleep time</string>
     <string name="visit_github">Visit GitHub</string>
     <string name="exchange_energy_double_click">Exchange energy double click</string>
@@ -108,4 +109,13 @@
     <string name="the_image_of_unactivated" translatable="false">The image of unactivated</string>
     <string name="beach">Beach</string>
     <string name="beach_list">Beach list</string>
+    <string name="test">Test</string>
+    <string name="timeout_restart_type">Timeout restart type</string>
+    <string name="start_at_7_o_clock">Start at 7 o\'clock</string>
+    <string name="tiyubiz">Tiyubiz</string>
+    <string name="friend_watch">Friend watch</string>
+    <string name="user_patrol">User patrol</string>
+    <string name="toast_vertical_offset">Toast vertical offset</string>
+    <string name="animal_game_time">Animal game time</string>
+
 </resources>

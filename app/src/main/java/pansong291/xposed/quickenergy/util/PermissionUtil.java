@@ -38,5 +38,4 @@ public class PermissionUtil {
             Log.printStackTrace(TAG, e);
         }
     }
-
 }

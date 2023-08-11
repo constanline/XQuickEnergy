@@ -2,26 +2,23 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
+import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Log;
 
-public class ListAdapter extends BaseAdapter
-{
+public class ListAdapter extends BaseAdapter {
     private static ListAdapter adapter;
 
-    public static ListAdapter get(Context c)
-    {
+    public static ListAdapter get(Context c) {
         if(adapter == null)
             adapter = new ListAdapter(c);
         return adapter;
@@ -45,9 +42,9 @@ public class ListAdapter extends BaseAdapter
     public void setSelectedList(List<String> l) {
         selects = l;
         try {
-            Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
+            Collections.sort(list, (o1, o2) -> {
                 if (selects.contains(o1.id) == selects.contains(o2.id)) {
-                    return IdAndName.Compare(o1, o2);
+                    return o1.compareTo(o2);
                 }
                 return selects.contains(o1.id) ? -1 : 1;
             });
@@ -58,7 +55,7 @@ public class ListAdapter extends BaseAdapter
     }
 
     public int findLast(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
@@ -80,7 +77,7 @@ public class ListAdapter extends BaseAdapter
     }
 
     public int findNext(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
@@ -123,7 +120,8 @@ public class ListAdapter extends BaseAdapter
         ViewHolder vh;
         if (p2 == null) {
             vh = new ViewHolder();
-            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            p2 = View.inflate(context, R.layout.list_item, null);
+//            p2 = LayoutInflater.from(context).inflate(R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
             p2.setTag(vh);

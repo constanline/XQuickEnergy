@@ -1,4 +1,4 @@
-package pansong291.xposed.quickenergy.ui;
+package pansong291.xposed.quickenergy.entity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

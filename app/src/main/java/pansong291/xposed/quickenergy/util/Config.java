@@ -1,25 +1,27 @@
 package pansong291.xposed.quickenergy.util;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.SendType;
+import pansong291.xposed.quickenergy.hook.ClassMember;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Config
-{
-
-    public enum RecallAnimalType
-    {
+public class Config {
+    public enum RecallAnimalType {
         ALWAYS, WHEN_THIEF, WHEN_HUNGRY, NEVER;
         public static final CharSequence[] nickNames = {"始终召回", "作贼时召回", "饥饿时召回", "不召回"};
         public static final CharSequence[] names =
                 {ALWAYS.nickName(), WHEN_THIEF.nickName(), WHEN_HUNGRY.nickName(), NEVER.nickName()};
 
-        public CharSequence nickName()
-        {
+        public CharSequence nickName() {
             return nickNames[ordinal()];
         }
     }
@@ -30,10 +32,13 @@ public class Config
     public static final String jn_immediateEffect = "immediateEffect";
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
+    public static final String jn_toastOffsetY = "toastOffsetY";
     public static final String jn_stayAwake = "stayAwake";
     public static final String jn_timeoutRestart = "timeoutRestart";
     public static final String jn_stayAwakeType = "stayAwakeType";
     public static final String jn_stayAwakeTarget = "stayAwakeTarget";
+    public static final String jn_timeoutType = "timeoutType";
+    public static final String jn_startAt7 = "startAt7";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
@@ -85,12 +90,14 @@ public class Config
     public static final String jn_feedAnimal = "feedAnimal";
     public static final String jn_useAccelerateTool = "useAccelerateTool";
     public static final String jn_feedFriendAnimalList = "feedFriendAnimalList";
+    public static final String jn_farmGameTime = "farmGameTime";
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_antdodoCollect = "antdodoCollect";
 
     public static final String jn_antOcean = "antOcean";
+    public static final String jn_userPatrol = "userPatrol";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -102,6 +109,7 @@ public class Config
     public static final String jn_syncStepCount = "syncStepCount";
     public static final String jn_kbSignIn = "kbSignIn";
     public static final String jn_ecoLifeTick = "ecoLifeTick";
+    public static final String jn_tiyubiz = "tiyubiz";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
@@ -112,10 +120,13 @@ public class Config
     private boolean immediateEffect;
     private boolean recordLog;
     private boolean showToast;
+    private int toastOffsetY;
     private boolean stayAwake;
     private XposedHook.StayAwakeType stayAwakeType;
     private XposedHook.StayAwakeTarget stayAwakeTarget;
     private boolean timeoutRestart;
+    private XposedHook.StayAwakeType timeoutType;
+    private boolean startAt7;
 
     /* forest */
     private boolean collectEnergy;
@@ -163,6 +174,7 @@ public class Config
     private boolean antdodoCollect;
 
     private boolean antOcean;
+    private boolean userPatrol;
 
     /* farm */
     private boolean enableFarm;
@@ -184,6 +196,7 @@ public class Config
     private List<String> feedFriendAnimalList;
     private List<Integer> feedFriendCountList;
 
+    private List<String> farmGameTime;
     private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
@@ -198,68 +211,67 @@ public class Config
     private int syncStepCount;
     private boolean kbSignIn;
     private boolean ecoLifeTick;
+    private boolean tiyubiz;
 
     /* base */
     private static Config config;
 
     /* application */
-    public static void setImmediateEffect(boolean b)
-    {
+    public static void setImmediateEffect(boolean b) {
         getConfig().immediateEffect = b;
         hasChanged = true;
     }
 
-    public static boolean immediateEffect()
-    {
+    public static boolean immediateEffect() {
         return getConfig().immediateEffect;
     }
 
-    public static void setRecordLog(boolean b)
-    {
+    public static void setRecordLog(boolean b) {
         getConfig().recordLog = b;
         hasChanged = true;
     }
 
-    public static boolean recordLog()
-    {
+    public static boolean recordLog() {
         return getConfig().recordLog;
     }
 
-    public static void setForestPauseTime(long b)
-    {
+    public static void setForestPauseTime(long b) {
         getConfig().forestPauseTime = b;
         hasChanged = true;
     }
 
-    public static long forestPauseTime()
-    {
+    public static long forestPauseTime() {
         return getConfig().forestPauseTime;
     }
 
-    public static void setShowToast(boolean b)
-    {
+    public static void setShowToast(boolean b) {
         getConfig().showToast = b;
         hasChanged = true;
     }
 
-    public static boolean showToast()
-    {
+    public static boolean showToast() {
         return getConfig().showToast;
     }
 
-    public static void setStayAwake(boolean b)
-    {
+    public static void setToastOffsetY(int i) {
+        getConfig().toastOffsetY = i;
+        hasChanged = true;
+    }
+
+    public static int toastOffsetY() {
+        return getConfig().toastOffsetY;
+    }
+
+    public static void setStayAwake(boolean b) {
         getConfig().stayAwake = b;
         hasChanged = true;
     }
 
-    public static boolean stayAwake()
-    {
+    public static boolean stayAwake() {
         return getConfig().stayAwake;
     }
 
-    public static void setStayAwakeType(int i)
-    {
+    public static void setStayAwakeType(int i) {
         getConfig().stayAwakeType = XposedHook.StayAwakeType.values()[i];
         hasChanged = true;
     }
@@ -268,8 +280,7 @@ public class Config
         return getConfig().stayAwakeType;
     }
 
-    public static void setStayAwakeTarget(int i)
-    {
+    public static void setStayAwakeTarget(int i) {
         getConfig().stayAwakeTarget = XposedHook.StayAwakeTarget.values()[i];
         hasChanged = true;
     }
@@ -287,48 +298,63 @@ public class Config
         return getConfig().timeoutRestart;
     }
 
+    public static void setTimeoutType(int i) {
+        getConfig().timeoutType = XposedHook.StayAwakeType.values()[i];
+        hasChanged = true;
+    }
+
+    public static XposedHook.StayAwakeType timeoutType() {
+        return getConfig().timeoutType;
+    }
+
+    public static void setStartAt7(Context context, boolean b) {
+        getConfig().startAt7 = b;
+        if (b) {
+            setAlarm7(context);
+        } else {
+            cancelAlarm7(context);
+        }
+        hasChanged = true;
+    }
+
+    public static boolean startAt7() {
+        return getConfig().startAt7;
+    }
+
     /* forest */
-    public static void setCollectEnergy(boolean b)
-    {
+    public static void setCollectEnergy(boolean b) {
         getConfig().collectEnergy = b;
         hasChanged = true;
     }
 
-    public static boolean collectEnergy()
-    {
+    public static boolean collectEnergy() {
         return getConfig().collectEnergy;
     }
 
-    public static void setCollectWateringBubble(boolean b)
-    {
+    public static void setCollectWateringBubble(boolean b) {
         getConfig().collectWateringBubble = b;
         hasChanged = true;
     }
 
-    public static boolean collectWateringBubble()
-    {
+    public static boolean collectWateringBubble() {
         return getConfig().collectWateringBubble;
     }
 
-    public static void setCheckInterval(int i)
-    {
+    public static void setCheckInterval(int i) {
         getConfig().checkInterval = i;
         hasChanged = true;
     }
 
-    public static int checkInterval()
-    {
+    public static int checkInterval() {
         return getConfig().checkInterval;
     }
 
-    public static void setWaitWhenException(int i)
-    {
+    public static void setWaitWhenException(int i) {
         getConfig().waitWhenException = i;
         hasChanged = true;
     }
 
-    public static int waitWhenException()
-    {
+    public static int waitWhenException() {
         return getConfig().waitWhenException;
     }
 
@@ -370,222 +396,183 @@ public class Config
 
     public static boolean isDoubleCardTime() {
         for (String doubleTime : getConfig().doubleCardTime) {
-            if (checkInTimeSpan(doubleTime)) return true;
+            if (checkInTimeSpan(doubleTime))
+                return true;
         }
         return false;
     }
 
-    public static void setAdvanceTime(int i)
-    {
+    public static void setAdvanceTime(int i) {
         getConfig().advanceTime = i;
         hasChanged = true;
     }
 
-    public static int advanceTime()
-    {
+    public static int advanceTime() {
         return getConfig().advanceTime;
     }
 
-    public static void setCollectInterval(int i)
-    {
+    public static void setCollectInterval(int i) {
         getConfig().collectInterval = i;
         hasChanged = true;
     }
 
-    public static int collectInterval()
-    {
+    public static int collectInterval() {
         return getConfig().collectInterval;
     }
 
-    public static void setCollectTimeout(int i)
-    {
+    public static void setCollectTimeout(int i) {
         getConfig().collectTimeout = i;
         hasChanged = true;
     }
 
-    public static int collectTimeout()
-    {
+    public static int collectTimeout() {
         return getConfig().collectTimeout;
     }
 
-    public static void setReturnWater33(int i)
-    {
+    public static void setReturnWater33(int i) {
         getConfig().returnWater33 = i;
         hasChanged = true;
     }
 
-    public static int returnWater33()
-    {
+    public static int returnWater33() {
         return getConfig().returnWater33;
     }
 
-    public static void setReturnWater18(int i)
-    {
+    public static void setReturnWater18(int i) {
         getConfig().returnWater18 = i;
         hasChanged = true;
     }
 
-    public static int returnWater18()
-    {
+    public static int returnWater18() {
         return getConfig().returnWater18;
     }
 
-    public static void setReturnWater10(int i)
-    {
+    public static void setReturnWater10(int i) {
         getConfig().returnWater10 = i;
         hasChanged = true;
     }
 
-    public static int returnWater10()
-    {
+    public static int returnWater10() {
         return getConfig().returnWater10;
     }
 
-    public static void setHelpFriendCollect(boolean b)
-    {
+    public static void setHelpFriendCollect(boolean b) {
         getConfig().helpFriendCollect = b;
         hasChanged = true;
     }
 
-    public static boolean helpFriendCollect()
-    {
+    public static boolean helpFriendCollect() {
         return getConfig().helpFriendCollect;
     }
 
-    public static List<String> getDontCollectList()
-    {
+    public static List<String> getDontCollectList() {
         return getConfig().dontCollectList;
     }
 
-    public static List<String> getDontHelpCollectList()
-    {
+    public static List<String> getDontHelpCollectList() {
         return getConfig().dontHelpCollectList;
     }
 
-    public static void setReceiveForestTaskAward(boolean b)
-    {
+    public static void setReceiveForestTaskAward(boolean b) {
         getConfig().receiveForestTaskAward = b;
         hasChanged = true;
     }
 
-    public static boolean receiveForestTaskAward()
-    {
+    public static boolean receiveForestTaskAward() {
         return getConfig().receiveForestTaskAward;
     }
 
-    public static List<String> getWaterFriendList()
-    {
+    public static List<String> getWaterFriendList() {
         return getConfig().waterFriendList;
     }
 
-    public static List<Integer> getWaterCountList()
-    {
+    public static List<Integer> getWaterCountList() {
         return getConfig().waterCountList;
     }
 
-    public static void setWaterFriendCount(int i)
-    {
+    public static void setWaterFriendCount(int i) {
         getConfig().waterFriendCount = i;
         hasChanged = true;
     }
 
-    public static int waterFriendCount()
-    {
+    public static int waterFriendCount() {
         return getConfig().waterFriendCount;
     }
 
-    public static void setCooperateWater(boolean b)
-    {
+    public static void setCooperateWater(boolean b) {
         getConfig().cooperateWater = b;
         hasChanged = true;
     }
 
-    public static boolean cooperateWater()
-    {
+    public static boolean cooperateWater() {
         return getConfig().cooperateWater;
     }
 
-    public static List<String> getCooperateWaterList()
-    {
+    public static List<String> getCooperateWaterList() {
         return getConfig().cooperateWaterList;
     }
 
-    public static List<Integer> getcooperateWaterNumList()
-    {
+    public static List<Integer> getcooperateWaterNumList() {
         return getConfig().cooperateWaterNumList;
     }
 
-    public static void setAncientTree(boolean b)
-    {
+    public static void setAncientTree(boolean b) {
         getConfig().ancientTree = b;
         hasChanged = true;
     }
 
-    public static boolean ancientTree()
-    {
+    public static boolean ancientTree() {
         return getConfig().ancientTree;
     }
 
-    public static List<String> getAncientTreeAreaCodeList()
-    {
+    public static List<String> getAncientTreeAreaCodeList() {
         return getConfig().ancientTreeAreaCodeList;
     }
 
-    public static void setReserve(boolean b)
-    {
+    public static void setReserve(boolean b) {
         getConfig().reserve = b;
         hasChanged = true;
     }
 
-    public static boolean reserve()
-    {
+    public static boolean reserve() {
         return getConfig().reserve;
     }
 
-    public static List<String> getReserveList()
-    {
+    public static List<String> getReserveList() {
         return getConfig().reserveList;
     }
 
-    public static List<Integer> getReserveCountList()
-    {
+    public static List<Integer> getReserveCountList() {
         return getConfig().reserveCountList;
     }
 
-    public static void setBeach(boolean b)
-    {
+    public static void setBeach(boolean b) {
         getConfig().beach = b;
         hasChanged = true;
     }
 
-    public static boolean beach()
-    {
+    public static boolean beach() {
         return getConfig().beach;
     }
 
-    public static List<String> getBeachList()
-    {
+    public static List<String> getBeachList() {
         return getConfig().beachList;
     }
 
-    public static List<Integer> getBeachCountList()
-    {
+    public static List<Integer> getBeachCountList() {
         return getConfig().beachCountList;
     }
 
-    public static void setEnergyRain(boolean b)
-    {
+    public static void setEnergyRain(boolean b) {
         getConfig().energyRain = b;
         hasChanged = true;
     }
 
-    public static List<String> getGiveEnergyRainList()
-    {
+    public static List<String> getGiveEnergyRainList() {
         return getConfig().giveEnergyRainList;
     }
 
-    public static boolean energyRain()
-    {
+    public static boolean energyRain() {
         return getConfig().energyRain;
     }
 
@@ -607,14 +594,12 @@ public class Config
         hasChanged = true;
     }
 
-    public static void setAncientTreeOnlyWeek(boolean b)
-    {
+    public static void setAncientTreeOnlyWeek(boolean b) {
         getConfig().ancientTreeOnlyWeek = b;
         hasChanged = true;
     }
 
-    public static boolean ancientTreeOnlyWeek()
-    {
+    public static boolean ancientTreeOnlyWeek() {
         return getConfig().ancientTreeOnlyWeek;
     }
 
@@ -627,152 +612,134 @@ public class Config
         return "星期一".equals(week) || "星期三".equals(week) || "星期五".equals(week);
     }
 
-    public static void setAntdodoCollect(boolean b)
-    {
+    public static void setAntdodoCollect(boolean b) {
         getConfig().antdodoCollect = b;
         hasChanged = true;
     }
 
-    public static boolean antdodoCollect()
-    {
+    public static boolean antdodoCollect() {
         return getConfig().antdodoCollect;
     }
 
-    public static void setAntOcean(boolean b)
-    {
+    public static void setAntOcean(boolean b) {
         getConfig().antOcean = b;
         hasChanged = true;
     }
 
-    public static boolean antOcean()
-    {
+    public static boolean antOcean() {
         return getConfig().antOcean;
     }
 
+    public static void setUserPatrol(boolean b) {
+        getConfig().userPatrol = b;
+        hasChanged = true;
+    }
+
+    public static boolean userPatrol() {
+        return getConfig().userPatrol;
+    }
+
     /* farm */
-    public static void setEnableFarm(boolean b)
-    {
+    public static void setEnableFarm(boolean b) {
         getConfig().enableFarm = b;
         hasChanged = true;
     }
 
-    public static boolean enableFarm()
-    {
+    public static boolean enableFarm() {
         return getConfig().enableFarm;
     }
 
-    public static void setRewardFriend(boolean b)
-    {
+    public static void setRewardFriend(boolean b) {
         getConfig().rewardFriend = b;
         hasChanged = true;
     }
 
-    public static boolean rewardFriend()
-    {
+    public static boolean rewardFriend() {
         return getConfig().rewardFriend;
     }
 
-    public static void setSendBackAnimal(boolean b)
-    {
+    public static void setSendBackAnimal(boolean b) {
         getConfig().sendBackAnimal = b;
         hasChanged = true;
     }
 
-    public static boolean sendBackAnimal()
-    {
+    public static boolean sendBackAnimal() {
         return getConfig().sendBackAnimal;
     }
 
-    public static void setSendType(int i)
-    {
+    public static void setSendType(int i) {
         getConfig().sendType = SendType.values()[i];
         hasChanged = true;
     }
 
-    public static SendType sendType()
-    {
+    public static SendType sendType() {
         return getConfig().sendType;
     }
 
-    public static List<String> getDontSendFriendList()
-    {
+    public static List<String> getDontSendFriendList() {
         return getConfig().dontSendFriendList;
     }
 
-    public static void setRecallAnimalType(int i)
-    {
+    public static void setRecallAnimalType(int i) {
         getConfig().recallAnimalType = RecallAnimalType.values()[i];
         hasChanged = true;
     }
 
-    public static RecallAnimalType recallAnimalType()
-    {
+    public static RecallAnimalType recallAnimalType() {
         return getConfig().recallAnimalType;
     }
 
-    public static void setReceiveFarmToolReward(boolean b)
-    {
+    public static void setReceiveFarmToolReward(boolean b) {
         getConfig().receiveFarmToolReward = b;
         hasChanged = true;
     }
 
-    public static boolean receiveFarmToolReward()
-    {
+    public static boolean receiveFarmToolReward() {
         return getConfig().receiveFarmToolReward;
     }
 
-    public static void setRecordFarmGame(boolean b)
-    {
+    public static void setRecordFarmGame(boolean b) {
         getConfig().recordFarmGame = b;
         hasChanged = true;
     }
 
-    public static boolean recordFarmGame()
-    {
+    public static boolean recordFarmGame() {
         return getConfig().recordFarmGame;
     }
 
-    public static void setKitchen(boolean b)
-    {
+    public static void setKitchen(boolean b) {
         getConfig().kitchen = b;
         hasChanged = true;
     }
 
-    public static boolean kitchen()
-    {
+    public static boolean kitchen() {
         return getConfig().kitchen;
     }
 
-    public static void setUseNewEggTool(boolean b)
-    {
+    public static void setUseNewEggTool(boolean b) {
         getConfig().useNewEggTool = b;
         hasChanged = true;
     }
 
-    public static boolean useNewEggTool()
-    {
+    public static boolean useNewEggTool() {
         return getConfig().useNewEggTool;
     }
 
-    public static void setHarvestProduce(boolean b)
-    {
+    public static void setHarvestProduce(boolean b) {
         getConfig().harvestProduce = b;
         hasChanged = true;
     }
 
-    public static boolean harvestProduce()
-    {
+    public static boolean harvestProduce() {
         return getConfig().harvestProduce;
     }
 
-    public static void setDonation(boolean b)
-    {
+    public static void setDonation(boolean b) {
         getConfig().donation = b;
         hasChanged = true;
     }
 
-    public static boolean donation()
-    {
+    public static boolean donation() {
         return getConfig().donation;
     }
 
@@ -785,47 +752,56 @@ public class Config
         return getConfig().answerQuestion;
     }
 
-    public static void setReceiveFarmTaskAward(boolean b)
-    {
+    public static void setReceiveFarmTaskAward(boolean b) {
         getConfig().receiveFarmTaskAward = b;
         hasChanged = true;
     }
 
-    public static boolean receiveFarmTaskAward()
-    {
+    public static boolean receiveFarmTaskAward() {
         return getConfig().receiveFarmTaskAward;
     }
 
-    public static void setFeedAnimal(boolean b)
-    {
+    public static void setFeedAnimal(boolean b) {
         getConfig().feedAnimal = b;
         hasChanged = true;
     }
 
-    public static boolean feedAnimal()
-    {
+    public static boolean feedAnimal() {
         return getConfig().feedAnimal;
     }
 
-    public static void setUseAccelerateTool(boolean b)
-    {
+    public static void setUseAccelerateTool(boolean b) {
         getConfig().useAccelerateTool = b;
         hasChanged = true;
     }
 
-    public static boolean useAccelerateTool()
-    {
+    public static boolean useAccelerateTool() {
         return getConfig().useAccelerateTool;
     }
 
-    public static List<String> getFeedFriendAnimalList()
-    {
+    public static List<String> getFeedFriendAnimalList() {
         return getConfig().feedFriendAnimalList;
     }
 
-    public static List<Integer> getFeedFriendCountList()
-    {
+    public static List<Integer> getFeedFriendCountList() {
         return getConfig().feedFriendCountList;
+    }
+
+    public static void setFarmGameTime(String i) {
+        getConfig().farmGameTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+
+    public static String farmGameTime() {
+        return String.join(",", getConfig().farmGameTime);
+    }
+
+    public static boolean isFarmGameTime() {
+        for (String doubleTime : getConfig().farmGameTime) {
+            if (checkInTimeSpan(doubleTime))
+                return true;
+        }
+        return false;
     }
 
     public static void setAnimalSleepTime(String i) {
@@ -837,10 +813,10 @@ public class Config
         return String.join(",", getConfig().animalSleepTime);
     }
 
-
     public static boolean isAnimalSleepTime() {
         for (String doubleTime : getConfig().animalSleepTime) {
-            if (checkInTimeSpan(doubleTime)) return true;
+            if (checkInTimeSpan(doubleTime))
+                return true;
         }
         return false;
     }
@@ -857,102 +833,84 @@ public class Config
         }
     }
 
-    public static void setNotifyFriend(boolean b)
-    {
+    public static void setNotifyFriend(boolean b) {
         getConfig().notifyFriend = b;
         hasChanged = true;
     }
 
-    public static boolean notifyFriend()
-    {
+    public static boolean notifyFriend() {
         return getConfig().notifyFriend;
     }
 
-    public static List<String> getDontNotifyFriendList()
-    {
+    public static List<String> getDontNotifyFriendList() {
         return getConfig().dontNotifyFriendList;
     }
 
     /* other */
-    public static void setReceivePoint(boolean b)
-    {
+    public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
         hasChanged = true;
     }
 
-    public static boolean receivePoint()
-    {
+    public static boolean receivePoint() {
         return getConfig().receivePoint;
     }
 
-    public static void setOpenTreasureBox(boolean b)
-    {
+    public static void setOpenTreasureBox(boolean b) {
         getConfig().openTreasureBox = b;
         hasChanged = true;
     }
 
-    public static boolean openTreasureBox()
-    {
+    public static boolean openTreasureBox() {
         return getConfig().openTreasureBox;
     }
 
-    public static void setReceiveCoinAsset(boolean b)
-    {
+    public static void setReceiveCoinAsset(boolean b) {
         getConfig().receiveCoinAsset = b;
         hasChanged = true;
     }
 
-    public static boolean receiveCoinAsset()
-    {
+    public static boolean receiveCoinAsset() {
         return getConfig().receiveCoinAsset;
     }
 
-    public static void setDonateCharityCoin(boolean b)
-    {
+    public static void setDonateCharityCoin(boolean b) {
         getConfig().donateCharityCoin = b;
         hasChanged = true;
     }
 
-    public static boolean donateCharityCoin()
-    {
+    public static boolean donateCharityCoin() {
         return getConfig().donateCharityCoin;
     }
 
-    public static void setMinExchangeCount(int i)
-    {
+    public static void setMinExchangeCount(int i) {
         getConfig().minExchangeCount = i;
         hasChanged = true;
     }
 
-    public static int minExchangeCount()
-    {
+    public static int minExchangeCount() {
         return getConfig().minExchangeCount;
     }
 
-    public static void setLatestExchangeTime(int i)
-    {
+    public static void setLatestExchangeTime(int i) {
         getConfig().latestExchangeTime = i;
         hasChanged = true;
     }
 
-    public static int latestExchangeTime()
-    {
+    public static int latestExchangeTime() {
         return getConfig().latestExchangeTime;
     }
 
-    public static void setSyncStepCount(int i)
-    {
+    public static void setSyncStepCount(int i) {
         getConfig().syncStepCount = i;
         hasChanged = true;
     }
 
-    public static int syncStepCount()
-    {
+    public static int syncStepCount() {
         return getConfig().syncStepCount;
     }
 
-    public static void setKbSginIn(boolean b)
-    {
+    public static void setKbSginIn(boolean b) {
         getConfig().kbSignIn = b;
         hasChanged = true;
     }
@@ -969,9 +927,19 @@ public class Config
     public static boolean ecoLifeTick() {
         return getConfig().ecoLifeTick;
     }
+
+    public static void setTiyubiz(boolean b) {
+        getConfig().tiyubiz = b;
+        hasChanged = true;
+    }
+
+    public static boolean tiyubiz() {
+        return getConfig().tiyubiz;
+    }
+
     /* base */
     private static Config getConfig() {
-        if(config == null || shouldReload && config.immediateEffect) {
+        if (config == null || shouldReload && config.immediateEffect) {
             shouldReload = false;
             String confJson = null;
             if (FileUtils.getConfigFile(FriendIdMap.currentUid).exists())
@@ -981,18 +949,20 @@ public class Config
         return config;
     }
 
-    public static Config defInit()
-    {
+    public static Config defInit() {
         Config c = new Config();
 
         c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;
+        c.toastOffsetY = 0;
         c.stayAwake = true;
         c.stayAwakeType = XposedHook.StayAwakeType.BROADCAST;
         c.stayAwakeTarget = XposedHook.StayAwakeTarget.SERVICE;
         c.timeoutRestart = true;
+        c.timeoutType = XposedHook.StayAwakeType.ALARM;
+        c.startAt7 = false;
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
@@ -1010,37 +980,48 @@ public class Config
         c.returnWater18 = 0;
         c.returnWater10 = 0;
         c.helpFriendCollect = true;
-        if(c.dontCollectList == null) c.dontCollectList = new ArrayList<>();
-        if(c.dontHelpCollectList == null) c.dontHelpCollectList = new ArrayList<>();
+        if (c.dontCollectList == null)
+            c.dontCollectList = new ArrayList<>();
+        if (c.dontHelpCollectList == null)
+            c.dontHelpCollectList = new ArrayList<>();
         c.receiveForestTaskAward = true;
-        if(c.waterFriendList == null) c.waterFriendList = new ArrayList<>();
-        if(c.waterCountList == null) c.waterCountList = new ArrayList<>();
+        if (c.waterFriendList == null)
+            c.waterFriendList = new ArrayList<>();
+        if (c.waterCountList == null)
+            c.waterCountList = new ArrayList<>();
         c.waterFriendCount = 66;
         c.cooperateWater = true;
-        if(c.cooperateWaterList == null) c.cooperateWaterList = new ArrayList<>();
-        if(c.syncStepList == null) c.syncStepList = new ArrayList<>();
-        if(c.cooperateWaterNumList == null) c.cooperateWaterNumList = new ArrayList<>();
+        if (c.cooperateWaterList == null)
+            c.cooperateWaterList = new ArrayList<>();
+        if (c.cooperateWaterNumList == null)
+            c.cooperateWaterNumList = new ArrayList<>();
         c.ancientTree = true;
-        c.ancientTreeAreaCodeList = new ArrayList<>();
         c.reserve = true;
-        if(c.reserveList == null) c.reserveList = new ArrayList<>();
-        if(c.reserveCountList == null) c.reserveCountList = new ArrayList<>();
+        if (c.reserveList == null)
+            c.reserveList = new ArrayList<>();
+        if (c.reserveCountList == null)
+            c.reserveCountList = new ArrayList<>();
         c.beach = true;
-        if(c.beachList == null) c.beachList = new ArrayList<>();
-        if(c.beachCountList == null) c.beachCountList = new ArrayList<>();
+        if (c.beachList == null)
+            c.beachList = new ArrayList<>();
+        if (c.beachCountList == null)
+            c.beachCountList = new ArrayList<>();
         c.energyRain = true;
-        if(c.giveEnergyRainList == null) c.giveEnergyRainList = new ArrayList<>();
+        if (c.giveEnergyRainList == null)
+            c.giveEnergyRainList = new ArrayList<>();
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
         c.antOcean = true;
+        c.userPatrol = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
         c.sendBackAnimal = true;
         c.sendType = SendType.HIT;
-        if(c.dontSendFriendList == null) c.dontSendFriendList = new ArrayList<>();
+        if (c.dontSendFriendList == null)
+            c.dontSendFriendList = new ArrayList<>();
         c.recallAnimalType = RecallAnimalType.ALWAYS;
         c.receiveFarmToolReward = true;
         c.recordFarmGame = true;
@@ -1052,13 +1033,18 @@ public class Config
         c.receiveFarmTaskAward = true;
         c.feedAnimal = true;
         c.useAccelerateTool = true;
-        if(c.feedFriendAnimalList == null) c.feedFriendAnimalList = new ArrayList<>();
-        if(c.feedFriendCountList == null) c.feedFriendCountList = new ArrayList<>();
-        c.doubleCardTime = new ArrayList<>();
-        c.doubleCardTime.add("2300-2400");
-        c.doubleCardTime.add("0000-0559");
+        if (c.feedFriendAnimalList == null)
+            c.feedFriendAnimalList = new ArrayList<>();
+        if (c.feedFriendCountList == null)
+            c.feedFriendCountList = new ArrayList<>();
+        c.farmGameTime = new ArrayList<>();
+        c.farmGameTime.add("2200-2400");
+        c.animalSleepTime = new ArrayList<>();
+        c.animalSleepTime.add("2300-2400");
+        c.animalSleepTime.add("0000-0559");
         c.notifyFriend = true;
-        if(c.dontNotifyFriendList == null) c.dontNotifyFriendList = new ArrayList<>();
+        if (c.dontNotifyFriendList == null)
+            c.dontNotifyFriendList = new ArrayList<>();
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1067,6 +1053,7 @@ public class Config
         c.kbSignIn = true;
         c.syncStepCount = 22000;
         c.ecoLifeTick = true;
+        c.tiyubiz = true;
         return c;
     }
 
@@ -1089,6 +1076,8 @@ public class Config
 
             config.showToast = jo.optBoolean(jn_showToast, true);
 
+            config.toastOffsetY = jo.optInt(jn_toastOffsetY, 0);
+
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
 
             config.stayAwakeType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_stayAwakeType, XposedHook.StayAwakeType.BROADCAST.name()));
@@ -1096,6 +1085,10 @@ public class Config
             config.stayAwakeTarget = XposedHook.StayAwakeTarget.valueOf(jo.optString(jn_stayAwakeTarget, XposedHook.StayAwakeTarget.SERVICE.name()));
 
             config.timeoutRestart = jo.optBoolean(jn_timeoutRestart, true);
+
+            config.timeoutType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
+
+            config.startAt7 = jo.optBoolean(jn_startAt7, false);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
@@ -1131,7 +1124,7 @@ public class Config
             config.dontCollectList = new ArrayList<>();
             if (jo.has(jn_dontCollectList)) {
                 ja = jo.getJSONArray(jn_dontCollectList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     config.dontCollectList.add(ja.getString(i));
                 }
             }
@@ -1139,7 +1132,7 @@ public class Config
             config.dontHelpCollectList = new ArrayList<>();
             if (jo.has(jn_dontHelpCollectList)) {
                 ja = jo.getJSONArray(jn_dontHelpCollectList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     config.dontHelpCollectList.add(ja.getString(i));
                 }
             }
@@ -1150,8 +1143,8 @@ public class Config
             config.waterCountList = new ArrayList<>();
             if (jo.has(jn_waterFriendList)) {
                 ja = jo.getJSONArray(jn_waterFriendList);
-                for(int i = 0; i < ja.length(); i++) {
-                    if(ja.get(i) instanceof JSONArray) {
+                for (int i = 0; i < ja.length(); i++) {
+                    if (ja.get(i) instanceof JSONArray) {
                         jaa = ja.getJSONArray(i);
                         config.waterFriendList.add(jaa.getString(0));
                         config.waterCountList.add(jaa.getInt(1));
@@ -1161,6 +1154,7 @@ public class Config
                     }
                 }
             }
+
             config.waterFriendCount = jo.optInt(jn_waterFriendCount, 66);
 
             config.cooperateWater = jo.optBoolean(jn_cooperateWater, true);
@@ -1169,7 +1163,7 @@ public class Config
             config.cooperateWaterNumList = new ArrayList<>();
             if (jo.has(jn_cooperateWaterList)) {
                 ja = jo.getJSONArray(jn_cooperateWaterList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     jaa = ja.getJSONArray(i);
                     config.cooperateWaterList.add(jaa.getString(0));
                     config.cooperateWaterNumList.add(jaa.getInt(1));
@@ -1181,16 +1175,16 @@ public class Config
             config.ancientTreeAreaCodeList = new ArrayList<>();
             if (jo.has(jn_ancientTreeAreaCodeList)) {
                 ja = jo.getJSONArray(jn_ancientTreeAreaCodeList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     config.ancientTreeAreaCodeList.add(ja.getString(i));
                 }
             }
 
             config.energyRain = jo.optBoolean(jn_energyRain, true);
             config.giveEnergyRainList = new ArrayList<>();
-            if(jo.has(jn_giveEnergyRainList)) {
+            if (jo.has(jn_giveEnergyRainList)) {
                 ja = jo.getJSONArray(jn_giveEnergyRainList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     jaa = ja.getJSONArray(i);
                     config.giveEnergyRainList.add(jaa.getString(0));
                 }
@@ -1199,10 +1193,10 @@ public class Config
             config.reserve = jo.optBoolean(jn_reserve, true);
             config.reserveList = new ArrayList<>();
             config.reserveCountList = new ArrayList<>();
-            if(jo.has(jn_reserveList)) {
+            if (jo.has(jn_reserveList)) {
                 ja = jo.getJSONArray(jn_reserveList);
-                for(int i = 0; i < ja.length(); i++) {
-                    if(ja.get(i) instanceof JSONArray) {
+                for (int i = 0; i < ja.length(); i++) {
+                    if (ja.get(i) instanceof JSONArray) {
                         jaa = ja.getJSONArray(i);
                         config.reserveList.add(jaa.getString(0));
                         config.reserveCountList.add(jaa.getInt(1));
@@ -1216,10 +1210,10 @@ public class Config
             config.beach = jo.optBoolean(jn_beach, true);
             config.beachList = new ArrayList<>();
             config.beachCountList = new ArrayList<>();
-            if(jo.has(jn_beachList)) {
+            if (jo.has(jn_beachList)) {
                 ja = jo.getJSONArray(jn_beachList);
-                for(int i = 0; i < ja.length(); i++) {
-                    if(ja.get(i) instanceof JSONArray) {
+                for (int i = 0; i < ja.length(); i++) {
+                    if (ja.get(i) instanceof JSONArray) {
                         jaa = ja.getJSONArray(i);
                         config.beachList.add(jaa.getString(0));
                         config.beachCountList.add(jaa.getInt(1));
@@ -1240,6 +1234,8 @@ public class Config
 
             config.antOcean = jo.optBoolean(jn_antOcean, true);
 
+            config.userPatrol = jo.optBoolean(jn_userPatrol, true);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1250,9 +1246,9 @@ public class Config
             config.sendType = SendType.valueOf(jo.optString(jn_sendType, SendType.HIT.name()));
 
             config.dontSendFriendList = new ArrayList<>();
-            if(jo.has(jn_dontSendFriendList)) {
+            if (jo.has(jn_dontSendFriendList)) {
                 ja = jo.getJSONArray(jn_dontSendFriendList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     config.dontSendFriendList.add(ja.getString(i));
                 }
             }
@@ -1281,10 +1277,10 @@ public class Config
 
             config.feedFriendAnimalList = new ArrayList<>();
             config.feedFriendCountList = new ArrayList<>();
-            if(jo.has(jn_feedFriendAnimalList)) {
+            if (jo.has(jn_feedFriendAnimalList)) {
                 ja = jo.getJSONArray(jn_feedFriendAnimalList);
-                for(int i = 0; i < ja.length(); i++) {
-                    if(ja.get(i) instanceof JSONArray) {
+                for (int i = 0; i < ja.length(); i++) {
+                    if (ja.get(i) instanceof JSONArray) {
                         jaa = ja.getJSONArray(i);
                         config.feedFriendAnimalList.add(jaa.getString(0));
                         config.feedFriendCountList.add(jaa.getInt(1));
@@ -1295,6 +1291,8 @@ public class Config
                 }
             }
 
+            config.farmGameTime = Arrays.asList(jo.optString(jn_farmGameTime, "2200-2400").split(","));
+
             config.animalSleepTime = Arrays.asList(jo.optString(jn_animalSleepTime, "2200-2400,0000-0559").split(","));
 
             config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
@@ -1302,7 +1300,7 @@ public class Config
             config.dontNotifyFriendList = new ArrayList<>();
             if (jo.has(jn_dontNotifyFriendList)) {
                 ja = jo.getJSONArray(jn_dontNotifyFriendList);
-                for(int i = 0; i < ja.length(); i++) {
+                for (int i = 0; i < ja.length(); i++) {
                     config.dontNotifyFriendList.add(ja.getString(i));
                 }
             }
@@ -1326,18 +1324,20 @@ public class Config
 
             config.ecoLifeTick = jo.optBoolean(jn_ecoLifeTick, true);
 
-        } catch(Throwable t) {
+            config.tiyubiz = jo.optBoolean(jn_tiyubiz, true);
+
+        } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
-            if(json != null) {
+            if (json != null) {
                 Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
         }
-        String formated = config2Json(config);
-        if(!formated.equals(json)) {
+        String formatted = config2Json(config);
+        if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 config.json");
-            FileUtils.write2File(formated, FileUtils.getConfigFile());
+            FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
     }
@@ -1345,9 +1345,9 @@ public class Config
     public static String config2Json(Config config) {
         JSONObject jo = new JSONObject();
         JSONArray ja, jaa;
-        try
-        {
-            if(config == null) config = Config.defInit();
+        try {
+            if (config == null)
+                config = Config.defInit();
 
             jo.put(jn_pauseTime, config.forestPauseTime);
 
@@ -1357,6 +1357,8 @@ public class Config
 
             jo.put(jn_showToast, config.showToast);
 
+            jo.put(jn_toastOffsetY, config.toastOffsetY);
+
             jo.put(jn_stayAwake, config.stayAwake);
 
             jo.put(jn_stayAwakeType, config.stayAwakeType);
@@ -1364,6 +1366,10 @@ public class Config
             jo.put(jn_stayAwakeTarget, config.stayAwakeTarget);
 
             jo.put(jn_timeoutRestart, config.timeoutRestart);
+
+            jo.put(jn_timeoutType, config.timeoutType);
+
+            jo.put(jn_startAt7, config.startAt7);
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
@@ -1380,7 +1386,7 @@ public class Config
 
             jo.put(jn_doubleCard, config.doubleCard);
 
-            jo.put(jn_doubleCardTime,  String.join(",", config.doubleCardTime));
+            jo.put(jn_doubleCardTime, String.join(",", config.doubleCardTime));
 
             jo.put(jn_advanceTime, config.advanceTime);
 
@@ -1397,14 +1403,13 @@ public class Config
             jo.put(jn_helpFriendCollect, config.helpFriendCollect);
 
             ja = new JSONArray();
-            for (String s: config.dontCollectList) {
+            for (String s : config.dontCollectList) {
                 ja.put(s);
             }
             jo.put(jn_dontCollectList, ja);
 
             ja = new JSONArray();
-            for(String s: config.dontHelpCollectList)
-            {
+            for (String s : config.dontHelpCollectList) {
                 ja.put(s);
             }
             jo.put(jn_dontHelpCollectList, ja);
@@ -1412,8 +1417,7 @@ public class Config
             jo.put(jn_receiveForestTaskAward, config.receiveForestTaskAward);
 
             ja = new JSONArray();
-            for(int i = 0; i < config.waterFriendList.size(); i++)
-            {
+            for (int i = 0; i < config.waterFriendList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.waterFriendList.get(i));
                 jaa.put(config.waterCountList.get(i));
@@ -1426,8 +1430,7 @@ public class Config
             jo.put(jn_cooperateWater, config.cooperateWater);
 
             ja = new JSONArray();
-            for(int i = 0; i < config.cooperateWaterList.size(); i++)
-            {
+            for (int i = 0; i < config.cooperateWaterList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.cooperateWaterList.get(i));
                 jaa.put(config.cooperateWaterNumList.get(i));
@@ -1436,7 +1439,6 @@ public class Config
             jo.put(jn_cooperateWaterList, ja);
 
             jo.put(jn_ancientTree, config.ancientTree);
-
 
             ja = new JSONArray();
             for (String s : config.ancientTreeAreaCodeList) {
@@ -1447,8 +1449,7 @@ public class Config
             jo.put(jn_reserve, config.reserve);
 
             ja = new JSONArray();
-            for(int i = 0; i < config.reserveList.size(); i++)
-            {
+            for (int i = 0; i < config.reserveList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.reserveList.get(i));
                 jaa.put(config.reserveCountList.get(i));
@@ -1459,8 +1460,7 @@ public class Config
             jo.put(jn_beach, config.beach);
 
             ja = new JSONArray();
-            for(int i = 0; i < config.beachList.size(); i++)
-            {
+            for (int i = 0; i < config.beachList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.beachList.get(i));
                 jaa.put(config.beachCountList.get(i));
@@ -1470,8 +1470,7 @@ public class Config
 
             jo.put(jn_energyRain, config.energyRain);
             ja = new JSONArray();
-            for(int i = 0; i < config.giveEnergyRainList.size(); i++)
-            {
+            for (int i = 0; i < config.giveEnergyRainList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.giveEnergyRainList.get(i));
                 ja.put(jaa);
@@ -1488,6 +1487,8 @@ public class Config
 
             jo.put(jn_antOcean, config.antOcean);
 
+            jo.put(jn_userPatrol, config.userPatrol);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -1498,8 +1499,7 @@ public class Config
             jo.put(jn_sendType, config.sendType.name());
 
             ja = new JSONArray();
-            for(String s: config.dontSendFriendList)
-            {
+            for (String s : config.dontSendFriendList) {
                 ja.put(s);
             }
             jo.put(jn_dontSendFriendList, ja);
@@ -1527,8 +1527,7 @@ public class Config
             jo.put(jn_useAccelerateTool, config.useAccelerateTool);
 
             ja = new JSONArray();
-            for(int i = 0; i < config.feedFriendAnimalList.size(); i++)
-            {
+            for (int i = 0; i < config.feedFriendAnimalList.size(); i++) {
                 jaa = new JSONArray();
                 jaa.put(config.feedFriendAnimalList.get(i));
                 jaa.put(config.feedFriendCountList.get(i));
@@ -1536,13 +1535,14 @@ public class Config
             }
             jo.put(jn_feedFriendAnimalList, ja);
 
+            jo.put(jn_farmGameTime, String.join(",", config.farmGameTime));
+
             jo.put(jn_animalSleepTime, String.join(",", config.animalSleepTime));
 
             jo.put(jn_notifyFriend, config.notifyFriend);
 
             ja = new JSONArray();
-            for(String s: config.dontNotifyFriendList)
-            {
+            for (String s : config.dontNotifyFriendList) {
                 ja.put(s);
             }
             jo.put(jn_dontNotifyFriendList, ja);
@@ -1566,39 +1566,37 @@ public class Config
 
             jo.put(jn_ecoLifeTick, config.ecoLifeTick);
 
-        } catch(Throwable t) {
+            jo.put(jn_tiyubiz, config.tiyubiz);
+
+        } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
         return formatJson(jo, false);
     }
 
-    public static String formatJson(JSONObject jo, boolean removeQuote)
-    {
-        String formated = null;
-        try
-        {
+    public static String formatJson(JSONObject jo, boolean removeQuote) {
+        String formated;
+        try {
             formated = jo.toString(4);
-        }catch(Throwable t)
-        {
+        } catch(Throwable t) {
             return jo.toString();
         }
-        if(!removeQuote) return formated;
+        if (!removeQuote)
+            return formated;
         StringBuilder sb = new StringBuilder(formated);
         char currentChar, lastNonSpaceChar = 0;
-        for(int i = 0; i < sb.length(); i++)
-        {
+        for (int i = 0; i < sb.length(); i++) {
             currentChar = sb.charAt(i);
-            switch(currentChar)
-            {
+            switch (currentChar) {
                 case '"':
-                    switch(lastNonSpaceChar)
-                    {
+                    switch (lastNonSpaceChar) {
                         case ':':
                         case '[':
                             sb.deleteCharAt(i);
                             i = sb.indexOf("\"", i);
                             sb.deleteCharAt(i);
-                            if(lastNonSpaceChar != '[') lastNonSpaceChar = sb.charAt(--i);
+                            if (lastNonSpaceChar != '[')
+                                lastNonSpaceChar = sb.charAt(--i);
                     }
                     break;
 
@@ -1606,13 +1604,68 @@ public class Config
                     break;
 
                 default:
-                    if(lastNonSpaceChar == '[' && currentChar != ']')
+                    if (lastNonSpaceChar == '[' && currentChar != ']')
                         break;
                     lastNonSpaceChar = currentChar;
             }
         }
         formated = sb.toString();
         return formated;
+    }
+
+    private static PendingIntent alarm7Pi;
+
+    private static PendingIntent getAlarm7Pi(Context context) {
+        if (alarm7Pi == null) {
+            Intent it = new Intent();
+            it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
+            int piFlag;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                piFlag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
+            } else {
+                piFlag = PendingIntent.FLAG_UPDATE_CURRENT;
+            }
+            alarm7Pi = PendingIntent.getActivity(context, 999, it, piFlag);
+        }
+        return alarm7Pi;
+    }
+
+    public static void setAlarm7(Context context) {
+        try {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = getAlarm7Pi(context);
+            Calendar calendar = Calendar.getInstance();
+            // calendar.add(Calendar.SECOND, 10);
+            if (calendar.get(Calendar.HOUR_OF_DAY) >= 7) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+            }
+            // alarmManager.setAlarmClock(new
+            // AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), null), pi);
+        } catch (Throwable th) {
+            Log.printStackTrace("alarm7", th);
+        }
+    }
+
+    public static void cancelAlarm7(Context context) {
+        try {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = getAlarm7Pi(context);
+            alarmManager.cancel(pi);
+
+            context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+        } catch (Throwable th) {
+            Log.printStackTrace("alarm7", th);
+        }
     }
 
 }

@@ -105,7 +105,6 @@ public class Statistics {
     private int memberSignIn = 0;
     private int kbSignIn = 0;
 
-    private int syncStep = 0;
 
     private static Statistics statistics;
 
@@ -187,6 +186,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -201,6 +201,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
@@ -555,7 +556,6 @@ public class Statistics {
         stat.donationEgg = 0;
         stat.memberSignIn = 0;
         stat.kbSignIn = 0;
-        stat.syncStep = 0;
         stat.exchangeDoubleCard = 0;
         stat.exchangeTimes = 0;
         save();
@@ -587,8 +587,8 @@ public class Statistics {
             stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
-
-        stat.dailyAnswerList = new HashSet<>();
+        if (stat.dailyAnswerList == null)
+            stat.dailyAnswerList = new HashSet<>();
         return stat;
     }
 
@@ -759,7 +759,6 @@ public class Statistics {
                 JSONArray ja = jo.getJSONArray(jn_dailyAnswerList);
                 for (int i = 0; i < ja.length(); i++) {
                     stat.dailyAnswerList.add(ja.getString(i));
-
                 }
             }
 
@@ -771,10 +770,10 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formated = statistics2Json(stat);
-        if (!formated.equals(json)) {
+        String formatted  = statistics2Json(stat);
+        if (!formatted .equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
-            FileUtils.write2File(formated, FileUtils.getStatisticsFile());
+            FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
     }

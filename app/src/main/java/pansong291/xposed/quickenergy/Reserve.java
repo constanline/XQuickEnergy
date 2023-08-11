@@ -17,7 +17,7 @@ public class Reserve {
     private static boolean firstTime = true;
 
     public static void start() {
-        if (!Config.reserve() || !firstTime)
+        if ((!Config.reserve() || !firstTime) && !Config.beach())
             return;
         Log.recordLog("开始检测保护地", "");
         new Thread() {
@@ -31,7 +31,7 @@ public class Reserve {
                         animalReserve();
                     }
 
-                    if (Config.beach() ) {
+                    if (Config.beach()) {
                         protectBeach();
                     }
 
@@ -51,16 +51,16 @@ public class Reserve {
                 s = ReserveRpcCall.queryTreeItemsForExchange();
             }
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONObject userBaseInfo = jo.getJSONObject("userBaseInfo");
                 JSONArray ja = jo.getJSONArray("treeItems");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
                     if (!jo.has("projectType"))
                         continue;
-                    if (!jo.getString("projectType").equals("RESERVE"))
+                    if (!"RESERVE".equals(jo.getString("projectType")))
                         continue;
-                    if (!jo.getString("applyAction").equals("AVAILABLE"))
+                    if (!"AVAILABLE".equals(jo.getString("applyAction")))
                         continue;
                     String projectId = jo.getString("itemId");
                     String itemName = jo.getString("itemName");
@@ -105,11 +105,11 @@ public class Reserve {
                     if (currentEnergy >= jo.getInt("energy")) {
                         return true;
                     } else {
-                        Log.forest("能量不够申请保护地[" + jo.getString("projectName") + "]，停止申请！");
+                        Log.forest("领保护地🏕️[" + jo.getString("projectName") + "]#能量不足停止申请");
                         return false;
                     }
                 } else {
-                    Log.forest("保护地[" + jo.getString("projectName") + "]似乎没有了！");
+                    Log.forest("领保护地🏕️[" + jo.getString("projectName") + "]#似乎没有了");
                     return false;
                 }
             } else {
@@ -136,13 +136,13 @@ public class Reserve {
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     int vitalityAmount = jo.getInt("vitalityAmount");
                     appliedTimes = Statistics.getReserveTimes(projectId) + 1;
-                    String str = "申请保护地[" + itemName + "]成功！[第" + appliedTimes + "次]"
-                            + (vitalityAmount > 0 ? "获得活力值[" + vitalityAmount + "]" : "");
+                    String str = "领保护地🏕️[" + itemName + "]#第" + appliedTimes + "次"
+                            + (vitalityAmount > 0 ? "-获得活力值" + vitalityAmount : "");
                     Log.forest(str);
                     Statistics.reserveToday(projectId, 1);
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
-                    Log.forest("申请保护地发生未知错误，停止申请！");
+                    Log.forest("领保护地🏕️[" + itemName + "]#发生未知错误，停止申请");
                     Statistics.reserveToday(projectId, count);
                     break;
                 }
@@ -154,6 +154,8 @@ public class Reserve {
                 } else {
                     Thread.sleep(200);
                 }
+                if (!Statistics.canReserveToday(projectId, count))
+                    break;
             }
         } catch (Throwable t) {
             Log.i(TAG, "exchangeTree err:");
@@ -171,15 +173,15 @@ public class Reserve {
                 s = ReserveRpcCall.queryCultivationList();
             }
             JSONObject jo = new JSONObject(s);
-            if (jo.getString("resultCode").equals("SUCCESS")) {
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray ja = jo.getJSONArray("cultivationItemVOList");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
                     if (!jo.has("templateSubType"))
                         continue;
-                    if (!jo.getString("templateSubType").equals("BEACH"))
+                    if (!"BEACH".equals(jo.getString("templateSubType")))
                         continue;
-                    if (!jo.getString("applyAction").equals("AVAILABLE"))
+                    if (!"AVAILABLE".equals(jo.getString("applyAction")))
                         continue;
                     String cultivationName = jo.getString("cultivationName");
                     String templateCode = jo.getString("templateCode");
@@ -226,11 +228,11 @@ public class Reserve {
                     if (currentEnergy >= jo.getInt("energy")) {
                         return true;
                     } else {
-                        Log.forest("能量不够申请[" + jo.getString("cultivationName") + "]，停止申请！");
+                        Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#能量不足停止申请");
                         return false;
                     }
                 } else {
-                    Log.forest("净滩行动[" + jo.getString("cultivationName") + "]似乎没有了！");
+                    Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#似乎没有了");
                     return false;
                 }
             } else {
@@ -256,19 +258,19 @@ public class Reserve {
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
                     JSONArray awardInfos = jo.getJSONArray("rewardItemVOs");
-                    String award = "";
+                    StringBuilder award = new StringBuilder();
                     for (int i = 0; i < awardInfos.length(); i++) {
                         jo = awardInfos.getJSONObject(i);
-                        award = award + jo.getString("name") + "*" + jo.getInt("num");
+                        award.append(jo.getString("name")).append("*").append(jo.getInt("num"));
                     }
                     appliedTimes = Statistics.getBeachTimes(cultivationCode) + 1;
-                    String str = "净滩行动[" + itemName + "]，[第" + appliedTimes + "次]"
-                            + "获得奖励[" + award + "]";
+                    String str = "净滩行动🏖️[" + itemName + "]#第" + appliedTimes + "次"
+                            + "-获得奖励" + award;
                     Log.forest(str);
                     Statistics.beachRecord(cultivationCode, 1);
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
-                    Log.forest("净滩行动发生未知错误，停止申请！");
+                    Log.forest("净滩行动🏖️[" + itemName + "]#发生未知错误，停止申请");
                     Statistics.beachToday(cultivationCode);
                     break;
                 }
@@ -280,6 +282,8 @@ public class Reserve {
                 } else {
                     Thread.sleep(200);
                 }
+                if (!Statistics.canBeach(cultivationCode, count) || !Statistics.canBeachToday(cultivationCode))
+                    break;
             }
         } catch (Throwable t) {
             Log.i(TAG, "oceanExchangeTree err:");
