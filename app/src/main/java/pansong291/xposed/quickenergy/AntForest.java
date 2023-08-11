@@ -713,7 +713,10 @@ public class AntForest {
                         break;
                     }
                 }
-                JSONArray forestTasksNew = jo.getJSONArray("forestTasksNew");
+                JSONArray forestTasksNew = jo.optJSONArray("forestTasksNew");
+                if (forestTasksNew == null) {
+                    return;
+                }
                 for (int i = 0; i < forestTasksNew.length(); i++) {
                     JSONObject forestTask = forestTasksNew.getJSONObject(i);
                     JSONArray taskInfoList = forestTask.getJSONArray("taskInfoList");

@@ -15,12 +15,10 @@ import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Log;
 
-public class ListAdapter extends BaseAdapter
-{
+public class ListAdapter extends BaseAdapter {
     private static ListAdapter adapter;
 
-    public static ListAdapter get(Context c)
-    {
+    public static ListAdapter get(Context c) {
         if(adapter == null)
             adapter = new ListAdapter(c);
         return adapter;
@@ -44,9 +42,9 @@ public class ListAdapter extends BaseAdapter
     public void setSelectedList(List<String> l) {
         selects = l;
         try {
-            Collections.sort(list, (Comparator<IdAndName>) (o1, o2) -> {
+            Collections.sort(list, (o1, o2) -> {
                 if (selects.contains(o1.id) == selects.contains(o2.id)) {
-                    return IdAndName.Compare(o1, o2);
+                    return o1.compareTo(o2);
                 }
                 return selects.contains(o1.id) ? -1 : 1;
             });
@@ -57,7 +55,7 @@ public class ListAdapter extends BaseAdapter
     }
 
     public int findLast(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
@@ -79,7 +77,7 @@ public class ListAdapter extends BaseAdapter
     }
 
     public int findNext(CharSequence cs) {
-        if(list == null || list.size() == 0) return -1;
+        if(list == null || list.isEmpty()) return -1;
         if(!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;

@@ -71,14 +71,14 @@ public class XposedHook implements IXposedHookLoadPackage {
             Config.setAlarm7(AntForestToast.context);
         }
         if (runnable == null) {
+            FriendManager.fillUser(XposedHook.classLoader);
+
             runnable = new Runnable() {
                 @Override
                 public void run() {
                     Config.shouldReload = true;
                     Statistics.resetToday();
                     AntForest.checkEnergyRanking(XposedHook.classLoader, times);
-
-                    FriendManager.fillUser(XposedHook.classLoader);
 
                     if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                         AntCooperate.start();

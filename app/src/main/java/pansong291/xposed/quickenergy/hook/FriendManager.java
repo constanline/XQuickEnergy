@@ -12,15 +12,13 @@ public class FriendManager {
     private static final String TAG = FriendManager.class.getCanonicalName();
 
     public static void fillUser(ClassLoader loader) {
-        List<String> unknownIds = FriendIdMap.getIncompleteUnknownIds();
-        if (unknownIds.size() > 0) {
+//        List<String> unknownIds = FriendIdMap.getIncompleteUnknownIds();
+//        if (!unknownIds.isEmpty()) {
             new Thread() {
                 ClassLoader loader;
-                List<String> unknownIds;
 
-                public Thread setData(ClassLoader cl, List<String> ss) {
+                public Thread setData(ClassLoader cl) {
                     loader = cl;
-                    unknownIds = ss;
                     return this;
                 }
 
@@ -49,8 +47,8 @@ public class FriendManager {
                         Log.printStackTrace(TAG, t);
                     }
                 }
-            }.setData(loader, unknownIds).start();
-        }
+            }.setData(loader).start();
+//        }
     }
 
     public static boolean needUpdateAll(long last) {
@@ -92,7 +90,10 @@ public class FriendManager {
     }
 
     private static void friendWatchSingle(String id, int collectedEnergy) throws JSONException {
-        JSONObject joSingle = joFriendWatch.getJSONObject(id);
+        JSONObject joSingle = joFriendWatch.optJSONObject(id);
+        if (joSingle == null) {
+            return;
+        }
         joSingle.put("weekGet", joSingle.optInt("weekGet", 0) + collectedEnergy);
         FileUtils.write2File(joFriendWatch.toString(), FileUtils.getFriendWatchFile());
     }

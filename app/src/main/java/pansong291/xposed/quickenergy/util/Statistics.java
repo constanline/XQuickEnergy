@@ -105,7 +105,6 @@ public class Statistics {
     private int memberSignIn = 0;
     private int kbSignIn = 0;
 
-    private int syncStep = 0;
 
     private static Statistics statistics;
 
@@ -557,7 +556,6 @@ public class Statistics {
         stat.donationEgg = 0;
         stat.memberSignIn = 0;
         stat.kbSignIn = 0;
-        stat.syncStep = 0;
         stat.exchangeDoubleCard = 0;
         stat.exchangeTimes = 0;
         save();
