@@ -46,4 +46,13 @@ public class ChoiceDialog {
                 .create().show();
     }
 
+    public static void showTimeoutRestartType(Context c, CharSequence title) {
+        new AlertDialog.Builder(c)
+                .setTitle(title)
+                .setSingleChoiceItems(XposedHook.StayAwakeType.nickNames, Config.timeoutType().ordinal(),
+                        (p1, p2) -> Config.setTimeoutType(p2))
+                .setPositiveButton(c.getString(R.string.ok), null)
+                .create().show();
+    }
+
 }

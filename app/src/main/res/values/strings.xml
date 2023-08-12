@@ -37,6 +37,8 @@
     <string name="don_t_send_friend_list">Don\'t send friend list</string>
     <string name="recall_animal_type">Recall animal type</string>
     <string name="receive_farm_tool_reward">Receive farm tool reward</string>
+    <string name="record_farm_game">Record farm game</string>
+    <string name="kitchen">Kitchen</string>
     <string name="use_new_egg_tool">Use new egg tool</string>
     <string name="harvest_produce">Harvest produce</string>
     <string name="answer_question">Answer question</string>
@@ -50,6 +52,7 @@
     <string name="other_configuration">OTHER CONFIGURATION</string>
     <string name="receive_point">Receive point</string>
     <string name="open_treasure_box">Open treasure box</string>
+    <string name="receive_coin_asset">Receive coin asset</string>
     <string name="donate_charity_coin">Donate charity coin</string>
     <string name="min_exchange_count">Min exchange count</string>
     <string name="latest_exchange_time_24_hour_system">Latest exchange time (24-hour system)</string>
@@ -61,6 +64,7 @@
     <string name="farm_log">Farm log</string>
     <string name="other_log">Other log</string>
     <string name="unactivated">UNACTIVATED</string>
+    <string name="tips">Tips</string>
     <string name="hide_the_application_icon">Hide the application icon</string>
     <string name="export_the_statistic_file">Export the statistic file</string>
     <string name="import_the_statistic_file">Import the statistic file</string>
@@ -87,10 +91,31 @@
     <string name="cancel">Cancel</string>
     <string name="collect_watering_bubble">Collect watering bubble</string>
     <string name="use_double_card_time">Use double card time</string>
+    <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
     <string name="animal_sleep_time">Animal sleep time</string>
-    <string name="ancient_tree_area_code_list">Ancient tree area code list</string>
     <string name="visit_github">Visit GitHub</string>
-    <string name="tips">Tips</string>
-
+    <string name="exchange_energy_double_click">Exchange energy double click</string>
+    <string name="exchange_energy_double_click_count">Exchange energy double click count</string>
+    <string name="reserve">Reserve</string>
+    <string name="reserve_list">Reserve list</string>
+    <string name="eco_life_tick">Eco Life Tick</string>
+    <string name="ancient_tree">Ancient Tree</string>
+    <string name="ancient_tree_area_code_list">Ancient tree area code list</string>
+    <string name="ancient_tree_only_week">Ancient Tree only week</string>
+    <string name="antdodo_collect">Antdodo Collect</string>
+    <string name="ant_ocean">Ant ocean</string>
+    <string name="water_friend_count">Water friend count</string>
+    <string name="the_image_of_main" translatable="false">The image of main</string>
+    <string name="the_image_of_unactivated" translatable="false">The image of unactivated</string>
+    <string name="beach">Beach</string>
+    <string name="beach_list">Beach list</string>
+    <string name="test">Test</string>
+    <string name="timeout_restart_type">Timeout restart type</string>
+    <string name="start_at_7_o_clock">Start at 7 o\'clock</string>
+    <string name="tiyubiz">Tiyubiz</string>
+    <string name="friend_watch">Friend watch</string>
+    <string name="user_patrol">User patrol</string>
+    <string name="toast_vertical_offset">Toast vertical offset</string>
+    <string name="animal_game_time">Animal game time</string>
 
 </resources>
