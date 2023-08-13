@@ -2,6 +2,8 @@ package pansong291.xposed.quickenergy.hook;
 
 import pansong291.xposed.quickenergy.util.StringUtil;
 
+import pansong291.xposed.quickenergy.util.RandomUtils;
+
 import java.util.UUID;
 
 public class AntForestRpcCall {
@@ -15,12 +17,14 @@ public class AntForestRpcCall {
 
     public static String queryEnergyRanking() {
         return RpcUtil.request("alipay.antmember.forest.h5.queryEnergyRanking",
-                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"periodType\":\"day\",\"rankType\":\"energyRank\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryHomePage() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryHomePage",
-                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                        + VERSION + "\"}]");
     }
 
     public static String queryFriendHomePage(String userId) {
@@ -78,6 +82,7 @@ public class AntForestRpcCall {
     public static String startEnergyRain() {
         return RpcUtil.request("alipay.antforest.forest.h5.startEnergyRain", "[{}]");
     }
+
     public static String energyRainSettlement(int saveEnergy, String token) {
         return RpcUtil.request("alipay.antforest.forest.h5.energyRainSettlement",
                 "[{\"activityPropNums\":0,\"saveEnergy\":" + saveEnergy + ",\"token\":\"" + token + "\"}]");
@@ -87,6 +92,13 @@ public class AntForestRpcCall {
         return RpcUtil.request("com.alipay.antiep.receiveTaskAward",
                 "[{\"ignoreLimit\":false,\"requestType\":\"H5\",\"sceneCode\":\"" + sceneCode +
                         "\",\"source\":\"ANTFOREST\",\"taskType\":\"" + taskType + "\"}]");
+    }
+
+    public static String finishTask(String sceneCode, String taskType) {
+        String outBizNo = taskType + "_" + RandomUtils.nextDouble();
+        return RpcUtil.request("com.alipay.antiep.finishTask",
+                "[{\"outBizNo\":\"" + outBizNo + "\",\"requestType\":\"H5\",\"sceneCode\":\"" +
+                        sceneCode + "\",\"source\":\"ANTFOREST\",\"taskType\":\"" + taskType + "\"}]");
     }
 
     public static String popupTask() {
@@ -112,6 +124,102 @@ public class AntForestRpcCall {
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
                         "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\"" +
                         VERSION + "\"}]");
+    }
+
+    public static String exchangeBenefit(String spuId, String skuId) {
+        return RpcUtil.request("com.alipay.antcommonweal.exchange.h5.exchangeBenefit",
+                "[{\"sceneCode\":\"ANTFOREST_VITALITY\",\"requestId\":\"" + System.currentTimeMillis()
+                        + "_" + RandomUtils.getRandom(17) + "\",\"spuId\":\"" +
+                        spuId + "\",\"skuId\":\"" + skuId + "\",\"source\":\"GOOD_DETAIL\"}]");
+    }
+
+
+    public static String testH5Rpc(String operationTpye, String requestDate) {
+        return RpcUtil.request(operationTpye,requestDate);
+    }
+
+    /* 神奇物种 */
+
+    public static String queryAnimalStatus() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.queryAnimalStatus",
+                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+    }
+
+    public static String antdodoHomePage() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.homePage",
+                "[{}]");
+    }
+
+    public static String taskEntrance() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.taskEntrance",
+                "[{\"statusList\":[\"TODO\",\"FINISHED\"]}]");
+    }
+
+    public static String antdodoCollect() {
+        return RpcUtil.request("alipay.antdodo.rpc.h5.collect",
+                "[{}]");
+    }
+
+    /* 巡护保护地 */
+    public static String queryUserPatrol() {
+        return RpcUtil.request("alipay.antforest.forest.h5.queryUserPatrol",
+                "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+
+    public static String patrolGo(int nodeIndex, int patrolId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.patrolGo",
+                "[{\"nodeIndex\":" + nodeIndex + ",\"patrolId\":" + patrolId
+                        + ",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+
+    public static String patrolKeepGoing(int nodeIndex, int patrolId, String eventType) {
+        String args = null;
+        switch (eventType) {
+            case "video":
+                args = "[{\"nodeIndex\":" + nodeIndex + ",\"patrolId\":" + patrolId
+                        + ",\"reactParam\":{\"viewed\":\"Y\"},\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+                break;
+            case "chase":
+                args = "[{\"nodeIndex\":" + nodeIndex + ",\"patrolId\":" + patrolId
+                        + ",\"reactParam\":{\"sendChat\":\"Y\"},\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+                break;
+            case "quiz":
+                args = "[{\"nodeIndex\":" + nodeIndex + ",\"patrolId\":" + patrolId
+                        + ",\"reactParam\":{\"answer\":\"correct\"},\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+                break;
+            default:
+                args = "[{\"nodeIndex\":" + nodeIndex + ",\"patrolId\":" + patrolId
+                        + ",\"reactParam\":{},\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+                break;
+        }
+        return RpcUtil.request("alipay.antforest.forest.h5.patrolKeepGoing", args);
+    }
+
+    public static String exchangePatrolChance(int costStep) {
+        return RpcUtil.request("alipay.antforest.forest.h5.exchangePatrolChance",
+                "[{\"costStep\":" + costStep + ",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+
+    public static String queryAnimalAndPiece(int animalId) {
+        String args = null;
+        if (animalId != 0) {
+            args = "[{\"animalId\":"+animalId+",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+        } else {
+            args = "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\",\"withDetail\":\"N\",\"withGift\":true}]";
+        }
+        return RpcUtil.request("alipay.antforest.forest.h5.queryAnimalAndPiece", args);
+    }
+
+    public static String combineAnimalPiece(int animalId, String piecePropIds) {
+        return RpcUtil.request("alipay.antforest.forest.h5.combineAnimalPiece",
+                "[{\"animalId\":" + animalId + ",\"piecePropIds\":" + piecePropIds
+                        + ",\"timezoneId\":\"Asia/Shanghai\",\"source\":\"ant_forest\"}]");
+    }
+
+    public static String AnimalConsumeProp(String propGroup, String propId, String propType) {
+        return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
+                "[{\"propGroup\":\"" + propGroup + "\",\"propId\":\"" + propId + "\",\"propType\":\"" + propType
+                        + "\",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
     }
 
 }

@@ -39,7 +39,7 @@ public class KBMember {
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {
                 jo = jo.getJSONObject("data");
-                Log.other("口碑签到〈第" + jo.getString("dayNo") + "天〉，获得〈" + jo.getString("value") + "积分〉");
+                Log.other("口碑签到📅[第" + jo.getString("dayNo") + "天]#获得" + jo.getString("value") + "积分");
                 Statistics.KbSignInToday();
             } else if (s.contains("\"HAS_SIGN_IN\"")) {
                 Statistics.KbSignInToday();

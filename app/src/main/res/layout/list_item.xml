@@ -9,9 +9,9 @@
 	android:minHeight="50dp">
 
 	<TextView
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:text="Text"
+		android:text=""
 		android:layout_weight="1"
 		android:id="@+id/tv_idn"/>
 
@@ -23,4 +23,3 @@
 		android:id="@+id/cb_list"/>
 
 </LinearLayout>
-

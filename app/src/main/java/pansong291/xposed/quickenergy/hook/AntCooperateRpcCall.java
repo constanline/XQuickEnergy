@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
-public class AntCooperateRpcCall
-{
+public class AntCooperateRpcCall {
 
     public static String queryUserCooperatePlantList() {
         return RpcUtil.request("alipay.antmember.forest.h5.queryUserCooperatePlantList", "[{}]");
