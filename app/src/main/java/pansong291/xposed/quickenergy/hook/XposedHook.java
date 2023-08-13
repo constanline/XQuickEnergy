@@ -122,6 +122,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             FriendIdMap.currentUid = targetUid;
                             if (handler != null) {
                                 Log.recordLog("尝试初始化");
+                                times =0;
                                 initHandler();
                             }
                         }

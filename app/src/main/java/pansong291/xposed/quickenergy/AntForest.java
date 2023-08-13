@@ -696,6 +696,7 @@ public class AntForest {
 
     private static void receiveTaskAward() {
         try {
+            boolean doubleCheck = false;
             String s = AntForestRpcCall.queryTaskList();
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -740,14 +741,18 @@ public class AntForest {
                             if (bizInfo.optBoolean("autoCompleteTask")) {
                                 JSONObject joFinishTask = new JSONObject(
                                         AntForestRpcCall.finishTask(sceneCode, taskType));
-                                if (joFinishTask.getBoolean("success"))
+                                if (joFinishTask.getBoolean("success")) {
                                     Log.forest("完成任务🧾️[" + taskTitle + "]");
-                                else
+                                    doubleCheck = true;
+                                } else {
                                     Log.recordLog("完成任务失败，" + taskTitle);
+                                }
                             }
                         }
                     }
                 }
+                if (doubleCheck)
+                    receiveTaskAward();
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
             }
@@ -950,7 +955,8 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean Guangpan = false;
-                        if ("photoguangpan".equals(actionId))continue;
+                        if ("photoguangpan".equals(actionId))
+                            continue;
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, Guangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡🍀[" + actionName + "]");
