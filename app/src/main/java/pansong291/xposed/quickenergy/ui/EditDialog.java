@@ -11,7 +11,8 @@ import pansong291.xposed.quickenergy.util.Config;
 public class EditDialog {
     public enum EditMode {
         TOAST_OFFSET_Y, CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
-        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT, FARM_GAME_TIME,
+        DOUBLE_COUNT_LIMIT, COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,
+        FARM_GAME_TIME,
         ANIMAL_SLEEP_TIME,
         MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION,
         EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT
@@ -86,6 +87,12 @@ public class EditDialog {
                                             Config.setDoubleCardTime(edt.getText().toString());
                                             break;
 
+                                        case DOUBLE_COUNT_LIMIT:
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setDoubleCountLimit(i);
+                                            break;
+
                                         case COLLECT_TIMEOUT:
                                             if (i > 0)
                                                 Config.setCollectTimeout(i * 1_000);
@@ -143,9 +150,9 @@ public class EditDialog {
                                             break;
 
                                         case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
-                                            if (i > 0) {
-                                                Config.setExchangeEnergyDoubleClickCount(i);
-                                            }
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setExchangeEnergyDoubleClickCount(i);
                                             break;
 
                                     }
@@ -179,6 +186,10 @@ public class EditDialog {
                 str = Config.doubleCardTime();
                 break;
 
+            case DOUBLE_COUNT_LIMIT:
+                str = String.valueOf(Config.getDoubleCountLimit());
+                break;
+
             case COLLECT_TIMEOUT:
                 str = String.valueOf(Config.collectTimeout() / 1_000);
                 break;
@@ -200,7 +211,7 @@ public class EditDialog {
                 break;
 
             case FARM_GAME_TIME:
-                str = String.valueOf(Config.farmGameTime());
+                str = Config.farmGameTime();
                 break;
 
             case ANIMAL_SLEEP_TIME:

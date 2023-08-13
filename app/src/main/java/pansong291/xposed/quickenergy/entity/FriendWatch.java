@@ -14,6 +14,7 @@ import java.util.List;
  * @since 2023/08/08
  */
 public class FriendWatch extends IdAndName {
+
     private static final String TAG = FriendWatch.class.getCanonicalName();
 
     public String startTime;
@@ -25,6 +26,17 @@ public class FriendWatch extends IdAndName {
     public FriendWatch(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(IdAndName o) {
+        FriendWatch another = (FriendWatch) o;
+        if (this.weekGet > another.weekGet) {
+            return -1;
+        } else if (this.weekGet < another.weekGet) {
+            return 1;
+        }
+        return super.compareTo(o);
     }
 
     public static List<FriendWatch> getList() {
@@ -45,8 +57,8 @@ public class FriendWatch extends IdAndName {
                 String name = FriendIdMap.getNameById(id);
                 FriendWatch friendWatch = new FriendWatch(id, name);
                 friendWatch.startTime = friend.optString("startTime", "无");
-                friendWatch.weekGet = friend.optInt("weekGet" ,0);
-                friendWatch.allGet = friend.optInt("allGet",0) + friendWatch.weekGet;
+                friendWatch.weekGet = friend.optInt("weekGet", 0);
+                friendWatch.allGet = friend.optInt("allGet", 0) + friendWatch.weekGet;
                 String showText = name + "(开始统计时间:" + friendWatch.startTime + ")\n\n";
                 showText = showText + "周收:" + friendWatch.weekGet + " 总收:" + friendWatch.allGet;
                 friendWatch.name = showText;

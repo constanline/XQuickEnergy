@@ -28,7 +28,7 @@ public class AntFarm {
     }
 
     public enum AnimalFeedStatus {
-        HUNGRY, EATING
+        HUNGRY, EATING, SLEEPY
     }
 
     public enum AnimalInteractStatus {
@@ -123,7 +123,8 @@ public class AntFarm {
                         parseSyncAnimalStatusResponse(joFarmVO.toString());
                         userId = joFarmVO.getJSONObject("masterUserInfoVO").getString("userId");
                         JSONArray cuisineList = jo.getJSONArray("cuisineList");
-                        useFarmFood(cuisineList);
+                        if (!AnimalFeedStatus.SLEEPY.name().equals(ownerAnimal.animalFeedStatus))
+                            useFarmFood(cuisineList);
                         if (jo.has("lotteryPlusInfo")) {
                             drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
                         }
@@ -206,7 +207,7 @@ public class AntFarm {
                     // receiveToolTaskReward(loader);
                     // }
 
-                    if (Config.recordFarmGame() &&  Config.isFarmGameTime()) {
+                    if (Config.recordFarmGame() && Config.isFarmGameTime()) {
                         recordFarmGame(GameType.starGame);
                         recordFarmGame(GameType.jumpGame);
                     }
@@ -227,7 +228,7 @@ public class AntFarm {
                         harvestProduce(ownerFarmId);
                     }
 
-                    if (Config.donation() && Statistics.canDonationEgg() && harvestBenevolenceScore >= 1) {
+                    if (Config.donation() && Statistics.canDonationEgg(userId) && harvestBenevolenceScore >= 1) {
                         donation();
                     }
 
@@ -515,7 +516,7 @@ public class AntFarm {
                         jo = jo.getJSONObject("donation");
                         harvestBenevolenceScore = jo.getDouble("harvestBenevolenceScore");
                         Log.farm("捐赠活动❤️[" + activityName + "]#累计捐赠" + jo.getInt("donationTimesStat") + "次");
-                        Statistics.donationEgg();
+                        Statistics.donationEgg(userId);
                     } else {
                         Log.recordLog(memo, s);
                     }
@@ -1200,6 +1201,10 @@ public class AntFarm {
                     if (!jo.getBoolean("received")) {
                         String singleDesc = jo.getString("singleDesc");
                         int awardCount = jo.getInt("awardCount");
+                        if (singleDesc.contains("饲料") && awardCount + foodStock > foodStockLimit) {
+                            Log.recordLog("领取" + awardCount + "g饲料后将超过[" + foodStockLimit + "g]上限，已终止领取", "");
+                            break;
+                        }
                         jo = new JSONObject(AntFarmRpcCall.drawLotteryPlus());
                         if ("SUCCESS".equals(jo.getString("memo"))) {
                             Log.farm("惊喜礼包🎁[" + singleDesc + "*" + awardCount + "]");

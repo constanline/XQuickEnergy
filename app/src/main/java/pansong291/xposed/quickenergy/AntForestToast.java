@@ -30,7 +30,7 @@ public class AntForestToast {
                             public void run() {
                                 try {
                                     Toast toast = Toast.makeText(context, cs, Toast.LENGTH_SHORT);
-                                    toast.setGravity(Gravity.CENTER, 0, Config.toastOffsetY());
+                                    toast.setGravity(toast.getGravity(), toast.getXOffset(), Config.toastOffsetY());
                                     toast.show();
                                 } catch (Throwable t) {
                                     Log.i(TAG, "show.run err:");

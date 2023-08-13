@@ -504,7 +504,7 @@ public class AntForest {
 
     private static int collectEnergy(String userId, long bubbleId, String bizNo, String extra) {
         if (Config.forestPauseTime() > System.currentTimeMillis()) {
-            Log.recordLog("异常等待中，暂不执行检测！", "");
+            Log.recordLog("异常等待中，暂不收取能量！", "");
             return 0;
         }
         int collected = 0;
@@ -527,11 +527,11 @@ public class AntForest {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
                     if (Config.forestPauseTime() > System.currentTimeMillis()) {
-                        Log.recordLog("异常等待中，暂不执行检测！", "");
+                        Log.recordLog("异常等待中，暂不收取能量！", "");
                         return 0;
                     }
                     if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis()) {
-                        if (Config.isDoubleCardTime() && !selfId.equals(userId)) {
+                        if (Config.isDoubleCardTime() && !selfId.equals(userId) && Statistics.canDoubleToday()) {
                             useDoubleCard();
                         }
                     }
@@ -715,7 +715,9 @@ public class AntForest {
                         break;
                     }
                 }
-                JSONArray forestTasksNew = jo.getJSONArray("forestTasksNew");
+                JSONArray forestTasksNew = jo.optJSONArray("forestTasksNew");
+                if (forestTasksNew == null)
+                    return;
                 for (int i = 0; i < forestTasksNew.length(); i++) {
                     JSONObject forestTask = forestTasksNew.getJSONObject(i);
                     JSONArray taskInfoList = forestTask.getJSONArray("taskInfoList");
@@ -910,6 +912,7 @@ public class AntForest {
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
                         doubleEndTime = System.currentTimeMillis() + 1000 * 60 * 5;
                         Log.forest("使用道具🎭[" + propName + "]");
+                        Statistics.DoubleToday();
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         updateDoubleTime();
@@ -1141,7 +1144,7 @@ public class AntForest {
                     JSONObject animal = jo.getJSONObject("animal");
                     int id = animal.getInt("id");
                     String name = animal.getString("name");
-                    if (canConsumeProp) {
+                    if (canConsumeProp && Config.animalConsumeProp()) {
                         JSONObject main = jo.optJSONObject("main");
                         if (main != null && main.optInt("holdsNum") > 0) {
                             canConsumeProp = !AnimalConsumeProp(id);

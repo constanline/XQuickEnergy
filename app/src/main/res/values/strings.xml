@@ -115,5 +115,8 @@
     <string name="user_patrol">User patrol</string>
     <string name="toast_vertical_offset">Toast vertical offset</string>
     <string name="animal_game_time">Animal game time</string>
+    <string name="animal_consume_prop">Animal consume prop</string>
+    <string name="double_count_limit">Double count limit</string>
+    <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
 
 </resources>

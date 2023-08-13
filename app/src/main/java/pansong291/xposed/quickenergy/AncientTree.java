@@ -13,10 +13,8 @@ import pansong291.xposed.quickenergy.util.Statistics;
 public class AncientTree {
     private static final String TAG = AncientTree.class.getCanonicalName();
 
-    private static boolean firstTime = true;
-
     public static void start() {
-        if (!Config.ancientTree() || !firstTime || !Config.isAncientTreeWeek())
+        if (!Config.ancientTree() || !Config.isAncientTreeWeek())
             return;
         Log.recordLog("开始检测古树保护", "");
         new Thread() {
@@ -53,7 +51,6 @@ public class AncientTree {
                     Log.printStackTrace(TAG, t);
                 }
                 CityCodeMap.saveIdMap();
-                firstTime = false;
             }
         }.start();
     }

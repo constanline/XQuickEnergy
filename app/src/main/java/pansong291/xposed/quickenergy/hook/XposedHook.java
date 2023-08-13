@@ -72,14 +72,14 @@ public class XposedHook implements IXposedHookLoadPackage {
             Config.setAlarm7(AntForestToast.context);
         }
         if (runnable == null) {
+            FriendManager.fillUser(XposedHook.classLoader);
+
             runnable = new Runnable() {
                 @Override
                 public void run() {
                     Config.shouldReload = true;
                     Statistics.resetToday();
                     AntForest.checkEnergyRanking(XposedHook.classLoader, times);
-
-                    FriendManager.fillUser(XposedHook.classLoader);
 
                     if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                         AntCooperate.start();
@@ -281,7 +281,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                 boolean force = intent.getBooleanExtra("force", false);
                 restartHook(AntForestToast.context, force);
             } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
-                Log.recordLog("收到测试消息:" );
+                Log.recordLog("收到测试消息:");
                 // XposedHook.restartHook(false);
             } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
                 Config.cancelAlarm7(AntForestToast.context);
