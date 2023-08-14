@@ -32,7 +32,7 @@ public class SettingsActivity extends Activity {
     private Animation slideRightOut;
 
     Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7,
-            sw_collectWateringBubble, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
+            sw_collectWateringBubble, sw_collectProp, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
             sw_cooperateWater, sw_energyRain, sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
             sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce, sw_donation, sw_answerQuestion,
             sw_receiveFarmTaskAward, sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend, sw_receivePoint,
@@ -158,6 +158,7 @@ public class SettingsActivity extends Activity {
         sw_startAt7 = findViewById(R.id.sw_startAt7);
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
+        sw_collectProp = findViewById(R.id.sw_collectProp);
         sw_helpFriendCollect = findViewById(R.id.sw_helpFriendCollect);
         sw_receiveForestTaskAward = findViewById(R.id.sw_receiveForestTaskAward);
         sw_cooperateWater = findViewById(R.id.sw_cooperateWater);
@@ -208,6 +209,7 @@ public class SettingsActivity extends Activity {
         sw_startAt7.setChecked(Config.startAt7());
         sw_collectEnergy.setChecked(Config.collectEnergy());
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
+        sw_collectProp.setChecked(Config.collectProp());
         sw_helpFriendCollect.setChecked(Config.helpFriendCollect());
         sw_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
         sw_cooperateWater.setChecked(Config.cooperateWater());
@@ -282,6 +284,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_collectWateringBubble:
                     Config.setCollectWateringBubble(sw.isChecked());
+                    break;
+
+                case R.id.sw_collectProp:
+                    Config.setCollectProp(sw.isChecked());
                     break;
 
                 case R.id.sw_limitCollect:

@@ -88,6 +88,7 @@
     <string name="cancel">取消</string>
     <string name="start_check_energy">开始检测能量</string>
     <string name="collect_watering_bubble">收金球</string>
+    <string name="collect_prop">收赠送的道具</string>
     <string name="use_double_card_time">使用双击卡时间</string>
     <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
