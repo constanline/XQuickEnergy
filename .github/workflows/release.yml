@@ -33,8 +33,8 @@ jobs:
         with:
           releaseDir: app/build/outputs/apk/release/
           signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-          keyAlias: BoBo
-          keyStorePassword: 123654
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           buildToolsVersion: 30.0.3
 
