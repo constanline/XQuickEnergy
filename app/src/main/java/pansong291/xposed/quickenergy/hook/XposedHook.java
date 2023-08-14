@@ -79,28 +79,33 @@ public class XposedHook implements IXposedHookLoadPackage {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    Config.shouldReload = true;
-                    Statistics.resetToday();
-                    AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
-                    if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
-                        AntCooperate.start();
-                        AntFarm.start();
-                        Reserve.start();
-                        if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
-                            AncientTree.start();
+                    String targetUid = RpcUtil.getUserId(XposedHook.classLoader);
+                    if (targetUid != null ) {
+                        FriendIdMap.currentUid = targetUid;
+
+                        Config.shouldReload = true;
+                        Statistics.resetToday();
+                        AntForest.checkEnergyRanking(XposedHook.classLoader, times);
+
+                        if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                            AntCooperate.start();
+                            AntFarm.start();
+                            Reserve.start();
+                            if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                                AncientTree.start();
+                            }
+                            AntSports.start(XposedHook.classLoader, times);
+                            AntMember.receivePoint();
+                            AntOcean.start();
                         }
-                        AntSports.start(XposedHook.classLoader, times);
-                        AntMember.receivePoint();
-                        AntOcean.start();
+                        times = (times + 1) % (3600_000 / Config.checkInterval());
                     }
-
                     if (Config.collectEnergy() || Config.enableFarm()) {
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
                         AntForestNotification.stop(service, false);
                     }
-                    times = (times + 1) % (3600_000 / Config.checkInterval());
                 }
             };
         }

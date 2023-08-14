@@ -892,7 +892,7 @@ public class AntForest {
 
     private static void useDoubleCard() {
         try {
-            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList());
+            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList(false));
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
@@ -929,6 +929,37 @@ public class AntForest {
             }
         } catch (Throwable th) {
             Log.i(TAG, "useDoubleCard err:");
+            Log.printStackTrace(TAG, th);
+        }
+    }
+
+    /* 赠送道具 */
+    private static void giveProp(String targetUserId) {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList(true));
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray forestPropVOList = jo.optJSONArray("forestPropVOList");
+                if (forestPropVOList.length() > 0) {
+                    jo = forestPropVOList.getJSONObject(0);
+                    String giveConfigId = jo.getJSONObject("giveConfigVO").getString("giveConfigId");
+                    int holdsNum = jo.optInt("holdsNum");
+                    String propName = jo.getJSONObject("propConfigVO").getString("propName");
+                    String propId = jo.getJSONArray("propIdList").getString(0);
+                    jo = new JSONObject(AntForestRpcCall.giveProp(giveConfigId, propId, targetUserId));
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        Log.forest("赠送道具[" + FriendIdMap.getNameById(targetUserId) + "]#" + propName);
+                    } else {
+                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                    }
+                    if (holdsNum > 1 || forestPropVOList.length() > 1) {
+                        giveProp(targetUserId);
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "giveProp err:");
             Log.printStackTrace(TAG, th);
         }
     }
