@@ -45,6 +45,7 @@ public class Config {
     public static final String jn_collectEnergy = "collectEnergy";
 
     public static final String jn_collectWateringBubble = "collectWateringBubble";
+    public static final String jn_collectProp = "collectProp";
     public static final String jn_ReturnWater33 = "returnWater30";
     public static final String jn_ReturnWater18 = "returnWater20";
     public static final String jn_ReturnWater10 = "returnWater10";
@@ -134,6 +135,7 @@ public class Config {
     private int checkInterval;
 
     private boolean collectWateringBubble;
+    private boolean collectProp;
     private boolean limitCollect;
     private int limitCount;
     private boolean doubleCard;
@@ -340,6 +342,15 @@ public class Config {
 
     public static boolean collectWateringBubble() {
         return getConfig().collectWateringBubble;
+    }
+
+    public static void setCollectProp(boolean b) {
+        getConfig().collectProp = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectProp() {
+        return getConfig().collectProp;
     }
 
     public static void setCheckInterval(int i) {
@@ -981,7 +992,7 @@ public class Config {
     public static Config defInit() {
         Config c = new Config();
 
-        c.forestPauseTime = 0L;
+        // c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;
@@ -995,6 +1006,7 @@ public class Config {
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
+        c.collectProp = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
         c.limitCollect = true;
@@ -1099,7 +1111,7 @@ public class Config {
             JSONArray ja, jaa;
             config = new Config();
 
-            config.forestPauseTime = jo.optLong(jn_pauseTime, 0L);
+            // config.forestPauseTime = jo.optLong(jn_pauseTime, 0L);
 
             config.immediateEffect = jo.optBoolean(jn_immediateEffect, true);
 
@@ -1128,6 +1140,8 @@ public class Config {
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
 
             config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
+
+            config.collectProp = jo.optBoolean(jn_collectProp, true);
 
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
 
@@ -1391,7 +1405,7 @@ public class Config {
             if (config == null)
                 config = Config.defInit();
 
-            jo.put(jn_pauseTime, config.forestPauseTime);
+            // jo.put(jn_pauseTime, config.forestPauseTime);
 
             jo.put(jn_immediateEffect, config.immediateEffect);
 
@@ -1417,6 +1431,8 @@ public class Config {
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_collectWateringBubble, config.collectWateringBubble);
+
+            jo.put(jn_collectProp, config.collectProp);
 
             jo.put(jn_checkInterval, config.checkInterval);
 

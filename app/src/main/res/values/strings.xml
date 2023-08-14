@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">仙人掌</string>
+    <string name="app_name">Cactus</string>
     <string name="start_check_energy">Start check energy</string>
     <color name="color_alpha">#00000000</color>
     <color name="color_btn_down">#F0F0F0</color>
@@ -90,6 +90,7 @@
     <string name="copy_success">Copy success</string>
     <string name="cancel">Cancel</string>
     <string name="collect_watering_bubble">Collect watering bubble</string>
+    <string name="collect_prop">Collect prop</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
     <string name="animal_sleep_time">Animal sleep time</string>

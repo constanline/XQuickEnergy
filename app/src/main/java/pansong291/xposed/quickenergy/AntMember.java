@@ -19,6 +19,8 @@ public class AntMember {
             @Override
             public void run() {
                 try {
+                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    Thread.sleep(100);
                     if (Statistics.canMemberSignInToday(FriendIdMap.currentUid)) {
                         String s = AntMemberRpcCall.memberSignIn();
                         JSONObject jo = new JSONObject(s);
@@ -129,7 +131,7 @@ public class AntMember {
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {
                 JSONObject result = jo.getJSONObject("result");
-                int userCurrentPoint = result.getInt("userCurrentPoint");
+                int userCurrentPoint = result.optInt("userCurrentPoint");
                 if (userCurrentPoint > 0) {
                     jo = new JSONObject(AntMemberRpcCall.exchangeDetail(itemId));
                     if (jo.getBoolean("success")) {

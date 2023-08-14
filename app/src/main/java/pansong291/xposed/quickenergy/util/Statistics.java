@@ -235,17 +235,7 @@ public class Statistics {
     }
 
     public static boolean canReserveToday(String id, int count) {
-        Statistics stat = getStatistics();
-        int index = -1;
-        for (int i = 0; i < stat.reserveLogList.size(); i++)
-            if (stat.reserveLogList.get(i).projectId.equals(id)) {
-                index = i;
-                break;
-            }
-        if (index < 0)
-            return true;
-        ReserveLog rl = stat.reserveLogList.get(index);
-        return rl.applyCount < count;
+        return  getReserveTimes(id) < count;
     }
 
     public static void reserveToday(String id, int count) {
