@@ -1,11 +1,7 @@
 name: Android CI
-# on:
-#   release:
-#     types: [published]
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 jobs:
   build:
     permissions: write-all
