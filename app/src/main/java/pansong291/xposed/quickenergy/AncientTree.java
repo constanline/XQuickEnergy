@@ -19,7 +19,7 @@ public class AncientTree {
     private static boolean firstTime = true;
 
     public static void start() {
-        if (!firstTime) {
+        if (!Config.ancientTree() || !firstTime || !Config.isAncientTreeWeek()) {
             return;
         }
         new Thread() {
@@ -31,7 +31,7 @@ public class AncientTree {
     }
     private static void home() {
         List<String> list = Config.getAncientTreeAreaCodeList();
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return;
         }
         for (String code : list) {
@@ -40,15 +40,19 @@ public class AncientTree {
                 JSONObject jo = new JSONObject(s);
                 if (jo.getString("resultCode").equals("SUCCESS")) {
                     JSONObject data = jo.getJSONObject("data");
-                    JSONObject targetDistrictDetailInfo = data.getJSONObject("targetDistrictDetailInfo");
-                    JSONObject districtInfo = targetDistrictDetailInfo.getJSONObject("districtInfo");
-                    String cityCode = districtInfo.getString("cityCode");
-                    JSONArray ancientTreeList = targetDistrictDetailInfo.getJSONArray("ancientTreeList");
-                    projectDetail(cityCode, ancientTreeList);
+                    if (data.has("targetDistrictDetailInfo")) {
+                        JSONObject targetDistrictDetailInfo = data.getJSONObject("targetDistrictDetailInfo");
+                        JSONObject districtInfo = targetDistrictDetailInfo.getJSONObject("districtInfo");
+                        String cityCode = districtInfo.getString("cityCode");
+                        JSONArray ancientTreeList = targetDistrictDetailInfo.getJSONArray("ancientTreeList");
+                        projectDetail(cityCode, ancientTreeList);
+                    } else {
+                        Log.recordLog("targetDistrictDetailInfo不存在", s);
+                    }
                     firstTime = false;
                 }
             } catch (Throwable t) {
-                Log.i(TAG, "homePage err:");
+                Log.i(TAG, "home err:");
                 Log.printStackTrace(TAG, t);
             }
         }
@@ -56,13 +60,17 @@ public class AncientTree {
 
     private static void protect(JSONObject projectDetail) throws JSONException {
         JSONObject data = projectDetail.getJSONObject("data");
-        if (data.getBoolean("canProtect")) {
+        if (data.getBoolean("canProtect") && !data.getBoolean("hasProtected")) {
             int currentEnergy = data.getInt("currentEnergy");
+            JSONObject districtInfo = data.getJSONObject("districtInfo");
+            String cityName = districtInfo.getString("cityName");
+            String districtName = districtInfo.getString("districtName");
             JSONObject ancientTree = data.getJSONObject("ancientTree");
             String activityId = ancientTree.getString("activityId");
             String projectId = ancientTree.getString("projectId");
             JSONObject ancientTreeInfo = ancientTree.getJSONObject("ancientTreeInfo");
             String name = ancientTreeInfo.getString("name");
+            int age = ancientTreeInfo.getInt("age");
             int protectExpense = ancientTreeInfo.getInt("protectExpense");
             String cityCode = ancientTreeInfo.getString("cityCode");
             if (currentEnergy > protectExpense) {
@@ -70,10 +78,11 @@ public class AncientTree {
                 try {
                     JSONObject jo = new JSONObject(s);
                     if (jo.getString("resultCode").equals("SUCCESS")) {
-                        Log.forest("[保护古树]消耗" + protectExpense + "能量保护古树\"" + name + "\"成功");
+                        Log.forest("保护古树🎐[" + cityName + "-" + districtName
+                                + "]#" + age + "年" + name + ",消耗能量" + protectExpense + "g");
                     }
                 } catch (Throwable t) {
-                    Log.i(TAG, "homePage err:");
+                    Log.i(TAG, "protect err:");
                     Log.printStackTrace(TAG, t);
                 }
             }
@@ -93,7 +102,7 @@ public class AncientTree {
                         protect(jo);
                     }
                 } catch (Throwable t) {
-                    Log.i(TAG, "homePage err:");
+                    Log.i(TAG, "projectDetail err:");
                     Log.printStackTrace(TAG, t);
                 }
             }

@@ -1,6 +1,9 @@
 package pansong291.xposed.quickenergy.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,6 +50,15 @@ public class Statistics {
         }
     }
 
+    private static class BeachLog {
+        String cultivationCode;
+        int applyCount = 0;
+
+        public BeachLog(String id) {
+            cultivationCode = id;
+        }
+    }
+
     private static class FeedFriendLog {
         String userId;
         int feedCount = 0;
@@ -60,10 +72,11 @@ public class Statistics {
     private static final String jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
             jn_answerQuestionList = "answerQuestionList", jn_syncStepList = "syncStepList",
-            jn_exchangeList = "exchangeList",
-            jn_questionHint = "questionHint", jn_donationEgg = "donationEgg", jn_memberSignIn = "memberSignIn",
+            jn_exchangeList = "exchangeList", jn_beachTodayList = "beachTodayList",
+            jn_questionHint = "questionHint", jn_donationEggList = "donationEggList",
+            jn_memberSignInList = "memberSignInList",
             jn_kbSignIn = "kbSignIn", jn_exchangeDoubleCard = "exchangeDoubleCard",
-            jn_exchangeTimes = "exchangeTimes";
+            jn_exchangeTimes = "exchangeTimes", jn_dailyAnswerList = "dailyAnswerList", jn_doubleTimes = "doubleTimes";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -74,23 +87,24 @@ public class Statistics {
     private ArrayList<String> cooperateWaterList;
     private ArrayList<String> syncStepList;
     private ArrayList<ReserveLog> reserveLogList;
-//    private ArrayList<String> ancientTreeCityCodeList;
+    private ArrayList<BeachLog> beachLogList;
+    private ArrayList<String> beachTodayList;
+    private ArrayList<String> ancientTreeCityCodeList;
     private ArrayList<String> exchangeList;
     private int exchangeDoubleCard = 0;
     private int exchangeTimes = 0;
+    private int doubleTimes = 0;
 
     // farm
     private ArrayList<String> answerQuestionList;
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
-
-    private int donationEgg = 0;
+    private Set<String> dailyAnswerList;
+    private ArrayList<String> donationEggList;
 
     // other
-    private int memberSignIn = 0;
+    private ArrayList<String> memberSignInList;
     private int kbSignIn = 0;
-
-    private int syncStep = 0;
 
     private static Statistics statistics;
 
@@ -172,6 +186,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -186,6 +201,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
@@ -251,6 +267,53 @@ public class Statistics {
         save();
     }
 
+    public static int getBeachTimes(String id) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return 0;
+        BeachLog bl = stat.beachLogList.get(index);
+        return bl.applyCount;
+    }
+
+    public static boolean canBeach(String id, int count) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        BeachLog bl = stat.beachLogList.get(index);
+        return bl.applyCount < count;
+    }
+
+    public static void beachRecord(String id, int count) {
+        Statistics stat = getStatistics();
+        BeachLog bl;
+        int index = -1;
+        for (int i = 0; i < stat.beachLogList.size(); i++)
+            if (stat.beachLogList.get(i).cultivationCode.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            bl = new BeachLog(id);
+            stat.beachLogList.add(bl);
+        } else {
+            bl = stat.beachLogList.get(index);
+        }
+        bl.applyCount += count;
+        save();
+    }
+
     public static boolean canCooperateWaterToday(String uid, String coopId) {
         Statistics stat = getStatistics();
         return !stat.cooperateWaterList.contains(uid + "_" + coopId);
@@ -265,18 +328,18 @@ public class Statistics {
         }
     }
 
-//    public static boolean canAncientTreeToday(String cityCode) {
-//        Statistics stat = getStatistics();
-//        return !stat.ancientTreeCityCodeList.contains(cityCode);
-//    }
-//
-//    public static void ancientTreeToday(String cityCode) {
-//        Statistics stat = getStatistics();
-//        if (!stat.ancientTreeCityCodeList.contains(cityCode)) {
-//            stat.ancientTreeCityCodeList.add(cityCode);
-//            save();
-//        }
-//    }
+    public static boolean canAncientTreeToday(String cityCode) {
+        Statistics stat = getStatistics();
+        return !stat.ancientTreeCityCodeList.contains(cityCode);
+    }
+
+    public static void ancientTreeToday(String cityCode) {
+        Statistics stat = getStatistics();
+        if (!stat.ancientTreeCityCodeList.contains(cityCode)) {
+            stat.ancientTreeCityCodeList.add(cityCode);
+            save();
+        }
+    }
 
     public static boolean canAnswerQuestionToday(String uid) {
         Statistics stat = getStatistics();
@@ -332,28 +395,28 @@ public class Statistics {
         save();
     }
 
-    public static boolean canMemberSignInToday() {
+    public static boolean canMemberSignInToday(String uid) {
         Statistics stat = getStatistics();
-        return stat.memberSignIn < stat.day.time;
+        return !stat.memberSignInList.contains(uid);
     }
 
-    public static void memberSignInToday() {
+    public static void memberSignInToday(String uid) {
         Statistics stat = getStatistics();
-        if (stat.memberSignIn != stat.day.time) {
-            stat.memberSignIn = stat.day.time;
+        if (!stat.memberSignInList.contains(uid)) {
+            stat.memberSignInList.add(uid);
             save();
         }
     }
 
-    public static boolean canDonationEgg() {
+    public static boolean canDonationEgg(String uid) {
         Statistics stat = getStatistics();
-        return stat.donationEgg < stat.day.time;
+        return !stat.donationEggList.contains(uid);
     }
 
-    public static void donationEgg() {
+    public static void donationEgg(String uid) {
         Statistics stat = getStatistics();
-        if (stat.donationEgg != stat.day.time) {
-            stat.donationEgg = stat.day.time;
+        if (!stat.donationEggList.contains(uid)) {
+            stat.donationEggList.add(uid);
             save();
         }
     }
@@ -378,12 +441,12 @@ public class Statistics {
         } else return stat.exchangeTimes < Config.getExchangeEnergyDoubleClickCount();
     }
 
-    public static void exchangeDoubleCardToday(boolean iSsuccess) {
+    public static void exchangeDoubleCardToday(boolean isSuccess) {
         Statistics stat = getStatistics();
         if (stat.exchangeDoubleCard != stat.day.time) {
             stat.exchangeDoubleCard = stat.day.time;
         }
-        if (iSsuccess) {
+        if (isSuccess) {
             stat.exchangeTimes += 1;
         } else {
             stat.exchangeTimes = Config.getExchangeEnergyDoubleClickCount();
@@ -394,6 +457,17 @@ public class Statistics {
     public static int getExchangeTimes() {
         Statistics stat = getStatistics();
         return stat.exchangeTimes;
+    }
+
+    public static boolean canDoubleToday() {
+        Statistics stat = getStatistics();
+        return stat.doubleTimes < Config.getDoubleCountLimit();
+    }
+
+    public static void DoubleToday() {
+        Statistics stat = getStatistics();
+        stat.doubleTimes += 1;
+        save();
     }
 
     public static boolean canKbSignInToday() {
@@ -409,6 +483,17 @@ public class Statistics {
         }
     }
 
+    public static Set<String> getDadaDailySet() {
+        Statistics stat = getStatistics();
+        return stat.dailyAnswerList;
+    }
+
+    public static void setDadaDailySet(Set<String> dailyAnswerList) {
+        Statistics stat = getStatistics();
+        stat.dailyAnswerList = dailyAnswerList;
+        save();
+    }
+
     public static boolean canSyncStepToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.syncStepList.contains(uid);
@@ -418,6 +503,19 @@ public class Statistics {
         Statistics stat = getStatistics();
         if (!stat.syncStepList.contains(uid)) {
             stat.syncStepList.add(uid);
+            save();
+        }
+    }
+
+    public static boolean canBeachToday(String cultivationCode) {
+        Statistics stat = getStatistics();
+        return !stat.beachTodayList.contains(cultivationCode);
+    }
+
+    public static void beachToday(String cultivationCode) {
+        Statistics stat = getStatistics();
+        if (!stat.beachTodayList.contains(cultivationCode)) {
+            stat.beachTodayList.add(cultivationCode);
             save();
         }
     }
@@ -461,16 +559,17 @@ public class Statistics {
         stat.syncStepList.clear();
         stat.exchangeList.clear();
         stat.reserveLogList.clear();
-//        stat.ancientTreeCityCodeList.clear();
+        stat.beachTodayList.clear();
+        stat.ancientTreeCityCodeList.clear();
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
         stat.questionHint = null;
-        stat.donationEgg = 0;
-        stat.memberSignIn = 0;
+        stat.donationEggList.clear();
+        stat.memberSignInList.clear();
         stat.kbSignIn = 0;
-        stat.syncStep = 0;
         stat.exchangeDoubleCard = 0;
         stat.exchangeTimes = 0;
+        stat.doubleTimes = 0;
         save();
         FileUtils.getForestLogFile().delete();
         FileUtils.getFarmLogFile().delete();
@@ -490,14 +589,22 @@ public class Statistics {
             stat.cooperateWaterList = new ArrayList<>();
         if (stat.answerQuestionList == null)
             stat.answerQuestionList = new ArrayList<>();
+        if (stat.donationEggList == null)
+            stat.donationEggList = new ArrayList<>();
+        if (stat.memberSignInList == null)
+            stat.memberSignInList = new ArrayList<>();
         if (stat.feedFriendLogList == null)
             stat.feedFriendLogList = new ArrayList<>();
-//        if (stat.ancientTreeCityCodeList == null)
-//            stat.ancientTreeCityCodeList = new ArrayList<>();
+        if (stat.ancientTreeCityCodeList == null)
+            stat.ancientTreeCityCodeList = new ArrayList<>();
         if (stat.syncStepList == null)
             stat.syncStepList = new ArrayList<>();
+        if (stat.beachTodayList == null)
+            stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
+        if (stat.dailyAnswerList == null)
+            stat.dailyAnswerList = new HashSet<>();
         return stat;
     }
 
@@ -558,12 +665,32 @@ public class Statistics {
                 }
             }
 
+            stat.ancientTreeCityCodeList = new ArrayList<>();
+
+            if (jo.has(Config.jn_ancientTreeCityCodeList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_ancientTreeCityCodeList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.ancientTreeCityCodeList.add(ja.getString(i));
+
+                }
+            }
+
             stat.syncStepList = new ArrayList<>();
 
             if (jo.has(jn_syncStepList)) {
                 JSONArray ja = jo.getJSONArray(jn_syncStepList);
                 for (int i = 0; i < ja.length(); i++) {
                     stat.syncStepList.add(ja.getString(i));
+
+                }
+            }
+
+            stat.beachTodayList = new ArrayList<>();
+
+            if (jo.has(jn_beachTodayList)) {
+                JSONArray ja = jo.getJSONArray(jn_beachTodayList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.beachTodayList.add(ja.getString(i));
 
                 }
             }
@@ -587,6 +714,18 @@ public class Statistics {
                     ReserveLog rl = new ReserveLog(jaa.getString(0));
                     rl.applyCount = jaa.getInt(1);
                     stat.reserveLogList.add(rl);
+                }
+            }
+
+            stat.beachLogList = new ArrayList<>();
+
+            if (jo.has(Config.jn_beachList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_beachList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    BeachLog bl = new BeachLog(jaa.getString(0));
+                    bl.applyCount = jaa.getInt(1);
+                    stat.beachLogList.add(bl);
                 }
             }
 
@@ -616,11 +755,22 @@ public class Statistics {
                 }
             }
 
-            if (jo.has(jn_donationEgg))
-                stat.donationEgg = jo.getInt(jn_donationEgg);
+            stat.donationEggList = new ArrayList<>();
+            if (jo.has(jn_donationEggList)) {
+                JSONArray ja = jo.getJSONArray(jn_donationEggList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.donationEggList.add(ja.getString(i));
+                }
+            }
 
-            if (jo.has(jn_memberSignIn))
-                stat.memberSignIn = jo.getInt(jn_memberSignIn);
+            stat.memberSignInList = new ArrayList<>();
+            if (jo.has(jn_memberSignInList)) {
+                JSONArray ja = jo.getJSONArray(jn_memberSignInList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.memberSignInList.add(ja.getString(i));
+
+                }
+            }
 
             if (jo.has(jn_kbSignIn))
                 stat.kbSignIn = jo.getInt(jn_kbSignIn);
@@ -631,6 +781,17 @@ public class Statistics {
             if (jo.has(jn_exchangeTimes))
                 stat.exchangeTimes = jo.getInt(jn_exchangeTimes);
 
+            if (jo.has(jn_doubleTimes))
+                stat.doubleTimes = jo.getInt(jn_doubleTimes);
+
+            stat.dailyAnswerList = new HashSet<>();
+            if (jo.has(jn_dailyAnswerList)) {
+                JSONArray ja = jo.getJSONArray(jn_dailyAnswerList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.dailyAnswerList.add(ja.getString(i));
+                }
+            }
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -639,10 +800,10 @@ public class Statistics {
             }
             stat = defInit();
         }
-        String formated = statistics2Json(stat);
-        if (!formated.equals(json)) {
+        String formatted = statistics2Json(stat);
+        if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
-            FileUtils.write2File(formated, FileUtils.getStatisticsFile());
+            FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
     }
@@ -697,16 +858,22 @@ public class Statistics {
             jo.put(jn_syncStepList, ja);
 
             ja = new JSONArray();
+            for (int i = 0; i < stat.beachTodayList.size(); i++) {
+                ja.put(stat.beachTodayList.get(i));
+            }
+            jo.put(jn_beachTodayList, ja);
+
+            ja = new JSONArray();
             for (int i = 0; i < stat.exchangeList.size(); i++) {
                 ja.put(stat.exchangeList.get(i));
             }
             jo.put(jn_exchangeList, ja);
 
-//            ja = new JSONArray();
-//            for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {
-//                ja.put(stat.ancientTreeCityCodeList.get(i));
-//            }
-//            jo.put(Config.jn_ancientTreeCityCodeList, ja);
+            ja = new JSONArray();
+            for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {
+                ja.put(stat.ancientTreeCityCodeList.get(i));
+            }
+            jo.put(Config.jn_ancientTreeCityCodeList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.reserveLogList.size(); i++) {
@@ -717,6 +884,16 @@ public class Statistics {
                 ja.put(jaa);
             }
             jo.put(Config.jn_reserveList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.beachLogList.size(); i++) {
+                BeachLog bl = stat.beachLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(bl.cultivationCode);
+                jaa.put(bl.applyCount);
+                ja.put(jaa);
+            }
+            jo.put(Config.jn_beachList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.answerQuestionList.size(); i++) {
@@ -737,15 +914,31 @@ public class Statistics {
             }
             jo.put(Config.jn_feedFriendAnimalList, ja);
 
-            jo.put(jn_donationEgg, stat.donationEgg);
+            ja = new JSONArray();
+            for (int i = 0; i < stat.donationEggList.size(); i++) {
+                ja.put(stat.donationEggList.get(i));
+            }
+            jo.put(jn_donationEggList, ja);
 
-            jo.put(jn_memberSignIn, stat.memberSignIn);
+            ja = new JSONArray();
+            for (int i = 0; i < stat.memberSignInList.size(); i++) {
+                ja.put(stat.memberSignInList.get(i));
+            }
+            jo.put(jn_memberSignInList, ja);
 
             jo.put(jn_kbSignIn, stat.kbSignIn);
 
             jo.put(jn_exchangeDoubleCard, stat.exchangeDoubleCard);
 
             jo.put(jn_exchangeTimes, stat.exchangeTimes);
+
+            jo.put(jn_doubleTimes, stat.doubleTimes);
+
+            ja = new JSONArray();
+            for (String item : stat.dailyAnswerList) {
+                ja.put(item);
+            }
+            jo.put(jn_dailyAnswerList, ja);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

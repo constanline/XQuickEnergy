@@ -9,16 +9,15 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileUtils
-{
+public class FileUtils {
     private static final String TAG = FileUtils.class.getCanonicalName();
     private static File mainDirectory;
     private static File configDirectory;
-    private static Map<String,File> configFileMap = new HashMap<>();
+    private static final Map<String, File> configFileMap = new HashMap<>();
     private static File friendIdMapFile;
     private static File cooperationIdMapFile;
     private static File reserveIdMapFile;
-    private static File cityCodeMapFile;
+    private static File beachIdMapFile;
     private static File statisticsFile;
     private static File exportedStatisticsFile;
     private static File forestLogFile;
@@ -27,30 +26,54 @@ public class FileUtils
     private static File simpleLogFile;
     private static File runtimeLogFile;
     private static File cityCodeFile;
+    private static File friendWatchFile;
+
+    private static void copyFile(File srcDir, File dstDir, String filename) {
+        File file = new File(srcDir, filename);
+        if (!file.exists()) {
+            return;
+        }
+        String content = readFromFile(file);
+        file = new File(dstDir, filename);
+        write2File(content, file);
+    }
 
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
-        if(mainDirectory == null) {
-            mainDirectory = new File(Environment.getExternalStorageDirectory(), "xqe");
-            if(mainDirectory.exists()) {
-                if(mainDirectory.isFile())
-                {
-                    mainDirectory.delete();
-                    mainDirectory.mkdirs();
-                }
-            } else {
+        if (mainDirectory == null) {
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!storageDir.exists()) {
+                storageDir.mkdirs();
+            }
+            mainDirectory = new File(storageDir, "xqe");
+            if (!mainDirectory.exists()) {
                 mainDirectory.mkdirs();
+                File oldDirectory = new File(Environment.getExternalStorageDirectory(), "xqe");
+                if (oldDirectory.exists()) {
+                    File deprecatedFile = new File(oldDirectory, "deprecated");
+                    if (!deprecatedFile.exists()) {
+                        copyFile(oldDirectory, mainDirectory, "config.json");
+                        copyFile(oldDirectory, mainDirectory, "friendId.list");
+                        copyFile(oldDirectory, mainDirectory, "cooperationId.list");
+                        copyFile(oldDirectory, mainDirectory, "reserveId.list");
+                        copyFile(oldDirectory, mainDirectory, "statistics.json");
+                        copyFile(oldDirectory, mainDirectory, "cityCode.json");
+                        try {
+                            deprecatedFile.createNewFile();
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                }
             }
         }
         return mainDirectory;
     }
 
     public static File getConfigDirectoryFile() {
-        if(configDirectory == null) {
-            configDirectory = new File(Environment.getExternalStorageDirectory(), "xqe/config");
-            if(configDirectory.exists()) {
-                if(configDirectory.isFile())
-                {
+        if (configDirectory == null) {
+            configDirectory = new File(getMainDirectoryFile(), "config");
+            if (configDirectory.exists()) {
+                if (configDirectory.isFile()) {
                     configDirectory.delete();
                     configDirectory.mkdirs();
                 }
@@ -70,6 +93,15 @@ public class FileUtils
         return cityCodeFile;
     }
 
+    public static File getFriendWatchFile() {
+        if(friendWatchFile == null) {
+            friendWatchFile = new File(getMainDirectoryFile(), "friendWatch.json");
+            if(friendWatchFile.exists() && friendWatchFile.isDirectory())
+                friendWatchFile.delete();
+        }
+        return friendWatchFile;
+    }
+
     public static File getConfigFile() {
         return getConfigFile(null);
     }
@@ -86,24 +118,26 @@ public class FileUtils
                     configFileMap.put(userId, configFile);
                     return configFile;
                 }
+            } else {
+                return configFileMap.get(userId);
             }
         }
         return configFileMap.get("Default");
     }
 
     public static File getFriendIdMapFile() {
-        if(friendIdMapFile == null) {
+        if (friendIdMapFile == null) {
             friendIdMapFile = new File(getMainDirectoryFile(), "friendId.list");
-            if(friendIdMapFile.exists() && friendIdMapFile.isDirectory())
+            if (friendIdMapFile.exists() && friendIdMapFile.isDirectory())
                 friendIdMapFile.delete();
         }
         return friendIdMapFile;
     }
 
     public static File getCooperationIdMapFile() {
-        if(cooperationIdMapFile == null) {
+        if (cooperationIdMapFile == null) {
             cooperationIdMapFile = new File(getMainDirectoryFile(), "cooperationId.list");
-            if(cooperationIdMapFile.exists() && cooperationIdMapFile.isDirectory())
+            if (cooperationIdMapFile.exists() && cooperationIdMapFile.isDirectory())
                 cooperationIdMapFile.delete();
         }
         return cooperationIdMapFile;
@@ -118,85 +152,88 @@ public class FileUtils
         return reserveIdMapFile;
     }
 
-    public static File getCityCodeMapFile() {
-        if (cityCodeMapFile == null) {
-            cityCodeMapFile = new File(getMainDirectoryFile(), "cityCode.list");
-            if (cityCodeMapFile.exists() && cityCodeMapFile.isDirectory())
-                cityCodeMapFile.delete();
+    public static File getBeachIdMapFile() {
+        if (beachIdMapFile == null) {
+            beachIdMapFile = new File(getMainDirectoryFile(), "beachId.list");
+            if (beachIdMapFile.exists() && beachIdMapFile.isDirectory())
+                beachIdMapFile.delete();
         }
-        return cityCodeMapFile;
-      }
+        return beachIdMapFile;
+    }
 
     public static File getStatisticsFile() {
-        if(statisticsFile == null) {
+        if (statisticsFile == null) {
             statisticsFile = new File(getMainDirectoryFile(), "statistics.json");
-            if(statisticsFile.exists() && statisticsFile.isDirectory())
+            if (statisticsFile.exists() && statisticsFile.isDirectory())
                 statisticsFile.delete();
         }
         return statisticsFile;
     }
 
     public static File getExportedStatisticsFile() {
-        if(exportedStatisticsFile == null) {
+        if (exportedStatisticsFile == null) {
             exportedStatisticsFile = new File(getMainDirectoryFile(), "statistics.json");
-            if(exportedStatisticsFile.exists() && exportedStatisticsFile.isDirectory())
+            if (exportedStatisticsFile.exists() && exportedStatisticsFile.isDirectory())
                 exportedStatisticsFile.delete();
         }
         return exportedStatisticsFile;
     }
 
     public static File getForestLogFile() {
-        if(forestLogFile == null) {
+        if (forestLogFile == null) {
             forestLogFile = new File(getMainDirectoryFile(), "forest.log");
-            if(forestLogFile.exists() && forestLogFile.isDirectory())
+            if (forestLogFile.exists() && forestLogFile.isDirectory())
                 forestLogFile.delete();
-            if(!forestLogFile.exists())
+            if (!forestLogFile.exists())
                 try {
                     forestLogFile.createNewFile();
-                } catch(Throwable ignored)  {}
+                } catch (Throwable ignored) {
+                }
         }
         return forestLogFile;
     }
 
     public static File getFarmLogFile() {
-        if(farmLogFile == null) {
+        if (farmLogFile == null) {
             farmLogFile = new File(getMainDirectoryFile(), "farm.log");
-            if(farmLogFile.exists() && farmLogFile.isDirectory())
+            if (farmLogFile.exists() && farmLogFile.isDirectory())
                 farmLogFile.delete();
-            if(!farmLogFile.exists())
+            if (!farmLogFile.exists())
                 try {
                     farmLogFile.createNewFile();
-                } catch(Throwable ignored) {}
+                } catch (Throwable ignored) {
+                }
         }
         return farmLogFile;
     }
 
     public static File getOtherLogFile() {
-        if(otherLogFile == null) {
+        if (otherLogFile == null) {
             otherLogFile = new File(getMainDirectoryFile(), "other.log");
-            if(otherLogFile.exists() && otherLogFile.isDirectory())
+            if (otherLogFile.exists() && otherLogFile.isDirectory())
                 otherLogFile.delete();
-            if(!otherLogFile.exists())
+            if (!otherLogFile.exists())
                 try {
                     otherLogFile.createNewFile();
-                } catch(Throwable ignored) {}
+                } catch (Throwable ignored) {
+                }
         }
         return otherLogFile;
     }
 
     public static File getSimpleLogFile() {
-        if(simpleLogFile == null) {
+        if (simpleLogFile == null) {
             simpleLogFile = new File(getMainDirectoryFile(), "simple.log");
-            if(simpleLogFile.exists() && simpleLogFile.isDirectory())
+            if (simpleLogFile.exists() && simpleLogFile.isDirectory())
                 simpleLogFile.delete();
         }
         return simpleLogFile;
     }
 
     public static File getRuntimeLogFile() {
-        if(runtimeLogFile == null) {
+        if (runtimeLogFile == null) {
             runtimeLogFile = new File(getMainDirectoryFile(), "runtime.log");
-            if(runtimeLogFile.exists() && runtimeLogFile.isDirectory())
+            if (runtimeLogFile.exists() && runtimeLogFile.isDirectory())
                 runtimeLogFile.delete();
         }
         return runtimeLogFile;
@@ -213,11 +250,10 @@ public class FileUtils
             fr = new FileReader(f);
             char[] chs = new char[1024];
             int len = 0;
-            while((len = fr.read(chs)) >= 0)
-            {
-                result .append(chs, 0, len);
+            while ((len = fr.read(chs)) >= 0) {
+                result.append(chs, 0, len);
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
         close(fr, f);
@@ -225,13 +261,13 @@ public class FileUtils
     }
 
     public static boolean append2SimpleLogFile(String s) {
-        if(getSimpleLogFile().length() > 31_457_280) // 30MB
+        if (getSimpleLogFile().length() > 31_457_280) // 30MB
             getSimpleLogFile().delete();
         return append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
     }
 
     public static void append2RuntimeLogFile(String s) {
-        if(getRuntimeLogFile().length() > 31_457_280) // 30MB
+        if (getRuntimeLogFile().length() > 31_457_280) // 30MB
             getRuntimeLogFile().delete();
         append2File(Log.getFormatDateTime() + "  " + s + "\n", getRuntimeLogFile());
     }
@@ -244,8 +280,8 @@ public class FileUtils
             fw.write(s);
             fw.flush();
             success = true;
-        } catch(Throwable t) {
-            if(!f.equals(getRuntimeLogFile()))
+        } catch (Throwable t) {
+            if (!f.equals(getRuntimeLogFile()))
                 Log.printStackTrace(TAG, t);
         }
         close(fw, f);
@@ -260,8 +296,8 @@ public class FileUtils
             fw.append(s);
             fw.flush();
             success = true;
-        } catch(Throwable t) {
-            if(!f.equals(getRuntimeLogFile()))
+        } catch (Throwable t) {
+            if (!f.equals(getRuntimeLogFile()))
                 Log.printStackTrace(TAG, t);
         }
         close(fw, f);
@@ -274,9 +310,10 @@ public class FileUtils
 
     public static void close(Closeable c, File f) {
         try {
-            if(c != null) c.close();
-        } catch(Throwable t) {
-            if(!f.equals(getRuntimeLogFile()))
+            if (c != null)
+                c.close();
+        } catch (Throwable t) {
+            if (!f.equals(getRuntimeLogFile()))
                 Log.printStackTrace(TAG, t);
         }
     }
