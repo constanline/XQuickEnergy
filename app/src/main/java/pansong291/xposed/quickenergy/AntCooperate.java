@@ -13,10 +13,8 @@ import pansong291.xposed.quickenergy.util.Statistics;
 public class AntCooperate {
     private static final String TAG = AntCooperate.class.getCanonicalName();
 
-    private static boolean firstTime = true;
-
     public static void start() {
-        if (!Config.cooperateWater() || !firstTime)
+        if (!Config.cooperateWater())
             return;
         new Thread() {
 
@@ -71,7 +69,6 @@ public class AntCooperate {
                     Log.printStackTrace(TAG, t);
                 }
                 CooperationIdMap.saveIdMap();
-                firstTime = false;
             }
         }.start();
     }

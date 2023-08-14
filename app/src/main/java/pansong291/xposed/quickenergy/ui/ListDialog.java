@@ -54,7 +54,7 @@ public class ListDialog {
     private static void showListDialog(Context c, CharSequence title) {
         try {
             getListDialog(c).show();
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             listDialog = null;
             getListDialog(c).show();
         }

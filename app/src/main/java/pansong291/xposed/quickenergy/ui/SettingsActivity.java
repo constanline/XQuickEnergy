@@ -33,19 +33,15 @@ public class SettingsActivity extends Activity {
     private Animation slideRightIn;
     private Animation slideRightOut;
 
-    Switch sw_immediateEffect, sw_recordLog, sw_showToast,
-            sw_stayAwake, sw_timeoutRestart, sw_startAt7, sw_collectWateringBubble,
-            sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
-            sw_cooperateWater, sw_energyRain,
-            sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
-            sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce,
-            sw_donation, sw_answerQuestion, sw_receiveFarmTaskAward,
-            sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend,
-            sw_receivePoint, sw_openTreasureBox, sw_donateCharityCoin,
-            sw_kbSignIn, sw_limitCollect, sw_doubleCard, sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick,
-            sw_tiyubiz,
+    Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7,
+            sw_collectWateringBubble, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
+            sw_cooperateWater, sw_energyRain, sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
+            sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce, sw_donation, sw_answerQuestion,
+            sw_receiveFarmTaskAward, sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend, sw_receivePoint,
+            sw_openTreasureBox, sw_donateCharityCoin, sw_kbSignIn, sw_limitCollect, sw_doubleCard,
+            sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
-            sw_kitchen, sw_antOcean, sw_userPatrol;
+            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +97,7 @@ public class SettingsActivity extends Activity {
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                   float velocityY) {
+                    float velocityY) {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                     return false;
                 int lastView = tabHost.getCurrentTab();
@@ -193,10 +189,12 @@ public class SettingsActivity extends Activity {
         sw_ExchangeEnergyDoubleClick = findViewById(R.id.sw_ExchangeEnergyDoubleClick);
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
         sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
+        sw_insBlueBeanExchange = findViewById(R.id.sw_insBlueBeanExchange);
         sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
         sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
+        sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
     }
 
     @Override
@@ -241,10 +239,12 @@ public class SettingsActivity extends Activity {
         sw_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
         sw_tiyubiz.setChecked(Config.tiyubiz());
+        sw_insBlueBeanExchange.setChecked(Config.insBlueBeanExchange());
         sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         sw_antdodoCollect.setChecked(Config.antdodoCollect());
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
+        sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -408,6 +408,10 @@ public class SettingsActivity extends Activity {
                     Config.setTiyubiz(sw.isChecked());
                     break;
 
+                case R.id.sw_insBlueBeanExchange:
+                    Config.setInsBlueBeanExchange(sw.isChecked());
+                    break;
+
                 case R.id.sw_ancientTreeOnlyWeek:
                     Config.setAncientTreeOnlyWeek(sw.isChecked());
                     break;
@@ -422,6 +426,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_userPatrol:
                     Config.setUserPatrol(sw.isChecked());
+                    break;
+
+                case R.id.sw_animalConsumeProp:
+                    Config.setAnimalConsumeProp(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
@@ -471,6 +479,10 @@ public class SettingsActivity extends Activity {
                             this.getString(R.string.use_double_card_time_desc));
                     break;
 
+                case R.id.btn_doubleCountLimit:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_COUNT_LIMIT);
+                    break;
+
                 case R.id.btn_returnWater30:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_30);
                     break;
@@ -492,7 +504,8 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_waterFriendList:
-                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(), Config.getWaterCountList());
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getWaterFriendList(),
+                            Config.getWaterCountList());
                     break;
 
                 case R.id.btn_waterFriendCount:
@@ -533,12 +546,14 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_recallAnimalType:
                     ChoiceDialog.showRecallAnimalType(this, btn.getText());
                     break;
+
                 case R.id.btn_farmGameTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.FARM_GAME_TIME);
                     break;
 
                 case R.id.btn_feedFriendAnimalList:
-                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(), Config.getFeedFriendCountList());
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(),
+                            Config.getFeedFriendCountList());
                     break;
 
                 case R.id.btn_dontNotifyFriendList:
@@ -557,7 +572,8 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_donation_xqe_developer:
-                    Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
+                    Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                            "alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx00339eflkuhhtfctcn48"));
                     startActivity(it2);
                     break;
 
@@ -595,4 +611,3 @@ public class SettingsActivity extends Activity {
     }
 
 }
-
