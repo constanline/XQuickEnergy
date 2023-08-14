@@ -98,11 +98,11 @@
     <string name="exchange_energy_double_click_count">Exchange energy double click count</string>
     <string name="reserve">Reserve</string>
     <string name="reserve_list">Reserve list</string>
-    <string name="eco_life_tick">Eco Life Tick</string>
-    <string name="ancient_tree">Ancient Tree</string>
+    <string name="eco_life_tick">Eco life tick</string>
+    <string name="ancient_tree">Ancient tree</string>
     <string name="ancient_tree_area_code_list">Ancient tree area code list</string>
-    <string name="ancient_tree_only_week">Ancient Tree only week</string>
-    <string name="antdodo_collect">Antdodo Collect</string>
+    <string name="ancient_tree_only_week">Ancient tree only week</string>
+    <string name="antdodo_collect">Antdodo collect</string>
     <string name="ant_ocean">Ant ocean</string>
     <string name="water_friend_count">Water friend count</string>
     <string name="the_image_of_main" translatable="false">The image of main</string>
@@ -117,5 +117,8 @@
     <string name="user_patrol">User patrol</string>
     <string name="toast_vertical_offset">Toast vertical offset</string>
     <string name="animal_game_time">Animal game time</string>
+    <string name="animal_consume_prop">Animal consume prop</string>
+    <string name="double_count_limit">Double count limit</string>
+    <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
 
 </resources>

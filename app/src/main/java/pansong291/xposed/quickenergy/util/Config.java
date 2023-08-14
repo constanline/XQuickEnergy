@@ -95,9 +95,9 @@ public class Config {
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_antdodoCollect = "antdodoCollect";
-
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
+    public static final String jn_animalConsumeProp = "animalConsumeProp";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -110,6 +110,7 @@ public class Config {
     public static final String jn_kbSignIn = "kbSignIn";
     public static final String jn_ecoLifeTick = "ecoLifeTick";
     public static final String jn_tiyubiz = "tiyubiz";
+    public static final String jn_insBlueBeanExchange = "insBlueBeanExchange";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
@@ -137,6 +138,7 @@ public class Config {
     private int limitCount;
     private boolean doubleCard;
     private List<String> doubleCardTime;
+    private int doubleCountLimit;
     private int advanceTime;
     private int collectInterval;
     private int collectTimeout;
@@ -152,7 +154,6 @@ public class Config {
     private List<Integer> waterCountList;
     private boolean cooperateWater;
     private List<String> cooperateWaterList;
-    private List<String> syncStepList;
     private List<Integer> cooperateWaterNumList;
     private boolean ancientTree;
     private List<String> ancientTreeAreaCodeList;
@@ -172,9 +173,9 @@ public class Config {
     private boolean exchangeEnergyDoubleClick;
     private int exchangeEnergyDoubleClickCount;
     private boolean antdodoCollect;
-
     private boolean antOcean;
     private boolean userPatrol;
+    private boolean animalConsumeProp;
 
     /* farm */
     private boolean enableFarm;
@@ -212,6 +213,7 @@ public class Config {
     private boolean kbSignIn;
     private boolean ecoLifeTick;
     private boolean tiyubiz;
+    private boolean insBlueBeanExchange;
 
     /* base */
     private static Config config;
@@ -237,7 +239,7 @@ public class Config {
 
     public static void setForestPauseTime(long b) {
         getConfig().forestPauseTime = b;
-        hasChanged = true;
+//        hasChanged = true;
     }
 
     public static long forestPauseTime() {
@@ -400,6 +402,15 @@ public class Config {
                 return true;
         }
         return false;
+    }
+
+    public static int getDoubleCountLimit() {
+        return getConfig().doubleCountLimit;
+    }
+
+    public static void setDoubleCountLimit(int doubleCountLimit) {
+        getConfig().doubleCountLimit = doubleCountLimit;
+        hasChanged = true;
     }
 
     public static void setAdvanceTime(int i) {
@@ -637,6 +648,15 @@ public class Config {
 
     public static boolean userPatrol() {
         return getConfig().userPatrol;
+    }
+
+    public static void setAnimalConsumeProp(boolean b) {
+        getConfig().animalConsumeProp = b;
+        hasChanged = true;
+    }
+
+    public static boolean animalConsumeProp() {
+        return getConfig().animalConsumeProp;
     }
 
     /* farm */
@@ -937,6 +957,15 @@ public class Config {
         return getConfig().tiyubiz;
     }
 
+    public static void setInsBlueBeanExchange(boolean b) {
+        getConfig().insBlueBeanExchange = b;
+        hasChanged = true;
+    }
+
+    public static boolean insBlueBeanExchange() {
+        return getConfig().insBlueBeanExchange;
+    }
+
     /* base */
     private static Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -952,7 +981,7 @@ public class Config {
     public static Config defInit() {
         Config c = new Config();
 
-        c.forestPauseTime = 0L;
+//        c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;
@@ -972,8 +1001,9 @@ public class Config {
         c.limitCount = 50;
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
-        c.doubleCardTime.add("0700-0725");
-        c.advanceTime = 500;
+        c.doubleCardTime.add("0700-0730");
+        c.doubleCountLimit = 6;
+        c.advanceTime = 0;
         c.collectInterval = 100;
         c.collectTimeout = 2_000;
         c.returnWater33 = 0;
@@ -1015,6 +1045,7 @@ public class Config {
         c.antdodoCollect = true;
         c.antOcean = true;
         c.userPatrol = true;
+        c.animalConsumeProp = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1054,6 +1085,7 @@ public class Config {
         c.syncStepCount = 22000;
         c.ecoLifeTick = true;
         c.tiyubiz = true;
+        c.insBlueBeanExchange = true;
         return c;
     }
 
@@ -1068,7 +1100,7 @@ public class Config {
             JSONArray ja, jaa;
             config = new Config();
 
-            config.forestPauseTime = jo.optInt(jn_pauseTime, 0);
+//            config.forestPauseTime = jo.optLong(jn_pauseTime, 0L);
 
             config.immediateEffect = jo.optBoolean(jn_immediateEffect, true);
 
@@ -1080,13 +1112,16 @@ public class Config {
 
             config.stayAwake = jo.optBoolean(jn_stayAwake, true);
 
-            config.stayAwakeType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_stayAwakeType, XposedHook.StayAwakeType.BROADCAST.name()));
+            config.stayAwakeType = XposedHook.StayAwakeType
+                    .valueOf(jo.optString(jn_stayAwakeType, XposedHook.StayAwakeType.BROADCAST.name()));
 
-            config.stayAwakeTarget = XposedHook.StayAwakeTarget.valueOf(jo.optString(jn_stayAwakeTarget, XposedHook.StayAwakeTarget.SERVICE.name()));
+            config.stayAwakeTarget = XposedHook.StayAwakeTarget
+                    .valueOf(jo.optString(jn_stayAwakeTarget, XposedHook.StayAwakeTarget.SERVICE.name()));
 
             config.timeoutRestart = jo.optBoolean(jn_timeoutRestart, true);
 
-            config.timeoutType = XposedHook.StayAwakeType.valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
+            config.timeoutType = XposedHook.StayAwakeType
+                    .valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
 
             config.startAt7 = jo.optBoolean(jn_startAt7, false);
 
@@ -1105,9 +1140,11 @@ public class Config {
 
             config.doubleCard = jo.optBoolean("doubleCard", false);
 
-            config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0725").split(","));
+            config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0730").split(","));
 
-            config.advanceTime = jo.optInt(jn_advanceTime, 500);
+            config.doubleCountLimit = jo.optInt("doubleCountLimit", 6);
+
+            config.advanceTime = jo.optInt(jn_advanceTime, 0);
 
             config.collectInterval = jo.optInt(jn_collectInterval, 100);
 
@@ -1236,6 +1273,8 @@ public class Config {
 
             config.userPatrol = jo.optBoolean(jn_userPatrol, true);
 
+            config.animalConsumeProp = jo.optBoolean(jn_animalConsumeProp, true);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1253,7 +1292,8 @@ public class Config {
                 }
             }
 
-            config.recallAnimalType = RecallAnimalType.valueOf(jo.optString(jn_recallAnimalType, RecallAnimalType.ALWAYS.name()));
+            config.recallAnimalType = RecallAnimalType
+                    .valueOf(jo.optString(jn_recallAnimalType, RecallAnimalType.ALWAYS.name()));
 
             config.receiveFarmToolReward = jo.optBoolean(jn_receiveFarmToolReward, true);
 
@@ -1326,6 +1366,8 @@ public class Config {
 
             config.tiyubiz = jo.optBoolean(jn_tiyubiz, true);
 
+            config.insBlueBeanExchange = jo.optBoolean(jn_insBlueBeanExchange, true);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -1349,7 +1391,7 @@ public class Config {
             if (config == null)
                 config = Config.defInit();
 
-            jo.put(jn_pauseTime, config.forestPauseTime);
+//            jo.put(jn_pauseTime, config.forestPauseTime);
 
             jo.put(jn_immediateEffect, config.immediateEffect);
 
@@ -1387,6 +1429,8 @@ public class Config {
             jo.put(jn_doubleCard, config.doubleCard);
 
             jo.put(jn_doubleCardTime, String.join(",", config.doubleCardTime));
+
+            jo.put("doubleCountLimit", config.doubleCountLimit);
 
             jo.put(jn_advanceTime, config.advanceTime);
 
@@ -1489,6 +1533,8 @@ public class Config {
 
             jo.put(jn_userPatrol, config.userPatrol);
 
+            jo.put(jn_animalConsumeProp, config.animalConsumeProp);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -1568,6 +1614,8 @@ public class Config {
 
             jo.put(jn_tiyubiz, config.tiyubiz);
 
+            jo.put(jn_insBlueBeanExchange, config.insBlueBeanExchange);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
@@ -1578,7 +1626,7 @@ public class Config {
         String formated;
         try {
             formated = jo.toString(4);
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             return jo.toString();
         }
         if (!removeQuote)

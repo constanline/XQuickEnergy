@@ -21,7 +21,7 @@ public class AntFarm {
         }
     }
     public enum AnimalBuff { ACCELERATING, INJURED, NONE }
-    public enum AnimalFeedStatus { HUNGRY, EATING }
+    public enum AnimalFeedStatus { HUNGRY, EATING, SLEEPY}
     public enum AnimalInteractStatus { HOME, GOTOSTEAL, STEALING }
     public enum SubAnimalType { NORMAL, GUEST, PIRATE, WORK }
     public enum TaskStatus { TODO, FINISHED, RECEIVED }
@@ -102,7 +102,8 @@ public class AntFarm {
                         parseSyncAnimalStatusResponse(joFarmVO.toString());
                         userId = joFarmVO.getJSONObject("masterUserInfoVO").getString("userId");
                         JSONArray cuisineList = jo.getJSONArray("cuisineList");
-                        useFarmFood(cuisineList);
+                        if (!AnimalFeedStatus.SLEEPY.name().equals(ownerAnimal.animalFeedStatus))
+                            useFarmFood(cuisineList);
                         if (jo.has("lotteryPlusInfo")) {
                             drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
                         }
@@ -180,10 +181,10 @@ public class AntFarm {
 
                     }
 
-//                    if(Config.receiveFarmToolReward())
-//                    {
-//                        receiveToolTaskReward(loader);
-//                    }
+                    // if(Config.receiveFarmToolReward())
+                    // {
+                    // receiveToolTaskReward(loader);
+                    // }
 
                     if (Config.recordFarmGame() && Config.isFarmGameTime()) {
                         recordFarmGame(GameType.starGame);
@@ -206,7 +207,7 @@ public class AntFarm {
                         harvestProduce(ownerFarmId);
                     }
 
-                    if (Config.donation() && Statistics.canDonationEgg() && harvestBenevolenceScore >= 1) {
+                    if (Config.donation() && Statistics.canDonationEgg(userId) && harvestBenevolenceScore >= 1) {
                         donation();
                     }
 
@@ -494,7 +495,7 @@ public class AntFarm {
                         jo = jo.getJSONObject("donation");
                         harvestBenevolenceScore = jo.getDouble("harvestBenevolenceScore");
                         Log.farm("捐赠活动❤️[" + activityName + "]#累计捐赠" + jo.getInt("donationTimesStat") + "次");
-                        Statistics.donationEgg();
+                        Statistics.donationEgg(userId);
                     } else {
                         Log.recordLog(memo, s);
                     }
@@ -556,18 +557,22 @@ public class AntFarm {
                                         } else {
                                             dadaDailySet.add(TimeUtil.getDateStr() + answer);
                                         }
-                                        Log.recordLog("答题" + (correct ? "正确" : "错误") + "可领取［" + extInfo.getString("award") + "克］");
+                                        Log.recordLog("答题" + (correct ? "正确" : "错误") + "可领取［"
+                                                + extInfo.getString("award") + "克］");
                                         Statistics.answerQuestionToday(FriendIdMap.currentUid);
 
-                                        JSONArray operationConfigList = joDailySubmit.getJSONArray("operationConfigList");
+                                        JSONArray operationConfigList = joDailySubmit
+                                                .getJSONArray("operationConfigList");
                                         for (int j = 0; j < operationConfigList.length(); j++) {
                                             JSONObject operationConfig = operationConfigList.getJSONObject(j);
                                             if ("PREVIEW_QUESTION".equals(operationConfig.getString("type"))) {
-                                                JSONArray actionTitle = new JSONArray(operationConfig.getString("actionTitle"));
+                                                JSONArray actionTitle = new JSONArray(
+                                                        operationConfig.getString("actionTitle"));
                                                 for (int k = 0; k < actionTitle.length(); k++) {
                                                     JSONObject joActionTitle = actionTitle.getJSONObject(k);
                                                     if (joActionTitle.getBoolean("correct")) {
-                                                        dadaDailySet.add(TimeUtil.getDateStr(1) + joActionTitle.getString("title"));
+                                                        dadaDailySet.add(TimeUtil.getDateStr(1)
+                                                                + joActionTitle.getString("title"));
                                                     }
                                                 }
                                             }
@@ -1175,6 +1180,10 @@ public class AntFarm {
                     if (!jo.getBoolean("received")) {
                         String singleDesc = jo.getString("singleDesc");
                         int awardCount = jo.getInt("awardCount");
+                        if (singleDesc.contains("饲料") && awardCount + foodStock > foodStockLimit) {
+                            Log.recordLog("领取" + awardCount + "克饲料后将超过[" + foodStockLimit + "克]上限，已终止领取", "");
+                            break;
+                        }
                         jo = new JSONObject(AntFarmRpcCall.drawLotteryPlus());
                         if ("SUCCESS".equals(jo.getString("memo"))) {
                             Log.farm("惊喜礼包🎁[" + singleDesc + "*" + awardCount + "]");
