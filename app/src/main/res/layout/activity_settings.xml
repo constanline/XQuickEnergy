@@ -941,6 +941,7 @@
 						android:paddingStart="8dp" />
 
 				</LinearLayout>
+
 			</FrameLayout>
 		</ScrollView>
 	</LinearLayout>

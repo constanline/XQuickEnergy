@@ -115,8 +115,11 @@ public class AntForest {
             return;
         }
         if (isScanning) {
-            Log.recordLog("之前的检测未结束，本次暂停", "");
-            return;
+            if (lastCollectTime + 5000 > System.currentTimeMillis()) {
+                Log.recordLog("之前的检测未结束，本次暂停", "");
+                return;
+            }
+            Log.recordLog("之前的检测未结束，但是上次收取时间超过5秒，继续执行本次检测");
         } else {
             Log.recordLog("定时检测开始", "");
             isScanning = true;
@@ -176,6 +179,8 @@ public class AntForest {
                 } catch (Throwable t) {
                     Log.i(TAG, "checkEnergyRanking.run err:");
                     Log.printStackTrace(TAG, t);
+                } finally {
+                    isScanning = false;
                 }
             }
         }.setData(loader, times);
@@ -889,7 +894,7 @@ public class AntForest {
 
     private static void useDoubleCard() {
         try {
-            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList());
+            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList(false));
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray forestPropVOList = jo.getJSONArray("forestPropVOList");
                 String propId = null;
@@ -930,6 +935,37 @@ public class AntForest {
         }
     }
 
+    /* 赠送道具 */
+    private static void giveProp(String targetUserId) {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList(true));
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray forestPropVOList = jo.optJSONArray("forestPropVOList");
+                if (forestPropVOList.length() > 0) {
+                    jo = forestPropVOList.getJSONObject(0);
+                    String giveConfigId = jo.getJSONObject("giveConfigVO").getString("giveConfigId");
+                    int holdsNum = jo.optInt("holdsNum");
+                    String propName = jo.getJSONObject("propConfigVO").getString("propName");
+                    String propId = jo.getJSONArray("propIdList").getString(0);
+                    jo = new JSONObject(AntForestRpcCall.giveProp(giveConfigId, propId, targetUserId));
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        Log.forest("赠送道具[" + FriendIdMap.getNameById(targetUserId) + "]#" + propName);
+                    } else {
+                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                    }
+                    if (holdsNum > 1 || forestPropVOList.length() > 1) {
+                        giveProp(targetUserId);
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "giveProp err:");
+            Log.printStackTrace(TAG, th);
+        }
+    }
+
     /* 绿色行动打卡 */
 
     private static void ecoLifeTick() {
@@ -955,8 +991,7 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean Guangpan = false;
-                        if ("photoguangpan".equals(actionId))
-                            continue;
+                        if ("photoguangpan".equals(actionId))continue;
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, Guangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡🍀[" + actionName + "]");

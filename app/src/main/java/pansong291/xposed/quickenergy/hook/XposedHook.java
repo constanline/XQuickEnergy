@@ -34,6 +34,8 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static Runnable runnable;
     private static int times;
 
+    private static boolean isHooked = false;
+
     public enum StayAwakeType {
         BROADCAST, ALARM, NONE;
 
@@ -58,7 +60,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     });
         }
 
-        if (ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
+        if (!isHooked && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
+            isHooked = true;
             Log.i(TAG, lpparam.packageName);
             classLoader = lpparam.classLoader;
             hookRpcCall(lpparam.classLoader);
@@ -122,7 +125,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             FriendIdMap.currentUid = targetUid;
                             if (handler != null) {
                                 Log.recordLog("尝试初始化");
-                                times =0;
+                                times = 0;
                                 initHandler();
                             }
                         }

@@ -12,8 +12,6 @@ public class FriendManager {
     private static final String TAG = FriendManager.class.getCanonicalName();
 
     public static void fillUser(ClassLoader loader) {
-        //List<String> unknownIds = FriendIdMap.getIncompleteUnknownIds();
-        //if (unknownIds.size() > 0) {
             new Thread() {
                 ClassLoader loader;
 
@@ -54,7 +52,6 @@ public class FriendManager {
                     }
                 }
             }.setData(loader).start();
-//        }
     }
 
     public static boolean needUpdateAll(long last) {
