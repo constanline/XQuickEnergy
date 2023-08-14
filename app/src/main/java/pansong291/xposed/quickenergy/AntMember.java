@@ -6,27 +6,26 @@ import pansong291.xposed.quickenergy.hook.AntMemberRpcCall;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.Statistics;
 import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
 
 public class AntMember {
     private static final String TAG = AntMember.class.getCanonicalName();
 
-    private static boolean firstTime = true;
-
     public static void receivePoint() {
-        if (!Config.receivePoint() || !firstTime)
+        if (!Config.receivePoint())
             return;
 
         new Thread() {
             @Override
             public void run() {
                 try {
-                    if (Statistics.canMemberSignInToday()) {
+                    if (Statistics.canMemberSignInToday(FriendIdMap.currentUid)) {
                         String s = AntMemberRpcCall.memberSignIn();
                         JSONObject jo = new JSONObject(s);
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.other("每日签到📅[" + jo.getString("signinPoint") + "积分]#已签到" + jo.getString("signinSumDay")
                                     + "天");
-                            Statistics.memberSignInToday();
+                            Statistics.memberSignInToday(FriendIdMap.currentUid);
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), s);
                         }
@@ -38,32 +37,8 @@ public class AntMember {
                     Log.i(TAG, "receivePoint.run err:");
                     Log.printStackTrace(TAG, t);
                 }
-                firstTime = false;
             }
         }.start();
-    }
-
-    private static void anXinDou() {
-        try {
-            String appletId = "AP16150326";
-            String s = AntMemberRpcCall.taskProcess(appletId);
-            JSONObject jo = new JSONObject(s);
-            if (jo.getBoolean("success")) {
-                JSONObject result = jo.getJSONObject("result");
-                if (result.getBoolean("canPush")) {
-                    s = AntMemberRpcCall.taskTrigger(appletId, "insportal-marketing");
-                    JSONObject joTrigger = new JSONObject(s);
-                    if (joTrigger.getBoolean("success")) {
-                        Log.other("安心豆任务触发成功");
-                    }
-                }
-            } else {
-                Log.recordLog("anXinDou", s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "anXinDou err:");
-            Log.printStackTrace(TAG, t);
-        }
     }
 
     private static void queryPointCert(int page, int pageSize) {
@@ -93,6 +68,94 @@ public class AntMember {
             }
         } catch (Throwable t) {
             Log.i(TAG, "queryPointCert err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void anXinDou() {
+        try {
+            String s = AntMemberRpcCall.pageRender();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject result = jo.getJSONObject("result");
+                    JSONArray modules = result.getJSONArray("modules");
+                    for (int i = 0; i < modules.length(); i++) {
+                        jo = modules.getJSONObject(i);
+                        if ("签到配置".equals(jo.getString("name"))) {
+                            String appletId = jo.getJSONObject("content").getJSONObject("signConfig")
+                                    .getString("appletId");
+                            insBlueBeanSign(appletId);
+                        } else if ("兑换时光加速器".equals(jo.getString("name"))) {
+                            String oneStopId = jo.getJSONObject("content").getJSONObject("beanDeductBanner")
+                                    .getString("oneStopId");
+                            if (Config.insBlueBeanExchange())
+                                insBlueBeanExchange(oneStopId);
+                        }
+                    }
+            } else {
+                Log.recordLog("pageRender", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "anXinDou err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void insBlueBeanSign(String appletId) {
+        try {
+            String s = AntMemberRpcCall.taskProcess(appletId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject result = jo.getJSONObject("result");
+                if (result.getBoolean("canPush")) {
+                    s = AntMemberRpcCall.taskTrigger(appletId, "insportal-marketing");
+                    JSONObject joTrigger = new JSONObject(s);
+                    if (joTrigger.getBoolean("success")) {
+                        Log.other("安心豆🥔[签到成功]");
+                    }
+                }
+            } else {
+                Log.recordLog("taskProcess", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "insBlueBeanSign err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void insBlueBeanExchange(String itemId) {
+        try {
+            String s = AntMemberRpcCall.queryUserAccountInfo();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                JSONObject result = jo.getJSONObject("result");
+                int userCurrentPoint = result.getInt("userCurrentPoint");
+                if (userCurrentPoint > 0) {
+                    jo = new JSONObject(AntMemberRpcCall.exchangeDetail(itemId));
+                    if (jo.getBoolean("success")) {
+                        JSONObject exchangeDetail = jo.getJSONObject("result").getJSONObject("rspContext")
+                                .getJSONObject("params").getJSONObject("exchangeDetail");
+                        if ("ITEM_GOING".equals(exchangeDetail.getString("status"))) {
+                            JSONObject itemExchangeConsultDTO = exchangeDetail.getJSONObject("itemExchangeConsultDTO");
+                            int pointAmount = itemExchangeConsultDTO.getInt("realConsumePointAmount");
+                            if (itemExchangeConsultDTO.getBoolean("canExchange") && userCurrentPoint >= pointAmount) {
+                                jo = new JSONObject(AntMemberRpcCall.exchange(itemId, pointAmount));
+                                if (jo.getBoolean("success")) {
+                                    Log.other("安心豆🥔[兑换" + exchangeDetail.getString("itemName") + "]");
+                                } else {
+                                    Log.recordLog("exchange", jo.toString());
+                                }
+                            }
+                        }
+                    } else {
+                        Log.recordLog("exchangeDetail", jo.toString());
+                    }
+                }
+            } else {
+                Log.recordLog("queryUserAccountInfo", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "insBlueBeanExchange err:");
             Log.printStackTrace(TAG, t);
         }
     }

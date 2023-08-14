@@ -111,5 +111,10 @@
     <string name="tiyubiz">文体中心</string>
     <string name="friend_watch">好友统计</string>
     <string name="user_patrol">巡护森林</string>
+    <string name="toast_vertical_offset">气泡纵向偏移</string>
+    <string name="animal_game_time">小鸡游戏时间</string>
+    <string name="animal_consume_prop">派遣动物</string>
+    <string name="double_count_limit">双击卡次数限制</string>
+    <string name="ins_blue_bean_exchange">安心豆兑换时光加速器</string>
 
 </resources>

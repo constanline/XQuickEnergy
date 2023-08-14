@@ -10,10 +10,19 @@ import pansong291.xposed.quickenergy.util.Config;
 
 public class EditDialog {
     public enum EditMode {
-        CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
-        COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,ANIMAL_SLEEP_TIME,
-        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION ,EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT }
+        TOAST_OFFSET_Y, CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
+        DOUBLE_COUNT_LIMIT, COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,
+        FARM_GAME_TIME,
+        ANIMAL_SLEEP_TIME,
+        MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT, WAIT_WHEN_EXCEPTION,
+        EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT
+    }
+
     private static EditMode mode;
+
+    public static void showEditDialog(Context c, CharSequence title, EditMode em) {
+        showEditDialog(c, title, em, null);
+    }
 
     public static void showEditDialog(Context c, CharSequence title, EditMode em, String msg) {
         mode = em;
@@ -48,10 +57,15 @@ public class EditDialog {
                                     int i = 0;
                                     try {
                                         i = Integer.parseInt(edt.getText().toString());
-                                    } catch (Throwable ignored) { }
-                                    switch(mode) {
+                                    } catch (Throwable ignored) {
+                                    }
+                                    switch (mode) {
+                                        case TOAST_OFFSET_Y:
+                                            Config.setToastOffsetY(i);
+                                            break;
+
                                         case CHECK_INTERVAL:
-                                            if(i > 0)
+                                            if (i > 0)
                                                 Config.setCheckInterval(i * 60_000);
                                             break;
 
@@ -60,7 +74,7 @@ public class EditDialog {
                                             break;
 
                                         case COLLECT_INTERVAL:
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setCollectInterval(i);
                                             break;
 
@@ -73,30 +87,40 @@ public class EditDialog {
                                             Config.setDoubleCardTime(edt.getText().toString());
                                             break;
 
+                                        case DOUBLE_COUNT_LIMIT:
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setDoubleCountLimit(i);
+                                            break;
+
                                         case COLLECT_TIMEOUT:
-                                            if(i > 0)
+                                            if (i > 0)
                                                 Config.setCollectTimeout(i * 1_000);
                                             break;
 
                                         case RETURN_WATER_30:
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setReturnWater33(i);
                                             break;
 
                                         case RETURN_WATER_20:
 
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setReturnWater18(i);
                                             break;
 
                                         case RETURN_WATER_10:
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setReturnWater10(i);
                                             break;
 
                                         case WATER_FRIEND_COUNT:
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setWaterFriendCount(i);
+                                            break;
+
+                                        case FARM_GAME_TIME:
+                                            Config.setFarmGameTime(edt.getText().toString());
                                             break;
 
                                         case ANIMAL_SLEEP_TIME:
@@ -104,12 +128,12 @@ public class EditDialog {
                                             break;
 
                                         case MIN_EXCHANGE_COUNT:
-                                            if(i >= 0)
+                                            if (i >= 0)
                                                 Config.setMinExchangeCount(i);
                                             break;
 
                                         case LATEST_EXCHANGE_TIME:
-                                            if(i >= 0 && i < 24)
+                                            if (i >= 0 && i < 24)
                                                 Config.setLatestExchangeTime(i);
                                             break;
                                         case SYNC_STEP_COUNT:
@@ -120,23 +144,29 @@ public class EditDialog {
                                             Config.setSyncStepCount(i);
                                             break;
                                         case WAIT_WHEN_EXCEPTION:
-                                            if (i < 0) i = 0;
+                                            if (i < 0)
+                                                i = 0;
                                             Config.setWaitWhenException(i * 60 * 1000);
                                             break;
 
                                         case EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT:
-                                            if (i > 0) {
-                                                Config.setExchangeEnergyDoubleClickCount(i);
-                                            }
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setExchangeEnergyDoubleClickCount(i);
                                             break;
 
                                     }
-                                } catch(Throwable ignored) { }
+                                } catch (Throwable ignored) {
+                                }
                             }
                         }.setData(c))
                 .create();
         String str = "";
-        switch(mode) {
+        switch (mode) {
+            case TOAST_OFFSET_Y:
+                str = String.valueOf(Config.toastOffsetY());
+                break;
+
             case CHECK_INTERVAL:
                 str = String.valueOf(Config.checkInterval() / 60_000);
                 break;
@@ -154,6 +184,10 @@ public class EditDialog {
                 break;
             case DOUBLE_CARD_TIME:
                 str = Config.doubleCardTime();
+                break;
+
+            case DOUBLE_COUNT_LIMIT:
+                str = String.valueOf(Config.getDoubleCountLimit());
                 break;
 
             case COLLECT_TIMEOUT:
@@ -174,6 +208,10 @@ public class EditDialog {
 
             case WATER_FRIEND_COUNT:
                 str = String.valueOf(Config.waterFriendCount());
+                break;
+
+            case FARM_GAME_TIME:
+                str = Config.farmGameTime();
                 break;
 
             case ANIMAL_SLEEP_TIME:

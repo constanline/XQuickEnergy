@@ -31,19 +31,15 @@ public class SettingsActivity extends Activity {
     private Animation slideRightIn;
     private Animation slideRightOut;
 
-    Switch sw_immediateEffect, sw_recordLog, sw_showToast,
-            sw_stayAwake, sw_timeoutRestart, sw_startAt7, sw_collectWateringBubble,
-            sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
-            sw_cooperateWater, sw_energyRain,
-            sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
-            sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce,
-            sw_donation, sw_answerQuestion, sw_receiveFarmTaskAward,
-            sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend,
-            sw_receivePoint, sw_openTreasureBox, sw_donateCharityCoin,
-            sw_kbSignIn, sw_limitCollect, sw_doubleCard, sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick,
-            sw_tiyubiz,
+    Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7,
+            sw_collectWateringBubble, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
+            sw_cooperateWater, sw_energyRain, sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
+            sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce, sw_donation, sw_answerQuestion,
+            sw_receiveFarmTaskAward, sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend, sw_receivePoint,
+            sw_openTreasureBox, sw_donateCharityCoin, sw_kbSignIn, sw_limitCollect, sw_doubleCard,
+            sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
-            sw_kitchen, sw_antOcean, sw_userPatrol;
+            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,10 +189,12 @@ public class SettingsActivity extends Activity {
         sw_ExchangeEnergyDoubleClick = findViewById(R.id.sw_ExchangeEnergyDoubleClick);
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
         sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
+        sw_insBlueBeanExchange = findViewById(R.id.sw_insBlueBeanExchange);
         sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
         sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
+        sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
     }
 
     @Override
@@ -241,10 +239,12 @@ public class SettingsActivity extends Activity {
         sw_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
         sw_tiyubiz.setChecked(Config.tiyubiz());
+        sw_insBlueBeanExchange.setChecked(Config.insBlueBeanExchange());
         sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         sw_antdodoCollect.setChecked(Config.antdodoCollect());
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
+        sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -408,6 +408,10 @@ public class SettingsActivity extends Activity {
                     Config.setTiyubiz(sw.isChecked());
                     break;
 
+                case R.id.sw_insBlueBeanExchange:
+                    Config.setInsBlueBeanExchange(sw.isChecked());
+                    break;
+
                 case R.id.sw_ancientTreeOnlyWeek:
                     Config.setAncientTreeOnlyWeek(sw.isChecked());
                     break;
@@ -423,10 +427,17 @@ public class SettingsActivity extends Activity {
                 case R.id.sw_userPatrol:
                     Config.setUserPatrol(sw.isChecked());
                     break;
+
+                case R.id.sw_animalConsumeProp:
+                    Config.setAnimalConsumeProp(sw.isChecked());
+                    break;
             }
         } else if (v instanceof Button) {
             Button btn = (Button) v;
             switch (v.getId()) {
+                case R.id.btn_toastOffsetY:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.TOAST_OFFSET_Y);
+                    break;
                 case R.id.btn_stayAwakeType:
                     ChoiceDialog.showStayAwakeType(this, btn.getText());
                     break;
@@ -440,27 +451,27 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_waitWhenException:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WAIT_WHEN_EXCEPTION);
                     break;
 
                 case R.id.btn_checkInterval:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.CHECK_INTERVAL, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.CHECK_INTERVAL);
                     break;
 
                 case R.id.btn_advanceTime:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ADVANCE_TIME, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ADVANCE_TIME);
                     break;
 
                 case R.id.btn_collectInterval:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.COLLECT_INTERVAL, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.COLLECT_INTERVAL);
                     break;
 
                 case R.id.btn_collectTimeout:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.COLLECT_TIMEOUT, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.COLLECT_TIMEOUT);
                     break;
 
                 case R.id.btn_limitCount:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LIMIT_COUNT, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LIMIT_COUNT);
                     break;
 
                 case R.id.btn_doubleCardTime:
@@ -468,16 +479,20 @@ public class SettingsActivity extends Activity {
                             this.getString(R.string.use_double_card_time_desc));
                     break;
 
+                case R.id.btn_doubleCountLimit:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_COUNT_LIMIT);
+                    break;
+
                 case R.id.btn_returnWater30:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_30, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_30);
                     break;
 
                 case R.id.btn_returnWater20:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_20, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_20);
                     break;
 
                 case R.id.btn_returnWater10:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_10, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.RETURN_WATER_10);
                     break;
 
                 case R.id.btn_dontCollectList:
@@ -494,7 +509,7 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_waterFriendCount:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.WATER_FRIEND_COUNT);
                     break;
 
                 case R.id.btn_cooperateWaterList:
@@ -533,6 +548,10 @@ public class SettingsActivity extends Activity {
                     ChoiceDialog.showRecallAnimalType(this, btn.getText());
                     break;
 
+                case R.id.btn_farmGameTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.FARM_GAME_TIME);
+                    break;
+
                 case R.id.btn_feedFriendAnimalList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getFeedFriendAnimalList(),
                             Config.getFeedFriendCountList());
@@ -543,7 +562,7 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_animalSleepTime:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANIMAL_SLEEP_TIME, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANIMAL_SLEEP_TIME);
                     break;
 
                 case R.id.btn_donation_developer:
@@ -560,20 +579,20 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_minExchangeCount:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.MIN_EXCHANGE_COUNT, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.MIN_EXCHANGE_COUNT);
                     break;
 
                 case R.id.btn_latestExchangeTime:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LATEST_EXCHANGE_TIME, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.LATEST_EXCHANGE_TIME);
                     break;
 
                 case R.id.btn_syncStepCount:
-                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT, null);
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.SYNC_STEP_COUNT);
                     break;
 
                 case R.id.btn_ExchangeEnergyDoubleClickCount:
                     EditDialog.showEditDialog(this, btn.getText(),
-                            EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT, null);
+                            EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
                     break;
             }
         }
