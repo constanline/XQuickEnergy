@@ -602,8 +602,8 @@ public class Config {
         return getConfig().exchangeEnergyDoubleClick;
     }
 
-    public static void setExchangeEnergyDoubleClick(boolean exchangeEnergyDoubleClick) {
-        getConfig().exchangeEnergyDoubleClick = exchangeEnergyDoubleClick;
+    public static void setExchangeEnergyDoubleClick(boolean b) {
+        getConfig().exchangeEnergyDoubleClick = b;
         hasChanged = true;
     }
 
@@ -611,8 +611,8 @@ public class Config {
         return getConfig().exchangeEnergyDoubleClickCount;
     }
 
-    public static void setExchangeEnergyDoubleClickCount(int exchangeEnergyDoubleClickCount) {
-        getConfig().exchangeEnergyDoubleClickCount = exchangeEnergyDoubleClickCount;
+    public static void setExchangeEnergyDoubleClickCount(int i) {
+        getConfig().exchangeEnergyDoubleClickCount = i;
         hasChanged = true;
     }
 
