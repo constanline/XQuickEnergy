@@ -131,7 +131,7 @@ public class AntMember {
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {
                 JSONObject result = jo.getJSONObject("result");
-                int userCurrentPoint = result.optInt("userCurrentPoint");
+                int userCurrentPoint = result.optInt("userCurrentPoint",0);
                 if (userCurrentPoint > 0) {
                     jo = new JSONObject(AntMemberRpcCall.exchangeDetail(itemId));
                     if (jo.getBoolean("success")) {
