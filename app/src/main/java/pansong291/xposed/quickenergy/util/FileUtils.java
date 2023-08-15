@@ -18,8 +18,8 @@ public class FileUtils {
     private static File cooperationIdMapFile;
     private static File reserveIdMapFile;
     private static File beachIdMapFile;
-    private static File cityCodeMapFile;
     private static File statisticsFile;
+    private static File infoChangedFile;
     private static File exportedStatisticsFile;
     private static File forestLogFile;
     private static File farmLogFile;
@@ -28,6 +28,7 @@ public class FileUtils {
     private static File runtimeLogFile;
     private static File cityCodeFile;
     private static File friendWatchFile;
+    private static File wuaFile;
 
     private static void copyFile(File srcDir, File dstDir, String filename) {
         File file = new File(srcDir, filename);
@@ -86,7 +87,7 @@ public class FileUtils {
     }
 
     public static File getCityCodeFile() {
-        if(cityCodeFile == null) {
+        if (cityCodeFile == null) {
             cityCodeFile = new File(getMainDirectoryFile(), "cityCode.json");
             if(cityCodeFile.exists() && cityCodeFile.isDirectory())
                 cityCodeFile.delete();
@@ -95,12 +96,19 @@ public class FileUtils {
     }
 
     public static File getFriendWatchFile() {
-        if(friendWatchFile == null) {
+        if (friendWatchFile == null) {
             friendWatchFile = new File(getMainDirectoryFile(), "friendWatch.json");
             if(friendWatchFile.exists() && friendWatchFile.isDirectory())
                 friendWatchFile.delete();
         }
         return friendWatchFile;
+    }
+
+    public static File getWuaFile() {
+        if (wuaFile == null) {
+            wuaFile = new File(getMainDirectoryFile(), "wua.list");
+        }
+        return wuaFile;
     }
 
     public static File getConfigFile() {
@@ -162,15 +170,6 @@ public class FileUtils {
         return beachIdMapFile;
     }
 
-    public static File getCityCodeMapFile() {
-        if (cityCodeMapFile == null) {
-            cityCodeMapFile = new File(getMainDirectoryFile(), "cityCode.list");
-            if (cityCodeMapFile.exists() && cityCodeMapFile.isDirectory())
-                cityCodeMapFile.delete();
-        }
-        return cityCodeMapFile;
-    }
-
     public static File getStatisticsFile() {
         if (statisticsFile == null) {
             statisticsFile = new File(getMainDirectoryFile(), "statistics.json");
@@ -187,6 +186,15 @@ public class FileUtils {
                 exportedStatisticsFile.delete();
         }
         return exportedStatisticsFile;
+    }
+
+    public static File getInfoChangedFile() {
+        if (infoChangedFile == null) {
+            infoChangedFile = new File(getMainDirectoryFile(), "infoChangedFile.log");
+            if (infoChangedFile.exists() && infoChangedFile.isDirectory())
+                infoChangedFile.delete();
+        }
+        return infoChangedFile;
     }
 
     public static File getForestLogFile() {
@@ -240,6 +248,10 @@ public class FileUtils {
         return simpleLogFile;
     }
 
+    public static File getRuntimeLogFileBak() {
+        return new File(getMainDirectoryFile(), "runtime.log." + System.currentTimeMillis());
+    }
+
     public static File getRuntimeLogFile() {
         if (runtimeLogFile == null) {
             runtimeLogFile = new File(getMainDirectoryFile(), "runtime.log");
@@ -270,16 +282,24 @@ public class FileUtils {
         return result.toString();
     }
 
-    public static boolean append2SimpleLogFile(String s) {
-        if (getSimpleLogFile().length() > 31_457_280) // 30MB
-            getSimpleLogFile().delete();
-        return append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
+    public static void append2SimpleLogFile(String s) {
+        synchronized (getSimpleLogFile()) {
+            if (getSimpleLogFile().length() > 31_457_280) // 30MB
+                getSimpleLogFile().delete();
+            append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
+        }
     }
 
     public static void append2RuntimeLogFile(String s) {
-        if (getRuntimeLogFile().length() > 31_457_280) // 30MB
-            getRuntimeLogFile().delete();
-        append2File(Log.getFormatDateTime() + "  " + s + "\n", getRuntimeLogFile());
+        synchronized (getRuntimeLogFile()) {
+            if (getRuntimeLogFile().length() > 31_457_280) {// 30MB
+                getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
+                if (getRuntimeLogFile().exists()) {
+                    getRuntimeLogFile().delete();
+                }
+            }
+            append2File(Log.getFormatDateTime() + "  " + s + "\n", getRuntimeLogFile());
+        }
     }
 
     public static boolean write2File(String s, File f) {

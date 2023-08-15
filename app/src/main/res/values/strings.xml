@@ -90,6 +90,7 @@
     <string name="copy_success">Copy success</string>
     <string name="cancel">Cancel</string>
     <string name="collect_watering_bubble">Collect watering bubble</string>
+    <string name="collect_prop">Collect prop</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
     <string name="animal_sleep_time">Animal sleep time</string>
@@ -98,11 +99,11 @@
     <string name="exchange_energy_double_click_count">Exchange energy double click count</string>
     <string name="reserve">Reserve</string>
     <string name="reserve_list">Reserve list</string>
-    <string name="eco_life_tick">Eco Life Tick</string>
-    <string name="ancient_tree">Ancient Tree</string>
+    <string name="eco_life_tick">Eco life tick</string>
+    <string name="ancient_tree">Ancient tree</string>
     <string name="ancient_tree_area_code_list">Ancient tree area code list</string>
-    <string name="ancient_tree_only_week">Ancient Tree only week</string>
-    <string name="antdodo_collect">Antdodo Collect</string>
+    <string name="ancient_tree_only_week">Ancient tree only week</string>
+    <string name="antdodo_collect">Antdodo collect</string>
     <string name="ant_ocean">Ant ocean</string>
     <string name="water_friend_count">Water friend count</string>
     <string name="the_image_of_main" translatable="false">The image of main</string>
@@ -117,5 +118,8 @@
     <string name="user_patrol">User patrol</string>
     <string name="toast_vertical_offset">Toast vertical offset</string>
     <string name="animal_game_time">Animal game time</string>
+    <string name="animal_consume_prop">Animal consume prop</string>
+    <string name="double_count_limit">Double count limit</string>
+    <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
 
 </resources>

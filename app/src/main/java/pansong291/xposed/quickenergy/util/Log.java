@@ -12,13 +12,17 @@ public class Log {
         FileUtils.append2RuntimeLogFile(tag + ", " + s);
     }
 
+    public static void infoChanged(String tag, String s) {
+        FileUtils.append2File(tag + ", " + s, FileUtils.getInfoChangedFile());
+    }
+
     public static void printStackTrace(String tag, Throwable t) {
         Log.i(tag, android.util.Log.getStackTraceString(t));
     }
 
     public static boolean forest(String s) {
         recordLog(s, "");
-        return FileUtils.append2File(getFormatDateTime() + " " + s + "\n", FileUtils.getForestLogFile());
+        return FileUtils.append2File(getFormatTime() + " " + s + "\n", FileUtils.getForestLogFile());
     }
 
     public static void farm(String s) {

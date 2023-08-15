@@ -14,10 +14,9 @@ import pansong291.xposed.quickenergy.util.Statistics;
 public class Reserve {
     private static final String TAG = Reserve.class.getCanonicalName();
 
-    private static boolean firstTime = true;
 
     public static void start() {
-        if ((!Config.reserve() || !firstTime) && !Config.beach())
+        if (!Config.reserve() && !Config.beach())
             return;
         Log.recordLog("开始检测保护地", "");
         new Thread() {
@@ -27,7 +26,7 @@ public class Reserve {
                 try {
                     while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
                         Thread.sleep(100);
-                    if (Config.reserve() && firstTime) {
+                    if (Config.reserve() ) {
                         animalReserve();
                     }
 
@@ -90,7 +89,6 @@ public class Reserve {
             Log.printStackTrace(TAG, t);
         }
         ReserveIdMap.saveIdMap();
-        firstTime = false;
     }
 
     private static boolean queryTreeForExchange(String projectId) {
@@ -146,10 +144,10 @@ public class Reserve {
                     Statistics.reserveToday(projectId, count);
                     break;
                 }
-                Thread.sleep(200);
+                Thread.sleep(300);
                 canApply = queryTreeForExchange(projectId);
                 if (!canApply) {
-                    Statistics.reserveToday(projectId, count);
+                    //Statistics.reserveToday(projectId, count);
                     break;
                 } else {
                     Thread.sleep(200);
@@ -274,10 +272,10 @@ public class Reserve {
                     Statistics.beachToday(cultivationCode);
                     break;
                 }
-                Thread.sleep(200);
+                Thread.sleep(300);
                 canApply = queryCultivationDetail(cultivationCode, projectCode);
                 if (!canApply) {
-                    Statistics.beachToday(cultivationCode);
+                    //Statistics.beachToday(cultivationCode);
                     break;
                 } else {
                     Thread.sleep(200);

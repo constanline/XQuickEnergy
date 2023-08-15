@@ -57,8 +57,8 @@ public class FriendWatch extends IdAndName {
                 String name = FriendIdMap.getNameById(id);
                 FriendWatch friendWatch = new FriendWatch(id, name);
                 friendWatch.startTime = friend.optString("startTime", "无");
-                friendWatch.weekGet = friend.optInt("weekGet" ,0);
-                friendWatch.allGet = friend.optInt("allGet",0) + friendWatch.weekGet;
+                friendWatch.weekGet = friend.optInt("weekGet", 0);
+                friendWatch.allGet = friend.optInt("allGet", 0) + friendWatch.weekGet;
                 String showText = name + "(开始统计时间:" + friendWatch.startTime + ")\n\n";
                 showText = showText + "周收:" + friendWatch.weekGet + " 总收:" + friendWatch.allGet;
                 friendWatch.name = showText;

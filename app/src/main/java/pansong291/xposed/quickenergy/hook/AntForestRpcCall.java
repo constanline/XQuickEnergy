@@ -114,9 +114,23 @@ public class AntForestRpcCall {
                         userId + "\"}]");
     }
 
-    public static String queryPropList() {
+    public static String queryPropList(boolean onlyGive) {
         return RpcUtil.request("alipay.antforest.forest.h5.queryPropList",
-                "[{\"onlyGive\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
+                "[{\"onlyGive\":\"" + (onlyGive ? "Y" : "")
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION
+                        + "\"}]");
+    }
+
+    public static String giveProp(String giveConfigId, String propId, String targetUserId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.giveProp",
+                "[{\"giveConfigId\":\"" + giveConfigId + "\",\"propId\":\"" + propId
+                        + "\",\"source\":\"self_corner\",\"targetUserId\":\"" + targetUserId + "\"}]");
+    }
+
+    public static String collectProp(String giveConfigId, String giveId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.collectProp",
+                "[{\"giveConfigId\":\"" + giveConfigId + "\",\"giveId\":\"" + giveId
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
     public static String consumeProp(String propId, String propType) {
@@ -133,9 +147,8 @@ public class AntForestRpcCall {
                         spuId + "\",\"skuId\":\"" + skuId + "\",\"source\":\"GOOD_DETAIL\"}]");
     }
 
-
     public static String testH5Rpc(String operationTpye, String requestDate) {
-        return RpcUtil.request(operationTpye,requestDate);
+        return RpcUtil.request(operationTpye, requestDate);
     }
 
     /* 神奇物种 */
@@ -203,7 +216,7 @@ public class AntForestRpcCall {
     public static String queryAnimalAndPiece(int animalId) {
         String args = null;
         if (animalId != 0) {
-            args = "[{\"animalId\":"+animalId+",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
+            args = "[{\"animalId\":" + animalId + ",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]";
         } else {
             args = "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\",\"withDetail\":\"N\",\"withGift\":true}]";
         }
@@ -220,6 +233,12 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
                 "[{\"propGroup\":\"" + propGroup + "\",\"propId\":\"" + propId + "\",\"propType\":\"" + propType
                         + "\",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+
+    public static String collectAnimalRobEnergy(String propId, String propType, String shortDay) {
+        return RpcUtil.request("alipay.antforest.forest.h5.collectAnimalRobEnergy",
+                "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType + "\",\"shortDay\":\"" + shortDay
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
 }
