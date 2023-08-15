@@ -522,11 +522,13 @@ public class Statistics {
 
     public static void resetToday() {
         Statistics stat = getStatistics();
-        String[] dateStr = Log.getFormatDate().split("-");
+        String formatDate = Log.getFormatDate();
+        String[] dateStr = formatDate.split("-");
         int ye = Integer.parseInt(dateStr[0]);
         int mo = Integer.parseInt(dateStr[1]);
         int da = Integer.parseInt(dateStr[2]);
 
+        Log.recordLog("原：" + stat.year.time + "-" + stat.month.time + "-" + stat.day.time + "；新：" + formatDate);
         if (ye > stat.year.time) {
             stat.year.reset(ye);
             stat.month.reset(mo);
@@ -786,6 +788,7 @@ public class Statistics {
             Log.printStackTrace(TAG, t);
             if (json != null) {
                 Log.i(TAG, "统计文件格式有误，已重置统计文件并备份原文件");
+                Log.infoChanged("统计文件格式有误，已重置统计文件并备份原文件", json);
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getStatisticsFile()));
             }
             stat = defInit();
@@ -793,6 +796,7 @@ public class Statistics {
         String formatted = statistics2Json(stat);
         if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 statistics.json");
+            Log.infoChanged("重新格式化 statistics.json", json);
             FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
@@ -937,7 +941,9 @@ public class Statistics {
     }
 
     private static void save() {
-        FileUtils.write2File(statistics2Json(getStatistics()), FileUtils.getStatisticsFile());
+        String json = statistics2Json(getStatistics());
+        Log.infoChanged("保存 statistics.json", json);
+        FileUtils.write2File(json, FileUtils.getStatisticsFile());
     }
 
 }

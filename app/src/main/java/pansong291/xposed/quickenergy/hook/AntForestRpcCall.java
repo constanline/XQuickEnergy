@@ -127,6 +127,12 @@ public class AntForestRpcCall {
                         + "\",\"source\":\"self_corner\",\"targetUserId\":\"" + targetUserId + "\"}]");
     }
 
+    public static String collectProp(String giveConfigId, String giveId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.collectProp",
+                "[{\"giveConfigId\":\"" + giveConfigId + "\",\"giveId\":\"" + giveId
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+    }
+
     public static String consumeProp(String propId, String propType) {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
@@ -227,6 +233,12 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
                 "[{\"propGroup\":\"" + propGroup + "\",\"propId\":\"" + propId + "\",\"propType\":\"" + propType
                         + "\",\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+
+    public static String collectAnimalRobEnergy(String propId, String propType, String shortDay) {
+        return RpcUtil.request("alipay.antforest.forest.h5.collectAnimalRobEnergy",
+                "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType + "\",\"shortDay\":\"" + shortDay
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
 }

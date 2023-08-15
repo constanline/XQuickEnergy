@@ -144,10 +144,10 @@ public class Reserve {
                     Statistics.reserveToday(projectId, count);
                     break;
                 }
-                Thread.sleep(200);
+                Thread.sleep(300);
                 canApply = queryTreeForExchange(projectId);
                 if (!canApply) {
-                    Statistics.reserveToday(projectId, count);
+                    //Statistics.reserveToday(projectId, count);
                     break;
                 } else {
                     Thread.sleep(200);
@@ -272,10 +272,10 @@ public class Reserve {
                     Statistics.beachToday(cultivationCode);
                     break;
                 }
-                Thread.sleep(200);
+                Thread.sleep(300);
                 canApply = queryCultivationDetail(cultivationCode, projectCode);
                 if (!canApply) {
-                    Statistics.beachToday(cultivationCode);
+                    //Statistics.beachToday(cultivationCode);
                     break;
                 } else {
                     Thread.sleep(200);
