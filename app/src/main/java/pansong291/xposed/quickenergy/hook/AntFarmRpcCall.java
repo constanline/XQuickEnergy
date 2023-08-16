@@ -268,6 +268,11 @@ public class AntFarmRpcCall {
                         + ",\"requestType\":\"RPC\",\"sceneCode\":\"ANTFARM\",\"source\":\"kitchen\",\"version\":\"unknown\"}]");
     }
 
+    public static String farmFoodMaterialCollect() {
+        return RpcUtil.request("com.alipay.antorchard.farmFoodMaterialCollect",
+                "[{\"collect\":true,\"requestType\":\"RPC\",\"sceneCode\":\"ORCHARD\",\"source\":\"VILLA\",\"version\":\"unknown\"}]");
+    }
+
     public static String cook(String userId) {
         return RpcUtil.request("com.alipay.antfarm.cook",
                 "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTFARM\",\"source\":\"antfarmzuofanrw\",\"userId\":\""

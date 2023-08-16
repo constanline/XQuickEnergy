@@ -117,5 +117,8 @@
     <string name="animal_consume_prop">派遣动物</string>
     <string name="double_count_limit">双击卡次数限制</string>
     <string name="ins_blue_bean_exchange">安心豆兑换时光加速器</string>
+    <string name="ant_orchard">开启农场</string>
+    <string name="receive_orchard_task_award">收取农场任务奖励</string>
+    <string name="orchard_spread_manure_count">农场每日施肥次数</string>
 
 </resources>

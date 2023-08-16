@@ -29,7 +29,6 @@ public class Config {
 
     private static final String TAG = Config.class.getCanonicalName();
     /* application */
-    public static final String jn_pauseTime = "pauseTime";
     public static final String jn_immediateEffect = "immediateEffect";
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
@@ -95,6 +94,8 @@ public class Config {
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
+    public static final String jn_antOrchard = "antOrchard";
+    public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_antdodoCollect = "antdodoCollect";
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
@@ -203,6 +204,9 @@ public class Config {
     private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
+    private boolean antOrchard;
+    private boolean receiveOrchardTaskAward;
+    private int orchardSpreadManureCount;
 
     /* other */
     private boolean receivePoint;
@@ -316,7 +320,7 @@ public class Config {
         if (b) {
             setAlarm7(context);
         } else {
-            cancelAlarm7(context);
+            cancelAlarm7(context, true);
         }
         hasChanged = true;
     }
@@ -877,6 +881,33 @@ public class Config {
         return getConfig().dontNotifyFriendList;
     }
 
+    public static void setAntOrchard(boolean b) {
+        getConfig().antOrchard = b;
+        hasChanged = true;
+    }
+
+    public static boolean antOrchard() {
+        return getConfig().antOrchard;
+    }
+
+    public static void setReceiveOrchardTaskAward(boolean b) {
+        getConfig().receiveOrchardTaskAward = b;
+        hasChanged = true;
+    }
+
+    public static boolean receiveOrchardTaskAward() {
+        return getConfig().receiveOrchardTaskAward;
+    }
+
+    public static int getOrchardSpreadManureCount() {
+        return getConfig().orchardSpreadManureCount;
+    }
+
+    public static void setOrchardSpreadManureCount(int i) {
+        getConfig().orchardSpreadManureCount = i;
+        hasChanged = true;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1087,6 +1118,9 @@ public class Config {
         c.notifyFriend = true;
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
+        c.antOrchard = true;
+        c.receiveOrchardTaskAward = true;
+        c.orchardSpreadManureCount = 0;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1101,7 +1135,9 @@ public class Config {
     }
 
     public static boolean saveConfigFile() {
-        return FileUtils.write2File(config2Json(config), FileUtils.getConfigFile());
+        String json = config2Json(config);
+        Log.infoChanged("保存 config.json", json);
+        return FileUtils.write2File(json, FileUtils.getConfigFile());
     }
 
     public static Config json2Config(String json) {
@@ -1110,8 +1146,6 @@ public class Config {
             JSONObject jo = new JSONObject(json);
             JSONArray ja, jaa;
             config = new Config();
-
-            // config.forestPauseTime = jo.optLong(jn_pauseTime, 0L);
 
             config.immediateEffect = jo.optBoolean(jn_immediateEffect, true);
 
@@ -1359,6 +1393,12 @@ public class Config {
                 }
             }
 
+            config.antOrchard = jo.optBoolean(jn_antOrchard, true);
+
+            config.receiveOrchardTaskAward = jo.optBoolean(jn_receiveOrchardTaskAward, true);
+
+            config.orchardSpreadManureCount = jo.optInt("orchardSpreadManureCount", 0);
+
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
 
@@ -1385,15 +1425,15 @@ public class Config {
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
-                Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
+                Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
         }
-        String formated = config2Json(config);
-        if (!formated.equals(json)) {
-            Log.i(TAG, "重新格式化 config.json");
-            FileUtils.write2File(formated, FileUtils.getConfigFile());
+        String formatted = config2Json(config);
+        if (!formatted.equals(json)) {
+            Log.infoChanged("重新格式化 config.json", formatted);
+            FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
     }
@@ -1404,8 +1444,6 @@ public class Config {
         try {
             if (config == null)
                 config = Config.defInit();
-
-            // jo.put(jn_pauseTime, config.forestPauseTime);
 
             jo.put(jn_immediateEffect, config.immediateEffect);
 
@@ -1611,6 +1649,12 @@ public class Config {
             }
             jo.put(jn_dontNotifyFriendList, ja);
 
+            jo.put(jn_antOrchard, config.antOrchard);
+
+            jo.put(jn_receiveOrchardTaskAward, config.receiveOrchardTaskAward);
+
+            jo.put("orchardSpreadManureCount", config.orchardSpreadManureCount);
+
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);
 
@@ -1641,15 +1685,15 @@ public class Config {
     }
 
     public static String formatJson(JSONObject jo, boolean removeQuote) {
-        String formated;
+        String formatted;
         try {
-            formated = jo.toString(4);
+            formatted = jo.toString(4);
         } catch (Throwable t) {
             return jo.toString();
         }
         if (!removeQuote)
-            return formated;
-        StringBuilder sb = new StringBuilder(formated);
+            return formatted;
+        StringBuilder sb = new StringBuilder(formatted);
         char currentChar, lastNonSpaceChar = 0;
         for (int i = 0; i < sb.length(); i++) {
             currentChar = sb.charAt(i);
@@ -1675,8 +1719,8 @@ public class Config {
                     lastNonSpaceChar = currentChar;
             }
         }
-        formated = sb.toString();
-        return formated;
+        formatted = sb.toString();
+        return formatted;
     }
 
     private static PendingIntent alarm7Pi;
@@ -1722,13 +1766,15 @@ public class Config {
         }
     }
 
-    public static void cancelAlarm7(Context context) {
+    public static void cancelAlarm7(Context context, boolean fromApp) {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pi = getAlarm7Pi(context);
             alarmManager.cancel(pi);
 
-            context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+            if (fromApp) {
+                context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+            }
         } catch (Throwable th) {
             Log.printStackTrace("alarm7", th);
         }

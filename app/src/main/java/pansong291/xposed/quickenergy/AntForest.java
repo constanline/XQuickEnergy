@@ -798,7 +798,7 @@ public class AntForest {
                                 JSONObject joFinishTask = new JSONObject(
                                         AntForestRpcCall.finishTask(sceneCode, taskType));
                                 if (joFinishTask.getBoolean("success")) {
-                                    Log.forest("完成任务🧾️[" + taskTitle + "]");
+                                    Log.forest("森林任务🧾️[" + taskTitle + "]");
                                     doubleCheck = true;
                                 } else {
                                     Log.recordLog("完成任务失败，" + taskTitle);
@@ -1062,7 +1062,18 @@ public class AntForest {
                         String actionId = actionItem.getString("actionId");
                         String actionName = actionItem.getString("actionName");
                         boolean Guangpan = false;
-                        if ("photoguangpan".equals(actionId))continue;
+                        // if ("photoguangpan".equals(actionId))continue;
+                        if ("photoguangpan".equals(actionId)) {
+                            Guangpan = true;
+                            String s = EcoLifeRpcCall.uploadDishImageBeforeMeals("ALIPAY", dayPoint);
+                            Thread.sleep(150);
+                            s = EcoLifeRpcCall.uploadDishImageAfterMeals("ALIPAY", dayPoint);
+                            Thread.sleep(150);
+                            jo = new JSONObject(EcoLifeRpcCall.queryDish("ALIPAY", dayPoint));
+                            JSONObject queryDishData = jo.getJSONObject("data");
+                            if (!"S_SEC_PASS".equals(queryDishData.getString("status")))
+                                continue;
+                        }
                         jo = new JSONObject(EcoLifeRpcCall.tick(actionId, "ALIPAY", dayPoint, Guangpan));
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.forest("绿色打卡🍀[" + actionName + "]");

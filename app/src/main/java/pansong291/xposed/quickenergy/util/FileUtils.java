@@ -20,6 +20,7 @@ public class FileUtils {
     private static File beachIdMapFile;
     private static File cityCodeMapFile;
     private static File statisticsFile;
+    private static File infoChangedFile;
     private static File exportedStatisticsFile;
     private static File forestLogFile;
     private static File farmLogFile;
@@ -27,6 +28,7 @@ public class FileUtils {
     private static File simpleLogFile;
     private static File runtimeLogFile;
     private static File friendWatchFile;
+    private static File wuaFile;
 
     private static void copyFile(File srcDir, File dstDir, String filename) {
         File file = new File(srcDir, filename);
@@ -91,6 +93,13 @@ public class FileUtils {
                 friendWatchFile.delete();
         }
         return friendWatchFile;
+    }
+
+    public static File getWuaFile() {
+        if (wuaFile == null) {
+            wuaFile = new File(getMainDirectoryFile(), "wua.list");
+        }
+        return wuaFile;
     }
 
     public static File getConfigFile() {
@@ -177,6 +186,15 @@ public class FileUtils {
                 exportedStatisticsFile.delete();
         }
         return exportedStatisticsFile;
+    }
+
+    public static File getInfoChangedFile() {
+        if (infoChangedFile == null) {
+            infoChangedFile = new File(getMainDirectoryFile(), "infoChangedFile.log");
+            if (infoChangedFile.exists() && infoChangedFile.isDirectory())
+                infoChangedFile.delete();
+        }
+        return infoChangedFile;
     }
 
     public static File getForestLogFile() {

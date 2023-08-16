@@ -387,7 +387,7 @@ public class AntOcean {
                     jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
                     if (jo.getBoolean("success")) {
                         String taskTitle = bizInfo.optString("taskTitle", taskType);
-                        Log.forest("完成任务🧾[" + taskTitle + "]");
+                        Log.forest("海洋任务🧾[" + taskTitle + "]");
                     } else {
                         Log.recordLog(jo.getString("desc"), jo.toString());
                     }

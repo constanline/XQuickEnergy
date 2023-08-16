@@ -21,6 +21,8 @@ import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {
@@ -72,7 +74,9 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static void initHandler() {
         if (handler == null) {
             handler = new Handler();
-            Config.setAlarm7(AntForestToast.context);
+            if (Config.startAt7()) {
+                Config.setAlarm7(AntForestToast.context);
+            }
         }
         if (runnable == null) {
             FriendManager.fillUser(XposedHook.classLoader);
@@ -99,6 +103,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntSports.start(XposedHook.classLoader, times);
                             AntMember.receivePoint();
                             AntOcean.start();
+                            AntOrchard.start();
                         }
                         times = (times + 1) % (3600_000 / Config.checkInterval());
                     }
@@ -124,6 +129,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     "onResume", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
+                            RpcUtil.isInterrupted = false;
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
                                 return;
@@ -294,7 +300,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                 Log.recordLog("收到测试消息:");
                 // XposedHook.restartHook(false);
             } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
-                Config.cancelAlarm7(AntForestToast.context);
+                Config.cancelAlarm7(AntForestToast.context, false);
             }
         }
     }
