@@ -113,5 +113,8 @@
     <string name="user_patrol">巡护森林</string>
     <string name="toast_vertical_offset">气泡纵向偏移</string>
     <string name="animal_game_time">小鸡游戏时间</string>
+    <string name="animal_consume_prop">派遣小动物</string>
+    <string name="double_count_limit">每日双击卡次数限制</string>
+    <string name="ins_blue_bean_exchange">安心豆兑换</string>
 
 </resources>

@@ -28,7 +28,7 @@ public class Config {
 
     private static final String TAG = Config.class.getCanonicalName();
     /* application */
-    public static final String jn_pauseTime = "pauseTime";
+//    public static final String jn_pauseTime = "pauseTime";
     public static final String jn_immediateEffect = "immediateEffect";
     public static final String jn_recordLog = "recordLog";
     public static final String jn_showToast = "showToast";
@@ -45,6 +45,7 @@ public class Config {
 
     public static final String jn_ancientTreeCityCodeList = "ancientTreeCityCodeList";
     public static final String jn_collectWateringBubble = "collectWateringBubble";
+    public static final String jn_collectProp = "collectProp";
     public static final String jn_ReturnWater33 = "returnWater30";
     public static final String jn_ReturnWater18 = "returnWater20";
     public static final String jn_ReturnWater10 = "returnWater10";
@@ -134,6 +135,7 @@ public class Config {
     private int checkInterval;
 
     private boolean collectWateringBubble;
+    private boolean collectProp;
     private boolean limitCollect;
     private int limitCount;
     private boolean doubleCard;
@@ -314,7 +316,7 @@ public class Config {
         if (b) {
             setAlarm7(context);
         } else {
-            cancelAlarm7(context);
+            cancelAlarm7(context, true);
         }
         hasChanged = true;
     }
@@ -340,6 +342,15 @@ public class Config {
 
     public static boolean collectWateringBubble() {
         return getConfig().collectWateringBubble;
+    }
+
+    public static void setCollectProp(boolean b) {
+        getConfig().collectProp = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectProp() {
+        return getConfig().collectProp;
     }
 
     public static void setCheckInterval(int i) {
@@ -995,6 +1006,7 @@ public class Config {
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
+        c.collectProp = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
         c.limitCollect = true;
@@ -1090,7 +1102,9 @@ public class Config {
     }
 
     public static boolean saveConfigFile() {
-        return FileUtils.write2File(config2Json(config), FileUtils.getConfigFile());
+        String json = config2Json(config);
+        Log.infoChanged("保存 config.json", json);
+        return FileUtils.write2File(json, FileUtils.getConfigFile());
     }
 
     public static Config json2Config(String json) {
@@ -1129,6 +1143,8 @@ public class Config {
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
 
             config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
+
+            config.collectProp = jo.optBoolean(jn_collectProp, true);
 
             config.checkInterval = jo.optInt(jn_checkInterval, 720_000);
 
@@ -1372,6 +1388,7 @@ public class Config {
             Log.printStackTrace(TAG, t);
             if (json != null) {
                 Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
+                Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
@@ -1379,6 +1396,7 @@ public class Config {
         String formatted = config2Json(config);
         if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 config.json");
+            Log.infoChanged("重新格式化 config.json", formatted);
             FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
@@ -1417,6 +1435,8 @@ public class Config {
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_collectWateringBubble, config.collectWateringBubble);
+
+            jo.put(jn_collectProp, config.collectProp);
 
             jo.put(jn_checkInterval, config.checkInterval);
 
@@ -1704,13 +1724,15 @@ public class Config {
         }
     }
 
-    public static void cancelAlarm7(Context context) {
+    public static void cancelAlarm7(Context context, boolean fromApp) {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pi = getAlarm7Pi(context);
             alarmManager.cancel(pi);
 
-            context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+            if (fromApp) {
+                context.sendBroadcast(new Intent("com.eg.android.AlipayGphone.xqe.cancelAlarm7"));
+            }
         } catch (Throwable th) {
             Log.printStackTrace("alarm7", th);
         }

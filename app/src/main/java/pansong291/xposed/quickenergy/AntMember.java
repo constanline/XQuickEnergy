@@ -34,7 +34,7 @@ public class AntMember {
                     }
                     queryPointCert(1, 8);
 
-                    anXinDou();
+                    insBlueBean();
                 } catch (Throwable t) {
                     Log.i(TAG, "receivePoint.run err:");
                     Log.printStackTrace(TAG, t);
@@ -74,7 +74,7 @@ public class AntMember {
         }
     }
 
-    private static void anXinDou() {
+    private static void insBlueBean() {
         try {
             String s = AntMemberRpcCall.pageRender();
             JSONObject jo = new JSONObject(s);

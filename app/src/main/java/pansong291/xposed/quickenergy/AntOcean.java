@@ -179,7 +179,7 @@ public class AntOcean {
                     boolean canCombine = true;
                     for (int j = 0; j < attachReward.length(); j++) {
                         JSONObject detail = attachReward.getJSONObject(j);
-                        if (detail.optInt("count") == 0) {
+                        if (detail.optInt("count", 0) == 0) {
                             canCombine = false;
                             break;
                         }
