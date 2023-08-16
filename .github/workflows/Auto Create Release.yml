@@ -1,0 +1,35 @@
+name: Create Release on Version Update
+
+on:
+  push:
+    paths:
+      - 'app/build.gradle'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt' 
+
+      - name: Get versionName from build.gradle
+        id: get_version
+        run: |
+          version=$(grep 'versionName' app/build.gradle | sed -n 's/.*"\(.*\)"/\1/p')
+          echo "::set-output name=version::v$version"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          files: ''
+          tag_name: ${{ steps.get_version.outputs.version }}
+          #title: Release ${{ steps.get_version.outputs.version }}
