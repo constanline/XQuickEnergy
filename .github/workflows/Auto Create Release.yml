@@ -32,4 +32,4 @@ jobs:
         with:
           files: ''
           tag_name: ${{ steps.get_version.outputs.version }}
-          #title: Release ${{ steps.get_version.outputs.version }}
+          #body_path: # 更新内容可以放这里
