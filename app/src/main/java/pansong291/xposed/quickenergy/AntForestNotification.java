@@ -77,7 +77,6 @@ public class AntForestNotification {
                     .setSmallIcon(android.R.drawable.sym_def_app_icon)
                     .setContentTitle("芝麻粒")
                     .setAutoCancel(false)
-                    .setOngoing(true)
                     .setContentIntent(pi)
                     .build();
         }

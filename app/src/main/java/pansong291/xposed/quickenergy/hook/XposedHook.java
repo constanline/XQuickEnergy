@@ -20,6 +20,8 @@ import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {
@@ -71,7 +73,9 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static void initHandler() {
         if (handler == null) {
             handler = new Handler();
-            Config.setAlarm7(AntForestToast.context);
+            if (Config.startAt7()) {
+                Config.setAlarm7(AntForestToast.context);
+            }
         }
         if (runnable == null) {
             FriendManager.fillUser(XposedHook.classLoader);
@@ -122,6 +126,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     "onResume", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
+                            RpcUtil.isInterrupted = false;
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
                                 return;
@@ -166,8 +171,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 PowerManager pm = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
                                 wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, service.getClass().getName());
                                 wakeLock.acquire();
-                            }
-                            if (Config.stayAwake()) {
+
                                 if (Config.stayAwakeType() == StayAwakeType.BROADCAST) {
                                     alarmBroadcast(AntForestToast.context, 30 * 60 * 1000, false);
                                 } else if (Config.stayAwakeType() == StayAwakeType.ALARM) {
@@ -290,13 +294,14 @@ public class XposedHook implements IXposedHookLoadPackage {
                 restartHook(AntForestToast.context, force);
             } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
                 Log.recordLog("收到测试消息");
-                alarmHook(AntForestToast.context, 3000, true);
+//                alarmHook(AntForestToast.context, 3000, true);
             } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
-                Config.cancelAlarm7(AntForestToast.context);
+                Config.cancelAlarm7(AntForestToast.context, false);
             }
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerBroadcastReceiver(Context context) {
         try {
             IntentFilter intentFilter = new IntentFilter();
