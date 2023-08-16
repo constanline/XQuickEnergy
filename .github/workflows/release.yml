@@ -31,7 +31,7 @@ jobs:
       - name: Upload to Release Action
         uses: Shopify/upload-to-release@v1.0.1
         with:
-          name: 芝麻粒_${{ github.event.release.tag_name }}.apk
+          name: XQuickEnergy_${{ github.event.release.tag_name }}.apk
           path: app/build/outputs/apk/debug/app-debug.apk
           repo-token: ${{ github.token }}
           content-type: application/zip
