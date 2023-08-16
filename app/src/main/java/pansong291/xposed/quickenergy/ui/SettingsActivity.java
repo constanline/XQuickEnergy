@@ -39,7 +39,7 @@ public class SettingsActivity extends Activity {
             sw_openTreasureBox, sw_donateCharityCoin, sw_kbSignIn, sw_limitCollect, sw_doubleCard,
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
-            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp;
+            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +180,8 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal = findViewById(R.id.sw_feedAnimal);
         sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
         sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
+        sw_antOrchard = findViewById(R.id.sw_antOrchard);
+        sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
         sw_openTreasureBox = findViewById(R.id.sw_openTreasureBox);
         sw_receiveCoinAsset = findViewById(R.id.sw_receiveCoinAsset);
@@ -231,6 +233,8 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal.setChecked(Config.feedAnimal());
         sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
         sw_notifyFriend.setChecked(Config.notifyFriend());
+        sw_antOrchard.setChecked(Config.antOrchard());
+        sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
         sw_receivePoint.setChecked(Config.receivePoint());
         sw_openTreasureBox.setChecked(Config.openTreasureBox());
         sw_receiveCoinAsset.setChecked(Config.receiveCoinAsset());
@@ -384,6 +388,14 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_notifyFriend:
                     Config.setNotifyFriend(sw.isChecked());
+                    break;
+
+                case R.id.sw_antOrchard:
+                    Config.setAntOrchard(sw.isChecked());
+                    break;
+
+                case R.id.sw_receiveOrchardTaskAward:
+                    Config.setReceiveOrchardTaskAward(sw.isChecked());
                     break;
 
                 case R.id.sw_receivePoint:
@@ -599,6 +611,11 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_ExchangeEnergyDoubleClickCount:
                     EditDialog.showEditDialog(this, btn.getText(),
                             EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
+                    break;
+
+                case R.id.btn_orchardSpreadManureCount:
+                    EditDialog.showEditDialog(this, btn.getText(),
+                            EditDialog.EditMode.ORCHARD_SPREAD_MANURE_COUNT);
                     break;
             }
         }

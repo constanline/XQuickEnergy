@@ -119,5 +119,8 @@
     <string name="animal_consume_prop">Animal consume prop</string>
     <string name="double_count_limit">Double count limit</string>
     <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
+    <string name="ant_orchard">Ant orchard</string>
+    <string name="receive_orchard_task_award">Receive orchard task award</string>
+    <string name="orchard_spread_manure_count">Orchard spread manure count</string>
 
 </resources>
