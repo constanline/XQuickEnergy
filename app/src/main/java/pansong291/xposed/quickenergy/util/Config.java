@@ -39,6 +39,8 @@ public class Config {
     public static final String jn_stayAwakeTarget = "stayAwakeTarget";
     public static final String jn_timeoutType = "timeoutType";
     public static final String jn_startAt7 = "startAt7";
+    public static final String jn_enableOnGoing = "enableOnGoing";
+    public static final String jn_backupRuntime = "backupRuntime";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
@@ -95,6 +97,9 @@ public class Config {
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
+    public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
+    public static final String jn_antOrchard = "antOrchard";
+    public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_antdodoCollect = "antdodoCollect";
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
@@ -129,6 +134,8 @@ public class Config {
     private boolean timeoutRestart;
     private XposedHook.StayAwakeType timeoutType;
     private boolean startAt7;
+    private boolean enableOnGoing;
+    private boolean backupRuntime;
 
     /* forest */
     private boolean collectEnergy;
@@ -203,6 +210,10 @@ public class Config {
     private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
+    private List<String> whoYouWantGiveTo;
+    private boolean antOrchard;
+    private boolean receiveOrchardTaskAward;
+    private int orchardSpreadManureCount;
 
     /* other */
     private boolean receivePoint;
@@ -323,6 +334,22 @@ public class Config {
 
     public static boolean startAt7() {
         return getConfig().startAt7;
+    }
+    public static void setEnableOnGoing(boolean b) {
+        getConfig().enableOnGoing = b;
+        hasChanged = true;
+    }
+
+    public static boolean enableOnGoing() {
+        return getConfig().enableOnGoing;
+    }
+    public static void setBackupRuntime(boolean b) {
+        getConfig().backupRuntime = b;
+        hasChanged = true;
+    }
+
+    public static boolean backupRuntime() {
+        return getConfig().backupRuntime;
     }
 
     /* forest */
@@ -877,6 +904,37 @@ public class Config {
         return getConfig().dontNotifyFriendList;
     }
 
+    public static List<String> whoYouWantGiveTo() {
+        return getConfig().whoYouWantGiveTo;
+    }
+
+    public static void setAntOrchard(boolean b) {
+        getConfig().antOrchard = b;
+        hasChanged = true;
+    }
+
+    public static boolean antOrchard() {
+        return getConfig().antOrchard;
+    }
+
+    public static void setReceiveOrchardTaskAward(boolean b) {
+        getConfig().receiveOrchardTaskAward = b;
+        hasChanged = true;
+    }
+
+    public static boolean receiveOrchardTaskAward() {
+        return getConfig().receiveOrchardTaskAward;
+    }
+
+    public static int getOrchardSpreadManureCount() {
+        return getConfig().orchardSpreadManureCount;
+    }
+
+    public static void setOrchardSpreadManureCount(int i) {
+        getConfig().orchardSpreadManureCount = i;
+        hasChanged = true;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1003,6 +1061,8 @@ public class Config {
         c.timeoutRestart = true;
         c.timeoutType = XposedHook.StayAwakeType.ALARM;
         c.startAt7 = false;
+        c.enableOnGoing = false;
+        c.backupRuntime = false;
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
@@ -1088,6 +1148,10 @@ public class Config {
         c.notifyFriend = true;
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
+        c.whoYouWantGiveTo = new ArrayList<>();
+        c.antOrchard = true;
+        c.receiveOrchardTaskAward = true;
+        c.orchardSpreadManureCount = 0;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1138,6 +1202,10 @@ public class Config {
                     .valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
 
             config.startAt7 = jo.optBoolean(jn_startAt7, false);
+
+            config.enableOnGoing = jo.optBoolean(jn_enableOnGoing, false);
+
+            config.backupRuntime = jo.optBoolean(jn_backupRuntime, false);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
@@ -1360,6 +1428,20 @@ public class Config {
                     config.dontNotifyFriendList.add(ja.getString(i));
                 }
             }
+            config.whoYouWantGiveTo = new ArrayList<>();
+            if (jo.has(jn_whoYouWantGiveTo)) {
+                ja = jo.getJSONArray(jn_whoYouWantGiveTo);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.whoYouWantGiveTo.add(ja.getString(i));
+                }
+            }
+
+
+            config.antOrchard = jo.optBoolean(jn_antOrchard, true);
+
+            config.receiveOrchardTaskAward = jo.optBoolean(jn_receiveOrchardTaskAward, true);
+
+            config.orchardSpreadManureCount = jo.optInt("orchardSpreadManureCount", 0);
 
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
@@ -1430,6 +1512,10 @@ public class Config {
             jo.put(jn_timeoutType, config.timeoutType);
 
             jo.put(jn_startAt7, config.startAt7);
+
+            jo.put(jn_enableOnGoing, config.enableOnGoing);
+
+            jo.put(jn_backupRuntime, config.backupRuntime);
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
@@ -1612,6 +1698,18 @@ public class Config {
                 ja.put(s);
             }
             jo.put(jn_dontNotifyFriendList, ja);
+
+            ja = new JSONArray();
+            for (String s : config.whoYouWantGiveTo) {
+                ja.put(s);
+            }
+            jo.put(jn_whoYouWantGiveTo, ja);
+
+            jo.put(jn_antOrchard, config.antOrchard);
+
+            jo.put(jn_receiveOrchardTaskAward, config.receiveOrchardTaskAward);
+
+            jo.put("orchardSpreadManureCount", config.orchardSpreadManureCount);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);

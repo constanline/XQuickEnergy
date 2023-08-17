@@ -153,6 +153,26 @@
                         android:id="@+id/btn_waitWhenException"
                         android:paddingStart="@dimen/setting_item_padding"
                         android:paddingEnd="@dimen/setting_item_padding" />
+
+                    <Switch
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enable_on_going"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_enableOnGoing"/>
+
+                    <Switch
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/backup_runtime_log"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_backupRuntime"/>
                 </LinearLayout>
                 <!--森林设置-->
                 <LinearLayout
@@ -195,19 +215,29 @@
                         android:minHeight="50dp"
                         android:id="@+id/sw_collectWateringBubble"/>
 
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:text="@string/advance_time_milliseconds"
-                        android:textAllCaps="false"
-                        android:onClick="onClick"
-                        android:minHeight="50dp"
-                        android:gravity="start|center_vertical"
-                        android:background="@drawable/button"
-                        android:id="@+id/btn_advanceTime"
-                        android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"/>
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/collect_prop"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_collectProp" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/advance_time_milliseconds"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_advanceTime"
+						android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -486,6 +516,20 @@
                         android:gravity="start|center_vertical"
                         android:background="@drawable/button"
                         android:id="@+id/btn_ExchangeEnergyDoubleClickCount"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/who_you_want_to_give_to"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_WhoYouWantToGiveTo"
                         android:paddingStart="@dimen/setting_item_padding"
                         android:paddingEnd="@dimen/setting_item_padding"/>
 
@@ -857,6 +901,41 @@
                         android:id="@+id/btn_dontNotifyFriendList"
                         android:paddingStart="@dimen/setting_item_padding"
                         android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Switch
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ant_orchard"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_antOrchard" />
+
+                    <Switch
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/receive_orchard_task_award"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_receiveOrchardTaskAward" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/orchard_spread_manure_count"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_orchardSpreadManureCount"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding" />
+
                 </LinearLayout>
                 <!--其他-->
                 <LinearLayout

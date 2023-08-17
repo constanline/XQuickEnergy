@@ -20,8 +20,6 @@ import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {
@@ -92,7 +90,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader, times);
 
-                        if (TimeUtil.getTimeStr().compareTo("0700") < 0 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                        if (TimeUtil.getTimeStr().compareTo("0700") < 0
+                                || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();
@@ -102,6 +101,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntSports.start(XposedHook.classLoader, times);
                             AntMember.receivePoint();
                             AntOcean.start();
+                            AntOrchard.start();
                         }
                         times = (times + 1) % (3600_000 / Config.checkInterval());
                     }
