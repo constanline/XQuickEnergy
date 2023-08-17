@@ -10,6 +10,7 @@ public class RandomUtils {
     }
 
     public static int nextInt(int min, int max) {
+        if (min >= max) return min;
         return rnd.nextInt(max - min) + min;
     }
 

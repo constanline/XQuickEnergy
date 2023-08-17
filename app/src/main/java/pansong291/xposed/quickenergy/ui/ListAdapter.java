@@ -7,20 +7,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ListAdapter extends BaseAdapter {
     private static ListAdapter adapter;
+
+    private static ListDialog.ListType listType;
 
     public static ListAdapter get(Context c) {
         if(adapter == null)
             adapter = new ListAdapter(c);
+        return adapter;
+    }
+
+    public static ListAdapter get(Context c, ListDialog.ListType listType) {
+        if(adapter == null) {
+            adapter = new ListAdapter(c);
+            viewHolderList = new ArrayList<>();
+        }
+        ListAdapter.listType = listType;
         return adapter;
     }
 
@@ -64,7 +75,7 @@ public class ListAdapter extends BaseAdapter {
         if(i < 0) i = list.size();
         for(;;) {
             i = (i + list.size() - 1) % list.size();
-            IdAndName ai = (IdAndName) list.get(i);
+            IdAndName ai = list.get(i);
             if(ai.name.contains(cs)) {
                 findIndex = i;
                 break;
@@ -123,7 +134,11 @@ public class ListAdapter extends BaseAdapter {
             p2 = View.inflate(context, R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
+            if (listType == ListDialog.ListType.SHOW) {
+                vh.cb.setVisibility(View.GONE);
+            }
             p2.setTag(vh);
+            viewHolderList.add(vh);
         } else {
             vh = (ViewHolder)p2.getTag();
         }
@@ -135,7 +150,9 @@ public class ListAdapter extends BaseAdapter {
         return p2;
     }
 
-    static class ViewHolder {
+    public static List<ViewHolder> viewHolderList;
+
+    public static class ViewHolder {
         TextView tv;
         CheckBox cb;
     }
