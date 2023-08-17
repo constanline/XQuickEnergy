@@ -68,17 +68,19 @@ public class AntOrchard {
         try {
             JSONObject jo = new JSONObject(AntOrchardRpcCall.orchardIndex());
             if ("100".equals(jo.getString("resultCode"))) {
-                JSONObject spreadManureStage = jo.getJSONObject("spreadManureActivity")
-                        .getJSONObject("spreadManureStage");
-                if ("FINISHED".equals(spreadManureStage.getString("status"))) {
-                    String sceneCode = spreadManureStage.getString("sceneCode");
-                    String taskType = spreadManureStage.getString("taskType");
-                    int awardCount = spreadManureStage.getInt("awardCount");
-                    JSONObject joo = new JSONObject(AntOrchardRpcCall.receiveTaskAward(sceneCode, taskType));
-                    if (joo.getBoolean("success")) {
-                        Log.farm("丰收礼包🎁[肥料*" + awardCount + "]");
-                    } else {
-                        Log.recordLog(joo.getString("desc"), joo.toString());
+                if (jo.has("spreadManureActivity")) {
+                    JSONObject spreadManureStage = jo.getJSONObject("spreadManureActivity")
+                            .getJSONObject("spreadManureStage");
+                    if ("FINISHED".equals(spreadManureStage.getString("status"))) {
+                        String sceneCode = spreadManureStage.getString("sceneCode");
+                        String taskType = spreadManureStage.getString("taskType");
+                        int awardCount = spreadManureStage.getInt("awardCount");
+                        JSONObject joo = new JSONObject(AntOrchardRpcCall.receiveTaskAward(sceneCode, taskType));
+                        if (joo.getBoolean("success")) {
+                            Log.farm("丰收礼包🎁[肥料*" + awardCount + "]");
+                        } else {
+                            Log.recordLog(joo.getString("desc"), joo.toString());
+                        }
                     }
                 }
                 String taobaoData = jo.getString("taobaoData");
