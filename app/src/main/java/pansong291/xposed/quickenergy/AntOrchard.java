@@ -74,8 +74,12 @@ public class AntOrchard {
     private static String[] wuaList;
     private static String getWua() {
         if (wuaList == null) {
-            String content = FileUtils.readFromFile(FileUtils.getWuaFile());
-            wuaList = content.split("\n");
+            try {
+                String content = FileUtils.readFromFile(FileUtils.getWuaFile());
+                wuaList = content.split("\n");
+            } catch (Throwable ignored) {
+                wuaList = new String[0];
+            }
         }
         if (wuaList.length > 0) {
             return wuaList[RandomUtils.nextInt(0, wuaList.length - 1)];
@@ -87,17 +91,19 @@ public class AntOrchard {
         try {
             JSONObject jo = new JSONObject(AntOrchardRpcCall.orchardIndex());
             if ("100".equals(jo.getString("resultCode"))) {
-                JSONObject spreadManureStage = jo.getJSONObject("spreadManureActivity")
-                        .getJSONObject("spreadManureStage");
-                if ("FINISHED".equals(spreadManureStage.getString("status"))) {
-                    String sceneCode = spreadManureStage.getString("sceneCode");
-                    String taskType = spreadManureStage.getString("taskType");
-                    int awardCount = spreadManureStage.getInt("awardCount");
-                    JSONObject joo = new JSONObject(AntOrchardRpcCall.receiveTaskAward(sceneCode, taskType));
-                    if (joo.getBoolean("success")) {
-                        Log.farm("丰收礼包🎁[肥料*" + awardCount + "]");
-                    } else {
-                        Log.recordLog(joo.getString("desc"), joo.toString());
+                if (jo.has("spreadManureActivity")) {
+                    JSONObject spreadManureStage = jo.getJSONObject("spreadManureActivity")
+                            .getJSONObject("spreadManureStage");
+                    if ("FINISHED".equals(spreadManureStage.getString("status"))) {
+                        String sceneCode = spreadManureStage.getString("sceneCode");
+                        String taskType = spreadManureStage.getString("taskType");
+                        int awardCount = spreadManureStage.getInt("awardCount");
+                        JSONObject joo = new JSONObject(AntOrchardRpcCall.receiveTaskAward(sceneCode, taskType));
+                        if (joo.getBoolean("success")) {
+                            Log.farm("丰收礼包🎁[肥料*" + awardCount + "]");
+                        } else {
+                            Log.recordLog(joo.getString("desc"), joo.toString());
+                        }
                     }
                 }
                 String taobaoData = jo.getString("taobaoData");
@@ -174,7 +180,7 @@ public class AntOrchard {
                         int awardCount = jo.optInt("awardCount", 1);
                         jo = new JSONObject(AntOrchardRpcCall.drawLottery());
                         if ("100".equals(jo.getString("resultCode"))) {
-                            Log.farm("七日礼包🎁[" + (singleDesc != null ? singleDesc + "随机礼包" : "肥料") + "*" + awardCount
+                            Log.farm("七日礼包🎁[" + singleDesc + "随机礼包" + "*" + awardCount
                                     + "]");
                         } else {
                             Log.i(jo.getString("resultDesc"), jo.toString());
@@ -196,8 +202,10 @@ public class AntOrchard {
             String s = AntOrchardRpcCall.orchardListTask();
             JSONObject jo = new JSONObject(s);
             if ("100".equals(jo.getString("resultCode"))) {
-                JSONObject signTaskInfo = jo.getJSONObject("signTaskInfo");
-                orchardSign(signTaskInfo);
+                if (jo.has("signTaskInfo")) {
+                    JSONObject signTaskInfo = jo.getJSONObject("signTaskInfo");
+                    orchardSign(signTaskInfo);
+                }
                 JSONArray jaTaskList = jo.getJSONArray("taskList");
                 for (int i = 0; i < jaTaskList.length(); i++) {
                     jo = jaTaskList.getJSONObject(i);
