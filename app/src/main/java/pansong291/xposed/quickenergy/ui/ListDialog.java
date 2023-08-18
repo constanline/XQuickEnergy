@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import java.util.Comparator;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
@@ -38,17 +39,29 @@ public class ListDialog {
     static AlertDialog edtDialog;
     static EditText edt_count;
 
+    static ListType listType;
+
     static AlertDialog optionsDialog;
     static AlertDialog deleteDialog;
 
+    public enum ListType {
+        RADIO, CHECK, SHOW
+    }
+
     public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl,
             List<Integer> cl) {
+        show(c, title, bl, sl, cl, ListType.CHECK);
+    }
+
+    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl,
+            List<Integer> cl, ListType listType) {
         selectedList = sl;
         countList = cl;
-        ListAdapter la = ListAdapter.get(c);
+        ListAdapter la = ListAdapter.get(c, listType);
         la.setBaseList(bl);
         la.setSelectedList(selectedList);
         showListDialog(c, title);
+        ListDialog.listType = listType;
     }
 
     private static void showListDialog(Context c, CharSequence title) {
@@ -97,16 +110,33 @@ public class ListDialog {
         lv_list.setAdapter(ListAdapter.get(c));
         lv_list.setOnItemClickListener(
                 (p1, p2, p3, p4) -> {
-                    curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
+                    if (listType == ListType.SHOW) {
+                        return;
+                    }
                     curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
+                    curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                     if (countList == null) {
-                        if (curViewHolder.cb.isChecked()) {
-                            selectedList.remove(curIdAndName.id);
-                            curViewHolder.cb.setChecked(false);
-                        } else {
-                            if (!selectedList.contains(curIdAndName.id))
+                        if (listType == ListType.RADIO) {
+                            selectedList.clear();
+                            if (curViewHolder.cb.isChecked()) {
+                                curViewHolder.cb.setChecked(false);
+                            } else {
+                                for (int i = 0; i < ListAdapter.viewHolderList.size(); i++) {
+                                    ListAdapter.ViewHolder viewHolder = ListAdapter.viewHolderList.get(i);
+                                    viewHolder.cb.setChecked(false);
+                                }
+                                curViewHolder.cb.setChecked(true);
                                 selectedList.add(curIdAndName.id);
-                            curViewHolder.cb.setChecked(true);
+                            }
+                        } else {
+                            if (curViewHolder.cb.isChecked()) {
+                                selectedList.remove(curIdAndName.id);
+                                curViewHolder.cb.setChecked(false);
+                            } else {
+                                if (!selectedList.contains(curIdAndName.id))
+                                    selectedList.add(curIdAndName.id);
+                                curViewHolder.cb.setChecked(true);
+                            }
                         }
                         Config.hasChanged = true;
                     } else {

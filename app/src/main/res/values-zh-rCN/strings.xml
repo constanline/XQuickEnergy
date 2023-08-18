@@ -88,7 +88,6 @@
     <string name="cancel">取消</string>
     <string name="start_check_energy">开始检测能量</string>
     <string name="collect_watering_bubble">收金球</string>
-    <string name="collect_prop">收赠送的道具</string>
     <string name="use_double_card_time">使用双击卡时间</string>
     <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
@@ -117,8 +116,15 @@
     <string name="animal_consume_prop">派遣动物</string>
     <string name="double_count_limit">双击卡次数限制</string>
     <string name="ins_blue_bean_exchange">安心豆兑换时光加速器</string>
+    <string name="enable_on_going">开启状态栏禁删</string>
+    <string name="backup_runtime_log">备份runtime日志</string>
     <string name="ant_orchard">开启农场</string>
     <string name="receive_orchard_task_award">收取农场任务奖励</string>
     <string name="orchard_spread_manure_count">农场每日施肥次数</string>
+    <string name="collect_prop">收集道具</string>
+    <string name="who_you_want_to_give_to">赠送道具给谁（赠送所有可送道具）</string>
+    <string name="collect_sesame">收芝麻粒</string>
+    <string name="zcj_sign_in">招财金签到</string>
+    <string name="merchant_kmdk">打开打卡</string>
 
 </resources>

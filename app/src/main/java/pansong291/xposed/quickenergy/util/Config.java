@@ -39,6 +39,8 @@ public class Config {
     public static final String jn_stayAwakeTarget = "stayAwakeTarget";
     public static final String jn_timeoutType = "timeoutType";
     public static final String jn_startAt7 = "startAt7";
+    public static final String jn_enableOnGoing = "enableOnGoing";
+    public static final String jn_backupRuntime = "backupRuntime";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
@@ -94,6 +96,7 @@ public class Config {
     public static final String jn_animalSleepTime = "animalSleepTime";
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
+    public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_antdodoCollect = "antdodoCollect";
@@ -113,6 +116,9 @@ public class Config {
     public static final String jn_ecoLifeTick = "ecoLifeTick";
     public static final String jn_tiyubiz = "tiyubiz";
     public static final String jn_insBlueBeanExchange = "insBlueBeanExchange";
+    public static final String jn_collectSesame = "collectSesame";
+    public static final String jn_zcjSignIn = "zcjSignIn";
+    public static final String jn_merchantKmdk = "merchantKmdk";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
@@ -130,6 +136,8 @@ public class Config {
     private boolean timeoutRestart;
     private XposedHook.StayAwakeType timeoutType;
     private boolean startAt7;
+    private boolean enableOnGoing;
+    private boolean backupRuntime;
 
     /* forest */
     private boolean collectEnergy;
@@ -204,6 +212,7 @@ public class Config {
     private List<String> animalSleepTime;
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
+    private List<String> whoYouWantGiveTo;
     private boolean antOrchard;
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
@@ -220,6 +229,9 @@ public class Config {
     private boolean ecoLifeTick;
     private boolean tiyubiz;
     private boolean insBlueBeanExchange;
+    private boolean collectSesame;
+    private boolean zcjSignIn;
+    private boolean merchantKmdk;
 
     /* base */
     private static Config config;
@@ -327,6 +339,24 @@ public class Config {
 
     public static boolean startAt7() {
         return getConfig().startAt7;
+    }
+
+    public static void setEnableOnGoing(boolean b) {
+        getConfig().enableOnGoing = b;
+        hasChanged = true;
+    }
+
+    public static boolean enableOnGoing() {
+        return getConfig().enableOnGoing;
+    }
+
+    public static void setBackupRuntime(boolean b) {
+        getConfig().backupRuntime = b;
+        hasChanged = true;
+    }
+
+    public static boolean backupRuntime() {
+        return getConfig().backupRuntime;
     }
 
     /* forest */
@@ -881,6 +911,10 @@ public class Config {
         return getConfig().dontNotifyFriendList;
     }
 
+    public static List<String> whoYouWantGiveTo() {
+        return getConfig().whoYouWantGiveTo;
+    }
+
     public static void setAntOrchard(boolean b) {
         getConfig().antOrchard = b;
         hasChanged = true;
@@ -1008,6 +1042,33 @@ public class Config {
         return getConfig().insBlueBeanExchange;
     }
 
+    public static void setCollectSesame(boolean b) {
+        getConfig().collectSesame = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectSesame() {
+        return getConfig().collectSesame;
+    }
+
+    public static void setZcjSignIn(boolean b) {
+        getConfig().zcjSignIn = b;
+        hasChanged = true;
+    }
+
+    public static boolean zcjSignIn() {
+        return getConfig().zcjSignIn;
+    }
+
+    public static void setMerchantKmdk(boolean b) {
+        getConfig().merchantKmdk = b;
+        hasChanged = true;
+    }
+
+    public static boolean merchantKmdk() {
+        return getConfig().merchantKmdk;
+    }
+
     /* base */
     private static Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1034,6 +1095,8 @@ public class Config {
         c.timeoutRestart = true;
         c.timeoutType = XposedHook.StayAwakeType.ALARM;
         c.startAt7 = false;
+        c.enableOnGoing = false;
+        c.backupRuntime = false;
 
         c.collectEnergy = true;
         c.collectWateringBubble = true;
@@ -1118,6 +1181,7 @@ public class Config {
         c.notifyFriend = true;
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
+        c.whoYouWantGiveTo = new ArrayList<>();
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
@@ -1131,6 +1195,9 @@ public class Config {
         c.ecoLifeTick = true;
         c.tiyubiz = true;
         c.insBlueBeanExchange = true;
+        c.collectSesame = false;
+        c.zcjSignIn = false;
+        c.merchantKmdk = false;
         return c;
     }
 
@@ -1169,6 +1236,10 @@ public class Config {
                     .valueOf(jo.optString(jn_timeoutType, XposedHook.StayAwakeType.BROADCAST.name()));
 
             config.startAt7 = jo.optBoolean(jn_startAt7, false);
+
+            config.enableOnGoing = jo.optBoolean(jn_enableOnGoing, false);
+
+            config.backupRuntime = jo.optBoolean(jn_backupRuntime, false);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
@@ -1393,6 +1464,14 @@ public class Config {
                 }
             }
 
+            config.whoYouWantGiveTo = new ArrayList<>();
+            if (jo.has(jn_whoYouWantGiveTo)) {
+                ja = jo.getJSONArray(jn_whoYouWantGiveTo);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.whoYouWantGiveTo.add(ja.getString(i));
+                }
+            }
+
             config.antOrchard = jo.optBoolean(jn_antOrchard, true);
 
             config.receiveOrchardTaskAward = jo.optBoolean(jn_receiveOrchardTaskAward, true);
@@ -1421,6 +1500,12 @@ public class Config {
             config.tiyubiz = jo.optBoolean(jn_tiyubiz, true);
 
             config.insBlueBeanExchange = jo.optBoolean(jn_insBlueBeanExchange, true);
+
+            config.collectSesame = jo.optBoolean(jn_collectSesame, false);
+
+            config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, false);
+
+            config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, false);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
@@ -1464,6 +1549,10 @@ public class Config {
             jo.put(jn_timeoutType, config.timeoutType);
 
             jo.put(jn_startAt7, config.startAt7);
+
+            jo.put(jn_enableOnGoing, config.enableOnGoing);
+
+            jo.put(jn_backupRuntime, config.backupRuntime);
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
@@ -1649,6 +1738,12 @@ public class Config {
             }
             jo.put(jn_dontNotifyFriendList, ja);
 
+            ja = new JSONArray();
+            for (String s : config.whoYouWantGiveTo) {
+                ja.put(s);
+            }
+            jo.put(jn_whoYouWantGiveTo, ja);
+
             jo.put(jn_antOrchard, config.antOrchard);
 
             jo.put(jn_receiveOrchardTaskAward, config.receiveOrchardTaskAward);
@@ -1677,6 +1772,12 @@ public class Config {
             jo.put(jn_tiyubiz, config.tiyubiz);
 
             jo.put(jn_insBlueBeanExchange, config.insBlueBeanExchange);
+
+            jo.put(jn_collectSesame, config.collectSesame);
+
+            jo.put(jn_zcjSignIn, config.zcjSignIn);
+
+            jo.put(jn_merchantKmdk, config.merchantKmdk);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
