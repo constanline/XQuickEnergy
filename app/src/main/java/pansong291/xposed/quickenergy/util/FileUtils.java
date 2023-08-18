@@ -293,7 +293,9 @@ public class FileUtils {
     public static void append2RuntimeLogFile(String s) {
         synchronized (getRuntimeLogFile()) {
             if (getRuntimeLogFile().length() > 31_457_280) {// 30MB
-                getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
+                if (Config.backupRuntime()) {
+                    getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
+                }
                 if (getRuntimeLogFile().exists()) {
                     getRuntimeLogFile().delete();
                 }

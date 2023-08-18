@@ -659,7 +659,7 @@ public class AntFarm {
                         awardCount = jo.getInt("awardCount");
                         jo = new JSONObject(AntFarmRpcCall.doFarmTask(taskId));
                         if ("SUCCESS".equals(jo.getString("memo"))) {
-                            Log.farm("完成任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                            Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
                         } else {
                             Log.recordLog(jo.getString("memo"), jo.toString());
                         }
@@ -675,7 +675,7 @@ public class AntFarm {
                                 Thread.sleep(15100);
                                 jo = new JSONObject(AntFarmRpcCall.videoTrigger(contentId));
                                 if (jo.getBoolean("success")) {
-                                    Log.farm("完成任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                                    Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
                                 } else {
                                     Log.recordLog(jo.getString("resultMsg"), jo.toString());
                                 }
@@ -1068,8 +1068,19 @@ public class AntFarm {
             JSONObject jo = new JSONObject(AntFarmRpcCall.enterKitchen(userId));
             if ("SUCCESS".equals(jo.getString("memo"))) {
                 boolean canCollectDailyFoodMaterial = jo.getBoolean("canCollectDailyFoodMaterial");
+                int dailyFoodMaterialAmount = jo.getInt("dailyFoodMaterialAmount");
+                if (jo.has("orchardFoodMaterialStatus")) {
+                    JSONObject orchardFoodMaterialStatus = jo.getJSONObject("orchardFoodMaterialStatus");
+                    if ("FINISHED".equals(orchardFoodMaterialStatus.optString("foodStatus"))) {
+                        jo = new JSONObject(AntFarmRpcCall.farmFoodMaterialCollect());
+                        if ("100".equals(jo.getString("resultCode"))) {
+                            Log.farm("小鸡厨房👨🏻‍🍳[领取农场食材]#" + jo.getInt("foodMaterialAddCount") + "g");
+                        } else {
+                            Log.i(TAG, jo.toString());
+                        }
+                    }
+                }
                 if (canCollectDailyFoodMaterial) {
-                    int dailyFoodMaterialAmount = jo.getInt("dailyFoodMaterialAmount");
                     jo = new JSONObject(AntFarmRpcCall.collectDailyFoodMaterial(dailyFoodMaterialAmount));
                     if ("SUCCESS".equals(jo.getString("memo"))) {
                         Log.farm("小鸡厨房👨🏻‍🍳[领取今日食材]#" + dailyFoodMaterialAmount + "g");
