@@ -74,9 +74,10 @@ public class Statistics {
             jn_answerQuestionList = "answerQuestionList", jn_syncStepList = "syncStepList",
             jn_exchangeList = "exchangeList", jn_beachTodayList = "beachTodayList",
             jn_questionHint = "questionHint", jn_donationEggList = "donationEggList",
-            jn_memberSignInList = "memberSignInList",
-            jn_kbSignIn = "kbSignIn", jn_exchangeDoubleCard = "exchangeDoubleCard",
-            jn_exchangeTimes = "exchangeTimes", jn_dailyAnswerList = "dailyAnswerList", jn_doubleTimes = "doubleTimes";
+            jn_memberSignInList = "memberSignInList", jn_kbSignIn = "kbSignIn",
+            jn_exchangeDoubleCard = "exchangeDoubleCard", jn_exchangeTimes = "exchangeTimes",
+            jn_dailyAnswerList = "dailyAnswerList", jn_doubleTimes = "doubleTimes",
+            jn_SpreadManureList = "SpreadManureList";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -101,6 +102,7 @@ public class Statistics {
     private ArrayList<FeedFriendLog> feedFriendLogList;
     private Set<String> dailyAnswerList;
     private ArrayList<String> donationEggList;
+    private ArrayList<String> SpreadManureList;
 
     // other
     private ArrayList<String> memberSignInList;
@@ -235,7 +237,7 @@ public class Statistics {
     }
 
     public static boolean canReserveToday(String id, int count) {
-        return  getReserveTimes(id) < count;
+        return getReserveTimes(id) < count;
     }
 
     public static void reserveToday(String id, int count) {
@@ -411,6 +413,19 @@ public class Statistics {
         }
     }
 
+    public static boolean canSpreadManureToday(String uid) {
+        Statistics stat = getStatistics();
+        return !stat.SpreadManureList.contains(uid);
+    }
+
+    public static void spreadManureToday(String uid) {
+        Statistics stat = getStatistics();
+        if (!stat.SpreadManureList.contains(uid)) {
+            stat.SpreadManureList.add(uid);
+            save();
+        }
+    }
+
     public static boolean canExchangeToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.exchangeList.contains(uid);
@@ -561,6 +576,7 @@ public class Statistics {
         stat.feedFriendLogList.clear();
         stat.questionHint = null;
         stat.donationEggList.clear();
+        stat.SpreadManureList.clear();
         stat.memberSignInList.clear();
         stat.kbSignIn = 0;
         stat.exchangeDoubleCard = 0;
@@ -587,6 +603,8 @@ public class Statistics {
             stat.answerQuestionList = new ArrayList<>();
         if (stat.donationEggList == null)
             stat.donationEggList = new ArrayList<>();
+        if (stat.SpreadManureList == null)
+            stat.SpreadManureList = new ArrayList<>();
         if (stat.memberSignInList == null)
             stat.memberSignInList = new ArrayList<>();
         if (stat.feedFriendLogList == null)
@@ -761,6 +779,16 @@ public class Statistics {
                 }
             }
 
+            stat.SpreadManureList = new ArrayList<>();
+
+            if (jo.has(jn_SpreadManureList)) {
+                JSONArray ja = jo.getJSONArray(jn_SpreadManureList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.SpreadManureList.add(ja.getString(i));
+
+                }
+            }
+
             stat.memberSignInList = new ArrayList<>();
 
             if (jo.has(jn_memberSignInList)) {
@@ -918,6 +946,12 @@ public class Statistics {
                 ja.put(stat.donationEggList.get(i));
             }
             jo.put(jn_donationEggList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.SpreadManureList.size(); i++) {
+                ja.put(stat.SpreadManureList.get(i));
+            }
+            jo.put(jn_SpreadManureList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.memberSignInList.size(); i++) {

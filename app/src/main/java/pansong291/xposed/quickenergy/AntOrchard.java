@@ -7,6 +7,8 @@ import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.FileUtils;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.RandomUtils;
+import pansong291.xposed.quickenergy.util.StringUtil;
+import pansong291.xposed.quickenergy.util.Statistics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +45,7 @@ public class AntOrchard {
                                     doOrchardDailyTask(userId);
                                     triggerTbTask();
                                 }
-                                if (Config.getOrchardSpreadManureCount() > 0)
+                                if (Config.getOrchardSpreadManureCount() > 0 && Statistics.canSpreadManureToday(userId))
                                     orchardSpreadManure();
 
                                 if (Config.getOrchardSpreadManureCount() >= 3
@@ -88,6 +90,15 @@ public class AntOrchard {
         return "null";
     }
 
+    private static boolean canSpreadManureContinue(String stageBefore, String stageAfter) {
+        Double bef = Double.parseDouble(StringUtil.getSubString(stageBefore, "施肥", "%"));
+        Double aft = Double.parseDouble(StringUtil.getSubString(stageAfter, "施肥", "%"));
+        if (bef - aft > 0.01)
+            return true;
+        Log.recordLog("施肥只加0.01%进度今日停止施肥！");
+        return false;
+    }
+
     private static void orchardSpreadManure() {
         try {
             JSONObject jo = new JSONObject(AntOrchardRpcCall.orchardIndex());
@@ -130,6 +141,10 @@ public class AntOrchard {
                         jo = new JSONObject(taobaoData);
                         String stageAfter = jo.getJSONObject("currentStage").getString("stageText");
                         Log.farm("农场施肥💩[" + stageAfter + "]");
+                        if (!canSpreadManureContinue(stageBefore, stageAfter)) {
+                            Statistics.spreadManureToday(userId);
+                            return;
+                        }
                         orchardSpreadManure();
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
