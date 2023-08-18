@@ -4,6 +4,7 @@ import de.robv.android.xposed.XposedHelpers;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.StringUtil;
@@ -109,7 +110,7 @@ public class RpcUtil {
                     } else if (msg.contains("请求不合法")) {
                         if (Config.waitWhenException() > 0) {
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
-                            Config.setForestPauseTime(waitTime);
+                            RuntimeInfo.getInstance().put(RuntimeInfo.RuntimeInfoKey.ForestPauseTime, waitTime);
                             AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                             Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }

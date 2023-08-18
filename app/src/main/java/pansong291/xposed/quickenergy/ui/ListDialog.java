@@ -111,8 +111,8 @@ public class ListDialog {
                     if (listType == ListType.SHOW) {
                         return;
                     }
+                    curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
                     if (countList == null) {
-                        curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
                         curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                         if (listType == ListType.RADIO) {
                             selectedList.clear();
@@ -154,6 +154,11 @@ public class ListDialog {
         return v;
     }
 
+    /**
+     * Show the EDT dialog and set the title, hint, and text based on the current context.
+     *
+     * @param  c  the context in which the dialog is shown
+     */
     private static void showEdtDialog(Context c) {
         try {
             getEdtDialog(c).show();

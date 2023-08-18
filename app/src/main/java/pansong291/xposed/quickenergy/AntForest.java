@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.hook.AntForestRpcCall;
 import pansong291.xposed.quickenergy.hook.EcoLifeRpcCall;
 import pansong291.xposed.quickenergy.hook.FriendManager;
@@ -108,7 +109,7 @@ public class AntForest {
      * @param times  the times
      */
     public static void checkEnergyRanking(ClassLoader loader, int times) {
-        if (Config.forestPauseTime() > System.currentTimeMillis()) {
+        if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System.currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
             return;
         }
@@ -189,7 +190,7 @@ public class AntForest {
     }
 
     private static void fillUserRobFlag(List<String> idList) {
-        if (Config.forestPauseTime() > System.currentTimeMillis()) {
+        if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System.currentTimeMillis()) {
             return;
         }
         try {
@@ -472,7 +473,7 @@ public class AntForest {
     }
 
     private static void canCollectEnergy(String userId, boolean laterCollect) {
-        if (Config.forestPauseTime() > System.currentTimeMillis()) {
+        if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System.currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
             return;
         }
@@ -561,7 +562,7 @@ public class AntForest {
     }
 
     private static int collectEnergy(String userId, long bubbleId, String bizNo, String extra) {
-        if (Config.forestPauseTime() > System.currentTimeMillis()) {
+        if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System.currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不收取能量！", "");
             return 0;
         }
@@ -584,7 +585,7 @@ public class AntForest {
                     while (System.currentTimeMillis() - lastCollectTime < Config.collectInterval()) {
                         Thread.sleep(System.currentTimeMillis() - lastCollectTime);
                     }
-                    if (Config.forestPauseTime() > System.currentTimeMillis()) {
+                    if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System.currentTimeMillis()) {
                         Log.recordLog("异常等待中，暂不收取能量！", "");
                         return 0;
                     }

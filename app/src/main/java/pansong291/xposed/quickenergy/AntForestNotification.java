@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
 
 import java.text.DateFormat;
@@ -87,8 +88,9 @@ public class AntForestNotification {
 
     public static void setContentText(CharSequence cs) {
         if (isStart) {
-            if (Config.forestPauseTime() > System.currentTimeMillis()) {
-                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(Config.forestPauseTime());
+            long forestPauseTime = RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime);
+            if (forestPauseTime > System.currentTimeMillis()) {
+                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(forestPauseTime);
             }
             mNotification = builder.setContentText(cs).build();
             if (mNotifyManager != null)
