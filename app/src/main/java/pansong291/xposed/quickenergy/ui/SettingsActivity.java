@@ -42,7 +42,7 @@ public class SettingsActivity extends Activity {
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
-            sw_enableOnGoing, sw_backupRuntime;
+            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +197,9 @@ public class SettingsActivity extends Activity {
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
         sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
         sw_insBlueBeanExchange = findViewById(R.id.sw_insBlueBeanExchange);
+        sw_collectSesame = findViewById(R.id.sw_collectSesame);
+        sw_zcjSignIn = findViewById(R.id.sw_zcjSignIn);
+        sw_merchantKmdk = findViewById(R.id.sw_merchantKmdk);
         sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
         sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
         sw_antOcean = findViewById(R.id.sw_antOcean);
@@ -253,6 +256,9 @@ public class SettingsActivity extends Activity {
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
         sw_tiyubiz.setChecked(Config.tiyubiz());
         sw_insBlueBeanExchange.setChecked(Config.insBlueBeanExchange());
+        sw_collectSesame.setChecked(Config.collectSesame());
+        sw_zcjSignIn.setChecked(Config.zcjSignIn());
+        sw_merchantKmdk.setChecked(Config.merchantKmdk());
         sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         sw_antdodoCollect.setChecked(Config.antdodoCollect());
         sw_antOcean.setChecked(Config.antOcean());
@@ -443,6 +449,18 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_insBlueBeanExchange:
                     Config.setInsBlueBeanExchange(sw.isChecked());
+                    break;
+
+                case R.id.sw_collectSesame:
+                    Config.setCollectSesame(sw.isChecked());
+                    break;
+
+                case R.id.sw_zcjSignIn:
+                    Config.setZcjSignIn(sw.isChecked());
+                    break;
+
+                case R.id.sw_merchantKmdk:
+                    Config.setMerchantKmdk(sw.isChecked());
                     break;
 
                 case R.id.sw_ancientTreeOnlyWeek:
