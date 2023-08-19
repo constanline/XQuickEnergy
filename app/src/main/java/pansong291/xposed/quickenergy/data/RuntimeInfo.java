@@ -48,14 +48,23 @@ public class RuntimeInfo {
     }
 
     public Object get(RuntimeInfoKey key) {
+        if (!map.containsKey(key.name())) {
+            return null;
+        }
         return map.get(key.name());
     }
 
     public String getString(RuntimeInfoKey key) {
+        if (!map.containsKey(key.name())) {
+            return null;
+        }
         return (String) map.get(key.name());
     }
 
     public Long getLong(RuntimeInfoKey key) {
+        if (!map.containsKey(key.name())) {
+            return 0L;
+        }
         return (Long) map.get(key.name());
     }
 

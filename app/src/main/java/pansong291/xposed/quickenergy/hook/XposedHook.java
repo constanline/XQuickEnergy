@@ -106,6 +106,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         times = (times + 1) % (3600_000 / Config.checkInterval());
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
+                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + Config.checkInterval());
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
                         AntForestNotification.stop(service, false);

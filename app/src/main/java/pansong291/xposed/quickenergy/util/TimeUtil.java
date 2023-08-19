@@ -15,6 +15,10 @@ public class TimeUtil {
         return getTimeStr(0);
     }
 
+    public static String getTimeStr(long ts) {
+        return DATE_FORMAT.format(new java.util.Date(ts));
+    }
+
     public static String getTimeStr(int plusMs) {
         Calendar c = Calendar.getInstance();
         if (plusMs != 0) {

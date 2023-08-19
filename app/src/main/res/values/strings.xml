@@ -127,6 +127,8 @@
     <string name="receive_orchard_task_award">Receive orchard task award</string>
     <string name="orchard_spread_manure_count">Orchard spread manure count</string>
     <string name="who_you_want_to_give_to">Who you want to give to</string>
-
+    <string name="collect_sesame">Collect sesame</string>
+    <string name="zcj_sign_in">Zcj sign in</string>
+    <string name="merchant_kmdk">Merchant kmdk</string>
 
 </resources>

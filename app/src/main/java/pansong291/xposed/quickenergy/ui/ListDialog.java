@@ -48,11 +48,13 @@ public class ListDialog {
         RADIO, CHECK, SHOW
     }
 
-    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl, List<Integer> cl) {
+    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl,
+            List<Integer> cl) {
         show(c, title, bl, sl, cl, ListType.CHECK);
     }
 
-    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl, List<Integer> cl, ListType listType) {
+    public static void show(Context c, CharSequence title, List<? extends IdAndName> bl, List<String> sl,
+            List<Integer> cl, ListType listType) {
         selectedList = sl;
         countList = cl;
         ListAdapter la = ListAdapter.get(c, listType);

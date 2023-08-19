@@ -116,6 +116,9 @@ public class Config {
     public static final String jn_ecoLifeTick = "ecoLifeTick";
     public static final String jn_tiyubiz = "tiyubiz";
     public static final String jn_insBlueBeanExchange = "insBlueBeanExchange";
+    public static final String jn_collectSesame = "collectSesame";
+    public static final String jn_zcjSignIn = "zcjSignIn";
+    public static final String jn_merchantKmdk = "merchantKmdk";
 
     public static boolean shouldReload;
     public static boolean hasChanged;
@@ -224,6 +227,9 @@ public class Config {
     private boolean ecoLifeTick;
     private boolean tiyubiz;
     private boolean insBlueBeanExchange;
+    private boolean collectSesame;
+    private boolean zcjSignIn;
+    private boolean merchantKmdk;
 
     /* base */
     private static Config config;
@@ -323,6 +329,7 @@ public class Config {
     public static boolean startAt7() {
         return getConfig().startAt7;
     }
+
     public static void setEnableOnGoing(boolean b) {
         getConfig().enableOnGoing = b;
         hasChanged = true;
@@ -331,6 +338,7 @@ public class Config {
     public static boolean enableOnGoing() {
         return getConfig().enableOnGoing;
     }
+
     public static void setBackupRuntime(boolean b) {
         getConfig().backupRuntime = b;
         hasChanged = true;
@@ -1023,6 +1031,33 @@ public class Config {
         return getConfig().insBlueBeanExchange;
     }
 
+    public static void setCollectSesame(boolean b) {
+        getConfig().collectSesame = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectSesame() {
+        return getConfig().collectSesame;
+    }
+
+    public static void setZcjSignIn(boolean b) {
+        getConfig().zcjSignIn = b;
+        hasChanged = true;
+    }
+
+    public static boolean zcjSignIn() {
+        return getConfig().zcjSignIn;
+    }
+
+    public static void setMerchantKmdk(boolean b) {
+        getConfig().merchantKmdk = b;
+        hasChanged = true;
+    }
+
+    public static boolean merchantKmdk() {
+        return getConfig().merchantKmdk;
+    }
+
     /* base */
     private static Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1149,6 +1184,9 @@ public class Config {
         c.ecoLifeTick = true;
         c.tiyubiz = true;
         c.insBlueBeanExchange = true;
+        c.collectSesame = false;
+        c.zcjSignIn = false;
+        c.merchantKmdk = false;
         return c;
     }
 
@@ -1805,6 +1843,12 @@ public class Config {
             jo.put(jn_tiyubiz, config.tiyubiz);
 
             jo.put(jn_insBlueBeanExchange, config.insBlueBeanExchange);
+
+            jo.put(jn_collectSesame, config.collectSesame);
+
+            jo.put(jn_zcjSignIn, config.zcjSignIn);
+
+            jo.put(jn_merchantKmdk, config.merchantKmdk);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
