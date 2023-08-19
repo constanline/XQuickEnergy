@@ -162,6 +162,9 @@ public class AntForest {
                         if (Config.userPatrol()) {
                             UserPatrol();
                         }
+                        if (!Config.whoYouWantGiveTo().isEmpty() && !FriendIdMap.currentUid.equals(Config.whoYouWantGiveTo().get(0))) {
+                            giveProp(Config.whoYouWantGiveTo().get(0));
+                        }
                         for (int i = 0; i < Config.getWaterFriendList().size(); i++) {
                             String uid = Config.getWaterFriendList().get(i);
                             if (selfId.equals(uid))
@@ -1012,7 +1015,7 @@ public class AntForest {
             JSONObject jo = new JSONObject(AntForestRpcCall.queryPropList(true));
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONArray forestPropVOList = jo.optJSONArray("forestPropVOList");
-                if (forestPropVOList.length() > 0) {
+                if (forestPropVOList != null && forestPropVOList.length() > 0) {
                     jo = forestPropVOList.getJSONObject(0);
                     String giveConfigId = jo.getJSONObject("giveConfigVO").getString("giveConfigId");
                     int holdsNum = jo.optInt("holdsNum", 0);
@@ -1024,6 +1027,7 @@ public class AntForest {
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     }
+                    Thread.sleep(200);
                     if (holdsNum > 1 || forestPropVOList.length() > 1) {
                         giveProp(targetUserId);
                     }

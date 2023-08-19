@@ -73,12 +73,14 @@ public class AntForestNotification {
                 builder = new Notification.Builder(context)
                         .setPriority(Notification.PRIORITY_LOW);
             }
-            mNotification = builder
-                    .setSmallIcon(android.R.drawable.sym_def_app_icon)
+            builder.setSmallIcon(android.R.drawable.sym_def_app_icon)
                     .setContentTitle("仙人掌")
                     .setAutoCancel(false)
-                    .setContentIntent(pi)
-                    .build();
+                    .setContentIntent(pi);
+            if (Config.enableOnGoing()) {
+                builder.setOngoing(true);
+            }
+            mNotification = builder.build();
         }
     }
 

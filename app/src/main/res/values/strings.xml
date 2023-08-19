@@ -119,8 +119,14 @@
     <string name="animal_consume_prop">Animal consume prop</string>
     <string name="double_count_limit">Double count limit</string>
     <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
+    <string name="enable_on_going">Enable on going</string>
+    <string name="backup_runtime_log">Backup runtime log</string>
     <string name="ant_orchard">Ant orchard</string>
     <string name="receive_orchard_task_award">Receive orchard task award</string>
     <string name="orchard_spread_manure_count">Orchard spread manure count</string>
+    <string name="who_you_want_to_give_to">Who you want to give to</string>
+    <string name="collect_sesame">Collect sesame</string>
+    <string name="zcj_sign_in">Zcj sign in</string>
+    <string name="merchant_kmdk">Merchant kmdk</string>
 
 </resources>

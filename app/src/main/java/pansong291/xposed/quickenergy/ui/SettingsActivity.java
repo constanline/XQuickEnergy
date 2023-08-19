@@ -39,7 +39,8 @@ public class SettingsActivity extends Activity {
             sw_openTreasureBox, sw_donateCharityCoin, sw_kbSignIn, sw_limitCollect, sw_doubleCard,
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
-            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward;
+            sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
+            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,8 @@ public class SettingsActivity extends Activity {
         sw_stayAwake = findViewById(R.id.sw_stayAwake);
         sw_timeoutRestart = findViewById(R.id.sw_timeoutRestart);
         sw_startAt7 = findViewById(R.id.sw_startAt7);
+        sw_enableOnGoing = findViewById(R.id.sw_enableOnGoing);
+        sw_backupRuntime = findViewById(R.id.sw_backupRuntime);
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
         sw_collectProp = findViewById(R.id.sw_collectProp);
@@ -193,6 +196,9 @@ public class SettingsActivity extends Activity {
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
         sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
         sw_insBlueBeanExchange = findViewById(R.id.sw_insBlueBeanExchange);
+        sw_collectSesame = findViewById(R.id.sw_collectSesame);
+        sw_zcjSignIn = findViewById(R.id.sw_zcjSignIn);
+        sw_merchantKmdk = findViewById(R.id.sw_merchantKmdk);
         sw_ancientTreeOnlyWeek = findViewById(R.id.sw_ancientTreeOnlyWeek);
         sw_antdodoCollect = findViewById(R.id.sw_antdodoCollect);
         sw_antOcean = findViewById(R.id.sw_antOcean);
@@ -209,6 +215,8 @@ public class SettingsActivity extends Activity {
         sw_stayAwake.setChecked(Config.stayAwake());
         sw_timeoutRestart.setChecked(Config.timeoutRestart());
         sw_startAt7.setChecked(Config.startAt7());
+        sw_enableOnGoing.setChecked(Config.enableOnGoing());
+        sw_backupRuntime.setChecked(Config.backupRuntime());
         sw_collectEnergy.setChecked(Config.collectEnergy());
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
         sw_collectProp.setChecked(Config.collectProp());
@@ -246,6 +254,9 @@ public class SettingsActivity extends Activity {
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
         sw_tiyubiz.setChecked(Config.tiyubiz());
         sw_insBlueBeanExchange.setChecked(Config.insBlueBeanExchange());
+        sw_collectSesame.setChecked(Config.collectSesame());
+        sw_zcjSignIn.setChecked(Config.zcjSignIn());
+        sw_merchantKmdk.setChecked(Config.merchantKmdk());
         sw_ancientTreeOnlyWeek.setChecked(Config.ancientTreeOnlyWeek());
         sw_antdodoCollect.setChecked(Config.antdodoCollect());
         sw_antOcean.setChecked(Config.antOcean());
@@ -280,6 +291,14 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_startAt7:
                     Config.setStartAt7(this.getApplicationContext(), sw.isChecked());
+                    break;
+
+                case R.id.sw_enableOnGoing:
+                    Config.setEnableOnGoing(sw.isChecked());
+                    break;
+
+                case R.id.sw_backupRuntime:
+                    Config.setBackupRuntime(sw.isChecked());
                     break;
 
                 case R.id.sw_collectEnergy:
@@ -428,6 +447,18 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_insBlueBeanExchange:
                     Config.setInsBlueBeanExchange(sw.isChecked());
+                    break;
+
+                case R.id.sw_collectSesame:
+                    Config.setCollectSesame(sw.isChecked());
+                    break;
+
+                case R.id.sw_zcjSignIn:
+                    Config.setZcjSignIn(sw.isChecked());
+                    break;
+
+                case R.id.sw_merchantKmdk:
+                    Config.setMerchantKmdk(sw.isChecked());
                     break;
 
                 case R.id.sw_ancientTreeOnlyWeek:
@@ -611,6 +642,11 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_ExchangeEnergyDoubleClickCount:
                     EditDialog.showEditDialog(this, btn.getText(),
                             EditDialog.EditMode.EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT);
+                    break;
+
+                case R.id.btn_WhoYouWantToGiveTo:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null,
+                            ListDialog.ListType.RADIO);
                     break;
 
                 case R.id.btn_orchardSpreadManureCount:

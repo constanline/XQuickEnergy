@@ -30,7 +30,7 @@
 					android:orientation="vertical">
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/immediate_effect"
@@ -41,7 +41,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/record_log"
@@ -51,7 +51,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/show_toast"
@@ -71,11 +71,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_toastOffsetY"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"/>
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/stay_awake"
@@ -94,7 +94,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_stayAwakeType"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -107,11 +107,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_stayAwakeTarget"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/timeout_restart_activity"
@@ -131,11 +131,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_timeoutRestartType"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"/>
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/start_at_7_o_clock"
@@ -155,7 +155,27 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_waitWhenException"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/enable_on_going"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_enableOnGoing" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/backup_runtime_log"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_backupRuntime" />
 				</LinearLayout>
 				<!--森林设置-->
 				<LinearLayout
@@ -166,7 +186,7 @@
 					android:orientation="vertical">
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/collect_energy"
@@ -186,11 +206,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_checkInterval"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/collect_watering_bubble"
@@ -200,7 +220,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/collect_prop"
@@ -220,7 +240,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_advanceTime"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -234,7 +254,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_collectInterval"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -248,11 +268,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_collectTimeout"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/limit_collect"
@@ -272,11 +292,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_limitCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/use_double_card"
@@ -296,7 +316,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_doubleCardTime"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -310,7 +330,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_doubleCountLimit"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:id="@+id/btn_returnWater30"
@@ -322,7 +342,7 @@
 						android:minHeight="50dp"
 						android:onClick="onClick"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:text="@string/return_water_33"
 						android:textAllCaps="false" />
 
@@ -338,7 +358,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_returnWater20"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -352,11 +372,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_returnWater10"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/help_friend_collect"
@@ -376,7 +396,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_dontCollectList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -390,11 +410,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_dontHelpCollectList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_forest_task_award"
@@ -414,7 +434,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_waterFriendList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -428,12 +448,12 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_waterFriendCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/cooperate_water"
@@ -453,11 +473,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_cooperateWaterList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/energy_rain"
@@ -477,11 +497,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_giveEnergyRainList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/exchange_energy_double_click"
@@ -501,11 +521,25 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_ExchangeEnergyDoubleClickCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/who_you_want_to_give_to"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_WhoYouWantToGiveTo"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/reserve"
@@ -525,11 +559,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_reserveList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/ancient_tree"
@@ -549,11 +583,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_ancientTreeCityCodeList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/ancient_tree_only_week"
@@ -563,7 +597,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/antdodo_collect"
@@ -573,7 +607,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/ant_ocean"
@@ -583,7 +617,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/beach"
@@ -603,11 +637,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_beachList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/user_patrol"
@@ -617,7 +651,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/animal_consume_prop"
@@ -635,7 +669,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/enable_farm"
@@ -645,7 +679,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/reward_friend"
@@ -655,7 +689,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/send_back_animal"
@@ -675,7 +709,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_sendType"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -689,7 +723,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_dontSendFriendList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -703,11 +737,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_recallAnimalType"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_farm_tool_reward"
@@ -717,7 +751,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/record_farm_game"
@@ -737,11 +771,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_farmGameTime"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"/>
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/kitchen"
@@ -751,7 +785,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/use_new_egg_tool"
@@ -761,7 +795,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/harvest_produce"
@@ -771,7 +805,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/donation"
@@ -781,7 +815,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/answer_question"
@@ -791,7 +825,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_farm_task_award"
@@ -801,7 +835,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/feed_animal"
@@ -811,7 +845,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/use_accelerate_tool"
@@ -831,7 +865,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_feedFriendAnimalList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -845,11 +879,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_animalSleepTime"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/notify_friend"
@@ -869,11 +903,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_dontNotifyFriendList"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/ant_orchard"
@@ -881,9 +915,9 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_antOrchard" />
 
-						<Switch
+					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_orchard_task_award"
@@ -903,7 +937,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_orchardSpreadManureCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 				</LinearLayout>
 				<!--其他-->
@@ -915,7 +949,7 @@
 					android:orientation="vertical">
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_point"
@@ -925,7 +959,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/open_treasure_box"
@@ -935,7 +969,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/receive_coin_asset"
@@ -945,7 +979,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/donate_charity_coin"
@@ -966,7 +1000,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_minExchangeCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -980,7 +1014,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_latestExchangeTime"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -994,11 +1028,11 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_syncStepCount"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/koubei_sign_in"
@@ -1008,7 +1042,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/eco_life_tick"
@@ -1018,7 +1052,7 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/tiyubiz"
@@ -1028,13 +1062,43 @@
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/ins_blue_bean_exchange"
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_insBlueBeanExchange" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/collect_sesame"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_collectSesame" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/zcj_sign_in"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_zcjSignIn" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/merchant_kmdk"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_merchantKmdk" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -1048,7 +1112,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_donation_xqe_developer"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -1062,7 +1126,7 @@
 						android:background="@drawable/button"
 						android:id="@+id/btn_donation_developer"
 						android:paddingStart="@dimen/setting_item_padding"
-                        android:paddingEnd="@dimen/setting_item_padding" />
+						android:paddingEnd="@dimen/setting_item_padding" />
 
 				</LinearLayout>
 

@@ -21,8 +21,6 @@ import pansong291.xposed.quickenergy.*;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class XposedHook implements IXposedHookLoadPackage {

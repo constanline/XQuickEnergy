@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = packageInfo.versionName;
             tv_version.setText("v" + version);
-        }catch (PackageManager.NameNotFoundException ignored) {
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
         this.setTitle(this.getTitle());
     }
@@ -126,7 +126,8 @@ public class MainActivity extends Activity {
                 return;
 
             case R.id.btn_friend_watch:
-                ListDialog.show(this, getString(R.string.friend_watch), FriendWatch.getList(), new ArrayList<>(), null);
+                ListDialog.show(this, getString(R.string.friend_watch), FriendWatch.getList(), new ArrayList<>(), null,
+                        ListDialog.ListType.SHOW);
                 return;
 
         }
