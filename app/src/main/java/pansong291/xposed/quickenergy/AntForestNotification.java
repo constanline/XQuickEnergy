@@ -98,7 +98,8 @@ public class AntForestNotification {
     }
 
     private static void innerSetContentText() {
-        mNotification = builder.setContentText("下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" + contentText).build();
+        String preContent = (nextScanTime > 0) ? "下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" : "";
+        mNotification = builder.setContentText(preContent + contentText).build();
         if (mNotifyManager != null)
             mNotifyManager.notify(NOTIFICATION_ID, mNotification);
     }

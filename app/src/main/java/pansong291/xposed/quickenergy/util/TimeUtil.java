@@ -10,13 +10,14 @@ import java.text.DateFormat;
 public class TimeUtil {
 
     public static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
+    public static final DateFormat TIME_FORMAT = DateFormat.getTimeInstance();
 
     public static String getTimeStr() {
         return getTimeStr(0);
     }
 
     public static String getTimeStr(long ts) {
-        return DATE_FORMAT.format(new java.util.Date(ts));
+        return TIME_FORMAT.format(new java.util.Date(ts));
     }
 
     public static String getTimeStr(int plusMs) {
