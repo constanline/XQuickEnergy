@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import pansong291.xposed.quickenergy.AntFarm.SendType;
 import pansong291.xposed.quickenergy.hook.ClassMember;
 import pansong291.xposed.quickenergy.hook.XposedHook;
@@ -1577,6 +1579,15 @@ public class Config {
 
             config.insBlueBeanExchange = jo.optBoolean(jn_insBlueBeanExchange, true);
             Log.i(TAG, jn_insBlueBeanExchange + ":" + config.insBlueBeanExchange);
+
+            config.collectSesame = jo.optBoolean(jn_collectSesame, true);
+            Log.i(TAG, jn_collectSesame + ":" + config.collectSesame);
+
+            config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, true);
+            Log.i(TAG, jn_zcjSignIn + ":" + config.zcjSignIn);
+
+            config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, true);
+            Log.i(TAG, jn_merchantKmdk + ":" + config.merchantKmdk);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
