@@ -123,8 +123,6 @@ public class Config {
     public static boolean shouldReload;
     public static boolean hasChanged;
 
-    private long forestPauseTime;
-
     /* application */
     private boolean immediateEffect;
     private boolean recordLog;
@@ -253,15 +251,6 @@ public class Config {
 
     public static boolean recordLog() {
         return getConfig().recordLog;
-    }
-
-    public static void setForestPauseTime(long b) {
-        getConfig().forestPauseTime = b;
-        hasChanged = true;
-    }
-
-    public static long forestPauseTime() {
-        return getConfig().forestPauseTime;
     }
 
     public static void setShowToast(boolean b) {
@@ -1084,7 +1073,6 @@ public class Config {
     public static Config defInit() {
         Config c = new Config();
 
-        // c.forestPauseTime = 0L;
         c.immediateEffect = true;
         c.recordLog = true;
         c.showToast = true;

@@ -22,6 +22,7 @@
 
     <color name="colorPrimary">#8DDEDF</color>
     <color name="textColorPrimary">#000000</color>
+    <color name="navigationBarColor">#AA000000</color>
 
     <color name="colorAccent">#12a4e7</color>
     
