@@ -15,7 +15,7 @@ public class Log {
     public static void infoChanged(String tag, String s) {
         FileUtils.append2File(tag + ", " + s, FileUtils.getInfoChangedFile());
     }
-    
+
     public static void printStackTrace(String tag, Throwable t) {
         Log.i(tag, android.util.Log.getStackTraceString(t));
     }
@@ -59,5 +59,4 @@ public class Log {
     public static String getFormatTime() {
         return getFormatDateTime().split(" ")[1];
     }
-
 }

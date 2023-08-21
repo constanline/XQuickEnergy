@@ -253,8 +253,14 @@ public class AntMember {
             for (int i = 0; i < 5; i++) {
                 JSONObject jo = new JSONObject(AntMemberRpcCall.queryActivity());
                 if (jo.getBoolean("success")) {
-                    if (jo.optBoolean("signUpEnable") && "UN_SIGN_UP".equals(jo.getString("signUpStatus"))) {
-                        String activityNo = jo.getString("activityNo");
+                    String activityNo = jo.getString("activityNo");
+                    if (!Log.getFormatDate().replace("-","").equals(activityNo.split("_")[2]))
+                        break;
+                    if ("SIGN_UP".equals(jo.getString("signUpStatus"))) {
+                        Log.recordLog("开门打卡今日已报名！");
+                        break;
+                    }
+                    if ("UN_SIGN_UP".equals(jo.getString("signUpStatus"))) {
                         String activityPeriodName = jo.getString("activityPeriodName");
                         JSONObject joSignUp = new JSONObject(AntMemberRpcCall.signUp(activityNo));
                         if (joSignUp.getBoolean("success")) {
