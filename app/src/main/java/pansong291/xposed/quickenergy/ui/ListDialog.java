@@ -14,9 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.util.Comparator;
-import java.util.List;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.AlipayUser;
 import pansong291.xposed.quickenergy.entity.AreaCode;
@@ -25,6 +22,8 @@ import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.CooperationIdMap;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
+
+import java.util.List;
 
 public class ListDialog {
     static AlertDialog listDialog;
@@ -114,8 +113,8 @@ public class ListDialog {
                         return;
                     }
                     curIdAndName = (IdAndName) p1.getAdapter().getItem(p3);
+                    curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                     if (countList == null) {
-                        curViewHolder = (ListAdapter.ViewHolder) p2.getTag();
                         if (listType == ListType.RADIO) {
                             selectedList.clear();
                             if (curViewHolder.cb.isChecked()) {

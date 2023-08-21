@@ -20,7 +20,7 @@ public class RpcUtil {
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
 
-    public static boolean isInterrupted = false;
+    public static volatile boolean isInterrupted = false;
 
     public static void init(ClassLoader loader) {
         if (rpcCallMethod == null) {

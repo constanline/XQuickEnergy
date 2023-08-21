@@ -1578,6 +1578,14 @@ public class Config {
             config.insBlueBeanExchange = jo.optBoolean(jn_insBlueBeanExchange, true);
             Log.i(TAG, jn_insBlueBeanExchange + ":" + config.insBlueBeanExchange);
 
+            config.collectSesame = jo.optBoolean(jn_collectSesame, true);
+            Log.i(TAG, jn_collectSesame + ":" + config.collectSesame);
+
+            config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, true);
+            Log.i(TAG, jn_zcjSignIn + ":" + config.zcjSignIn);
+
+            config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, true);
+            Log.i(TAG, jn_merchantKmdk + ":" + config.merchantKmdk);
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
