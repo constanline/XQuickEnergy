@@ -56,7 +56,7 @@ public class RpcUtil {
                                     classLoader).getName()), "getMyAccountInfoModelByLocal");
             return (String) XposedHelpers.getObjectField(callMethod, "userId");
         } catch (Throwable th) {
-            Log.i(TAG, "getUserId err:" + Objects.requireNonNull(th.getCause()).getMessage());
+            Log.i(TAG, "getUserId err");
             Log.printStackTrace(TAG, th);
         }
         return null;
