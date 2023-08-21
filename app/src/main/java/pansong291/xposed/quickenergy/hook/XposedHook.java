@@ -32,7 +32,6 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static PowerManager.WakeLock wakeLock;
     public static Handler handler;
     private static Runnable runnable;
-    private static int times;
 
     private static boolean isHooked = false;
 
@@ -88,7 +87,7 @@ public class XposedHook implements IXposedHookLoadPackage {
 
                         Config.shouldReload = true;
                         Statistics.resetToday();
-                        AntForest.checkEnergyRanking(XposedHook.classLoader, times);
+                        AntForest.checkEnergyRanking(XposedHook.classLoader);
 
                         if (TimeUtil.getTimeStr().compareTo("0700") < 0
                                 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
@@ -98,14 +97,14 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
                                 AncientTree.start();
                             }
-                            AntSports.start(XposedHook.classLoader, times);
+                            AntSports.start(XposedHook.classLoader);
                             AntMember.receivePoint();
                             AntOcean.start();
                             AntOrchard.start();
                         }
-                        times = (times + 1) % (3600_000 / Config.checkInterval());
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
+                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + Config.checkInterval());
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
                         AntForestNotification.stop(service, false);
@@ -135,7 +134,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                             FriendIdMap.currentUid = targetUid;
                             if (handler != null) {
                                 Log.recordLog("尝试初始化");
-                                times = 0;
                                 initHandler();
                             }
                         }
@@ -167,7 +165,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                             XposedHook.service = service;
                             AntForestToast.context = service.getApplicationContext();
                             RpcUtil.init(loader);
-                            times = 0;
                             if (Config.stayAwake()) {
                                 PowerManager pm = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
                                 wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, service.getClass().getName());
@@ -231,14 +228,14 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     public static void restartHook(Context context, boolean force) {
         try {
-            Intent intent = new Intent();
+            Intent intent;
             if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+                intent = new Intent(Intent.ACTION_VIEW);
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
-                if (force) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             } else {
+                intent = new Intent();
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
                 context.startService(intent);
             }

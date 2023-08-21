@@ -5,7 +5,7 @@ import pansong291.xposed.quickenergy.util.RandomUtils;
 public class ReserveRpcCall {
     private static final String VERSION = "20230501";
     private static final String VERSION2 = "20230522";
-    private static final String VERSION3 = "20230701";
+    private static final String VERSION3 = "20230815";
 
     private static String getUniqueId() {
         return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();

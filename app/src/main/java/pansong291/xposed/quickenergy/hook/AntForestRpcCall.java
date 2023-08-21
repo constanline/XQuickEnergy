@@ -9,6 +9,7 @@ import java.util.UUID;
 public class AntForestRpcCall {
 
     private static final String VERSION = "20230501";
+    private static final String VERSION2 = "20230710";
 
     public static String fillUserRobFlag(String userIdList) {
         return RpcUtil.request("alipay.antforest.forest.h5.fillUserRobFlag",
@@ -30,8 +31,7 @@ public class AntForestRpcCall {
     public static String queryFriendHomePage(String userId) {
         return RpcUtil.request("alipay.antforest.forest.h5.queryFriendHomePage",
                 "[{\"canRobFlags\":\"F,F,F,F,F\",\"configVersionMap\":{\"redPacketConfig\":0,\"wateringBubbleConfig\":\"10\"},\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\""
-                        +
-                        userId + "\",\"version\":\"" + VERSION + "\"}]");
+                        + userId + "\",\"version\":\"" + VERSION + "\"}]");
     }
 
     public static String collectEnergy(String bizType, String userId, long bubbleId) {
@@ -49,8 +49,7 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antmember.forest.h5.transferEnergy", "[{\"bizNo\":\"" +
                 bizNo + UUID.randomUUID().toString() + "\",\"energyId\":" + energyId +
                 ",\"extInfo\":{\"sendChat\":\"N\"},\"from\":\"friendIndex\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUser\":\""
-                +
-                targetUser + "\",\"transferType\":\"WATERING\",\"version\":\"" + VERSION + "\"}]");
+                + targetUser + "\",\"transferType\":\"WATERING\",\"version\":\"" + VERSION + "\"}]");
     }
 
     public static String forFriendCollectEnergy(String targetUserId, long bubbleId) {
@@ -66,8 +65,7 @@ public class AntForestRpcCall {
     public static String queryTaskList() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryTaskList",
                 "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
-                        +
-                        VERSION + "\"}]");
+                        + VERSION2 + "\"}]");
     }
 
     public static String queryEnergyRainHome() {
@@ -108,23 +106,20 @@ public class AntForestRpcCall {
     public static String popupTask() {
         return RpcUtil.request("alipay.antforest.forest.h5.popupTask",
                 "[{\"fromAct\":\"pop_task\",\"needInitSign\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"statusList\":[\"TODO\",\"FINISHED\"],\"version\":\""
-                        +
-                        VERSION + "\"}]");
+                        + VERSION + "\"}]");
     }
 
     public static String antiepSign(String entityId, String userId) {
         return RpcUtil.request("com.alipay.antiep.sign",
-                "[{\"entityId\":\"" + entityId +
-                        "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\""
-                        +
-                        userId + "\"}]");
+                "[{\"entityId\":\"" + entityId
+                        + "\",\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_ENERGY_SIGN\",\"source\":\"ANTFOREST\",\"userId\":\""
+                        + userId + "\"}]");
     }
 
     public static String queryPropList(boolean onlyGive) {
         return RpcUtil.request("alipay.antforest.forest.h5.queryPropList",
                 "[{\"onlyGive\":\"" + (onlyGive ? "Y" : "")
-                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION
-                        + "\"}]");
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\"" + VERSION + "\"}]");
     }
 
     public static String giveProp(String giveConfigId, String propId, String targetUserId) {
@@ -143,8 +138,7 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antforest.forest.h5.consumeProp",
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
                         "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\""
-                        +
-                        VERSION + "\"}]");
+                        + VERSION + "\"}]");
     }
 
     public static String exchangeBenefit(String spuId, String skuId) {

@@ -156,6 +156,11 @@ public class ListDialog {
         return v;
     }
 
+    /**
+     * Show the EDT dialog and set the title, hint, and text based on the current context
+     *
+     * @param c the context in which the dialog is shown
+     */
     private static void showEdtDialog(Context c) {
         try {
             getEdtDialog(c).show();

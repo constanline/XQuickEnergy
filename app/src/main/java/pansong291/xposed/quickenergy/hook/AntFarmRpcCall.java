@@ -115,11 +115,9 @@ public class AntFarmRpcCall {
         return RpcUtil.request("com.alipay.antfarm.listToolTaskDetails", args1);
     }
 
-    public static String receiveToolTaskReward(String awardType, int rewardCount, String taskType) {
-        String args1 = "[{\"awardType\":\"" + awardType +
-                "\",\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":"
-                + rewardCount + ",\"rewardType\":\"" + awardType +
-                "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
+    public static String receiveToolTaskReward(String rewardType, int rewardCount, String taskType) {
+        String args1 = "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":" + rewardCount
+                + ",\"rewardType\":\"" + rewardType + "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
                 + taskType + "\",\"version\":\"" + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.receiveToolTaskReward", args1);
     }
@@ -223,7 +221,7 @@ public class AntFarmRpcCall {
             // 得到一个信息摘要器
             MessageDigest digest = MessageDigest.getInstance("md5");
             byte[] result = digest.digest(password.getBytes());
-            StringBuilder  buffer = new StringBuilder ();
+            StringBuilder buffer = new StringBuilder();
             // 把没一个byte 做一个与运算 0xff;
             for (byte b : result) {
                 // 与运算
