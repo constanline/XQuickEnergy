@@ -116,8 +116,7 @@ public class AntFarmRpcCall {
     }
 
     public static String receiveToolTaskReward(String awardType, int rewardCount, String taskType) {
-        String args1 = "[{\"awardType\":\"" + awardType +
-                "\",\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":"
+        String args1 = "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":"
                 + rewardCount + ",\"rewardType\":\"" + awardType +
                 "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
                 + taskType + "\",\"version\":\"" + VERSION + "\"}]";

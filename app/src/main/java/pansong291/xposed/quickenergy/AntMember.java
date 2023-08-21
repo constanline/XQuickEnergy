@@ -45,11 +45,15 @@ public class AntMember {
                         if (jo.getBoolean("success")) {
                             JSONObject data = jo.getJSONObject("data");
                             if (data.optBoolean("isOpened")) {
-                                if (Config.merchantKmdk())
-                                    merchantKmdk();
-
                                 if (Config.zcjSignIn())
                                     zcjSignIn();
+
+                                if (Config.merchantKmdk()) {
+                                    if (TimeUtil.getTimeStr().compareTo("0600") > 0
+                                            && TimeUtil.getTimeStr().compareTo("1200") < 0)
+                                        kmdkSignIn();
+                                    kmdkSignUp();
+                                }
                             } else {
                                 Log.recordLog("商家服务未开通！");
                             }
@@ -221,38 +225,58 @@ public class AntMember {
         }
     }
 
-    private static void merchantKmdk() {
+    private static void kmdkSignIn() {
         try {
             String s = AntMemberRpcCall.queryActivity();
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {
-                if (TimeUtil.getTimeStr().compareTo("0600") > 0 && TimeUtil.getTimeStr().compareTo("1200") < 0) {
-                    if ("SIGN_IN_ENABLE".equals(jo.getString("signInStatus"))) {
-                        String activityNo = jo.getString("activityNo");
-                        JSONObject joSignIn = new JSONObject(AntMemberRpcCall.signIn(activityNo));
-                        if (joSignIn.getBoolean("success")) {
-                            Log.other("商家服务🕴🏻[开门打卡签到成功]");
-                            merchantKmdk();
-                        } else {
-                            Log.recordLog(joSignIn.getString("errorMsg"), joSignIn.toString());
-                        }
-                    }
-                }
-                if (jo.optBoolean("signUpEnable") && "UN_SIGN_UP".equals(jo.getString("signUpStatus"))) {
+                if ("SIGN_IN_ENABLE".equals(jo.getString("signInStatus"))) {
                     String activityNo = jo.getString("activityNo");
-                    String activityPeriodName = jo.getString("activityPeriodName");
-                    JSONObject joSignUp = new JSONObject(AntMemberRpcCall.signUp(activityNo));
-                    if (joSignUp.getBoolean("success")) {
-                        Log.other("商家服务🕴🏻[" + activityPeriodName + "开门打卡报名]");
+                    JSONObject joSignIn = new JSONObject(AntMemberRpcCall.signIn(activityNo));
+                    if (joSignIn.getBoolean("success")) {
+                        Log.other("商家服务🕴🏻[开门打卡签到成功]");
                     } else {
-                        Log.recordLog(joSignUp.getString("errorMsg"), joSignUp.toString());
+                        Log.recordLog(joSignIn.getString("errorMsg"), joSignIn.toString());
                     }
                 }
             } else {
                 Log.recordLog("queryActivity", s);
             }
         } catch (Throwable t) {
-            Log.i(TAG, "signUp err:");
+            Log.i(TAG, "kmdkSignIn err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void kmdkSignUp() {
+        try {
+            for (int i = 0; i < 5; i++) {
+                JSONObject jo = new JSONObject(AntMemberRpcCall.queryActivity());
+                if (jo.getBoolean("success")) {
+                    String activityNo = jo.getString("activityNo");
+                    if (!Log.getFormatDate().replace("-","").equals(activityNo.split("_")[2]))
+                        break;
+                    if ("SIGN_UP".equals(jo.getString("signUpStatus"))) {
+                        Log.recordLog("开门打卡今日已报名！");
+                        break;
+                    }
+                    if ("UN_SIGN_UP".equals(jo.getString("signUpStatus"))) {
+                        String activityPeriodName = jo.getString("activityPeriodName");
+                        JSONObject joSignUp = new JSONObject(AntMemberRpcCall.signUp(activityNo));
+                        if (joSignUp.getBoolean("success")) {
+                            Log.other("商家服务🕴🏻[" + activityPeriodName + "开门打卡报名]");
+                            return;
+                        } else {
+                            Log.recordLog(joSignUp.getString("errorMsg"), joSignUp.toString());
+                        }
+                    }
+                } else {
+                    Log.recordLog("queryActivity", jo.toString());
+                }
+                Thread.sleep(500);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "kmdkSignUp err:");
             Log.printStackTrace(TAG, t);
         }
     }
