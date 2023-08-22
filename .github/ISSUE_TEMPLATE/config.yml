@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用问题
+    url: https://github.com/cwj851/XQuickEnergy/discussions/
+    about: 请使用 GitHub Discussion 的“提问”分区讨论使用上的问题。
