@@ -1,38 +1,30 @@
-name: Questions and Bugs Report / 问题与 BUG 反馈
-description: Questions and bugs report must be submitted using this template / 问题反馈必须使用此模板进行提交
+name: 问题与 BUG 反馈
+description: 问题反馈应当使用此模板进行提交
 labels: [ bug ]
-title: "[Questions and Bugs Report] (Briefly describe the cause of the problem)"
 body:
   - type: markdown
     attributes:
-      value: |
-        ### Please fill in the specific reason and steps to reproduce the problem below.
-        
-        In the event of an exception, crash functional problem, you must submit a problem log, if not, your issues will be closed directly.
-        
+      value: |        
         ### 请在下方填写问题发生的具体原因和复现步骤。
         
         发生异常、崩溃、闪退或功能性问题，必须提交问题 Log (日志)，没有 Log 的 issues 将直接被关闭。
   - type: input
     attributes:
-      label: Module App version / 模块版本
-      description: |
-        Please fill in the complete version of the Module App currently in use, for example: **1.0**
-        请填写当前使用的模块完整版本号，例如：**1.0**
+      label: 模块版本
+      description: 请填写当前使用的模块完整版本号，例如：**1.0**
     validations:
       required: true
   - type: input
     attributes:
-      label: Device model and system in used / 正在使用的设备型号以及使用的系统
-      description: |
-        Fill in the current device model and system here, the system such as (MIUI, ColorOS, OxygenOS, PE/Native)
-        这里填写当前使用的设备型号以及使用的系统，系统例如 (MIUI、ColorOS、OxygenOS、PE/原生)
+      label: 正在使用的设备型号以及使用的系统
+      description: 这里填写当前使用的设备型号以及使用的系统，系统例如 (MIUI、ColorOS、OxygenOS、PE/原生)
     validations:
       required: true
   - type: dropdown
     attributes:
-      label: Android version / Android 版本
+      label: Android 版本
       options:
+        - 14
         - 13
         - 12L/12.1
         - 12
@@ -48,42 +40,33 @@ body:
       required: true
   - type: input
     attributes:
-      label: Xposed Framework name and version / Xposed 框架名称与版本号
-      description: |
-        Please fill in the currently used Xposed Framework, for example: **LSPosed 1.8.4 (version code)**
-        请填写当前使用的 Xposed 框架，例如：**LSPosed 1.8.4 (次版本号)**
+      label: Xposed 框架名称与版本号
+      description: 请填写当前使用的 Xposed 框架，例如：**LSPosed 1.8.4 (次版本号)**
     validations:
       required: true
   - type: textarea
     attributes:
-      label: Describe in detail why the problem occurred / 详细描述问题发生的具体原因
+      label: 详细描述问题发生的具体原因
       description: 请在下方详细描述问题发生的具体场景、复现步骤和经过，以便我们能够按照你所描述的步骤复现这个问题。
     validations:
       required: true
   - type: textarea
     attributes:
-      label: Provide module problem logs or necessary logs / 提供模块问题 Log 或必要 Log
-      description: |
-        Needs to be committed the problem-related parts of the logs at the File named runtime.Log.
-        需要提交在runtime.log文件中与问题相关部分的日志。
+      label: 提供模块问题 Log 或必要 Log
+      description: 需要提交在runtime.log文件中与问题相关部分的日志。
       value: |
-        <details><summary>Click to expand / 展开查看</summary><pre><code>
+        <details><summary>展开查看</summary><pre><code>
 
-        (Paste problem log here / 此处粘贴问题 Log)
+        (此处粘贴问题 Log)
 
         </code></pre></details>
-        <!-- When submitting, you can desensitize personal information, paste the logs you copied, and do not break the code format -->
         <!-- 提交时可以将个人信息脱敏，粘贴你复制的日志，不要破坏代码格式 -->
     validations:
       required: true
   - type: checkboxes
     attributes:
-      label: Confirm the contents you submitted / 确认一下你提交的信息
-      description: |
-        In order to ensure the quality of issues and avoid wasting unnecessary time, issues that do not check the options below will be closed directly.
-        Please make sure you have **checked the option below** before submitting.
-        为了确保 issues 的质量和避免浪费不必要的时间，未勾选下方选项的 issues 将直接被关闭。
-        请一定确保你已经**勾选下方的选项**后再提交。
+      label: 确认一下你提交的信息
+      description: 为了确保 issues 的质量和避免浪费不必要的时间，未勾选下方选项的 issues 将直接被关闭。
       options:
-        - label: I certify that the above contents is correct / 我确保上述信息准确无误
-          required: false
+        - label: 我确保上述信息准确无误
+          required: true

@@ -130,5 +130,12 @@
     <string name="collect_sesame">Collect sesame</string>
     <string name="zcj_sign_in">Zcj sign in</string>
     <string name="merchant_kmdk">Merchant kmdk</string>
+    <string name="enable_stall">Enable stall</string>
+    <string name="stall_auto_close">Stall auto close</string>
+    <string name="stall_auto_open">Stall auto open</string>
+    <string name="stall_auto_task">Stall auto task</string>
+    <string name="stall_receive_award">Stall receive award</string>
+    <string name="accept_gift">Accept gift</string>
+    <string name="visit_friend_list">Visit friend list</string>
 
 </resources>

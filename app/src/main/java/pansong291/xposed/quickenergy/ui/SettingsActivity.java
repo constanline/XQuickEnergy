@@ -42,7 +42,8 @@ public class SettingsActivity extends Activity {
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
-            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk;
+            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk,
+            sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_acceptGift;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +185,7 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal = findViewById(R.id.sw_feedAnimal);
         sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
         sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
+        sw_acceptGift = findViewById(R.id.sw_acceptGift);
         sw_antOrchard = findViewById(R.id.sw_antOrchard);
         sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
@@ -205,6 +207,11 @@ public class SettingsActivity extends Activity {
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
+
+        sw_enableStall = findViewById(R.id.sw_enableStall);
+        sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
+        sw_stallAutoOpen = findViewById(R.id.sw_stallAutoOpen);
+        sw_stallAutoTask = findViewById(R.id.sw_stallAutoTask);
     }
 
     @Override
@@ -243,6 +250,7 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal.setChecked(Config.feedAnimal());
         sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
         sw_notifyFriend.setChecked(Config.notifyFriend());
+        sw_acceptGift.setChecked(Config.acceptGift());
         sw_antOrchard.setChecked(Config.antOrchard());
         sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
         sw_receivePoint.setChecked(Config.receivePoint());
@@ -264,6 +272,11 @@ public class SettingsActivity extends Activity {
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
+
+        sw_enableStall.setChecked(Config.enableStall());
+        sw_stallAutoClose.setChecked(Config.stallAutoClose());
+        sw_stallAutoOpen.setChecked(Config.stallAutoOpen());
+        sw_stallAutoTask.setChecked(Config.stallAutoTask());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -411,6 +424,10 @@ public class SettingsActivity extends Activity {
                     Config.setNotifyFriend(sw.isChecked());
                     break;
 
+                case R.id.sw_acceptGift:
+                    Config.setAcceptGift(sw.isChecked());
+                    break;
+
                 case R.id.sw_antOrchard:
                     Config.setAntOrchard(sw.isChecked());
                     break;
@@ -481,6 +498,22 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_animalConsumeProp:
                     Config.setAnimalConsumeProp(sw.isChecked());
+                    break;
+
+                case R.id.sw_enableStall:
+                    Config.setEnableStall(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoClose:
+                    Config.setStallAutoClose(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoOpen:
+                    Config.setStallAutoOpen(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoTask:
+                    Config.setStallAutoTask(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
@@ -611,6 +644,11 @@ public class SettingsActivity extends Activity {
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getDontNotifyFriendList(), null);
                     break;
 
+                case R.id.btn_visitFriendList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getVisitFriendList(),
+                            Config.getVisitFriendCountList());
+                    break;
+
                 case R.id.btn_animalSleepTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ANIMAL_SLEEP_TIME);
                     break;
@@ -646,7 +684,8 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_WhoYouWantToGiveTo:
-                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null, ListDialog.ListType.RADIO);
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null,
+                            ListDialog.ListType.RADIO);
                     break;
 
                 case R.id.btn_orchardSpreadManureCount:

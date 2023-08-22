@@ -13,7 +13,7 @@ public class Log {
     }
 
     public static void infoChanged(String tag, String s) {
-        FileUtils.append2File(tag + ", " + s, FileUtils.getInfoChangedFile());
+        FileUtils.append2File(getFormatTime() + " " + tag + ", " + s + "\n", FileUtils.getInfoChangedFile());
     }
 
     public static void printStackTrace(String tag, Throwable t) {

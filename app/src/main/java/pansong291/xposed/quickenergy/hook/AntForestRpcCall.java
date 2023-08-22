@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class AntForestRpcCall {
 
-    private static final String VERSION = "20230501";
+    private static final String VERSION = "20230710";
 
     public static String fillUserRobFlag(String userIdList) {
         return RpcUtil.request("alipay.antforest.forest.h5.fillUserRobFlag",

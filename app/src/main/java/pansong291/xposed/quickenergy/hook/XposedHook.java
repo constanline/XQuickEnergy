@@ -68,6 +68,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     }
 
     private static void initHandler() {
+        Log.recordLog("尝试初始化");
         if (handler == null) {
             handler = new Handler();
             if (Config.startAt7()) {
@@ -83,8 +84,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     String targetUid = RpcUtil.getUserId(XposedHook.classLoader);
                     if (targetUid != null) {
                         FriendIdMap.currentUid = targetUid;
-
                         Config.shouldReload = true;
+
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
 
@@ -100,6 +101,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntMember.receivePoint();
                             AntOcean.start();
                             AntOrchard.start();
+                            AntStall.start();
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
@@ -111,11 +113,16 @@ public class XposedHook implements IXposedHookLoadPackage {
                 }
             };
         }
-        handler.removeCallbacks(runnable);
-        AntForest.stop();
-        AntForestNotification.stop(service, false);
-        AntForestNotification.start(service);
-        handler.post(runnable);
+        try {
+            handler.removeCallbacks(runnable);
+            AntForest.stop();
+            AntForestNotification.stop(service, false);
+            AntForestNotification.start(service);
+            handler.post(runnable);
+        } catch (Throwable th) {
+            Log.i(TAG, "initHandler err:");
+            Log.printStackTrace(TAG, th);
+        }
     }
 
     private void hookService(ClassLoader loader) {
@@ -132,7 +139,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                             }
                             FriendIdMap.currentUid = targetUid;
                             if (handler != null) {
-                                Log.recordLog("尝试初始化");
                                 initHandler();
                             }
                         }

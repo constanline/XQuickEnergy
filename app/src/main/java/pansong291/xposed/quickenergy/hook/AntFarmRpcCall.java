@@ -29,7 +29,7 @@ public class AntFarmRpcCall {
 
     public static String queryLoveCabin(String userId) {
         String args1 = "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ENTERFARM\",\"userId\":\"" +
-                userId + "\",\"version\":\"unknown\"}]";
+                userId + "\",\"version\":\"" + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.queryLoveCabin", args1);
     }
 
@@ -319,4 +319,18 @@ public class AntFarmRpcCall {
                 "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5 \",\"version\":\"\"}]");
     }
 
+    /* 小麦 */
+
+    public static String acceptGift() {
+        return RpcUtil.request("com.alipay.antfarm.acceptGift",
+                "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
+
+    public static String visitFriend(String friendFarmId) {
+        return RpcUtil.request("com.alipay.antfarm.visitFriend",
+                "[{\"friendFarmId\":\"" + friendFarmId
+                        + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
 }
