@@ -38,7 +38,7 @@ public class AntForestNotification {
                 getNotificationManager(context).notify(NOTIFICATION_ID, mNotification);
             isStart = true;
         }
-        setContentText("开始检测能量");
+        setContentText("运行中...");
     }
 
     public static void stop(Context context, boolean remove) {

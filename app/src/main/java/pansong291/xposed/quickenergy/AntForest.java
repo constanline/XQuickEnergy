@@ -1458,9 +1458,9 @@ public class AntForest {
                                 "a"),
                         "a", new Object[] { step, Boolean.FALSE, "system" });
                 if (booleanValue) {
-                    Log.other("修改步数🏃🏻‍♂️[" + step + "步]");
+                    Log.other("同步步数🏃🏻‍♂️[" + step + "步]");
                 } else {
-                    Log.recordLog("修改运动步数失败:" + step, "");
+                    Log.recordLog("同步运动步数失败:" + step, "");
                 }
                 Statistics.SyncStepToday(FriendIdMap.currentUid);
             } catch (Throwable t) {

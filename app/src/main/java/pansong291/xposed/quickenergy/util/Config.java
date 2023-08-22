@@ -97,6 +97,8 @@ public class Config {
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
+    public static final String jn_acceptGift = "acceptGift";
+    public static final String jn_visitFriendList = "visitFriendList";
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_antdodoCollect = "antdodoCollect";
@@ -211,6 +213,9 @@ public class Config {
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
     private List<String> whoYouWantGiveTo;
+    private boolean acceptGift;
+    private List<String> visitFriendList;
+    private List<Integer> visitFriendCountList;
     private boolean antOrchard;
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
@@ -904,6 +909,23 @@ public class Config {
         return getConfig().whoYouWantGiveTo;
     }
 
+    public static void setAcceptGift(boolean b) {
+        getConfig().acceptGift = b;
+        hasChanged = true;
+    }
+
+    public static boolean acceptGift() {
+        return getConfig().acceptGift;
+    }
+
+    public static List<String> getVisitFriendList() {
+        return getConfig().visitFriendList;
+    }
+
+    public static List<Integer> getVisitFriendCountList() {
+        return getConfig().visitFriendCountList;
+    }
+
     public static void setAntOrchard(boolean b) {
         getConfig().antOrchard = b;
         hasChanged = true;
@@ -1086,7 +1108,7 @@ public class Config {
         c.enableOnGoing = false;
         c.backupRuntime = false;
 
-        c.collectEnergy = true;
+        c.collectEnergy = false;
         c.collectWateringBubble = true;
         c.collectProp = true;
         c.checkInterval = 720_000;
@@ -1170,6 +1192,11 @@ public class Config {
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
         c.whoYouWantGiveTo = new ArrayList<>();
+        c.acceptGift = true;
+        if (c.visitFriendList == null)
+            c.visitFriendList = new ArrayList<>();
+        if (c.visitFriendCountList == null)
+            c.visitFriendCountList = new ArrayList<>();
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
@@ -1230,7 +1257,7 @@ public class Config {
             config.backupRuntime = jo.optBoolean(jn_backupRuntime, false);
 
             /* forest */
-            config.collectEnergy = jo.optBoolean(jn_collectEnergy, true);
+            config.collectEnergy = jo.optBoolean(jn_collectEnergy, false);
 
             config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
 
@@ -1457,6 +1484,24 @@ public class Config {
                 ja = jo.getJSONArray(jn_whoYouWantGiveTo);
                 for (int i = 0; i < ja.length(); i++) {
                     config.whoYouWantGiveTo.add(ja.getString(i));
+                }
+            }
+
+            config.acceptGift = jo.optBoolean(jn_acceptGift, true);
+
+            config.visitFriendList = new ArrayList<>();
+            config.visitFriendCountList = new ArrayList<>();
+            if (jo.has(jn_visitFriendList)) {
+                ja = jo.getJSONArray(jn_visitFriendList);
+                for (int i = 0; i < ja.length(); i++) {
+                    if (ja.get(i) instanceof JSONArray) {
+                        jaa = ja.getJSONArray(i);
+                        config.visitFriendList.add(jaa.getString(0));
+                        config.visitFriendCountList.add(jaa.getInt(1));
+                    } else {
+                        config.visitFriendList.add(ja.getString(i));
+                        config.visitFriendCountList.add(3);
+                    }
                 }
             }
 
@@ -1731,6 +1776,17 @@ public class Config {
                 ja.put(s);
             }
             jo.put(jn_whoYouWantGiveTo, ja);
+
+            jo.put(jn_acceptGift, config.acceptGift);
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.visitFriendList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.visitFriendList.get(i));
+                jaa.put(config.visitFriendCountList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_visitFriendList, ja);
 
             jo.put(jn_antOrchard, config.antOrchard);
 
