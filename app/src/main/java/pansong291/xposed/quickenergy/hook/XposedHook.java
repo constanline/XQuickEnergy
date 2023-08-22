@@ -125,6 +125,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
                             RpcUtil.isInterrupted = false;
+                            AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
                                 return;
@@ -159,6 +160,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 return;
                             }
                             RpcUtil.isInterrupted = false;
+                            AntForestNotification.setContentText("运行中...");
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
                             AntForestToast.context = service.getApplicationContext();
