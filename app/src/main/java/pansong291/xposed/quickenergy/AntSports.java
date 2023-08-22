@@ -15,14 +15,12 @@ public class AntSports {
 
     private static final HashSet<String> waitOpenBoxNos = new HashSet<>();
 
-    public static void start(ClassLoader loader, int times) {
+    public static void start(ClassLoader loader) {
         new Thread() {
             ClassLoader loader;
-            int times;
 
-            public Thread setData(ClassLoader cl, int i) {
+            public Thread setData(ClassLoader cl) {
                 loader = cl;
-                times = i;
                 return this;
             }
 
@@ -40,8 +38,7 @@ public class AntSports {
                     if (Config.donateCharityCoin())
                         queryProjectList(loader);
 
-                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid)
-                            && times == 0)
+                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid))
                         queryWalkStep(loader);
 
                     if (Config.tiyubiz()) {
@@ -56,7 +53,7 @@ public class AntSports {
                     Log.printStackTrace(TAG, t);
                 }
             }
-        }.setData(loader, times).start();
+        }.setData(loader).start();
     }
 
     private static void receiveCoinAsset() {

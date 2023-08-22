@@ -14,6 +14,7 @@ public class FileUtils {
     private static File mainDirectory;
     private static File configDirectory;
     private static final Map<String, File> configFileMap = new HashMap<>();
+    private static File runtimeInfoFile;
     private static File friendIdMapFile;
     private static File cooperationIdMapFile;
     private static File reserveIdMapFile;
@@ -132,6 +133,19 @@ public class FileUtils {
             }
         }
         return configFileMap.get("Default");
+    }
+
+    public static File runtimeInfoFile() {
+        if (runtimeInfoFile == null) {
+            runtimeInfoFile = new File(getMainDirectoryFile(), "runtimeInfo.json");
+            if (!runtimeInfoFile.exists()) {
+                try {
+                    runtimeInfoFile.createNewFile();
+                } catch (Throwable ignored) {
+                }
+            }
+        }
+        return runtimeInfoFile;
     }
 
     public static File getFriendIdMapFile() {
@@ -293,7 +307,9 @@ public class FileUtils {
     public static void append2RuntimeLogFile(String s) {
         synchronized (getRuntimeLogFile()) {
             if (getRuntimeLogFile().length() > 31_457_280) {// 30MB
-                getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
+                if (Config.backupRuntime()) {
+                    getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
+                }
                 if (getRuntimeLogFile().exists()) {
                     getRuntimeLogFile().delete();
                 }

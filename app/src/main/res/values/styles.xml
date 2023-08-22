@@ -5,6 +5,7 @@
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <!--ToolBar上的Title颜色-->
         <item name="android:titleTextColor">@color/textColorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
 	</style>
 </resources>

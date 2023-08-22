@@ -7,20 +7,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.IdAndName;
 import pansong291.xposed.quickenergy.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ListAdapter extends BaseAdapter {
     private static ListAdapter adapter;
 
+    private static ListDialog.ListType listType;
+
     public static ListAdapter get(Context c) {
-        if(adapter == null)
+        if (adapter == null)
             adapter = new ListAdapter(c);
+        return adapter;
+    }
+
+    public static ListAdapter get(Context c, ListDialog.ListType listType) {
+        if (adapter == null) {
+            adapter = new ListAdapter(c);
+            viewHolderList = new ArrayList<>();
+        }
+        ListAdapter.listType = listType;
         return adapter;
     }
 
@@ -35,7 +46,8 @@ public class ListAdapter extends BaseAdapter {
     }
 
     public void setBaseList(List<? extends IdAndName> l) {
-        if(l != list) exitFind();
+        if (l != list)
+            exitFind();
         list = l;
     }
 
@@ -55,21 +67,23 @@ public class ListAdapter extends BaseAdapter {
     }
 
     public int findLast(CharSequence cs) {
-        if(list == null || list.isEmpty()) return -1;
-        if(!cs.equals(findWord)) {
+        if (list == null || list.isEmpty())
+            return -1;
+        if (!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
         }
         int i = findIndex;
-        if(i < 0) i = list.size();
-        for(;;) {
+        if (i < 0)
+            i = list.size();
+        for (;;) {
             i = (i + list.size() - 1) % list.size();
-            IdAndName ai = (IdAndName) list.get(i);
-            if(ai.name.contains(cs)) {
+            IdAndName ai = list.get(i);
+            if (ai.name.contains(cs)) {
                 findIndex = i;
                 break;
             }
-            if(findIndex < 0 && i == 0)
+            if (findIndex < 0 && i == 0)
                 break;
         }
         notifyDataSetChanged();
@@ -77,19 +91,20 @@ public class ListAdapter extends BaseAdapter {
     }
 
     public int findNext(CharSequence cs) {
-        if(list == null || list.isEmpty()) return -1;
-        if(!cs.equals(findWord)) {
+        if (list == null || list.isEmpty())
+            return -1;
+        if (!cs.equals(findWord)) {
             findIndex = -1;
             findWord = cs;
         }
-        for(int i = findIndex;;) {
+        for (int i = findIndex;;) {
             i = (i + 1) % list.size();
             IdAndName ai = list.get(i);
-            if(ai.name.contains(cs)) {
+            if (ai.name.contains(cs)) {
                 findIndex = i;
                 break;
             }
-            if(findIndex < 0 && i == list.size() - 1)
+            if (findIndex < 0 && i == list.size() - 1)
                 break;
         }
         notifyDataSetChanged();
@@ -102,7 +117,7 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list == null ? 0: list.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
@@ -123,19 +138,25 @@ public class ListAdapter extends BaseAdapter {
             p2 = View.inflate(context, R.layout.list_item, null);
             vh.tv = p2.findViewById(R.id.tv_idn);
             vh.cb = p2.findViewById(R.id.cb_list);
+            if (listType == ListDialog.ListType.SHOW) {
+                vh.cb.setVisibility(View.GONE);
+            }
             p2.setTag(vh);
+            viewHolderList.add(vh);
         } else {
-            vh = (ViewHolder)p2.getTag();
+            vh = (ViewHolder) p2.getTag();
         }
 
         IdAndName ai = list.get(p1);
         vh.tv.setText(ai.name);
-        vh.tv.setTextColor(findIndex == p1 ? Color.RED: Color.BLACK);
+        vh.tv.setTextColor(findIndex == p1 ? Color.RED : Color.BLACK);
         vh.cb.setChecked(selects != null && selects.contains(ai.id));
         return p2;
     }
 
-    static class ViewHolder {
+    public static List<ViewHolder> viewHolderList;
+
+    public static class ViewHolder {
         TextView tv;
         CheckBox cb;
     }

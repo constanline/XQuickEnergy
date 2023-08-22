@@ -1,0 +1,28 @@
+name: Enhancement Report / 功能建议
+description: 功能建议使用此模板进行提交 / Functional recommendations must be submitted using this template
+labels: [ enhancement ]
+title: "[Enhancement Report]"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Please fill in the functional requirements or suggestions below.
+        
+        ### 请在下方填写功能需求或建议。
+  - type: textarea
+    attributes:
+      label: Describe in detail / 具体描述
+      description: 请在下方详细描述功能需求或建议。
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Confirm the contents you submitted / 确认一下你提交的信息
+      description: |
+        In order to ensure the quality of issues and avoid wasting unnecessary time, issues that do not check the options below will be closed directly.
+        Please make sure you have **checked the option below** before submitting.
+        为了确保 issues 的质量和避免浪费不必要的时间，未勾选下方选项的 issues 将直接被关闭。
+        请一定确保你已经**勾选下方的选项**后再提交。
+      options:
+        - label: I certify that the above contents is correct / 我确保上述信息准确无误
+          required: false
