@@ -68,6 +68,15 @@ public class Statistics {
         }
     }
 
+    private static class VisitFriendLog {
+        String userId;
+        int visitCount = 0;
+
+        public VisitFriendLog(String id) {
+            userId = id;
+        }
+    }
+
     private static final String TAG = Statistics.class.getCanonicalName();
     private static final String jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
@@ -100,6 +109,7 @@ public class Statistics {
     private ArrayList<String> answerQuestionList;
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
+    private ArrayList<VisitFriendLog> visitFriendLogList;
     private Set<String> dailyAnswerList;
     private ArrayList<String> donationEggList;
     private ArrayList<String> SpreadManureList;
@@ -387,6 +397,41 @@ public class Statistics {
         save();
     }
 
+    public static boolean canVisitFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.visitFriendLogList.size(); i++)
+            if (stat.visitFriendLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        VisitFriendLog vfl = stat.visitFriendLogList.get(index);
+        return vfl.visitCount < count;
+    }
+
+    public static void visitFriendToday(String id, int count) {
+        id = FriendIdMap.currentUid + "-" + id;
+        Statistics stat = getStatistics();
+        VisitFriendLog vfl;
+        int index = -1;
+        for (int i = 0; i < stat.visitFriendLogList.size(); i++)
+            if (stat.visitFriendLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            vfl = new VisitFriendLog(id);
+            stat.visitFriendLogList.add(vfl);
+        } else {
+            vfl = stat.visitFriendLogList.get(index);
+        }
+        vfl.visitCount= count;
+        save();
+    }
+
     public static boolean canMemberSignInToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.memberSignInList.contains(uid);
@@ -574,6 +619,7 @@ public class Statistics {
         stat.ancientTreeCityCodeList.clear();
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
+        stat.visitFriendLogList.clear();
         stat.questionHint = null;
         stat.donationEggList.clear();
         stat.SpreadManureList.clear();
@@ -609,6 +655,8 @@ public class Statistics {
             stat.memberSignInList = new ArrayList<>();
         if (stat.feedFriendLogList == null)
             stat.feedFriendLogList = new ArrayList<>();
+        if (stat.visitFriendLogList == null)
+            stat.visitFriendLogList = new ArrayList<>();
         if (stat.ancientTreeCityCodeList == null)
             stat.ancientTreeCityCodeList = new ArrayList<>();
         if (stat.syncStepList == null)
@@ -765,6 +813,19 @@ public class Statistics {
                     FeedFriendLog ffl = new FeedFriendLog(jaa.getString(0));
                     ffl.feedCount = jaa.getInt(1);
                     stat.feedFriendLogList.add(ffl);
+
+                }
+            }
+
+            stat.visitFriendLogList = new ArrayList<>();
+
+            if (jo.has(Config.jn_visitFriendList)) {
+                JSONArray ja = jo.getJSONArray(Config.jn_visitFriendList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    VisitFriendLog vfl = new VisitFriendLog(jaa.getString(0));
+                    vfl.visitCount = jaa.getInt(1);
+                    stat.visitFriendLogList.add(vfl);
 
                 }
             }
@@ -940,6 +1001,16 @@ public class Statistics {
                 ja.put(jaa);
             }
             jo.put(Config.jn_feedFriendAnimalList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.visitFriendLogList.size(); i++) {
+                VisitFriendLog vfl = stat.visitFriendLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(vfl.userId);
+                jaa.put(vfl.visitCount);
+                ja.put(jaa);
+            }
+            jo.put(Config.jn_visitFriendList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.donationEggList.size(); i++) {

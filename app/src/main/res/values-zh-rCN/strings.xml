@@ -125,6 +125,8 @@
     <string name="who_you_want_to_give_to">赠送道具给谁（赠送所有可送道具）</string>
     <string name="collect_sesame">收芝麻粒</string>
     <string name="zcj_sign_in">招财金签到</string>
-    <string name="merchant_kmdk">商户打开打卡</string>
+    <string name="merchant_kmdk">商户开门打卡</string>
+    <string name="accept_gift">收麦子</string>
+    <string name="visit_friend_list">送麦子名单</string>
 
 </resources>

@@ -128,5 +128,7 @@
     <string name="collect_sesame">Collect sesame</string>
     <string name="zcj_sign_in">Zcj sign in</string>
     <string name="merchant_kmdk">Merchant kmdk</string>
+    <string name="accept_gift">Accept gift</string>
+    <string name="visit_friend_list">Visit friend list</string>
 
 </resources>

@@ -40,7 +40,7 @@ public class SettingsActivity extends Activity {
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
-            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk;
+            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +183,7 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal = findViewById(R.id.sw_feedAnimal);
         sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
         sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
+        sw_acceptGift = findViewById(R.id.sw_acceptGift);
         sw_antOrchard = findViewById(R.id.sw_antOrchard);
         sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
@@ -241,6 +242,7 @@ public class SettingsActivity extends Activity {
         sw_feedAnimal.setChecked(Config.feedAnimal());
         sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
         sw_notifyFriend.setChecked(Config.notifyFriend());
+        sw_acceptGift.setChecked(Config.acceptGift());
         sw_antOrchard.setChecked(Config.antOrchard());
         sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
         sw_receivePoint.setChecked(Config.receivePoint());
@@ -407,6 +409,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_notifyFriend:
                     Config.setNotifyFriend(sw.isChecked());
+                    break;
+
+                case R.id.sw_acceptGift:
+                    Config.setAcceptGift(sw.isChecked());
                     break;
 
                 case R.id.sw_antOrchard:
@@ -608,6 +614,11 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_dontNotifyFriendList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getDontNotifyFriendList(), null);
+                    break;
+
+                case R.id.btn_visitFriendList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getVisitFriendList(),
+                            Config.getVisitFriendCountList());
                     break;
 
                 case R.id.btn_animalSleepTime:
