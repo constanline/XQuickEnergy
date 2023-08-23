@@ -21,10 +21,3 @@ body:
       description: 请在下方详细描述功能需求或建议。
     validations:
       required: true
-  - type: checkboxes
-    attributes:
-      label: 确认一下你提交的信息
-      description: 为了确保 issues 的质量和避免浪费不必要的时间，未勾选下方选项的 issues 将直接被关闭。
-      options:
-        - label: 我确保上述信息准确无误
-          required: true

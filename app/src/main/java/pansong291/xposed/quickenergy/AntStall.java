@@ -107,7 +107,7 @@ public class AntStall {
                     if ("OPEN".equals(shop.getString("status"))) {
                         JSONObject rentLastEnv = shop.getJSONObject("rentLastEnv");
                         long gmtLastRent = rentLastEnv.getLong("gmtLastRent");
-                        if (gmtLastRent - System.currentTimeMillis() > (long) Config.stallSelfOpenTime() * 60 * 1000) {
+                        if (System.currentTimeMillis() - gmtLastRent > (long) Config.stallSelfOpenTime() * 60 * 1000) {
                             String shopId = shop.getString("shopId");
                             String rentLastBill = shop.getString("rentLastBill");
                             String rentLastUser = shop.getString("rentLastUser");
@@ -287,10 +287,10 @@ public class AntStall {
                     Log.recordLog("shopClose err:", s);
                 }
             } else {
-                Log.recordLog("shopOneKeyClose err:", s);
+                Log.recordLog("shopClose err:", s);
             }
         } catch (Throwable t) {
-            Log.i(TAG, "shopOneKeyClose err:");
+            Log.i(TAG, "shopClose err:");
             Log.printStackTrace(TAG, t);
         }
     }

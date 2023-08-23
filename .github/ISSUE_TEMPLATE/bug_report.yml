@@ -10,38 +10,16 @@ body:
         发生异常、崩溃、闪退或功能性问题，必须提交问题 Log (日志)，没有 Log 的 issues 将直接被关闭。
   - type: input
     attributes:
-      label: 模块版本
-      description: 请填写当前使用的模块完整版本号，例如：**1.0**
+      label: |
+        **程序版本** / **框架版本** / **模块版本**
+      description: 请填写当前使用的程序版本 (例如：10.5.8)、框架版本 (例如：LSPosed 1.8.4) 及模块版本 (例如：1.1.1)
     validations:
       required: true
   - type: input
     attributes:
-      label: 正在使用的设备型号以及使用的系统
-      description: 这里填写当前使用的设备型号以及使用的系统，系统例如 (MIUI、ColorOS、OxygenOS、PE/原生)
-    validations:
-      required: true
-  - type: dropdown
-    attributes:
-      label: Android 版本
-      options:
-        - 14
-        - 13
-        - 12L/12.1
-        - 12
-        - 11
-        - 10
-        - 9
-        - 8.1
-        - 8.0.0
-        - 7.1.2
-        - 7.1.1
-        - 7.0
-    validations:
-      required: true
-  - type: input
-    attributes:
-      label: Xposed 框架名称与版本号
-      description: 请填写当前使用的 Xposed 框架，例如：**LSPosed 1.8.4 (次版本号)**
+      label: |
+        **系统版本** / **Android版本**
+      description: 这里填写当前使用的系统版本 (例如 MIUI、ColorOS、OxygenOS、PE/原生) 及 Android版本 (例如Android 10、Android 11、Android 12)
     validations:
       required: true
   - type: textarea
@@ -53,7 +31,7 @@ body:
   - type: textarea
     attributes:
       label: 提供模块问题 Log 或必要 Log
-      description: 需要提交在runtime.log文件中与问题相关部分的日志。
+      description: 闪退需提交闪退(crash)日志，无响应需提交无响应(ANR)日志，功能性问题需提交运行时(runtime)日志。
       value: |
         <details><summary>展开查看</summary><pre><code>
 
@@ -63,10 +41,3 @@ body:
         <!-- 提交时可以将个人信息脱敏，粘贴你复制的日志，不要破坏代码格式 -->
     validations:
       required: true
-  - type: checkboxes
-    attributes:
-      label: 确认一下你提交的信息
-      description: 为了确保 issues 的质量和避免浪费不必要的时间，未勾选下方选项的 issues 将直接被关闭。
-      options:
-        - label: 我确保上述信息准确无误
-          required: true
