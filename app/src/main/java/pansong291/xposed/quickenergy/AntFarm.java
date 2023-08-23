@@ -464,7 +464,7 @@ public class AntFarm {
                             }
                         }
                         if (isFull) {
-                            Log.farm("领取道具🎖️[" + toolType.nickName() + "]#已满，暂不领取");
+                            Log.recordLog("领取道具🎖️[" + toolType.nickName() + "]#已满，暂不领取");
                             continue;
                         }
                         int awardCount = bizInfo.getInt("awardCount");

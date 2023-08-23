@@ -137,5 +137,11 @@
     <string name="stall_receive_award">Stall receive award</string>
     <string name="accept_gift">Accept gift</string>
     <string name="visit_friend_list">Visit friend list</string>
+    <string name="stall_open_type">Stall open type</string>
+    <string name="stall_open_list">Stall open list</string>
+    <string name="stall_white_list">Stall white list</string>
+    <string name="stall_allow_open_time">Stall allow open time</string>
+    <string name="stall_self_open_time">Stall self open time</string>
+    <string name="stall_black_list">Stall black list</string>
 
 </resources>

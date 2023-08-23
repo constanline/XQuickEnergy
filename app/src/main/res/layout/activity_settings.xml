@@ -1010,6 +1010,86 @@
                         android:minHeight="50dp"
                         android:id="@+id/sw_stallReceiveAward" />
 
+                    <Switch
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stall_open_type"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:id="@+id/sw_stallOpenType" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/stall_open_list"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_stallOpenList"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/stall_white_list"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_stallWhiteList"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/stall_black_list"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_stallBlackList"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/stall_allow_open_time"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_stallAllowOpenTime"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:text="@string/stall_self_open_time"
+                        android:textAllCaps="false"
+                        android:onClick="onClick"
+                        android:minHeight="50dp"
+                        android:gravity="start|center_vertical"
+                        android:background="@drawable/button"
+                        android:id="@+id/btn_stallSelfOpenTime"
+                        android:paddingStart="@dimen/setting_item_padding"
+                        android:paddingEnd="@dimen/setting_item_padding"/>
+
                 </LinearLayout>
                 <!--其他-->
                 <LinearLayout

@@ -53,7 +53,7 @@
     <string name="latest_exchange_time_24_hour_system">最晚捐步时间(24小时制)</string>
     <string name="koubei_sign_in">口碑签到</string>
     <string name="more">更多</string>
-    <string name="support_developer">支持当前开发者</string>
+    <string name="support_developer">支持芝麻粒开发者</string>
     <string name="hello_user">你好，旅行者！</string>
     <string name="support_xqe_developer">支持XQE原作者</string>
     <string name="forest_log">森林记录</string>
@@ -133,5 +133,11 @@
     <string name="stall_receive_award">新村自动领奖</string>
     <string name="accept_gift">收麦子</string>
     <string name="visit_friend_list">种麦子名单</string>
+    <string name="stall_open_type">摊位类型(打开:摆摊列表/关闭:不摆列表)</string>
+    <string name="stall_open_list">摊位列表</string>
+    <string name="stall_white_list">不请走列表(未实装)</string>
+    <string name="stall_allow_open_time">允许他人摆摊时长(未实装)</string>
+    <string name="stall_self_open_time">自己收摊时长</string>
+    <string name="stall_black_list">禁摆摊列表(未实装)</string>
 
 </resources>
