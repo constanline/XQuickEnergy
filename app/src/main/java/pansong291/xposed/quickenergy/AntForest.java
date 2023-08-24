@@ -768,26 +768,64 @@ public class AntForest {
     private static void exchangeEnergyDoubleClick(int count) {
         int exchangedTimes = 0;
         try {
-            String s;
-            JSONObject jo;
-            for (int exchangeCount = 1; exchangeCount <= count; exchangeCount++) {
-                if (Statistics.canExchangeDoubleCardToday()) {
-                    s = AntForestRpcCall.exchangeBenefit("CR20230516000362", "CR20230516000363");
-                    jo = new JSONObject(s);
-                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                        exchangedTimes = Statistics.getExchangeTimes() + 1;
-                        Log.forest("活力兑换🎐[限时双击卡]#第" + exchangedTimes + "次");
-                        Statistics.exchangeDoubleCardToday(true);
-                    } else {
-                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
-                        Statistics.exchangeDoubleCardToday(false);
-                        break;
+            String s = AntForestRpcCall.itemList("SC_ASSETS");
+            JSONObject jo = new JSONObject(s);
+            String skuId = null;
+            String spuId = null;
+            double price = 0d;
+            if (jo.getBoolean("success")) {
+                JSONArray itemInfoVOList = jo.optJSONArray("itemInfoVOList");
+                if (itemInfoVOList != null && itemInfoVOList.length() > 0) {
+                    for (int i = 0; i < itemInfoVOList.length(); i++) {
+                        jo = itemInfoVOList.getJSONObject(i);
+                        if ("能量双击卡".equals(jo.getString("spuName"))) {
+                            JSONArray skuModelList = jo.getJSONArray("skuModelList");
+                            for (int j = 0; j < skuModelList.length(); j++) {
+                                jo = skuModelList.getJSONObject(j);
+                                if ("LIMIT_TIME_ENERGY_DOUBLE_CLICK_3DAYS_2023"
+                                        .equals(jo.getString("rightsConfigId"))) {
+                                    skuId = jo.getString("skuId");
+                                    spuId = jo.getString("spuId");
+                                    price = jo.getJSONObject("price").getDouble("amount");
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                     }
-                    Thread.sleep(1000);
-                } else {
-                    break;
                 }
-
+                if (skuId != null && spuId != null) {
+                    for (int exchangeCount = 1; exchangeCount <= count; exchangeCount++) {
+                        if (Statistics.canExchangeDoubleCardToday()) {
+                            jo = new JSONObject(AntForestRpcCall.queryVitalityStoreIndex());
+                            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                                int totalVitalityAmount = jo.getJSONObject("userVitalityInfoVO")
+                                        .getInt("totalVitalityAmount");
+                                if (totalVitalityAmount > price) {
+                                    jo = new JSONObject(AntForestRpcCall.exchangeBenefit(spuId, skuId));
+                                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                                        Statistics.exchangeDoubleCardToday(true);
+                                        exchangedTimes = Statistics.getExchangeTimes();
+                                        Log.forest("活力兑换🎐[限时双击卡]#第" + exchangedTimes + "次");
+                                    } else {
+                                        Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                                        Statistics.exchangeDoubleCardToday(false);
+                                        break;
+                                    }
+                                    Thread.sleep(1000);
+                                } else {
+                                    Log.recordLog("活力值不足，停止兑换！", "");
+                                    break;
+                                }
+                            }
+                        } else {
+                            Log.recordLog("兑换次数已到上限！", "");
+                            break;
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("desc"), s);
             }
         } catch (Throwable t) {
             Log.i(TAG, "exchangeEnergyDoubleClick err:");

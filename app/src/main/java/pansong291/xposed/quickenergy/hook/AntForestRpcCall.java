@@ -140,6 +140,23 @@ public class AntForestRpcCall {
                         + VERSION + "\"}]");
     }
 
+    public static String itemList(String labelType) {
+        return RpcUtil.request("com.alipay.antiep.itemList",
+                "[{\"extendInfo\":\"{}\",\"labelType\":\"" + labelType
+                        + "\",\"pageSize\":20,\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_VITALITY\",\"source\":\"afEntry\",\"startIndex\":0}]");
+    }
+
+    public static String itemDetail(String spuId) {
+        return RpcUtil.request("com.alipay.antiep.itemDetail",
+                "[{\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_VITALITY\",\"source\":\"afEntry\",\"spuId\":\""
+                        + spuId + "\"}]");
+    }
+
+    public static String queryVitalityStoreIndex() {
+        return RpcUtil.request("alipay.antforest.forest.h5.queryVitalityStoreIndex",
+                "[{\"source\":\"afEntry\"}]");
+    }
+
     public static String exchangeBenefit(String spuId, String skuId) {
         return RpcUtil.request("com.alipay.antcommonweal.exchange.h5.exchangeBenefit",
                 "[{\"sceneCode\":\"ANTFOREST_VITALITY\",\"requestId\":\"" + System.currentTimeMillis()

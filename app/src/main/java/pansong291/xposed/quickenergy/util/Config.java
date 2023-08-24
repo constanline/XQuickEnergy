@@ -99,6 +99,7 @@ public class Config {
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
     public static final String jn_acceptGift = "acceptGift";
     public static final String jn_visitFriendList = "visitFriendList";
+    public static final String jn_chickenDiary = "chickenDiary";
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_orchardSpreadManureCount = "orchardSpreadManureCount";
@@ -229,6 +230,7 @@ public class Config {
     private boolean acceptGift;
     private List<String> visitFriendList;
     private List<Integer> visitFriendCountList;
+    private boolean chickenDiary;
     private boolean antOrchard;
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
@@ -951,6 +953,15 @@ public class Config {
         return getConfig().visitFriendCountList;
     }
 
+    public static void setChickenDiary(boolean b) {
+        getConfig().chickenDiary = b;
+        hasChanged = true;
+    }
+
+    public static boolean chickenDiary() {
+        return getConfig().chickenDiary;
+    }
+
     public static void setAntOrchard(boolean b) {
         getConfig().antOrchard = b;
         hasChanged = true;
@@ -1306,6 +1317,7 @@ public class Config {
             c.visitFriendList = new ArrayList<>();
         if (c.visitFriendCountList == null)
             c.visitFriendCountList = new ArrayList<>();
+        c.chickenDiary = true;
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
@@ -1625,6 +1637,8 @@ public class Config {
                     }
                 }
             }
+
+            config.chickenDiary = jo.optBoolean(jn_chickenDiary, true);
 
             config.antOrchard = jo.optBoolean(jn_antOrchard, true);
 
@@ -1949,6 +1963,8 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_visitFriendList, ja);
+
+            jo.put(jn_chickenDiary, config.chickenDiary);
 
             jo.put(jn_antOrchard, config.antOrchard);
 

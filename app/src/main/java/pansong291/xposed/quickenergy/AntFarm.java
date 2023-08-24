@@ -8,6 +8,7 @@ import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -218,6 +219,10 @@ public class AntFarm {
                         collectDailyFoodMaterial(userId);
                         collectDailyLimitedFoodMaterial();
                         cook(userId);
+                    }
+
+                    if (Config.chickenDiary()) {
+                        queryChickenDiaryList();
                     }
 
                     if (Config.useNewEggTool()) {
@@ -1362,6 +1367,62 @@ public class AntFarm {
 
         } catch (Throwable t) {
             Log.i(TAG, "acceptGift err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void queryChickenDiary(String queryDayStr) {
+        try {
+            JSONObject jo = new JSONObject(AntFarmRpcCall.queryChickenDiary(queryDayStr));
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONObject chickenDiary = jo.getJSONObject("data").getJSONObject("chickenDiary");
+                String diaryDateStr = chickenDiary.getString("diaryDateStr");
+                if (!chickenDiary.has("tietieStatus"))
+                    return;
+                JSONObject tietieStatus = chickenDiary.getJSONObject("tietieStatus");
+                Iterator it = tietieStatus.keys();
+                while (it.hasNext()) {
+                    String key = (String) it.next();
+                    if (tietieStatus.optBoolean(key, false)) {
+                        jo = new JSONObject(AntFarmRpcCall.diaryTietie(diaryDateStr, key));
+                        if ("SUCCESS".equals(jo.getString("memo"))) {
+                            String prizeType = jo.getString("prizeType");
+                            int prizeNum = jo.optInt("prizeNum", 0);
+                            Log.farm("贴贴小鸡💞[" + prizeType + "*" + prizeNum + "]");
+                        } else {
+                            Log.i(jo.getString("memo"), jo.toString());
+                        }
+                    }
+                }
+            } else {
+                Log.i(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "queryChickenDiary err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void queryChickenDiaryList() {
+        try {
+            JSONObject jo = new JSONObject(AntFarmRpcCall.queryChickenDiaryList());
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray chickenDiaryBriefList = jo.getJSONObject("data").optJSONArray("chickenDiaryBriefList");
+                if (chickenDiaryBriefList != null && chickenDiaryBriefList.length() > 0) {
+                    for (int i = 0; i < chickenDiaryBriefList.length(); i++) {
+                        jo = chickenDiaryBriefList.getJSONObject(i);
+                        if (!jo.optBoolean("read", true)) {
+                            String dateStr = jo.getString("dateStr");
+                            queryChickenDiary(dateStr);
+                            Thread.sleep(300);
+                        }
+                    }
+                }
+            } else {
+                Log.i(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "queryChickenDiaryList err:");
             Log.printStackTrace(TAG, t);
         }
     }

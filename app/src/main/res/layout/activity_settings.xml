@@ -934,6 +934,16 @@
 						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:text="@string/chicken_diary"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_chickenDiary" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
 						android:text="@string/ant_orchard"
 						android:onClick="onClick"
 						android:minHeight="50dp"

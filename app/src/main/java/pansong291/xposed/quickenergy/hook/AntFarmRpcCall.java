@@ -337,4 +337,22 @@ public class AntFarmRpcCall {
                         + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\""
                         + VERSION + "\"}]");
     }
+
+    /* 小鸡日记 */
+    public static String queryChickenDiaryList() {
+        return RpcUtil.request("com.alipay.antfarm.queryChickenDiaryList",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"DIARY\",\"source\":\"antfarm_icon\"}]");
+    }
+
+    public static String queryChickenDiary(String queryDayStr) {
+        return RpcUtil.request("com.alipay.antfarm.queryChickenDiary",
+                "[{\"queryDayStr\":\"" + queryDayStr
+                        + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"DIARY\",\"source\":\"antfarm_icon\"}]");
+    }
+
+    public static String diaryTietie(String diaryDate, String roleId) {
+        return RpcUtil.request("com.alipay.antfarm.diaryTietie",
+                "[{\"diaryDate\":\"" + diaryDate + "\",\"requestType\":\"NORMAL\",\"roleId\":\"" + roleId
+                        + "\",\"sceneCode\":\"DIARY\",\"source\":\"antfarm_icon\"}]");
+    }
 }

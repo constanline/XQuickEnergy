@@ -24,6 +24,7 @@ public class SettingsActivity extends Activity {
     private static final int MAX_TAB_INDEX = 3;
 
     private TabHost tabHost;
+    private ScrollView scrollView;
     private int currentView = 0;
     private GestureDetector gestureDetector;
     private Animation slideLeftIn;
@@ -42,7 +43,7 @@ public class SettingsActivity extends Activity {
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
-            sw_stallOpenType;
+            sw_stallOpenType, sw_chickenDiary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +187,7 @@ public class SettingsActivity extends Activity {
         sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
         sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
         sw_acceptGift = findViewById(R.id.sw_acceptGift);
+        sw_chickenDiary = findViewById(R.id.sw_chickenDiary);
         sw_antOrchard = findViewById(R.id.sw_antOrchard);
         sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
@@ -252,6 +254,7 @@ public class SettingsActivity extends Activity {
         sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
         sw_notifyFriend.setChecked(Config.notifyFriend());
         sw_acceptGift.setChecked(Config.acceptGift());
+        sw_chickenDiary.setChecked(Config.chickenDiary());
         sw_antOrchard.setChecked(Config.antOrchard());
         sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
         sw_receivePoint.setChecked(Config.receivePoint());
@@ -429,6 +432,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_acceptGift:
                     Config.setAcceptGift(sw.isChecked());
+                    break;
+
+                case R.id.sw_chickenDiary:
+                    Config.setChickenDiary(sw.isChecked());
                     break;
 
                 case R.id.sw_antOrchard:

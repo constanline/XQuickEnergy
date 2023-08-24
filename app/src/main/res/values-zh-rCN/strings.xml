@@ -139,5 +139,6 @@
     <string name="stall_allow_open_time">允许他人摆摊时长(未实装)</string>
     <string name="stall_self_open_time">自己收摊时长</string>
     <string name="stall_black_list">禁摆摊列表(未实装)</string>
+    <string name="chicken_diary">小鸡日记</string>
 
 </resources>
