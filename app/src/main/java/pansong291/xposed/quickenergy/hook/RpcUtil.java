@@ -113,7 +113,7 @@ public class RpcUtil {
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
                             RuntimeInfo.getInstance().put(RuntimeInfo.RuntimeInfoKey.ForestPauseTime, waitTime);
                             AntForestNotification
-                                    .setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                                    .setContentText("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                             Log.forest("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
                     } else if (msg.contains("MMTPException")) {

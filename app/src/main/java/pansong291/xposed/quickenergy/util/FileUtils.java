@@ -296,26 +296,17 @@ public class FileUtils {
         return result.toString();
     }
 
-    public static void append2SimpleLogFile(String s) {
-        synchronized (getSimpleLogFile()) {
-            if (getSimpleLogFile().length() > 31_457_280) // 30MB
-                getSimpleLogFile().delete();
-            append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
-        }
+    public synchronized static void append2SimpleLogFile(String s) {
+        if (getSimpleLogFile().length() > 31_457_280) // 30MB
+            getSimpleLogFile().delete();
+        append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
     }
 
-    public static void append2RuntimeLogFile(String s) {
-        synchronized (getRuntimeLogFile()) {
-            if (getRuntimeLogFile().length() > 31_457_280) {// 30MB
-                if (Config.backupRuntime()) {
-                    getRuntimeLogFile().renameTo(getRuntimeLogFileBak());
-                }
-                if (getRuntimeLogFile().exists()) {
-                    getRuntimeLogFile().delete();
-                }
-            }
-            append2File(Log.getFormatDateTime() + "  " + s + "\n", getRuntimeLogFile());
+    public synchronized static void append2RuntimeLogFile(String s) {
+        if (getRuntimeLogFile().length() > 31_457_280) {// 30MB
+            getRuntimeLogFile().delete();
         }
+        append2File(Log.getFormatDateTime() + "  " + s + "\n", getRuntimeLogFile());
     }
 
     public static boolean write2File(String s, File f) {

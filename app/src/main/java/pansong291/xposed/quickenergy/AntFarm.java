@@ -125,9 +125,6 @@ public class AntFarm {
                         if (jo.has("lotteryPlusInfo")) {
                             drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
                         }
-                        if (jo.has("lotteryPlusInfo")) {
-                            drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
-                        }
                         if (Config.acceptGift() && joFarmVO.getJSONObject("subFarmVO").has("giftRecord")
                                 && foodStockLimit - foodStock >= 10) {
                             acceptGift();
@@ -1136,6 +1133,7 @@ public class AntFarm {
             if ("SUCCESS".equals(jo.getString("memo"))) {
                 boolean canCollectDailyFoodMaterial = jo.getBoolean("canCollectDailyFoodMaterial");
                 int dailyFoodMaterialAmount = jo.getInt("dailyFoodMaterialAmount");
+                int garbageAmount = jo.optInt("garbageAmount", 0);
                 if (jo.has("orchardFoodMaterialStatus")) {
                     JSONObject orchardFoodMaterialStatus = jo.getJSONObject("orchardFoodMaterialStatus");
                     if ("FINISHED".equals(orchardFoodMaterialStatus.optString("foodStatus"))) {
@@ -1156,6 +1154,14 @@ public class AntFarm {
                     }
                 } else {
                     Log.recordLog("明日可领食材", "");
+                }
+                if (garbageAmount > 0) {
+                    jo = new JSONObject(AntFarmRpcCall.collectKitchenGarbage());
+                    if ("SUCCESS".equals(jo.getString("memo"))) {
+                        Log.farm("小鸡厨房👨🏻‍🍳[领取肥料]#" + jo.getInt("recievedKitchenGarbageAmount") + "g");
+                    } else {
+                        Log.i(TAG, jo.toString());
+                    }
                 }
             } else {
                 Log.i(TAG, jo.toString());

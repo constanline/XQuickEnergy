@@ -101,10 +101,23 @@ public class Config {
     public static final String jn_visitFriendList = "visitFriendList";
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
+    public static final String jn_orchardSpreadManureCount = "orchardSpreadManureCount";
     public static final String jn_antdodoCollect = "antdodoCollect";
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
+
+    public static final String jn_enableStall = "enableStall";
+    public static final String jn_stallAutoOpen = "stallAutoOpen";
+    public static final String jn_stallAutoClose = "stallAutoClose";
+    public static final String jn_stallAutoTask = "stallAutoTask";
+    public static final String jn_stallReceiveAward = "stallReceiveAward";
+    public static final String jn_stallOpenType = "stallOpenType";
+    public static final String jn_stallOpenList = "stallOpenList";
+    public static final String jn_stallWhiteList = "stallWhiteList";
+    public static final String jn_stallBlackList = "stallBlackList";
+    public static final String jn_stallAllowOpenTime = "stallAllowOpenTime";
+    public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -122,8 +135,8 @@ public class Config {
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
 
-    public static boolean shouldReload;
-    public static boolean hasChanged;
+    public static volatile boolean shouldReload;
+    public static volatile boolean hasChanged;
 
     /* application */
     private boolean immediateEffect;
@@ -220,6 +233,18 @@ public class Config {
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
 
+    private boolean enableStall;
+    private boolean stallAutoClose;
+    private boolean stallAutoOpen;
+    private boolean stallAutoTask;
+    private boolean stallReceiveAward;
+    private boolean stallOpenType;
+    private List<String> stallOpenList;
+    private List<String> stallWhiteList;
+    private List<String> stallBlackList;
+    private int stallAllowOpenTime;
+    private int stallSelfOpenTime;
+
     /* other */
     private boolean receivePoint;
     private boolean openTreasureBox;
@@ -237,7 +262,7 @@ public class Config {
     private boolean merchantKmdk;
 
     /* base */
-    private static Config config;
+    private static volatile Config config;
 
     /* application */
     public static void setImmediateEffect(boolean b) {
@@ -953,6 +978,90 @@ public class Config {
         hasChanged = true;
     }
 
+    public static void setEnableStall(boolean b) {
+        getConfig().enableStall = b;
+        hasChanged = true;
+    }
+
+    public static boolean enableStall() {
+        return getConfig().enableStall;
+    }
+
+    public static void setStallAutoClose(boolean b) {
+        getConfig().stallAutoClose = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallAutoClose() {
+        return getConfig().stallAutoClose;
+    }
+
+    public static void setStallAutoOpen(boolean b) {
+        getConfig().stallAutoOpen = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallAutoOpen() {
+        return getConfig().stallAutoOpen;
+    }
+
+    public static void setStallAutoTask(boolean b) {
+        getConfig().stallAutoTask = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallAutoTask() {
+        return getConfig().stallAutoTask;
+    }
+
+    public static void setStallReceiveAward(boolean b) {
+        getConfig().stallReceiveAward = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallReceiveAward() {
+        return getConfig().stallReceiveAward;
+    }
+
+    public static void setStallOpenType(boolean b) {
+        getConfig().stallOpenType = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallOpenType() {
+        return getConfig().stallOpenType;
+    }
+
+    public static List<String> stallOpenList() {
+        return getConfig().stallOpenList;
+    }
+
+    public static List<String> stallWhiteList() {
+        return getConfig().stallWhiteList;
+    }
+
+    public static List<String> stallBlackList() {
+        return getConfig().stallBlackList;
+    }
+
+    public static void setStallAllowOpenTime(int b) {
+        getConfig().stallAllowOpenTime = b;
+        hasChanged = true;
+    }
+
+    public static int stallAllowOpenTime() {
+        return getConfig().stallAllowOpenTime;
+    }
+
+    public static void setStallSelfOpenTime(int b) {
+        getConfig().stallSelfOpenTime = b;
+        hasChanged = true;
+    }
+
+    public static int stallSelfOpenTime() {
+        return getConfig().stallSelfOpenTime;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1081,7 +1190,7 @@ public class Config {
     }
 
     /* base */
-    private static Config getConfig() {
+    private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
             shouldReload = false;
             String confJson = null;
@@ -1188,7 +1297,7 @@ public class Config {
             c.feedFriendCountList = new ArrayList<>();
         c.doubleCardTime = new ArrayList<>();
         c.doubleCardTime.add("0700-2000");
-        c.notifyFriend = true;
+        c.notifyFriend = false;
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
         c.whoYouWantGiveTo = new ArrayList<>();
@@ -1200,6 +1309,18 @@ public class Config {
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
+
+        c.enableStall = false;
+        c.stallAutoClose = false;
+        c.stallAutoOpen = false;
+        c.stallAutoTask = true;
+        c.stallReceiveAward = false;
+        c.stallOpenType = true;
+        c.stallOpenList = new ArrayList<>();
+        c.stallWhiteList = new ArrayList<>();
+        c.stallBlackList = new ArrayList<>();
+        c.stallAllowOpenTime = 121;
+        c.stallSelfOpenTime = 120;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1469,7 +1590,7 @@ public class Config {
 
             config.animalSleepTime = Arrays.asList(jo.optString(jn_animalSleepTime, "2200-2400,0000-0559").split(","));
 
-            config.notifyFriend = jo.optBoolean(jn_notifyFriend, true);
+            config.notifyFriend = jo.optBoolean(jn_notifyFriend, false);
 
             config.dontNotifyFriendList = new ArrayList<>();
             if (jo.has(jn_dontNotifyFriendList)) {
@@ -1509,7 +1630,47 @@ public class Config {
 
             config.receiveOrchardTaskAward = jo.optBoolean(jn_receiveOrchardTaskAward, true);
 
-            config.orchardSpreadManureCount = jo.optInt("orchardSpreadManureCount", 0);
+            config.orchardSpreadManureCount = jo.optInt(jn_orchardSpreadManureCount, 0);
+
+            config.enableStall = jo.optBoolean(jn_enableStall, false);
+
+            config.stallAutoClose = jo.optBoolean(jn_stallAutoClose, false);
+
+            config.stallAutoOpen = jo.optBoolean(jn_stallAutoOpen, false);
+
+            config.stallAutoTask = jo.optBoolean(jn_stallAutoTask, true);
+
+            config.stallReceiveAward = jo.optBoolean(jn_stallReceiveAward, true);
+
+            config.stallOpenType = jo.optBoolean(jn_stallOpenType, true);
+
+            config.stallOpenList = new ArrayList<>();
+            if (jo.has(jn_stallOpenList)) {
+                ja = jo.getJSONArray(jn_stallOpenList);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.stallOpenList.add(ja.getString(i));
+                }
+            }
+
+            config.stallWhiteList = new ArrayList<>();
+            if (jo.has(jn_stallWhiteList)) {
+                ja = jo.getJSONArray(jn_stallWhiteList);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.stallWhiteList.add(ja.getString(i));
+                }
+            }
+
+            config.stallBlackList = new ArrayList<>();
+            if (jo.has(jn_stallBlackList)) {
+                ja = jo.getJSONArray(jn_stallBlackList);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.stallBlackList.add(ja.getString(i));
+                }
+            }
+
+            config.stallAllowOpenTime = jo.optInt(jn_stallAllowOpenTime, 121);
+
+            config.stallSelfOpenTime = jo.optInt(jn_stallSelfOpenTime, 120);
 
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
@@ -1550,7 +1711,8 @@ public class Config {
         }
         String formatted = config2Json(config);
         if (!formatted.equals(json)) {
-            Log.infoChanged("重新格式化 config.json", formatted);
+            Log.infoChanged("重新格式化 config.json，原", json);
+            Log.infoChanged("重新格式化 config.json，新", formatted);
             FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
@@ -1792,7 +1954,31 @@ public class Config {
 
             jo.put(jn_receiveOrchardTaskAward, config.receiveOrchardTaskAward);
 
-            jo.put("orchardSpreadManureCount", config.orchardSpreadManureCount);
+            jo.put(jn_orchardSpreadManureCount, config.orchardSpreadManureCount);
+
+            jo.put(jn_enableStall, config.enableStall);
+            jo.put(jn_stallAutoClose, config.stallAutoClose);
+            jo.put(jn_stallAutoOpen, config.stallAutoOpen);
+            jo.put(jn_stallAutoTask, config.stallAutoTask);
+            jo.put(jn_stallReceiveAward, config.stallReceiveAward);
+            jo.put(jn_stallOpenType, config.stallOpenType);
+            ja = new JSONArray();
+            for (int i = 0; i < config.stallOpenList.size(); i++) {
+                ja.put(config.stallOpenList.get(i));
+            }
+            jo.put(jn_stallOpenList, ja);
+            ja = new JSONArray();
+            for (int i = 0; i < config.stallWhiteList.size(); i++) {
+                ja.put(config.stallWhiteList.get(i));
+            }
+            jo.put(jn_stallWhiteList, ja);
+            ja = new JSONArray();
+            for (int i = 0; i < config.stallBlackList.size(); i++) {
+                ja.put(config.stallBlackList.get(i));
+            }
+            jo.put(jn_stallBlackList, ja);
+            jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
+            jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);

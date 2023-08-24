@@ -284,6 +284,11 @@ public class AntFarmRpcCall {
                         + VERSION + "\"}]");
     }
 
+    public static String collectKitchenGarbage() {
+        return RpcUtil.request("com.alipay.antfarm.collectKitchenGarbage",
+                "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTFARM\",\"source\":\"VILLA\",\"version\":\"unknown\"}]");
+    }
+
     /* 日常任务 */
 
     public static String doFarmTask(String bizKey) {

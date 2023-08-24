@@ -40,7 +40,9 @@ public class SettingsActivity extends Activity {
             sw_ExchangeEnergyDoubleClick, sw_reserve, sw_ecoLifeTick, sw_tiyubiz, sw_insBlueBeanExchange,
             sw_ancientTree, sw_ancientTreeOnlyWeek, sw_receiveCoinAsset, sw_antdodoCollect, sw_recordFarmGame, sw_beach,
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
-            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift;
+            sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
+            sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
+            sw_stallOpenType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +207,13 @@ public class SettingsActivity extends Activity {
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
+
+        sw_enableStall = findViewById(R.id.sw_enableStall);
+        sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
+        sw_stallAutoOpen = findViewById(R.id.sw_stallAutoOpen);
+        sw_stallAutoTask = findViewById(R.id.sw_stallAutoTask);
+        sw_stallReceiveAward = findViewById(R.id.sw_stallReceiveAward);
+        sw_stallOpenType = findViewById(R.id.sw_stallOpenType);
     }
 
     @Override
@@ -264,6 +273,13 @@ public class SettingsActivity extends Activity {
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
+
+        sw_enableStall.setChecked(Config.enableStall());
+        sw_stallAutoClose.setChecked(Config.stallAutoClose());
+        sw_stallAutoOpen.setChecked(Config.stallAutoOpen());
+        sw_stallAutoTask.setChecked(Config.stallAutoTask());
+        sw_stallReceiveAward.setChecked(Config.stallReceiveAward());
+        sw_stallOpenType.setChecked(Config.stallOpenType());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -486,6 +502,30 @@ public class SettingsActivity extends Activity {
                 case R.id.sw_animalConsumeProp:
                     Config.setAnimalConsumeProp(sw.isChecked());
                     break;
+
+                case R.id.sw_enableStall:
+                    Config.setEnableStall(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoClose:
+                    Config.setStallAutoClose(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoOpen:
+                    Config.setStallAutoOpen(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallAutoTask:
+                    Config.setStallAutoTask(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallReceiveAward:
+                    Config.setStallReceiveAward(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallOpenType:
+                    Config.setStallOpenType(sw.isChecked());
+                    break;
             }
         } else if (v instanceof Button) {
             Button btn = (Button) v;
@@ -663,6 +703,18 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_orchardSpreadManureCount:
                     EditDialog.showEditDialog(this, btn.getText(),
                             EditDialog.EditMode.ORCHARD_SPREAD_MANURE_COUNT);
+                    break;
+
+                case R.id.btn_stallOpenList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallOpenList(), null);
+                    break;
+
+                case R.id.btn_stallAllowOpenTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.STALL_ALLOW_OPEN_TIME);
+                    break;
+
+                case R.id.btn_stallSelfOpenTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.STALL_SELF_OPEN_TIME);
                     break;
             }
         }

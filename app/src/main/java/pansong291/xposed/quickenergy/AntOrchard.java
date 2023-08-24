@@ -93,7 +93,7 @@ public class AntOrchard {
     private static boolean canSpreadManureContinue(String stageBefore, String stageAfter) {
         Double bef = Double.parseDouble(StringUtil.getSubString(stageBefore, "施肥", "%"));
         Double aft = Double.parseDouble(StringUtil.getSubString(stageAfter, "施肥", "%"));
-        if (bef - aft > 0.01)
+        if (bef - aft != 0.01)
             return true;
         Log.recordLog("施肥只加0.01%进度今日停止施肥！");
         return false;
