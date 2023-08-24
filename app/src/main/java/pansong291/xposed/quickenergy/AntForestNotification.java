@@ -97,8 +97,14 @@ public class AntForestNotification {
     }
 
     private static void innerSetContentText() {
-        String preContent = (nextScanTime > 0) ? "下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" : "";
-        mNotification = builder.setContentText(preContent + contentText).build();
+        Notification.InboxStyle style = new Notification.InboxStyle();
+//        String preContent = (nextScanTime > 0) ? "下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" : "";
+        if (nextScanTime > 0) {
+            style.addLine("下次扫描时间" + TimeUtil.getTimeStr(nextScanTime));
+        }
+        style.addLine(contentText);
+        builder.setStyle(style);
+        mNotification = builder.build();
         if (mNotifyManager != null)
             mNotifyManager.notify(NOTIFICATION_ID, mNotification);
     }
@@ -107,7 +113,7 @@ public class AntForestNotification {
         if (isStart) {
             long forestPauseTime = RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime);
             if (forestPauseTime > System.currentTimeMillis()) {
-                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(forestPauseTime);
+                cs = "触发异常,等待至" + DateFormat.getDateTimeInstance().format(forestPauseTime);
             }
             contentText = cs;
             innerSetContentText();

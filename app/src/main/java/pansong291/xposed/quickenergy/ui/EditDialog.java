@@ -13,7 +13,8 @@ public class EditDialog {
         TOAST_OFFSET_Y, CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
         DOUBLE_COUNT_LIMIT, COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,
         FARM_GAME_TIME, ANIMAL_SLEEP_TIME, MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT,
-        WAIT_WHEN_EXCEPTION, EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT, ORCHARD_SPREAD_MANURE_COUNT
+        WAIT_WHEN_EXCEPTION, EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT, ORCHARD_SPREAD_MANURE_COUNT,
+        STALL_ALLOW_OPEN_TIME, STALL_SELF_OPEN_TIME
     }
 
     private static EditMode mode;
@@ -159,6 +160,18 @@ public class EditDialog {
                                             Config.setOrchardSpreadManureCount(i);
                                             break;
 
+                                        case STALL_ALLOW_OPEN_TIME:
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setStallAllowOpenTime(i);
+                                            break;
+
+                                        case STALL_SELF_OPEN_TIME:
+                                            if (i < 0)
+                                                i = 0;
+                                            Config.setStallSelfOpenTime(i);
+                                            break;
+
                                     }
                                 } catch (Throwable ignored) {
                                 }
@@ -244,6 +257,14 @@ public class EditDialog {
 
             case ORCHARD_SPREAD_MANURE_COUNT:
                 str = String.valueOf(Config.getOrchardSpreadManureCount());
+                break;
+
+            case STALL_ALLOW_OPEN_TIME:
+                str = String.valueOf(Config.stallAllowOpenTime());
+                break;
+
+            case STALL_SELF_OPEN_TIME:
+                str = String.valueOf(Config.stallSelfOpenTime());
                 break;
         }
         edt.setText(str);

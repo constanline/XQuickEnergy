@@ -8,8 +8,7 @@ import java.util.UUID;
 
 public class AntForestRpcCall {
 
-    private static final String VERSION = "20230501";
-    private static final String VERSION2 = "20230710";
+    private static final String VERSION = "20230710";
 
     public static String fillUserRobFlag(String userIdList) {
         return RpcUtil.request("alipay.antforest.forest.h5.fillUserRobFlag",
@@ -65,7 +64,7 @@ public class AntForestRpcCall {
     public static String queryTaskList() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryTaskList",
                 "[{\"extend\":{},\"fromAct\":\"home_task_list\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
-                        + VERSION2 + "\"}]");
+                        + VERSION + "\"}]");
     }
 
     public static String queryEnergyRainHome() {
@@ -139,6 +138,23 @@ public class AntForestRpcCall {
                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType +
                         "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"timezoneId\":\"Asia/Shanghai\",\"version\":\""
                         + VERSION + "\"}]");
+    }
+
+    public static String itemList(String labelType) {
+        return RpcUtil.request("com.alipay.antiep.itemList",
+                "[{\"extendInfo\":\"{}\",\"labelType\":\"" + labelType
+                        + "\",\"pageSize\":20,\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_VITALITY\",\"source\":\"afEntry\",\"startIndex\":0}]");
+    }
+
+    public static String itemDetail(String spuId) {
+        return RpcUtil.request("com.alipay.antiep.itemDetail",
+                "[{\"requestType\":\"rpc\",\"sceneCode\":\"ANTFOREST_VITALITY\",\"source\":\"afEntry\",\"spuId\":\""
+                        + spuId + "\"}]");
+    }
+
+    public static String queryVitalityStoreIndex() {
+        return RpcUtil.request("alipay.antforest.forest.h5.queryVitalityStoreIndex",
+                "[{\"source\":\"afEntry\"}]");
     }
 
     public static String exchangeBenefit(String spuId, String skuId) {
@@ -242,4 +258,10 @@ public class AntForestRpcCall {
                         + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
+    /* 复活能量 */
+    public static String protectBubble(String targetUserId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.protectBubble",
+                "[{\"source\":\"ANT_FOREST_H5\",\"targetUserId\":\"" + targetUserId + "\",\"version\":\"" + VERSION
+                        + "\"}]");
+    }
 }

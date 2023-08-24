@@ -374,16 +374,6 @@
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
 
-					<Switch
-						android:paddingStart="@dimen/setting_item_padding"
-						android:paddingEnd="@dimen/setting_item_padding"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:text="@string/help_friend_collect"
-						android:onClick="onClick"
-						android:minHeight="50dp"
-						android:id="@+id/sw_helpFriendCollect" />
-
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -397,6 +387,16 @@
 						android:id="@+id/btn_dontCollectList"
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/help_friend_collect"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_helpFriendCollect" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -934,6 +934,16 @@
 						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:text="@string/chicken_diary"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_chickenDiary" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
 						android:text="@string/ant_orchard"
 						android:onClick="onClick"
 						android:minHeight="50dp"
@@ -960,6 +970,136 @@
 						android:gravity="start|center_vertical"
 						android:background="@drawable/button"
 						android:id="@+id/btn_orchardSpreadManureCount"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/enable_stall"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_enableStall" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_auto_close"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallAutoClose" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_auto_open"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallAutoOpen" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_auto_task"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallAutoTask" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_receive_award"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallReceiveAward" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_open_type"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallOpenType" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_open_list"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallOpenList"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_white_list"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallWhiteList"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_black_list"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallBlackList"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_allow_open_time"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallAllowOpenTime"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_self_open_time"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallSelfOpenTime"
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
 
