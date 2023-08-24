@@ -115,10 +115,9 @@ public class AntFarmRpcCall {
         return RpcUtil.request("com.alipay.antfarm.listToolTaskDetails", args1);
     }
 
-    public static String receiveToolTaskReward(String awardType, int rewardCount, String taskType) {
-        String args1 = "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":"
-                + rewardCount + ",\"rewardType\":\"" + awardType +
-                "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
+    public static String receiveToolTaskReward(String rewardType, int rewardCount, String taskType) {
+        String args1 = "[{\"ignoreLimit\":false,\"requestType\":\"NORMAL\",\"rewardCount\":" + rewardCount
+                + ",\"rewardType\":\"" + rewardType + "\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"taskType\":\""
                 + taskType + "\",\"version\":\"" + VERSION + "\"}]";
         return RpcUtil.request("com.alipay.antfarm.receiveToolTaskReward", args1);
     }
@@ -283,6 +282,11 @@ public class AntFarmRpcCall {
                 "[{\"cookbookId\":\"" + cookbookId + "\",\"cuisineId\":\"" + cuisineId
                         + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"useCuisine\":true,\"version\":\""
                         + VERSION + "\"}]");
+    }
+
+    public static String collectKitchenGarbage() {
+        return RpcUtil.request("com.alipay.antfarm.collectKitchenGarbage",
+                "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTFARM\",\"source\":\"VILLA\",\"version\":\"unknown\"}]");
     }
 
     /* 日常任务 */

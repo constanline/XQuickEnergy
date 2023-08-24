@@ -24,7 +24,7 @@ public class AntOcean {
             public void run() {
                 try {
                     while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                    Thread.sleep(100);
+                        Thread.sleep(100);
                     String s = AntOceanRpcCall.queryOceanStatus();
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -49,9 +49,9 @@ public class AntOcean {
         try {
             JSONObject joHomePage = new JSONObject(AntOceanRpcCall.queryHomePage());
             if ("SUCCESS".equals(joHomePage.getString("resultCode"))) {
-//                if (Config.collectEnergy() && joHomePage.has("bubbleVOList")) {
-//                    collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
-//                }
+                if (joHomePage.has("bubbleVOList")) {
+                    collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
+                }
 
                 JSONObject userInfoVO = joHomePage.getJSONObject("userInfoVO");
                 int rubbishNumber = userInfoVO.optInt("rubbishNumber");
@@ -89,6 +89,9 @@ public class AntOcean {
         try {
             for (int i = 0; i < bubbleVOList.length(); i++) {
                 JSONObject bubble = bubbleVOList.getJSONObject(i);
+                if (!"ocean".equals(bubble.getString("channel"))) {
+                    continue;
+                }
                 if ("AVAILABLE".equals(bubble.getString("collectStatus"))) {
                     long bubbleId = bubble.getLong("id");
                     String userId = bubble.getString("userId");

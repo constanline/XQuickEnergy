@@ -120,7 +120,7 @@ public class Config {
     public static final String jn_stallBlackList = "stallBlackList";
     public static final String jn_stallAllowOpenTime = "stallAllowOpenTime";
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
-
+    public static final String jn_stallDonate = "stallDonate";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -247,6 +247,7 @@ public class Config {
     private List<String> stallBlackList;
     private int stallAllowOpenTime;
     private int stallSelfOpenTime;
+    private boolean stallDonate;
 
     /* other */
     private boolean receivePoint;
@@ -980,6 +981,7 @@ public class Config {
         getConfig().orchardSpreadManureCount = i;
         hasChanged = true;
     }
+
     public static void setEnableStall(boolean b) {
         getConfig().enableStall = b;
         hasChanged = true;
@@ -1064,6 +1066,14 @@ public class Config {
         return getConfig().stallSelfOpenTime;
     }
 
+    public static void setStallDonate(boolean b) {
+        getConfig().stallDonate = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallDonate() {
+        return getConfig().stallDonate;
+    }
 
     /* other */
     public static void setReceivePoint(boolean b) {
@@ -1325,6 +1335,7 @@ public class Config {
         c.stallBlackList = new ArrayList<>();
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
+        c.stallDonate = false;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1762,6 +1773,8 @@ public class Config {
 
             config.stallSelfOpenTime = jo.optInt(jn_stallSelfOpenTime, 120);
 
+            config.stallDonate = jo.optBoolean(jn_stallDonate, false);
+
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
             Log.i(TAG, jn_receivePoint + ":" + config.receivePoint);
@@ -2082,6 +2095,7 @@ public class Config {
             jo.put(jn_stallBlackList, ja);
             jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
+            jo.put(jn_stallDonate, config.stallDonate);
 
 
             /* other */

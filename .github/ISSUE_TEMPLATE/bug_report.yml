@@ -11,15 +11,15 @@ body:
   - type: input
     attributes:
       label: |
-        **程序版本** / **框架版本** / **模块版本**
-      description: 请填写当前使用的程序版本 (例如：10.5.8)、框架版本 (例如：LSPosed 1.8.4) 及模块版本 (例如：1.1.1)
+        程序版本 / 框架版本 / 模块版本
+      description: 请填写当前使用的 程序版本 (例如：10.5.8)、框架版本 (例如：LSPosed 1.8.4) 及 模块版本 (例如：1.1.1)
     validations:
       required: true
   - type: input
     attributes:
       label: |
-        **系统版本** / **Android版本**
-      description: 这里填写当前使用的系统版本 (例如 MIUI、ColorOS、OxygenOS、PE/原生) 及 Android版本 (例如Android 10、Android 11、Android 12)
+        系统版本 / Android版本
+      description: 这里填写当前使用的 系统版本 (例如：MIUI、ColorOS、OxygenOS、PE/原生) 及 Android版本 (例如：Android 10、Android 11、Android 12)
     validations:
       required: true
   - type: textarea

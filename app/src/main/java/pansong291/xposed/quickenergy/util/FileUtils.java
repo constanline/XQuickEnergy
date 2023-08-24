@@ -135,6 +135,15 @@ public class FileUtils {
         return configFileMap.get("Default");
     }
 
+    public static File getFriendIdMapFile() {
+        if (friendIdMapFile == null) {
+            friendIdMapFile = new File(getMainDirectoryFile(), "friendId.list");
+            if (friendIdMapFile.exists() && friendIdMapFile.isDirectory())
+                friendIdMapFile.delete();
+        }
+        return friendIdMapFile;
+    }
+
     public static File runtimeInfoFile() {
         if (runtimeInfoFile == null) {
             runtimeInfoFile = new File(getMainDirectoryFile(), "runtimeInfo.json");
@@ -146,15 +155,6 @@ public class FileUtils {
             }
         }
         return runtimeInfoFile;
-    }
-
-    public static File getFriendIdMapFile() {
-        if (friendIdMapFile == null) {
-            friendIdMapFile = new File(getMainDirectoryFile(), "friendId.list");
-            if (friendIdMapFile.exists() && friendIdMapFile.isDirectory())
-                friendIdMapFile.delete();
-        }
-        return friendIdMapFile;
     }
 
     public static File getCooperationIdMapFile() {

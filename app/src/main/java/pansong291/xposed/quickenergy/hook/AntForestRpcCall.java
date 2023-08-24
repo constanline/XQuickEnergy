@@ -241,4 +241,10 @@ public class AntForestRpcCall {
                         + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
+    /* 复活能量 */
+    public static String protectBubble(String targetUserId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.protectBubble",
+                "[{\"source\":\"ANT_FOREST_H5\",\"targetUserId\":\"" + targetUserId + "\",\"version\":\"" + VERSION
+                        + "\"}]");
+    }
 }
