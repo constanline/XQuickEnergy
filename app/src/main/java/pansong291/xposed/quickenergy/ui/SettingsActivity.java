@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity {
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
-            sw_stallOpenType, sw_chickenDiary;
+            sw_stallOpenType, sw_chickenDiary, sw_collectGiftBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +209,7 @@ public class SettingsActivity extends Activity {
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
+        sw_collectGiftBox = findViewById(R.id.sw_collectGiftBox);
 
         sw_enableStall = findViewById(R.id.sw_enableStall);
         sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
@@ -276,6 +277,7 @@ public class SettingsActivity extends Activity {
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
+        sw_collectGiftBox.setChecked(Config.collectGiftBox());
 
         sw_enableStall.setChecked(Config.enableStall());
         sw_stallAutoClose.setChecked(Config.stallAutoClose());
@@ -508,6 +510,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_animalConsumeProp:
                     Config.setAnimalConsumeProp(sw.isChecked());
+                    break;
+
+                case R.id.sw_collectGiftBox:
+                    Config.setCollectGiftBox(sw.isChecked());
                     break;
 
                 case R.id.sw_enableStall:

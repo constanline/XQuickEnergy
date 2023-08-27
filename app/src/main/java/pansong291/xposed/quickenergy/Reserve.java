@@ -140,7 +140,7 @@ public class Reserve {
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     Log.forest("领保护地🏕️[" + itemName + "]#发生未知错误，停止申请");
-                    Statistics.reserveToday(projectId, count);
+                    //Statistics.reserveToday(projectId, count);
                     break;
                 }
                 Thread.sleep(300);
@@ -269,7 +269,7 @@ public class Reserve {
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     Log.forest("净滩行动🏖️[" + itemName + "]#发生未知错误，停止申请");
-                    Statistics.beachToday(cultivationCode);
+                    //Statistics.beachToday(cultivationCode);
                     break;
                 }
                 Thread.sleep(300);

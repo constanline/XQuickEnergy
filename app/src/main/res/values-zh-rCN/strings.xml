@@ -140,5 +140,6 @@
     <string name="stall_self_open_time">自己收摊时长</string>
     <string name="stall_black_list">禁摆摊列表(未实装)</string>
     <string name="chicken_diary">小鸡日记</string>
+    <string name="collect_gift_box">领取礼盒</string>
 
 </resources>

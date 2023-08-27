@@ -107,6 +107,7 @@ public class Config {
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
+    public static final String jn_collectGiftBox = "collectGiftBox";
 
     public static final String jn_enableStall = "enableStall";
     public static final String jn_stallAutoOpen = "stallAutoOpen";
@@ -119,6 +120,7 @@ public class Config {
     public static final String jn_stallBlackList = "stallBlackList";
     public static final String jn_stallAllowOpenTime = "stallAllowOpenTime";
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
+    public static final String jn_stallDonate = "stallDonate";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -201,6 +203,7 @@ public class Config {
     private boolean antOcean;
     private boolean userPatrol;
     private boolean animalConsumeProp;
+    private boolean collectGiftBox;
 
     /* farm */
     private boolean enableFarm;
@@ -246,6 +249,7 @@ public class Config {
     private List<String> stallBlackList;
     private int stallAllowOpenTime;
     private int stallSelfOpenTime;
+    private boolean stallDonate;
 
     /* other */
     private boolean receivePoint;
@@ -725,6 +729,15 @@ public class Config {
         return getConfig().animalConsumeProp;
     }
 
+    public static void setCollectGiftBox(boolean b) {
+        getConfig().collectGiftBox = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectGiftBox() {
+        return getConfig().collectGiftBox;
+    }
+
     /* farm */
     public static void setEnableFarm(boolean b) {
         getConfig().enableFarm = b;
@@ -1073,6 +1086,15 @@ public class Config {
         return getConfig().stallSelfOpenTime;
     }
 
+    public static void setStallDonate(boolean b) {
+        getConfig().stallDonate = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallDonate() {
+        return getConfig().stallDonate;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1284,6 +1306,7 @@ public class Config {
         c.antOcean = true;
         c.userPatrol = true;
         c.animalConsumeProp = true;
+        c.collectGiftBox = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1333,6 +1356,7 @@ public class Config {
         c.stallBlackList = new ArrayList<>();
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
+        c.stallDonate = false;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1542,6 +1566,8 @@ public class Config {
 
             config.animalConsumeProp = jo.optBoolean(jn_animalConsumeProp, true);
 
+            config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1685,6 +1711,8 @@ public class Config {
             config.stallAllowOpenTime = jo.optInt(jn_stallAllowOpenTime, 121);
 
             config.stallSelfOpenTime = jo.optInt(jn_stallSelfOpenTime, 120);
+
+            config.stallDonate = jo.optBoolean(jn_stallDonate, false);
 
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
@@ -1889,6 +1917,8 @@ public class Config {
 
             jo.put(jn_animalConsumeProp, config.animalConsumeProp);
 
+            jo.put(jn_collectGiftBox, config.collectGiftBox);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -1995,6 +2025,7 @@ public class Config {
             jo.put(jn_stallBlackList, ja);
             jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
+            jo.put(jn_stallDonate, config.stallDonate);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);
