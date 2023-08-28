@@ -238,7 +238,7 @@ public class AntOrchard {
                     if (!"TODO".equals(jo.getString("taskStatus")))
                         continue;
                     String title = jo.getJSONObject("taskDisplayConfig").getString("title");
-                    if ("TRIGGER".equals(jo.getString("actionType"))) {
+                    if ("TRIGGER".equals(jo.getString("actionType")) || "ADD_HOME".equals(jo.getString("actionType"))) {
                         String taskId = jo.getString("taskId");
                         String sceneCode = jo.getString("sceneCode");
                         jo = new JSONObject(AntOrchardRpcCall.finishTask(userId, sceneCode, taskId));

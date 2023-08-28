@@ -495,7 +495,7 @@ public class AntStall {
                             s = AntStallRpcCall.projectDonate(projectId);
                             JSONObject joProjectDonate = new JSONObject(s);
                             if ("SUCCESS".equals(joProjectDonate.getString("resultCode"))) {
-                                JSONObject astUserVillageVO = joProjectDetail.getJSONObject("astUserVillageVO");
+                                JSONObject astUserVillageVO = joProjectDonate.getJSONObject("astUserVillageVO");
                                 if (astUserVillageVO.getInt("donateCount") >= astUserVillageVO.getInt("donateLimit")) {
                                     roadmap();
                                 }
