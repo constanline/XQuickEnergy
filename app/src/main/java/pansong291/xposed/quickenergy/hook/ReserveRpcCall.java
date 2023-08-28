@@ -18,8 +18,9 @@ public class ReserveRpcCall {
     }
 
     public static String queryTreeForExchange(String projectId) {
-        return RpcUtil.request("alipay.antforest.forest.h5.queryTreeForExchange", "[{\"projectId\":\"" + projectId
-                + "\",\"version\":\"" + VERSION + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+        return RpcUtil.request("alipay.antforest.forest.h5.queryTreeForExchange",
+                "[{\"projectId\":\"" + projectId + "\",\"version\":\"" + VERSION
+                        + "\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
     }
 
     public static String exchangeTree(String projectId) {

@@ -8,6 +8,9 @@ import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -95,9 +98,24 @@ public class AntFarm {
 
     private static FarmTool[] farmTools;
 
+    private static final List<String> bizKeyList;
+
+    static {
+        bizKeyList = new ArrayList<>();
+        bizKeyList.add("ADD_GONGGE_NEW");
+        bizKeyList.add("USER_STARVE_PUSH");
+        bizKeyList.add("HIRE_LOW_ACTIVITY");
+        bizKeyList.add("HEART_DONATION_ADVANCED_FOOD_V2");
+        bizKeyList.add("YEB_PURCHASE");
+        bizKeyList.add("ONLINE_PAY");
+        bizKeyList.add("DIANTAOHUANDUAN");
+    }
+
     public static void start() {
         if (!Config.enableFarm())
             return;
+
+        PluginUtils.invoke(AntFarm.class, PluginUtils.PluginAction.START);
         new Thread() {
 
             @Override
@@ -220,6 +238,10 @@ public class AntFarm {
                         cook(userId);
                     }
 
+                    if (Config.chickenDiary()) {
+                        queryChickenDiaryList();
+                    }
+
                     if (Config.useNewEggTool()) {
                         useFarmTool(ownerFarmId, ToolType.NEWEGGTOOL);
                         syncAnimalStatus(ownerFarmId);
@@ -281,6 +303,8 @@ public class AntFarm {
                             animalSleep();
                         }
                     }
+
+                    PluginUtils.invoke(AntFarm.class, PluginUtils.PluginAction.STOP);
 
                 } catch (Throwable t) {
                     Log.i(TAG, "AntFarm.start.run err:");
@@ -687,42 +711,39 @@ public class AntFarm {
                 for (int i = 0; i < jaFarmTaskList.length(); i++) {
                     jo = jaFarmTaskList.getJSONObject(i);
                     String title = null;
-                    String taskId = null;
-                    int awardCount = 0;
-                    if (!jo.has("taskMode"))
-                        continue;
                     if (jo.has("title"))
                         title = jo.getString("title");
-                    if ("VIEW".equals(jo.getString("taskMode")) && "TODO".equals(jo.getString("taskStatus"))) {
-                        taskId = jo.getString("taskId");
-                        awardCount = jo.getInt("awardCount");
-                        jo = new JSONObject(AntFarmRpcCall.doFarmTask(taskId));
-                        if ("SUCCESS".equals(jo.getString("memo"))) {
-                            Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
-                        } else {
-                            Log.recordLog(jo.getString("memo"), jo.toString());
-                        }
-                    } else if ("庄园小视频".equals(title) && "TODO".equals(jo.getString("taskStatus"))) {
-                        awardCount = jo.getInt("awardCount");
-                        jo = new JSONObject(AntFarmRpcCall.queryTabVideoUrl());
-                        if ("SUCCESS".equals(jo.getString("memo"))) {
-                            String videoUrl = jo.getString("videoUrl");
-                            String contentId = videoUrl.substring(videoUrl.indexOf("&contentId=") + 1,
-                                    videoUrl.indexOf("&refer"));
-                            jo = new JSONObject(AntFarmRpcCall.videoDeliverModule(contentId));
-                            if (jo.getBoolean("success")) {
-                                Thread.sleep(15100);
-                                jo = new JSONObject(AntFarmRpcCall.videoTrigger(contentId));
+                    if ("TODO".equals(jo.getString("taskStatus"))) {
+                        int awardCount = jo.optInt("awardCount");
+                        String bizKey = jo.getString("bizKey");
+                        if ("VIEW".equals(jo.optString("taskMode")) || bizKeyList.contains(bizKey)) {
+                            jo = new JSONObject(AntFarmRpcCall.doFarmTask(bizKey));
+                            if ("SUCCESS".equals(jo.getString("memo"))) {
+                                Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                            } else {
+                                Log.recordLog(jo.getString("memo"), jo.toString());
+                            }
+                        } else if ("庄园小视频".equals(title)) {
+                            jo = new JSONObject(AntFarmRpcCall.queryTabVideoUrl());
+                            if ("SUCCESS".equals(jo.getString("memo"))) {
+                                String videoUrl = jo.getString("videoUrl");
+                                String contentId = videoUrl.substring(videoUrl.indexOf("&contentId=") + 1,
+                                        videoUrl.indexOf("&refer"));
+                                jo = new JSONObject(AntFarmRpcCall.videoDeliverModule(contentId));
                                 if (jo.getBoolean("success")) {
-                                    Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                                    Thread.sleep(15100);
+                                    jo = new JSONObject(AntFarmRpcCall.videoTrigger(contentId));
+                                    if (jo.getBoolean("success")) {
+                                        Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                                    } else {
+                                        Log.recordLog(jo.getString("resultMsg"), jo.toString());
+                                    }
                                 } else {
                                     Log.recordLog(jo.getString("resultMsg"), jo.toString());
                                 }
                             } else {
-                                Log.recordLog(jo.getString("resultMsg"), jo.toString());
+                                Log.recordLog(jo.getString("memo"), jo.toString());
                             }
-                        } else {
-                            Log.recordLog(jo.getString("memo"), jo.toString());
                         }
                     }
                 }
@@ -1362,6 +1383,62 @@ public class AntFarm {
 
         } catch (Throwable t) {
             Log.i(TAG, "acceptGift err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void queryChickenDiary(String queryDayStr) {
+        try {
+            JSONObject jo = new JSONObject(AntFarmRpcCall.queryChickenDiary(queryDayStr));
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONObject chickenDiary = jo.getJSONObject("data").getJSONObject("chickenDiary");
+                String diaryDateStr = chickenDiary.getString("diaryDateStr");
+                if (!chickenDiary.has("tietieStatus"))
+                    return;
+                JSONObject tietieStatus = chickenDiary.getJSONObject("tietieStatus");
+                Iterator it = tietieStatus.keys();
+                while (it.hasNext()) {
+                    String key = (String) it.next();
+                    if (tietieStatus.optBoolean(key, false)) {
+                        jo = new JSONObject(AntFarmRpcCall.diaryTietie(diaryDateStr, key));
+                        if ("SUCCESS".equals(jo.getString("memo"))) {
+                            String prizeType = jo.getString("prizeType");
+                            int prizeNum = jo.optInt("prizeNum", 0);
+                            Log.farm("贴贴小鸡💞[" + prizeType + "*" + prizeNum + "]");
+                        } else {
+                            Log.i(jo.getString("memo"), jo.toString());
+                        }
+                    }
+                }
+            } else {
+                Log.i(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "queryChickenDiary err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void queryChickenDiaryList() {
+        try {
+            JSONObject jo = new JSONObject(AntFarmRpcCall.queryChickenDiaryList());
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray chickenDiaryBriefList = jo.getJSONObject("data").optJSONArray("chickenDiaryBriefList");
+                if (chickenDiaryBriefList != null && chickenDiaryBriefList.length() > 0) {
+                    for (int i = 0; i < chickenDiaryBriefList.length(); i++) {
+                        jo = chickenDiaryBriefList.getJSONObject(i);
+                        if (!jo.optBoolean("read", true)) {
+                            String dateStr = jo.getString("dateStr");
+                            queryChickenDiary(dateStr);
+                            Thread.sleep(300);
+                        }
+                    }
+                }
+            } else {
+                Log.i(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "queryChickenDiaryList err:");
             Log.printStackTrace(TAG, t);
         }
     }

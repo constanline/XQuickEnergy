@@ -64,6 +64,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             classLoader = lpparam.classLoader;
             hookRpcCall(lpparam.classLoader);
             hookService(lpparam.classLoader);
+            PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
         }
     }
 
@@ -81,6 +82,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             runnable = new Runnable() {
                 @Override
                 public void run() {
+                    PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.START);
                     String targetUid = RpcUtil.getUserId(XposedHook.classLoader);
                     if (targetUid != null) {
                         FriendIdMap.currentUid = targetUid;
@@ -110,6 +112,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     } else {
                         AntForestNotification.stop(service, false);
                     }
+
+                    PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.STOP);
                 }
             };
         }

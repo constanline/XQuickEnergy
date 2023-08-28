@@ -86,7 +86,7 @@ public class Statistics {
             jn_memberSignInList = "memberSignInList", jn_kbSignIn = "kbSignIn",
             jn_exchangeDoubleCard = "exchangeDoubleCard", jn_exchangeTimes = "exchangeTimes",
             jn_dailyAnswerList = "dailyAnswerList", jn_doubleTimes = "doubleTimes",
-            jn_SpreadManureList = "SpreadManureList";
+            jn_SpreadManureList = "SpreadManureList", jn_protectBubbleList = "protectBubbleList";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -101,6 +101,7 @@ public class Statistics {
     private ArrayList<String> beachTodayList;
     private ArrayList<String> ancientTreeCityCodeList;
     private ArrayList<String> exchangeList;
+    private ArrayList<String> protectBubbleList;
     private int exchangeDoubleCard = 0;
     private int exchangeTimes = 0;
     private int doubleTimes = 0;
@@ -428,7 +429,7 @@ public class Statistics {
         } else {
             vfl = stat.visitFriendLogList.get(index);
         }
-        vfl.visitCount= count;
+        vfl.visitCount = count;
         save();
     }
 
@@ -480,6 +481,19 @@ public class Statistics {
         Statistics stat = getStatistics();
         if (!stat.exchangeList.contains(uid)) {
             stat.exchangeList.add(uid);
+            save();
+        }
+    }
+
+    public static boolean canProtectBubbleToday(String uid) {
+        Statistics stat = getStatistics();
+        return !stat.protectBubbleList.contains(uid);
+    }
+
+    public static void protectBubbleToday(String uid) {
+        Statistics stat = getStatistics();
+        if (!stat.protectBubbleList.contains(uid)) {
+            stat.protectBubbleList.add(uid);
             save();
         }
     }
@@ -610,6 +624,7 @@ public class Statistics {
         stat.cooperateWaterList.clear();
         stat.syncStepList.clear();
         stat.exchangeList.clear();
+        stat.protectBubbleList.clear();
         stat.reserveLogList.clear();
         stat.beachTodayList.clear();
         stat.ancientTreeCityCodeList.clear();
@@ -661,6 +676,8 @@ public class Statistics {
             stat.beachTodayList = new ArrayList<>();
         if (stat.exchangeList == null)
             stat.exchangeList = new ArrayList<>();
+        if (stat.protectBubbleList == null)
+            stat.protectBubbleList = new ArrayList<>();
         if (stat.dailyAnswerList == null)
             stat.dailyAnswerList = new HashSet<>();
         return stat;
@@ -759,6 +776,16 @@ public class Statistics {
                 JSONArray ja = jo.getJSONArray(jn_exchangeList);
                 for (int i = 0; i < ja.length(); i++) {
                     stat.exchangeList.add(ja.getString(i));
+
+                }
+            }
+
+            stat.protectBubbleList = new ArrayList<>();
+
+            if (jo.has(jn_protectBubbleList)) {
+                JSONArray ja = jo.getJSONArray(jn_protectBubbleList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.protectBubbleList.add(ja.getString(i));
 
                 }
             }
@@ -951,6 +978,12 @@ public class Statistics {
                 ja.put(stat.exchangeList.get(i));
             }
             jo.put(jn_exchangeList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.protectBubbleList.size(); i++) {
+                ja.put(stat.protectBubbleList.get(i));
+            }
+            jo.put(jn_protectBubbleList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.ancientTreeCityCodeList.size(); i++) {

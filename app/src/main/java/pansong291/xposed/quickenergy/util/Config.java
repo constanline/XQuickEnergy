@@ -101,6 +101,7 @@ public class Config {
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
     public static final String jn_acceptGift = "acceptGift";
     public static final String jn_visitFriendList = "visitFriendList";
+    public static final String jn_chickenDiary = "chickenDiary";
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_orchardSpreadManureCount = "orchardSpreadManureCount";
@@ -108,6 +109,7 @@ public class Config {
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
+    public static final String jn_collectGiftBox = "collectGiftBox";
 
     public static final String jn_enableStall = "enableStall";
     public static final String jn_stallAutoOpen = "stallAutoOpen";
@@ -121,6 +123,7 @@ public class Config {
     public static final String jn_stallAllowOpenTime = "stallAllowOpenTime";
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
     public static final String jn_stallDonate = "stallDonate";
+    public static final String jn_stallInviteRegister = "stallInviteRegister";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -203,6 +206,7 @@ public class Config {
     private boolean antOcean;
     private boolean userPatrol;
     private boolean animalConsumeProp;
+    private boolean collectGiftBox;
 
     /* farm */
     private boolean enableFarm;
@@ -232,6 +236,7 @@ public class Config {
     private boolean acceptGift;
     private List<String> visitFriendList;
     private List<Integer> visitFriendCountList;
+    private boolean chickenDiary;
     private boolean antOrchard;
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
@@ -248,6 +253,7 @@ public class Config {
     private int stallAllowOpenTime;
     private int stallSelfOpenTime;
     private boolean stallDonate;
+    private boolean stallInviteRegister;
 
     /* other */
     private boolean receivePoint;
@@ -266,7 +272,7 @@ public class Config {
     private boolean merchantKmdk;
 
     /* base */
-    private volatile static Config config;
+    private static volatile Config config;
 
     /* application */
     public static void setImmediateEffect(boolean b) {
@@ -659,8 +665,8 @@ public class Config {
         return getConfig().exchangeEnergyDoubleClick;
     }
 
-    public static void setExchangeEnergyDoubleClick(boolean exchangeEnergyDoubleClick) {
-        getConfig().exchangeEnergyDoubleClick = exchangeEnergyDoubleClick;
+    public static void setExchangeEnergyDoubleClick(boolean b) {
+        getConfig().exchangeEnergyDoubleClick = b;
         hasChanged = true;
     }
 
@@ -668,8 +674,8 @@ public class Config {
         return getConfig().exchangeEnergyDoubleClickCount;
     }
 
-    public static void setExchangeEnergyDoubleClickCount(int exchangeEnergyDoubleClickCount) {
-        getConfig().exchangeEnergyDoubleClickCount = exchangeEnergyDoubleClickCount;
+    public static void setExchangeEnergyDoubleClickCount(int i) {
+        getConfig().exchangeEnergyDoubleClickCount = i;
         hasChanged = true;
     }
 
@@ -725,6 +731,15 @@ public class Config {
 
     public static boolean animalConsumeProp() {
         return getConfig().animalConsumeProp;
+    }
+
+    public static void setCollectGiftBox(boolean b) {
+        getConfig().collectGiftBox = b;
+        hasChanged = true;
+    }
+
+    public static boolean collectGiftBox() {
+        return getConfig().collectGiftBox;
     }
 
     /* farm */
@@ -955,6 +970,15 @@ public class Config {
         return getConfig().visitFriendCountList;
     }
 
+    public static void setChickenDiary(boolean b) {
+        getConfig().chickenDiary = b;
+        hasChanged = true;
+    }
+
+    public static boolean chickenDiary() {
+        return getConfig().chickenDiary;
+    }
+
     public static void setAntOrchard(boolean b) {
         getConfig().antOrchard = b;
         hasChanged = true;
@@ -1073,6 +1097,15 @@ public class Config {
 
     public static boolean stallDonate() {
         return getConfig().stallDonate;
+    }
+
+    public static void setStallInviteRegister(boolean b) {
+        getConfig().stallInviteRegister = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallInviteRegister() {
+        return getConfig().stallInviteRegister;
     }
 
     /* other */
@@ -1203,7 +1236,7 @@ public class Config {
     }
 
     /* base */
-    private synchronized static Config getConfig() {
+    private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
             shouldReload = false;
             String confJson = null;
@@ -1284,6 +1317,7 @@ public class Config {
         c.antOcean = true;
         c.userPatrol = true;
         c.animalConsumeProp = true;
+        c.collectGiftBox = true;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1320,6 +1354,7 @@ public class Config {
             c.visitFriendList = new ArrayList<>();
         if (c.visitFriendCountList == null)
             c.visitFriendCountList = new ArrayList<>();
+        c.chickenDiary = true;
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
@@ -1336,6 +1371,7 @@ public class Config {
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
         c.stallDonate = false;
+        c.stallInviteRegister = false;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1597,6 +1633,9 @@ public class Config {
             config.animalConsumeProp = jo.optBoolean(jn_animalConsumeProp, true);
             Log.i(TAG, jn_animalConsumeProp + ":" + config.animalConsumeProp);
 
+            config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
+            Log.i(TAG, jn_collectGiftBox + ":" + config.collectGiftBox);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
             Log.i(TAG, jn_enableFarm + ":" + config.enableFarm);
@@ -1718,6 +1757,8 @@ public class Config {
             }
             Log.i(TAG, jn_visitFriendList + ":" + String.join(",", config.visitFriendList));
 
+            config.chickenDiary = jo.optBoolean(jn_chickenDiary, true);
+
             config.antOrchard = jo.optBoolean(jn_antOrchard, true);
             Log.i(TAG, jn_antOrchard + ":" + config.antOrchard);
 
@@ -1774,6 +1815,8 @@ public class Config {
             config.stallSelfOpenTime = jo.optInt(jn_stallSelfOpenTime, 120);
 
             config.stallDonate = jo.optBoolean(jn_stallDonate, false);
+
+            config.stallInviteRegister = jo.optBoolean(jn_stallInviteRegister, true);
 
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
@@ -1991,6 +2034,8 @@ public class Config {
 
             jo.put(jn_animalConsumeProp, config.animalConsumeProp);
 
+            jo.put(jn_collectGiftBox, config.collectGiftBox);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -2066,6 +2111,8 @@ public class Config {
             }
             jo.put(jn_visitFriendList, ja);
 
+            jo.put(jn_chickenDiary, config.chickenDiary);
+
             jo.put(jn_antOrchard, config.antOrchard);
 
             jo.put(jn_receiveOrchardTaskAward, config.receiveOrchardTaskAward);
@@ -2096,7 +2143,7 @@ public class Config {
             jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
             jo.put(jn_stallDonate, config.stallDonate);
-
+            jo.put(jn_stallInviteRegister, config.stallInviteRegister);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);

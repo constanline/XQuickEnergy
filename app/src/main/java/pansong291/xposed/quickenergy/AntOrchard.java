@@ -3,17 +3,7 @@ package pansong291.xposed.quickenergy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntOrchardRpcCall;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.FileUtils;
-import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.RandomUtils;
-import pansong291.xposed.quickenergy.util.StringUtil;
-import pansong291.xposed.quickenergy.util.Statistics;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import pansong291.xposed.quickenergy.util.*;
 
 public class AntOrchard {
     private static final String TAG = AntOrchard.class.getCanonicalName();
@@ -24,6 +14,7 @@ public class AntOrchard {
     public static void start() {
         if (!Config.antOrchard())
             return;
+        PluginUtils.invoke(AntOrchard.class, PluginUtils.PluginAction.START);
         new Thread() {
             @Override
             public void run() {
@@ -65,6 +56,7 @@ public class AntOrchard {
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }
+                    PluginUtils.invoke(AntOrchard.class, PluginUtils.PluginAction.STOP);
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
@@ -93,7 +85,7 @@ public class AntOrchard {
     private static boolean canSpreadManureContinue(String stageBefore, String stageAfter) {
         Double bef = Double.parseDouble(StringUtil.getSubString(stageBefore, "施肥", "%"));
         Double aft = Double.parseDouble(StringUtil.getSubString(stageAfter, "施肥", "%"));
-        if (bef - aft > 0.01)
+        if (bef - aft != 0.01)
             return true;
         Log.recordLog("施肥只加0.01%进度今日停止施肥！");
         return false;
@@ -191,7 +183,6 @@ public class AntOrchard {
             String itemId = lotteryPlusInfo.getString("itemId");
             JSONObject jo = lotteryPlusInfo.getJSONObject("userSevenDaysGiftsItem");
             JSONArray ja = jo.getJSONArray("userEverydayGiftItems");
-            int index = -1;
             for (int i = 0; i < ja.length(); i++) {
                 jo = ja.getJSONObject(i);
                 if (jo.getString("itemId").equals(itemId)) {
@@ -238,7 +229,7 @@ public class AntOrchard {
                     if (!"TODO".equals(jo.getString("taskStatus")))
                         continue;
                     String title = jo.getJSONObject("taskDisplayConfig").getString("title");
-                    if ("TRIGGER".equals(jo.getString("actionType"))) {
+                    if ("TRIGGER".equals(jo.getString("actionType")) || "ADD_HOME".equals(jo.getString("actionType"))) {
                         String taskId = jo.getString("taskId");
                         String sceneCode = jo.getString("sceneCode");
                         jo = new JSONObject(AntOrchardRpcCall.finishTask(userId, sceneCode, taskId));
@@ -346,6 +337,7 @@ public class AntOrchard {
                         if ("100".equals(jo.getString("resultCode"))) {
                             Log.farm("许愿奖励✨[肥料" + jo.getInt("amount") + "g]");
                             querySubplotsActivity(taskRequire);
+                            return;
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         }

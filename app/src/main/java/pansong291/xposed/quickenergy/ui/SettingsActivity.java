@@ -44,7 +44,7 @@ public class SettingsActivity extends Activity {
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
-            sw_stallOpenType;
+            sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +187,7 @@ public class SettingsActivity extends Activity {
         sw_useAccelerateTool = findViewById(R.id.sw_useAccelerateTool);
         sw_notifyFriend = findViewById(R.id.sw_notifyFriend);
         sw_acceptGift = findViewById(R.id.sw_acceptGift);
+        sw_chickenDiary = findViewById(R.id.sw_chickenDiary);
         sw_antOrchard = findViewById(R.id.sw_antOrchard);
         sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
@@ -208,6 +209,7 @@ public class SettingsActivity extends Activity {
         sw_antOcean = findViewById(R.id.sw_antOcean);
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
+        sw_collectGiftBox = findViewById(R.id.sw_collectGiftBox);
 
         sw_enableStall = findViewById(R.id.sw_enableStall);
         sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
@@ -215,6 +217,8 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask = findViewById(R.id.sw_stallAutoTask);
         sw_stallReceiveAward = findViewById(R.id.sw_stallReceiveAward);
         sw_stallOpenType = findViewById(R.id.sw_stallOpenType);
+        sw_stallDonate = findViewById(R.id.sw_stallDonate);
+        sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
     }
 
     @Override
@@ -254,6 +258,7 @@ public class SettingsActivity extends Activity {
         sw_useAccelerateTool.setChecked(Config.useAccelerateTool());
         sw_notifyFriend.setChecked(Config.notifyFriend());
         sw_acceptGift.setChecked(Config.acceptGift());
+        sw_chickenDiary.setChecked(Config.chickenDiary());
         sw_antOrchard.setChecked(Config.antOrchard());
         sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
         sw_receivePoint.setChecked(Config.receivePoint());
@@ -275,6 +280,7 @@ public class SettingsActivity extends Activity {
         sw_antOcean.setChecked(Config.antOcean());
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
+        sw_collectGiftBox.setChecked(Config.collectGiftBox());
 
         sw_enableStall.setChecked(Config.enableStall());
         sw_stallAutoClose.setChecked(Config.stallAutoClose());
@@ -282,6 +288,8 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask.setChecked(Config.stallAutoTask());
         sw_stallReceiveAward.setChecked(Config.stallReceiveAward());
         sw_stallOpenType.setChecked(Config.stallOpenType());
+        sw_stallDonate.setChecked(Config.stallDonate());
+        sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -433,6 +441,10 @@ public class SettingsActivity extends Activity {
                     Config.setAcceptGift(sw.isChecked());
                     break;
 
+                case R.id.sw_chickenDiary:
+                    Config.setChickenDiary(sw.isChecked());
+                    break;
+
                 case R.id.sw_antOrchard:
                     Config.setAntOrchard(sw.isChecked());
                     break;
@@ -505,6 +517,10 @@ public class SettingsActivity extends Activity {
                     Config.setAnimalConsumeProp(sw.isChecked());
                     break;
 
+                case R.id.sw_collectGiftBox:
+                    Config.setCollectGiftBox(sw.isChecked());
+                    break;
+
                 case R.id.sw_enableStall:
                     Config.setEnableStall(sw.isChecked());
                     break;
@@ -527,6 +543,14 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_stallOpenType:
                     Config.setStallOpenType(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallDonate:
+                    Config.setStallDonate(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallInviteRegister:
+                    Config.setStallInviteRegister(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
