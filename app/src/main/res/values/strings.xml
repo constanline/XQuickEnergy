@@ -142,5 +142,7 @@
     <string name="stall_self_open_time">Stall self open time</string>
     <string name="stall_black_list">Stall black list</string>
     <string name="chicken_diary">Chicken diary</string>
+    <string name="collect_gift_box">Collect gift box</string>
+    <string name="stall_invite_register">Stall invite register</string>
 
 </resources>

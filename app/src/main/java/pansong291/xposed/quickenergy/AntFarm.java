@@ -9,6 +9,8 @@ import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -95,6 +97,19 @@ public class AntFarm {
     private static int unreceiveTaskAward = 0;
 
     private static FarmTool[] farmTools;
+
+    private static List<String> bizKeyList;
+
+    static {
+        bizKeyList = new ArrayList<>();
+        bizKeyList.add("ADD_GONGGE_NEW");
+        bizKeyList.add("USER_STARVE_PUSH");
+        bizKeyList.add("HIRE_LOW_ACTIVITY");
+        bizKeyList.add("HEART_DONATION_ADVANCED_FOOD_V2");
+        bizKeyList.add("YEB_PURCHASE");
+        bizKeyList.add("ONLINE_PAY");
+        bizKeyList.add("DIANTAOHUANDUAN");
+    }
 
     public static void start() {
         if (!Config.enableFarm())
@@ -692,42 +707,41 @@ public class AntFarm {
                 for (int i = 0; i < jaFarmTaskList.length(); i++) {
                     jo = jaFarmTaskList.getJSONObject(i);
                     String title = null;
-                    String taskId = null;
                     int awardCount = 0;
-                    if (!jo.has("taskMode"))
-                        continue;
                     if (jo.has("title"))
                         title = jo.getString("title");
-                    if ("VIEW".equals(jo.getString("taskMode")) && "TODO".equals(jo.getString("taskStatus"))) {
-                        taskId = jo.getString("taskId");
-                        awardCount = jo.getInt("awardCount");
-                        jo = new JSONObject(AntFarmRpcCall.doFarmTask(taskId));
-                        if ("SUCCESS".equals(jo.getString("memo"))) {
-                            Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
-                        } else {
-                            Log.recordLog(jo.getString("memo"), jo.toString());
-                        }
-                    } else if ("庄园小视频".equals(title) && "TODO".equals(jo.getString("taskStatus"))) {
-                        awardCount = jo.getInt("awardCount");
-                        jo = new JSONObject(AntFarmRpcCall.queryTabVideoUrl());
-                        if ("SUCCESS".equals(jo.getString("memo"))) {
-                            String videoUrl = jo.getString("videoUrl");
-                            String contentId = videoUrl.substring(videoUrl.indexOf("&contentId=") + 1,
-                                    videoUrl.indexOf("&refer"));
-                            jo = new JSONObject(AntFarmRpcCall.videoDeliverModule(contentId));
-                            if (jo.getBoolean("success")) {
-                                Thread.sleep(15100);
-                                jo = new JSONObject(AntFarmRpcCall.videoTrigger(contentId));
+                    String bizKey = jo.getString("bizKey");
+                    if ("TODO".equals(jo.getString("taskStatus"))) {
+                        if ("VIEW".equals(jo.optString("taskMode", null)) || bizKeyList.contains(bizKey)) {
+                            awardCount = jo.getInt("awardCount");
+                            jo = new JSONObject(AntFarmRpcCall.doFarmTask(bizKey));
+                            if ("SUCCESS".equals(jo.getString("memo"))) {
+                                Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                            } else {
+                                Log.recordLog(jo.getString("memo"), jo.toString());
+                            }
+                        } else if ("庄园小视频".equals(title)) {
+                            awardCount = jo.getInt("awardCount");
+                            jo = new JSONObject(AntFarmRpcCall.queryTabVideoUrl());
+                            if ("SUCCESS".equals(jo.getString("memo"))) {
+                                String videoUrl = jo.getString("videoUrl");
+                                String contentId = videoUrl.substring(videoUrl.indexOf("&contentId=") + 1,
+                                        videoUrl.indexOf("&refer"));
+                                jo = new JSONObject(AntFarmRpcCall.videoDeliverModule(contentId));
                                 if (jo.getBoolean("success")) {
-                                    Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                                    Thread.sleep(15100);
+                                    jo = new JSONObject(AntFarmRpcCall.videoTrigger(contentId));
+                                    if (jo.getBoolean("success")) {
+                                        Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
+                                    } else {
+                                        Log.recordLog(jo.getString("resultMsg"), jo.toString());
+                                    }
                                 } else {
                                     Log.recordLog(jo.getString("resultMsg"), jo.toString());
                                 }
                             } else {
-                                Log.recordLog(jo.getString("resultMsg"), jo.toString());
+                                Log.recordLog(jo.getString("memo"), jo.toString());
                             }
-                        } else {
-                            Log.recordLog(jo.getString("memo"), jo.toString());
                         }
                     }
                 }

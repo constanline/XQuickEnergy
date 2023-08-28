@@ -238,7 +238,7 @@ public class AntOrchard {
                     if (!"TODO".equals(jo.getString("taskStatus")))
                         continue;
                     String title = jo.getJSONObject("taskDisplayConfig").getString("title");
-                    if ("TRIGGER".equals(jo.getString("actionType"))) {
+                    if ("TRIGGER".equals(jo.getString("actionType")) || "ADD_HOME".equals(jo.getString("actionType"))) {
                         String taskId = jo.getString("taskId");
                         String sceneCode = jo.getString("sceneCode");
                         jo = new JSONObject(AntOrchardRpcCall.finishTask(userId, sceneCode, taskId));
@@ -346,6 +346,7 @@ public class AntOrchard {
                         if ("100".equals(jo.getString("resultCode"))) {
                             Log.farm("许愿奖励✨[肥料" + jo.getInt("amount") + "g]");
                             querySubplotsActivity(taskRequire);
+                            return;
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         }

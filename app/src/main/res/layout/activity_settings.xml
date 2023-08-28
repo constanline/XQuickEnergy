@@ -658,6 +658,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_animalConsumeProp" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/collect_gift_box"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_collectGiftBox" />
 				</LinearLayout>
 				<!--庄园设置-->
 				<LinearLayout
@@ -1102,6 +1112,16 @@
 						android:id="@+id/btn_stallSelfOpenTime"
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_invite_register"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallInviteRegister" />
 
 				</LinearLayout>
 				<!--其他-->
