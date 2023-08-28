@@ -346,6 +346,7 @@ public class AntOrchard {
                         if ("100".equals(jo.getString("resultCode"))) {
                             Log.farm("许愿奖励✨[肥料" + jo.getInt("amount") + "g]");
                             querySubplotsActivity(taskRequire);
+                            return;
                         } else {
                             Log.recordLog(jo.getString("resultDesc"), jo.toString());
                         }

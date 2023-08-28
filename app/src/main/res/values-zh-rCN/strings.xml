@@ -141,5 +141,6 @@
     <string name="stall_black_list">禁摆摊列表(未实装)</string>
     <string name="chicken_diary">小鸡日记</string>
     <string name="collect_gift_box">领取礼盒</string>
+    <string name="stall_invite_register">邀请好友开通新村</string>
 
 </resources>

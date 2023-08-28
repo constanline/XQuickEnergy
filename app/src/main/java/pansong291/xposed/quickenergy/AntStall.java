@@ -329,17 +329,27 @@ public class AntStall {
                     if ("FINISHED".equals(taskStatus)) {
                         receiveTaskAward(task.getString("taskType"));
                     } else if ("TODO".equals(taskStatus)) {
+                        JSONObject bizInfo = new JSONObject(task.getString("bizInfo"));
                         String taskType = task.getString("taskType");
-                        if (taskType.startsWith("ANTSTALL_TASK_mulanxiaowu")) {
+                        String title = bizInfo.optString("title", taskType);
+                        if ("VISIT_AUTO_FINISH".equals(bizInfo.getString("actionType"))
+                                || "ANTSTALL_NORMAL_OPEN_NOTICE".equals(taskType) || "tianjiashouye".equals(taskType)) {
                             if (finishTask(taskType)) {
+                                Log.farm("蚂蚁新村⛪[完成任务]#" + title);
                                 taskList();
                                 return;
                             }
                         } else if ("ANTSTALL_NORMAL_DAILY_QA".equals(taskType)) {
-                            String bizInfo = task.getString("bizInfo");
-                            if (ReadingDada.answerQuestion(new JSONObject(bizInfo))) {
+                            if (ReadingDada.answerQuestion(bizInfo)) {
                                 receiveTaskAward(taskType);
                             }
+                        } else if ("ANTSTALL_NORMAL_INVITE_REGISTER".equals(taskType)) {
+                            if (inviteRegister()) {
+                                taskList();
+                                return;
+                            }
+                        } else if ("ANTSTALL_P2P_DAILY_SHARER".equals(taskType)) {
+                            // shareP2P();
                         }
                     }
                 }
@@ -390,8 +400,7 @@ public class AntStall {
         String s = AntStallRpcCall.finishTask(FriendIdMap.currentUid + "_" + taskType, taskType);
         try {
             JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                Log.farm("蚂蚁新村⛪[完成任务]");
+             if (jo.getBoolean("success")) {
                 return true;
             } else {
                 Log.recordLog("finishTask err:", s);
@@ -401,6 +410,73 @@ public class AntStall {
             Log.printStackTrace(TAG, t);
         }
         return false;
+    }
+
+    private static boolean inviteRegister() {
+        if (!Config.stallInviteRegister()) {
+            return false;
+        }
+        try {
+            String s = AntStallRpcCall.rankInviteRegister();
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray friendRankList = jo.optJSONArray("friendRankList");
+                if (friendRankList != null && friendRankList.length() > 0) {
+                    for (int i = 0; i < friendRankList.length(); i++) {
+                        JSONObject friend = friendRankList.getJSONObject(i);
+                        if (friend.optBoolean("canInviteRegister", false)
+                                && "UNREGISTER".equals(friend.getString("userStatus"))) {/* 是否加名单筛选 */
+                            String userId = friend.getString("userId");
+                            jo = new JSONObject(AntStallRpcCall.friendInviteRegister(userId));
+                            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                                Log.farm("邀请好友[" + FriendIdMap.getNameById(userId) + "]#开通新村");
+                                return true;
+                            } else {
+                                Log.recordLog("friendInviteRegister err:", jo.toString());
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog("rankInviteRegister err:", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "InviteRegister err:");
+            Log.printStackTrace(TAG, t);
+        }
+        return false;
+    }
+
+    private static void shareP2P() {
+        try {
+            String s = AntStallRpcCall.shareP2P();
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                String shareId = jo.getString("shareId");
+                /* 保存shareId到Statistics */
+                Log.recordLog("蚂蚁新村⛪[分享助力]");
+            } else {
+                Log.recordLog("shareP2P err:", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "shareP2P err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void achieveBeShareP2P(String shareId) {
+        try {
+            String s = AntStallRpcCall.achieveBeShareP2P(shareId);
+            JSONObject jo = new JSONObject(s);
+            if (jo.getBoolean("success")) {
+                Log.recordLog("蚂蚁新村⛪[助力成功]");
+            } else {
+                Log.recordLog("achieveBeShareP2P err:", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "achieveBeShareP2P err:");
+            Log.printStackTrace(TAG, t);
+        }
     }
 
     private static void donate() {

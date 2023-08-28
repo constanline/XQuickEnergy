@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity {
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
-            sw_stallOpenType, sw_chickenDiary, sw_collectGiftBox;
+            sw_stallOpenType, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,6 +217,7 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask = findViewById(R.id.sw_stallAutoTask);
         sw_stallReceiveAward = findViewById(R.id.sw_stallReceiveAward);
         sw_stallOpenType = findViewById(R.id.sw_stallOpenType);
+        sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
     }
 
     @Override
@@ -285,6 +286,7 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask.setChecked(Config.stallAutoTask());
         sw_stallReceiveAward.setChecked(Config.stallReceiveAward());
         sw_stallOpenType.setChecked(Config.stallOpenType());
+        sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -538,6 +540,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_stallOpenType:
                     Config.setStallOpenType(sw.isChecked());
+                    break;
+
+                case R.id.sw_stallInviteRegister:
+                    Config.setStallInviteRegister(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {

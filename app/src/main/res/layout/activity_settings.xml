@@ -1113,6 +1113,16 @@
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
 
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_invite_register"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallInviteRegister" />
+
 				</LinearLayout>
 				<!--其他-->
 				<LinearLayout

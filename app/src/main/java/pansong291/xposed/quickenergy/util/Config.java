@@ -121,6 +121,7 @@ public class Config {
     public static final String jn_stallAllowOpenTime = "stallAllowOpenTime";
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
     public static final String jn_stallDonate = "stallDonate";
+    public static final String jn_stallInviteRegister = "stallInviteRegister";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -250,6 +251,7 @@ public class Config {
     private int stallAllowOpenTime;
     private int stallSelfOpenTime;
     private boolean stallDonate;
+    private boolean stallInviteRegister;
 
     /* other */
     private boolean receivePoint;
@@ -1095,6 +1097,15 @@ public class Config {
         return getConfig().stallDonate;
     }
 
+    public static void setStallInviteRegister(boolean b) {
+        getConfig().stallInviteRegister = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallInviteRegister() {
+        return getConfig().stallInviteRegister;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1357,6 +1368,7 @@ public class Config {
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
         c.stallDonate = false;
+        c.stallInviteRegister = false;
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1714,6 +1726,8 @@ public class Config {
 
             config.stallDonate = jo.optBoolean(jn_stallDonate, false);
 
+            config.stallInviteRegister = jo.optBoolean(jn_stallInviteRegister, true);
+
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
 
@@ -2026,6 +2040,7 @@ public class Config {
             jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
             jo.put(jn_stallDonate, config.stallDonate);
+            jo.put(jn_stallInviteRegister, config.stallInviteRegister);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);

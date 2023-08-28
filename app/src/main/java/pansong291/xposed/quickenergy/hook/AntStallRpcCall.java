@@ -168,4 +168,32 @@ public class AntStallRpcCall {
                                 "[{\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
                                                 + VERSION + "\"}]");
         }
+
+        public static String rankInviteRegister() {
+                return RpcUtil.request("com.alipay.antstall.rank.invite.register",
+                                "[{\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                                                + VERSION + "\"}]");
+        }
+
+        public static String friendInviteRegister(String friendUserId) {
+                return RpcUtil.request("com.alipay.antstall.friend.invite.register",
+                                "[{\"friendUserId\":\"" + friendUserId
+                                                + "\",\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                                                + VERSION + "\"}]");
+        }
+
+        /* 助力好友 */
+        public static String shareP2P() {
+                return RpcUtil.request("com.alipay.antiep.shareP2P",
+                                "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTSTALL_P2P_SHARER\",\"source\":\"ANTSTALL\",\"systemType\":\"android\",\"version\":\""
+                                                + VERSION + "\"}]");
+        }
+
+        public static String achieveBeShareP2P(String shareId) {
+                return RpcUtil.request("com.alipay.antiep.achieveBeShareP2P",
+                                "[{\"requestType\":\"RPC\",\"sceneCode\":\"ANTSTALL_P2P_SHARER\",\"shareId\":\""
+                                                + shareId
+                                                + "\",\"source\":\"ANTSTALL\",\"systemType\":\"android\",\"version\":\""
+                                                + VERSION + "\"}]");
+        }
 }
