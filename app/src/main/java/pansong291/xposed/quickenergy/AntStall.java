@@ -47,7 +47,11 @@ public class AntStall {
                     Log.farm("蚂蚁新村⛪请先开启蚂蚁新村");
                     return;
                 }
-                settle(jo);
+
+                JSONObject seatsMap = jo.getJSONObject("seatsMap");
+                settle(seatsMap);
+
+                sendBack(seatsMap);
 
                 // shopList();
 
@@ -74,9 +78,60 @@ public class AntStall {
         }
     }
 
-    private static void settle(JSONObject stallHome) {
+    private static void sendBack(String billNo, String seatId, String shopId, String shopUserId) {
+        String s = AntStallRpcCall.shopSendBackPre(billNo, seatId, shopId, shopUserId);
         try {
-            JSONObject seatsMap = stallHome.getJSONObject("seatsMap");
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONObject astPreviewShopSettleVO = jo.getJSONObject("astPreviewShopSettleVO");
+                JSONObject income = astPreviewShopSettleVO.getJSONObject("income");
+                int amount = (int) income.getDouble("amount");
+                s = AntStallRpcCall.shopSendBack(seatId);
+                jo = new JSONObject(s);
+                if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                    Log.farm("蚂蚁新村⛪请走[" + FriendIdMap.getNameById(shopUserId) + "]的小摊" + (amount > 0 ? "获得金币" + amount : ""));
+                } else {
+                    Log.recordLog("sendBack err:", s);
+                }
+            } else {
+                Log.recordLog("sendBackPre err:", s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "sendBack err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void sendBack(JSONObject seatsMap) {
+        try {
+            for (int i = 1; i <= 2; i++) {
+                JSONObject seat = seatsMap.getJSONObject("GUEST_0" + i);
+                String rentLastUser = seat.getString("rentLastUser");
+                //白名单直接跳过
+                if (Config.stallWhiteList().contains(rentLastUser)) {
+                    continue;
+                }
+                String rentLastBill = seat.getString("rentLastBill");
+                String seatId = seat.getString("seatId");
+                String rentLastShop = seat.getString("rentLastShop");
+                //黑名单直接赶走
+                if (Config.stallBlackList().contains(rentLastUser)) {
+                    sendBack(rentLastBill, seatId, rentLastShop, rentLastUser);
+                    continue;
+                }
+                long bizStartTime = seat.getLong("bizStartTime");
+                if ((System.currentTimeMillis() - bizStartTime) / 1000 / 60 > Config.stallAllowOpenTime()) {
+                    sendBack(rentLastBill, seatId, rentLastShop, rentLastUser);
+                }
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "sendBack err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void settle(JSONObject seatsMap) {
+        try {
             JSONObject seat = seatsMap.getJSONObject("MASTER");
             if (seat.has("coinsMap")) {
                 JSONObject coinsMap = seat.getJSONObject("coinsMap");
@@ -189,6 +244,7 @@ public class AntStall {
         try {
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                Log.farm("蚂蚁新村⛪在[" + FriendIdMap.getNameById(userId) + "]家摆摊");
                 shopIds.poll();
             }
         } catch (Throwable t) {
@@ -228,55 +284,6 @@ public class AntStall {
         }
     }
 
-    private static void shopList() {
-        String s = AntStallRpcCall.shopList();
-        try {
-            JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                JSONArray astUserShopList = jo.getJSONArray("astUserShopList");
-                int openShop = 0;
-                for (int i = 0; i < astUserShopList.length(); i++) {
-                    JSONObject shop = astUserShopList.getJSONObject(i);
-                    if ("OPEN".equals(shop.getString("status"))) {
-                        openShop++;
-                    }
-                }
-                if (Config.stallAutoClose() && openShop > 0) {
-                    shopOneKeyClose();
-                    openShop = 0;
-                }
-                if (Config.stallAutoOpen() && openShop < 4) {
-                    shopOneKeyOpen();
-                }
-            } else {
-                Log.recordLog("shopList err:", s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "shopList err:");
-            Log.printStackTrace(TAG, t);
-        }
-
-    }
-
-    private static void shopOneKeyClose() {
-        String s = AntStallRpcCall.preOneKeyClose();
-        try {
-            JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                s = AntStallRpcCall.oneKeyClose();
-                jo = new JSONObject(s);
-                if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                    Log.farm("蚂蚁新村⛪[一键收摊]");
-                }
-            } else {
-                Log.recordLog("shopOneKeyClose err:", s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "shopOneKeyClose err:");
-            Log.printStackTrace(TAG, t);
-        }
-    }
-
     private static void shopClose(String shopId, String billNo, String userId) {
         String s = AntStallRpcCall.preShopClose(shopId, billNo);
         try {
@@ -295,21 +302,6 @@ public class AntStall {
             }
         } catch (Throwable t) {
             Log.i(TAG, "shopClose err:");
-            Log.printStackTrace(TAG, t);
-        }
-    }
-
-    private static void shopOneKeyOpen() {
-        String s = AntStallRpcCall.oneKeyOpen();
-        try {
-            JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                Log.farm("蚂蚁新村⛪[一键摆摊]");
-            } else {
-                Log.recordLog("shopOneKeyOpen err:", s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "shopOneKeyOpen err:");
             Log.printStackTrace(TAG, t);
         }
     }

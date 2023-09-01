@@ -1172,6 +1172,21 @@ public class Config {
         return getConfig().syncStepCount;
     }
 
+    private static int tmpStepCount = -1;
+    public static int tmpStepCount() {
+        if (tmpStepCount >= 0) {
+            return tmpStepCount;
+        }
+        tmpStepCount = Config.syncStepCount();
+        if (tmpStepCount > 0) {
+            tmpStepCount = RandomUtils.nextInt(tmpStepCount, tmpStepCount + 2000);
+            if (tmpStepCount > 100000) {
+                tmpStepCount = 100000;
+            }
+        }
+        return tmpStepCount;
+    }
+
     public static void setKbSginIn(boolean b) {
         getConfig().kbSignIn = b;
         hasChanged = true;

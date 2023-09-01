@@ -107,7 +107,6 @@ public class AntFarm {
         bizKeyList.add("HIRE_LOW_ACTIVITY");
         bizKeyList.add("HEART_DONATION_ADVANCED_FOOD_V2");
         bizKeyList.add("YEB_PURCHASE");
-        bizKeyList.add("ONLINE_PAY");
         bizKeyList.add("DIANTAOHUANDUAN");
     }
 
