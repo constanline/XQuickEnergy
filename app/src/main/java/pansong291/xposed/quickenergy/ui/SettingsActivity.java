@@ -734,6 +734,14 @@ public class SettingsActivity extends Activity {
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallOpenList(), null);
                     break;
 
+                case R.id.btn_stallWhiteList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallWhiteList(), null);
+                    break;
+
+                case R.id.btn_stallBlackList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallBlackList(), null);
+                    break;
+
                 case R.id.btn_stallAllowOpenTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.STALL_ALLOW_OPEN_TIME);
                     break;

@@ -120,7 +120,7 @@ public class XposedHook implements IXposedHookLoadPackage {
             };
         }
         try {
-            AntForestToast.show(service.getString(R.string.app_name) + "加载成功");
+            AntForestToast.show("芝麻粒加载成功");
             handler.removeCallbacks(runnable);
             AntForest.stop();
             AntForestNotification.stop(service, false);
