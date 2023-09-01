@@ -303,7 +303,7 @@ public class AntForest {
                     && jo.getLong("canCollectLaterTime") - System.currentTimeMillis() < Config.checkInterval());
             String userId = jo.getString("userId");
             if (Config.collectEnergy() && optBoolean && !userId.equals(selfId)) {
-                canCollectEnergy(userId, true);
+                canCollectEnergy(userId);
             }
             if (Config.helpFriendCollect() && jo.getBoolean("canProtectBubble") && restTimes > 0) {
                 restTimes = protectBubble(userId);
@@ -493,7 +493,7 @@ public class AntForest {
         return 39;
     }
 
-    private static void canCollectEnergy(String userId, boolean laterCollect) {
+    private static void canCollectEnergy(String userId) {
         if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System
                 .currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
@@ -545,7 +545,7 @@ public class AntForest {
                             break;
 
                         case WAITING:
-                            if (!laterCollect || Config.getDontCollectList().contains(userId))
+                            if (!true || Config.getDontCollectList().contains(userId))
                                 break;
                             long produceTime = bubble.getLong("produceTime");
                             if (produceTime - serverTime < Config.checkInterval())
@@ -1565,14 +1565,7 @@ public class AntForest {
 
         @Override
         public void run() {
-            int step = Config.syncStepCount();
-            if (step == 0) {
-                return;
-            }
-            step = RandomUtils.nextInt(step, step + 2000);
-            if (step > 100000) {
-                step = 100000;
-            }
+            int step = Config.tmpStepCount();
             try {
                 boolean booleanValue = (Boolean) XposedHelpers.callMethod(
                         XposedHelpers.callStaticMethod(
