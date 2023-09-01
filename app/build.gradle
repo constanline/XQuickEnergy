@@ -9,7 +9,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
         versionCode 60
-        versionName "1.1.8"
+        versionName "1.1.8-fix1"
     }
     buildTypes {
         release {
