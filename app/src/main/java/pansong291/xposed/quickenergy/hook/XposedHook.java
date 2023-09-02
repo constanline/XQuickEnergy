@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.*;
@@ -109,7 +110,14 @@ public class XposedHook implements IXposedHookLoadPackage {
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
-                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + Config.checkInterval());
+                        int interval = Config.checkInterval();
+
+                        if (TimeUtil.getTimeStr().compareTo("0719") > 0 && TimeUtil.getTimeStr().compareTo("0723") < 0) {
+                            interval = 60000;
+                        }
+                        XposedBridge.log("checkinterval:"+interval);
+                        Log.i(TAG, "checkinterval:"+interval);
+                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + interval);
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
                         AntForestNotification.stop(service, false);

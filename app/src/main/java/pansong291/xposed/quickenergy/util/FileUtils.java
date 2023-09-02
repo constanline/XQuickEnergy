@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
-
+import de.robv.android.xposed.XposedBridge;
 public class FileUtils {
     private static final String TAG = FileUtils.class.getCanonicalName();
     private static File mainDirectory;
@@ -44,7 +44,7 @@ public class FileUtils {
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
         if (mainDirectory == null) {
-            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }

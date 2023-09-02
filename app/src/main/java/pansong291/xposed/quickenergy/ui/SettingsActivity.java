@@ -646,6 +646,10 @@ public class SettingsActivity extends Activity {
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
 
+                case R.id.btn_masterIDList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getMasterIDList(), null);
+                    break;
+
                 case R.id.btn_reserveList:
                     ListDialog.show(this, btn.getText(), AlipayReserve.getList(), Config.getReserveList(),
                             Config.getReserveCountList());

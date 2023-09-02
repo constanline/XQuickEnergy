@@ -11,6 +11,8 @@ import pansong291.xposed.quickenergy.hook.EcoLifeRpcCall;
 import pansong291.xposed.quickenergy.hook.FriendManager;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 import pansong291.xposed.quickenergy.util.*;
+import de.robv.android.xposed.XposedBridge;
+
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -141,6 +143,7 @@ public class AntForest {
             @Override
             public void run() {
                 try {
+                    XposedBridge.log(TAG + "collect");
                     canCollectSelfEnergy();
                     queryEnergyRanking();
                     isScanning = false;
@@ -367,27 +370,40 @@ public class AntForest {
 
                 if (Config.collectEnergy()) {
                     Log.recordLog("进入[" + selfName + "]的蚂蚁森林", "");
-                    for (int i = 0; i < jaBubbles.length(); i++) {
-                        JSONObject bubble = jaBubbles.getJSONObject(i);
-                        long bubbleId = bubble.getLong("id");
-                        switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
-                            case AVAILABLE:
-                                if (Config.getDontCollectList().contains(selfId))
-                                    Log.recordLog("不收取[" + selfName + "]", ", userId=" + selfId);
-                                else
-                                    collectedEnergy += collectEnergy(selfId, bubbleId, selfName, null);
-                                break;
-
-                            case WAITING:
-                                if (Config.getDontCollectList().contains(selfId))
+                    List<String> list = Config.getMasterIDList();
+                    if (list.contains(FriendIdMap.currentUid)) {
+                        //String msg = "当前用户id:"+FriendIdMap.currentUid+":"+FriendIdMap.getNameById(FriendIdMap.currentUid)+",是大号";
+                        //AntForestToast.show(msg);
+                        for (int i = 0; i < jaBubbles.length(); i++) {
+                            JSONObject bubble = jaBubbles.getJSONObject(i);
+                            long bubbleId = bubble.getLong("id");
+                            switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
+                                case AVAILABLE:
+                                    if (Config.getDontCollectList().contains(selfId))
+                                        Log.recordLog("不收取[" + selfName + "]", ", userId=" + selfId);
+                                    else
+                                        collectedEnergy += collectEnergy(selfId, bubbleId, selfName, null);
                                     break;
-                                long produceTime = bubble.getLong("produceTime");
-                                if (produceTime - serverTime < Config.checkInterval())
-                                    execute(selfId, null, bubbleId, produceTime);
-                                else
-                                    setLaterTime(produceTime);
-                                break;
+
+                                case WAITING:
+                                    if (Config.getDontCollectList().contains(selfId))
+                                        break;
+                                    long produceTime = bubble.getLong("produceTime");
+                                    //XposedBridge.log("produceTime:"+produceTime);
+                                    if (produceTime - serverTime < Config.checkInterval()) {
+                                        Log.recordLog("set loop task","");
+                                        execute(selfId, null, bubbleId, produceTime);
+                                    } else {
+                                        setLaterTime(produceTime);
+                                    }
+                                    break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        String msg = "当前用户id:"+FriendIdMap.currentUid+":"+FriendIdMap.getNameById(FriendIdMap.currentUid)+",不是大号";
+                        AntForestToast.show(msg);
                     }
                 }
                 if (Config.collectWateringBubble()) {
@@ -494,6 +510,15 @@ public class AntForest {
     }
 
     private static void canCollectEnergy(String userId) {
+        List<String> list = Config.getMasterIDList();
+        if (list.contains(FriendIdMap.currentUid)) {
+            String msg = "当前用户id:"+FriendIdMap.currentUid+":"+FriendIdMap.getNameById(FriendIdMap.currentUid)+",是大号，收取能量";
+            Log.forest(msg);
+        } else {
+            String msg = "当前用户id:"+FriendIdMap.currentUid+":"+FriendIdMap.getNameById(FriendIdMap.currentUid)+",不是大号，不收取能量";
+            Log.forest(msg);
+            return;
+        }
         if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System
                 .currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
@@ -1643,14 +1668,22 @@ public class AntForest {
                 Log.recordLog("[" + FriendIdMap.getNameById(userId) + "]蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
                 // 20230725收取失败不再继续尝试
-                collectEnergy(userId, bubbleId, bizNo);
+                int collected = collectEnergy(userId, bubbleId, bizNo);
+                // 只定点收取大号的
+                List<String> list = Config.getMasterIDList();
+                if (list.contains(FriendIdMap.currentUid)) {
+                    if ( collected <= 0 )
+                    {   Log.recordLog("没有收到，开始循环收取", "");
+                        long time = System.currentTimeMillis();
+                        while (System.currentTimeMillis() - time < Config.collectTimeout()) {
+                            if (collectEnergy(userId, bubbleId, bizNo) > 0)
+                                break;
+                            sleep(1000);
+                        }
+                    }
+                }
 
-//                long time = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - time < Config.collectTimeout()) {
-//                    if (collectEnergy(userId, bubbleId, bizNo) > 0)
-//                        break;
-//                    sleep(500);
-//                }
+
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);
