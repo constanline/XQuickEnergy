@@ -40,26 +40,16 @@ jobs:
     #   with:
     #     arguments: build
 
-    - name: Sign Android Release
-      uses: ilharp/sign-android-release@v1
-      with:
-        releaseDir: app/build/outputs/apk/release/
-        buildToolsVersion: 30.0.3
-      env:
-        JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.20-8/x64
-        JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.20-8/x64
-        signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
 
-    
     - name: Sign app APK
       uses: ilharp/sign-android-release@v1
       id: sign_app
       with:
         releaseDir: app/build/outputs/apk/release/
-        signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-        keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-        keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-        keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        # signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+        # keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+        # keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        # keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         buildToolsVersion: 30.0.3
 
     - name: Upload to Release Action
