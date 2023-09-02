@@ -39,6 +39,18 @@ jobs:
     #   uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
     #   with:
     #     arguments: build
+
+    - name: Sign Android Release
+      uses: ilharp/sign-android-release@v1
+      with:
+        releaseDir: app/build/outputs/apk/release/
+        buildToolsVersion: 30.0.3
+      env:
+        JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.20-8/x64
+        JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.20-8/x64
+        signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+
+    
     - name: Sign app APK
       uses: ilharp/sign-android-release@v1
       id: sign_app
