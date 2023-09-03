@@ -196,4 +196,19 @@ public class AntStallRpcCall {
                                                 + "\",\"source\":\"ANTSTALL\",\"systemType\":\"android\",\"version\":\""
                                                 + VERSION + "\"}]");
         }
+
+        public static String shopSendBackPre(String billNo, String seatId, String shopId, String shopUserId) {
+                return RpcUtil.request("com.alipay.antstall.friend.shop.sendback.pre",
+                        "[{\"billNo\":\"" + billNo + "\",\"seatId\":\"" + seatId + "\",\"shopId\":\"" + shopId
+                                + "\",\"shopUserId\":\"" + shopUserId
+                                + "\",\"source\":\"ch_appcollect__chsub_my-recentlyUsed\",\"systemType\":\"android\",\"version\":\""
+                                + VERSION + "\"}]");
+            }
+        
+            public static String shopSendBack(String seatId) {
+                return RpcUtil.request("com.alipay.antstall.friend.shop.sendback",
+                        "[{\"seatId\":\"" + seatId
+                                + "\",\"source\":\"ch_appcollect__chsub_my-recentlyUsed\",\"systemType\":\"android\",\"version\":\""
+                                + VERSION + "\"}]");
+            }
 }

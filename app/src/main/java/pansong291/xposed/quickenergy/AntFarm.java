@@ -107,13 +107,14 @@ public class AntFarm {
         bizKeyList.add("HIRE_LOW_ACTIVITY");
         bizKeyList.add("HEART_DONATION_ADVANCED_FOOD_V2");
         bizKeyList.add("YEB_PURCHASE");
-        bizKeyList.add("ONLINE_PAY");
         bizKeyList.add("DIANTAOHUANDUAN");
     }
 
     public static void start() {
         if (!Config.enableFarm())
             return;
+
+        PluginUtils.invoke(AntFarm.class, PluginUtils.PluginAction.START);
         new Thread() {
 
             @Override
@@ -301,6 +302,8 @@ public class AntFarm {
                             animalSleep();
                         }
                     }
+
+                    PluginUtils.invoke(AntFarm.class, PluginUtils.PluginAction.STOP);
 
                 } catch (Throwable t) {
                     Log.i(TAG, "AntFarm.start.run err:");
@@ -707,13 +710,12 @@ public class AntFarm {
                 for (int i = 0; i < jaFarmTaskList.length(); i++) {
                     jo = jaFarmTaskList.getJSONObject(i);
                     String title = null;
-                    int awardCount = 0;
                     if (jo.has("title"))
                         title = jo.getString("title");
-                    String bizKey = jo.getString("bizKey");
                     if ("TODO".equals(jo.getString("taskStatus"))) {
+                        int awardCount = jo.optInt("awardCount", 0);
+                        String bizKey = jo.getString("bizKey");
                         if ("VIEW".equals(jo.optString("taskMode", null)) || bizKeyList.contains(bizKey)) {
-                            awardCount = jo.getInt("awardCount");
                             jo = new JSONObject(AntFarmRpcCall.doFarmTask(bizKey));
                             if ("SUCCESS".equals(jo.getString("memo"))) {
                                 Log.farm("庄园任务🧾[" + title + "]#获得饲料" + awardCount + "g");
@@ -1357,7 +1359,7 @@ public class AntFarm {
                     } else {
                         Log.recordLog(jo.getString("memo"), jo.toString());
                     }
-                    Thread.sleep(200);
+                    Thread.sleep(1000L);
                 }
             } else {
                 Log.recordLog(jo.getString("memo"), s);

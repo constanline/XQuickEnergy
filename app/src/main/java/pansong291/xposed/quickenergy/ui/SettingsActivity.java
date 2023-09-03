@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity {
             sw_kitchen, sw_antOcean, sw_userPatrol, sw_animalConsumeProp, sw_antOrchard, sw_receiveOrchardTaskAward,
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
-            sw_stallOpenType, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister;
+            sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,6 +217,7 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask = findViewById(R.id.sw_stallAutoTask);
         sw_stallReceiveAward = findViewById(R.id.sw_stallReceiveAward);
         sw_stallOpenType = findViewById(R.id.sw_stallOpenType);
+        sw_stallDonate = findViewById(R.id.sw_stallDonate);
         sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
     }
 
@@ -286,6 +287,7 @@ public class SettingsActivity extends Activity {
         sw_stallAutoTask.setChecked(Config.stallAutoTask());
         sw_stallReceiveAward.setChecked(Config.stallReceiveAward());
         sw_stallOpenType.setChecked(Config.stallOpenType());
+        sw_stallDonate.setChecked(Config.stallDonate());
         sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
     }
 
@@ -542,6 +544,10 @@ public class SettingsActivity extends Activity {
                     Config.setStallOpenType(sw.isChecked());
                     break;
 
+                case R.id.sw_stallDonate:
+                    Config.setStallDonate(sw.isChecked());
+                    break;
+
                 case R.id.sw_stallInviteRegister:
                     Config.setStallInviteRegister(sw.isChecked());
                     break;
@@ -726,6 +732,14 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_stallOpenList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallOpenList(), null);
+                    break;
+
+                case R.id.btn_stallWhiteList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallWhiteList(), null);
+                    break;
+
+                case R.id.btn_stallBlackList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.stallBlackList(), null);
                     break;
 
                 case R.id.btn_stallAllowOpenTime:
