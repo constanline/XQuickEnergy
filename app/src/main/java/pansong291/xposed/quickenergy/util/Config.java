@@ -1170,6 +1170,22 @@ public class Config {
         return getConfig().syncStepCount;
     }
 
+    private static int tmpStepCount = -1;
+
+    public static int tmpStepCount() {
+        if (tmpStepCount >= 0) {
+            return tmpStepCount;
+        }
+        tmpStepCount = Config.syncStepCount();
+        if (tmpStepCount > 0) {
+            tmpStepCount = RandomUtils.nextInt(tmpStepCount, tmpStepCount + 2000);
+            if (tmpStepCount > 100000) {
+                tmpStepCount = 100000;
+            }
+        }
+        return tmpStepCount;
+    }
+
     public static void setKbSginIn(boolean b) {
         getConfig().kbSignIn = b;
         hasChanged = true;
@@ -1387,7 +1403,7 @@ public class Config {
 
     public static boolean saveConfigFile() {
         String json = config2Json(config);
-        Log.infoChanged("保存 config.json", json);
+        //Log.infoChanged("保存 config.json", json);
         return FileUtils.write2File(json, FileUtils.getConfigFile());
     }
 
@@ -1760,15 +1776,17 @@ public class Config {
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
-                Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
+                //Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
         }
         String formatted = config2Json(config);
         if (!formatted.equals(json)) {
-            Log.infoChanged("重新格式化 config.json，原", json);
-            Log.infoChanged("重新格式化 config.json，新", formatted);
+            //Log.infoChanged("重新格式化 config.json，原", json);
+            //Log.infoChanged("重新格式化 config.json，新", formatted);
+            Log.recordLog("重新格式化 config.json，新", "");
+
             FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;

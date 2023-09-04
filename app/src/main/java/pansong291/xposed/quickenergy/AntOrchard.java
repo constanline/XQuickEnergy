@@ -3,17 +3,7 @@ package pansong291.xposed.quickenergy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntOrchardRpcCall;
-import pansong291.xposed.quickenergy.util.Config;
-import pansong291.xposed.quickenergy.util.FileUtils;
-import pansong291.xposed.quickenergy.util.Log;
-import pansong291.xposed.quickenergy.util.RandomUtils;
-import pansong291.xposed.quickenergy.util.StringUtil;
-import pansong291.xposed.quickenergy.util.Statistics;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import pansong291.xposed.quickenergy.util.*;
 
 public class AntOrchard {
     private static final String TAG = AntOrchard.class.getCanonicalName();
@@ -24,6 +14,8 @@ public class AntOrchard {
     public static void start() {
         if (!Config.antOrchard())
             return;
+
+        PluginUtils.invoke(AntOrchard.class, PluginUtils.PluginAction.START);
         new Thread() {
             @Override
             public void run() {
@@ -65,6 +57,7 @@ public class AntOrchard {
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }
+                    PluginUtils.invoke(AntOrchard.class, PluginUtils.PluginAction.STOP);
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
@@ -191,7 +184,6 @@ public class AntOrchard {
             String itemId = lotteryPlusInfo.getString("itemId");
             JSONObject jo = lotteryPlusInfo.getJSONObject("userSevenDaysGiftsItem");
             JSONArray ja = jo.getJSONArray("userEverydayGiftItems");
-            int index = -1;
             for (int i = 0; i < ja.length(); i++) {
                 jo = ja.getJSONObject(i);
                 if (jo.getString("itemId").equals(itemId)) {

@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -77,6 +78,26 @@ public class Statistics {
         }
     }
 
+    private static class StallShareIdLog {
+        String userId;
+        String shareId;
+
+        public StallShareIdLog(String uid, String sid) {
+            userId = uid;
+            shareId = sid;
+        }
+    }
+
+    private static class StallHelpedCountLog {
+        String userId;
+        int helpedCount = 0;
+        int beHelpedCount = 0;
+
+        public StallHelpedCountLog(String id) {
+            userId = id;
+        }
+    }
+
     private static final String TAG = Statistics.class.getCanonicalName();
     private static final String jn_year = "year", jn_month = "month", jn_day = "day",
             jn_collected = "collected", jn_helped = "helped", jn_watered = "watered",
@@ -86,7 +107,9 @@ public class Statistics {
             jn_memberSignInList = "memberSignInList", jn_kbSignIn = "kbSignIn",
             jn_exchangeDoubleCard = "exchangeDoubleCard", jn_exchangeTimes = "exchangeTimes",
             jn_dailyAnswerList = "dailyAnswerList", jn_doubleTimes = "doubleTimes",
-            jn_SpreadManureList = "SpreadManureList", jn_protectBubbleList = "protectBubbleList";
+            jn_spreadManureList = "spreadManureList", jn_protectBubbleList = "protectBubbleList",
+            jn_stallShareIdList = "stallShareIdList", jn_stallP2PHelpedList = "stallP2PHelpedList",
+            jn_stallHelpedCountList = "stallHelpedCountList";
 
     private TimeStatistics year;
     private TimeStatistics month;
@@ -111,9 +134,12 @@ public class Statistics {
     private String questionHint;
     private ArrayList<FeedFriendLog> feedFriendLogList;
     private ArrayList<VisitFriendLog> visitFriendLogList;
+    private ArrayList<StallShareIdLog> stallShareIdLogList;
+    private ArrayList<StallHelpedCountLog> stallHelpedCountLogList;
     private Set<String> dailyAnswerList;
     private ArrayList<String> donationEggList;
-    private ArrayList<String> SpreadManureList;
+    private ArrayList<String> spreadManureList;
+    private ArrayList<String> stallP2PHelpedList;
 
     // other
     private ArrayList<String> memberSignInList;
@@ -433,6 +459,124 @@ public class Statistics {
         save();
     }
 
+    public static List<String> stallP2PUserIdList(String uid) {
+        List<String> p2pUserIdList = new ArrayList<>();
+        Statistics stat = getStatistics();
+        for (int i = 0; i < stat.stallShareIdLogList.size(); i++)
+            if (!stat.stallShareIdLogList.get(i).userId.equals(uid)) {
+                p2pUserIdList.add(stat.stallShareIdLogList.get(i).userId);
+            }
+        return p2pUserIdList;
+    }
+
+    public static void stallShareIdToday(String uid, String sid) {
+        Statistics stat = getStatistics();
+        StallShareIdLog ssil;
+        int index = -1;
+        for (int i = 0; i < stat.stallShareIdLogList.size(); i++)
+            if (stat.stallShareIdLogList.get(i).userId.equals(uid)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            ssil = new StallShareIdLog(uid, sid);
+            stat.stallShareIdLogList.add(ssil);
+        } else {
+            ssil = stat.stallShareIdLogList.get(index);
+        }
+        ssil.shareId = sid;
+        save();
+    }
+
+    public static String getStallShareId(String uid) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.stallShareIdLogList.size(); i++)
+            if (stat.stallShareIdLogList.get(i).userId.equals(uid)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            return null;
+        } else {
+            return stat.stallShareIdLogList.get(index).shareId;
+        }
+    }
+
+    public static boolean canStallHelpToday(String id) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.stallHelpedCountLogList.size(); i++)
+            if (stat.stallHelpedCountLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        StallHelpedCountLog shcl = stat.stallHelpedCountLogList.get(index);
+        return shcl.helpedCount < 3;
+    }
+
+    public static void stallHelpToday(String id, boolean limited) {
+        Statistics stat = getStatistics();
+        StallHelpedCountLog shcl;
+        int index = -1;
+        for (int i = 0; i < stat.stallHelpedCountLogList.size(); i++)
+            if (stat.stallHelpedCountLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            shcl = new StallHelpedCountLog(id);
+            stat.stallHelpedCountLogList.add(shcl);
+        } else {
+            shcl = stat.stallHelpedCountLogList.get(index);
+        }
+        if (limited) {
+            shcl.helpedCount = 3;
+        } else {
+            shcl.helpedCount += 1;
+        }
+        save();
+    }
+
+    public static boolean canStallBeHelpToday(String id) {
+        Statistics stat = getStatistics();
+        int index = -1;
+        for (int i = 0; i < stat.stallHelpedCountLogList.size(); i++)
+            if (stat.stallHelpedCountLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0)
+            return true;
+        StallHelpedCountLog shcl = stat.stallHelpedCountLogList.get(index);
+        return shcl.beHelpedCount < 3;
+    }
+
+    public static void stallBeHelpToday(String id, boolean limited) {
+        Statistics stat = getStatistics();
+        StallHelpedCountLog shcl;
+        int index = -1;
+        for (int i = 0; i < stat.stallHelpedCountLogList.size(); i++)
+            if (stat.stallHelpedCountLogList.get(i).userId.equals(id)) {
+                index = i;
+                break;
+            }
+        if (index < 0) {
+            shcl = new StallHelpedCountLog(id);
+            stat.stallHelpedCountLogList.add(shcl);
+        } else {
+            shcl = stat.stallHelpedCountLogList.get(index);
+        }
+        if (limited) {
+            shcl.beHelpedCount = 3;
+        } else {
+            shcl.beHelpedCount += 1;
+        }
+        save();
+    }
+
     public static boolean canMemberSignInToday(String uid) {
         Statistics stat = getStatistics();
         return !stat.memberSignInList.contains(uid);
@@ -461,13 +605,28 @@ public class Statistics {
 
     public static boolean canSpreadManureToday(String uid) {
         Statistics stat = getStatistics();
-        return !stat.SpreadManureList.contains(uid);
+        return !stat.spreadManureList.contains(uid);
     }
 
     public static void spreadManureToday(String uid) {
         Statistics stat = getStatistics();
-        if (!stat.SpreadManureList.contains(uid)) {
-            stat.SpreadManureList.add(uid);
+        if (!stat.spreadManureList.contains(uid)) {
+            stat.spreadManureList.add(uid);
+            save();
+        }
+    }
+
+    public static boolean canStallP2PHelpToday(String uid) {
+        uid = FriendIdMap.currentUid + "-" + uid;
+        Statistics stat = getStatistics();
+        return !stat.stallP2PHelpedList.contains(uid);
+    }
+
+    public static void stallP2PHelpeToday(String uid) {
+        uid = FriendIdMap.currentUid + "-" + uid;
+        Statistics stat = getStatistics();
+        if (!stat.stallP2PHelpedList.contains(uid)) {
+            stat.stallP2PHelpedList.add(uid);
             save();
         }
     }
@@ -635,9 +794,11 @@ public class Statistics {
         stat.answerQuestionList.clear();
         stat.feedFriendLogList.clear();
         stat.visitFriendLogList.clear();
+        stat.stallHelpedCountLogList.clear();
         stat.questionHint = null;
         stat.donationEggList.clear();
-        stat.SpreadManureList.clear();
+        stat.spreadManureList.clear();
+        stat.stallP2PHelpedList.clear();
         stat.memberSignInList.clear();
         stat.kbSignIn = 0;
         stat.exchangeDoubleCard = 0;
@@ -664,14 +825,20 @@ public class Statistics {
             stat.answerQuestionList = new ArrayList<>();
         if (stat.donationEggList == null)
             stat.donationEggList = new ArrayList<>();
-        if (stat.SpreadManureList == null)
-            stat.SpreadManureList = new ArrayList<>();
+        if (stat.spreadManureList == null)
+            stat.spreadManureList = new ArrayList<>();
+        if (stat.stallP2PHelpedList == null)
+            stat.stallP2PHelpedList = new ArrayList<>();
         if (stat.memberSignInList == null)
             stat.memberSignInList = new ArrayList<>();
         if (stat.feedFriendLogList == null)
             stat.feedFriendLogList = new ArrayList<>();
         if (stat.visitFriendLogList == null)
             stat.visitFriendLogList = new ArrayList<>();
+        if (stat.stallShareIdLogList == null)
+            stat.stallShareIdLogList = new ArrayList<>();
+        if (stat.stallHelpedCountLogList == null)
+            stat.stallHelpedCountLogList = new ArrayList<>();
         if (stat.ancientTreeCityCodeList == null)
             stat.ancientTreeCityCodeList = new ArrayList<>();
         if (stat.syncStepList == null)
@@ -857,6 +1024,31 @@ public class Statistics {
                 }
             }
 
+            stat.stallShareIdLogList = new ArrayList<>();
+
+            if (jo.has(jn_stallShareIdList)) {
+                JSONArray ja = jo.getJSONArray(jn_stallShareIdList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    StallShareIdLog ssil = new StallShareIdLog(jaa.getString(0), jaa.getString(1));
+                    stat.stallShareIdLogList.add(ssil);
+                }
+            }
+
+            stat.stallHelpedCountLogList = new ArrayList<>();
+
+            if (jo.has(jn_stallHelpedCountList)) {
+                JSONArray ja = jo.getJSONArray(jn_stallHelpedCountList);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray jaa = ja.getJSONArray(i);
+                    StallHelpedCountLog shcl = new StallHelpedCountLog(jaa.getString(0));
+                    shcl.helpedCount = jaa.getInt(1);
+                    shcl.beHelpedCount = jaa.getInt(2);
+                    stat.stallHelpedCountLogList.add(shcl);
+
+                }
+            }
+
             stat.donationEggList = new ArrayList<>();
 
             if (jo.has(jn_donationEggList)) {
@@ -867,12 +1059,22 @@ public class Statistics {
                 }
             }
 
-            stat.SpreadManureList = new ArrayList<>();
+            stat.spreadManureList = new ArrayList<>();
 
-            if (jo.has(jn_SpreadManureList)) {
-                JSONArray ja = jo.getJSONArray(jn_SpreadManureList);
+            if (jo.has(jn_spreadManureList)) {
+                JSONArray ja = jo.getJSONArray(jn_spreadManureList);
                 for (int i = 0; i < ja.length(); i++) {
-                    stat.SpreadManureList.add(ja.getString(i));
+                    stat.spreadManureList.add(ja.getString(i));
+
+                }
+            }
+
+            stat.stallP2PHelpedList = new ArrayList<>();
+
+            if (jo.has(jn_stallP2PHelpedList)) {
+                JSONArray ja = jo.getJSONArray(jn_stallP2PHelpedList);
+                for (int i = 0; i < ja.length(); i++) {
+                    stat.stallP2PHelpedList.add(ja.getString(i));
 
                 }
             }
@@ -1046,16 +1248,43 @@ public class Statistics {
             jo.put(Config.jn_visitFriendList, ja);
 
             ja = new JSONArray();
+            for (int i = 0; i < stat.stallShareIdLogList.size(); i++) {
+                StallShareIdLog ssil = stat.stallShareIdLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(ssil.userId);
+                jaa.put(ssil.shareId);
+                ja.put(jaa);
+            }
+            jo.put(jn_stallShareIdList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.stallHelpedCountLogList.size(); i++) {
+                StallHelpedCountLog shcl = stat.stallHelpedCountLogList.get(i);
+                JSONArray jaa = new JSONArray();
+                jaa.put(shcl.userId);
+                jaa.put(shcl.helpedCount);
+                jaa.put(shcl.beHelpedCount);
+                ja.put(jaa);
+            }
+            jo.put(jn_stallHelpedCountList, ja);
+
+            ja = new JSONArray();
             for (int i = 0; i < stat.donationEggList.size(); i++) {
                 ja.put(stat.donationEggList.get(i));
             }
             jo.put(jn_donationEggList, ja);
 
             ja = new JSONArray();
-            for (int i = 0; i < stat.SpreadManureList.size(); i++) {
-                ja.put(stat.SpreadManureList.get(i));
+            for (int i = 0; i < stat.spreadManureList.size(); i++) {
+                ja.put(stat.spreadManureList.get(i));
             }
-            jo.put(jn_SpreadManureList, ja);
+            jo.put(jn_spreadManureList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < stat.stallP2PHelpedList.size(); i++) {
+                ja.put(stat.stallP2PHelpedList.get(i));
+            }
+            jo.put(jn_stallP2PHelpedList, ja);
 
             ja = new JSONArray();
             for (int i = 0; i < stat.memberSignInList.size(); i++) {
