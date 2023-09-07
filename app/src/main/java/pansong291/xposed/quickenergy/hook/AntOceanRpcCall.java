@@ -7,7 +7,7 @@ import pansong291.xposed.quickenergy.util.RandomUtils;
  * @since 2023/08/01
  */
 public class AntOceanRpcCall {
-    private static final String VERSION = "20230730";
+    private static final String VERSION = "20230901";
     private static String getUniqueId() {
         return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();
     }
@@ -83,6 +83,19 @@ public class AntOceanRpcCall {
         return RpcUtil.request("alipay.antocean.ocean.h5.querySeaAreaDetailList",
                 "[{\"seaAreaCode\":\"\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetUserId\":\"\",\"uniqueId\":\"" +
                         getUniqueId() + "\"}]");
+    }
+
+    public static String queryOceanChapterList() {
+        return RpcUtil.request("alipay.antocean.ocean.h5.queryOceanChapterList",
+                "[{\"source\":\"chInfo_ch_url-https://2021003115672468.h5app.alipay.com/www/atlasOcean.html\",\"uniqueId\":\""
+                        + getUniqueId() + "\"}]");
+    }
+
+    public static String switchOceanChapter(String chapterCode) {
+        return RpcUtil.request("alipay.antocean.ocean.h5.switchOceanChapter",
+                "[{\"chapterCode\":\"" + chapterCode
+                        + "\",\"source\":\"chInfo_ch_url-https://2021003115672468.h5app.alipay.com/www/atlasOcean.html\",\"uniqueId\":\""
+                        + getUniqueId() + "\"}]");
     }
 
     public static String queryMiscInfo() {
