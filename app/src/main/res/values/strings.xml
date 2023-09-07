@@ -145,5 +145,7 @@
     <string name="stall_donate">Stall donate</string>
     <string name="collect_gift_box">Collect gift box</string>
     <string name="stall_invite_register">Stall invite register</string>
+    <string name="stall_invite_shop_list">Stall invite shop list</string>
+    <string name="stall_throw_manure">Stall throw manure</string>
 
 </resources>

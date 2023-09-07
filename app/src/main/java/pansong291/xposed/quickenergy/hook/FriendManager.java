@@ -95,7 +95,11 @@ public class FriendManager {
     private static void friendWatchSingle(String id, int collectedEnergy) throws JSONException {
         JSONObject joSingle = joFriendWatch.optJSONObject(id);
         if (joSingle == null) {
-            return;
+            joSingle = new JSONObject();
+            joSingle.put("name", FriendIdMap.getNameById(id));
+            joSingle.put("allGet", 0);
+            joSingle.put("startTime", TimeUtil.getDateStr());
+            joFriendWatch.put(id, joSingle);
         }
         joSingle.put("weekGet", joSingle.optInt("weekGet", 0) + collectedEnergy);
         FileUtils.write2File(joFriendWatch.toString(), FileUtils.getFriendWatchFile());
@@ -115,7 +119,7 @@ public class FriendManager {
                 joSingle.put("name", FriendIdMap.getNameById(id));
                 joSingle.put("allGet", joSingle.optInt("allGet", 0) + joSingle.optInt("weekGet", 0));
                 joSingle.put("weekGet", 0);
-                if (joSingle.has("startTime")) {
+                if (!joSingle.has("startTime")) {
                     joSingle.put("startTime", dateStr);
                 }
                 joFriendWatch.put(id, joSingle);

@@ -765,7 +765,7 @@ public class Statistics {
         int mo = Integer.parseInt(dateStr[1]);
         int da = Integer.parseInt(dateStr[2]);
 
-        Log.recordLog("原：" + stat.year.time + "-" + stat.month.time + "-" + stat.day.time + "；新：" + formatDate);
+        //Log.recordLog("原：" + stat.year.time + "-" + stat.month.time + "-" + stat.day.time + "；新：" + formatDate);
         if (ye > stat.year.time) {
             stat.year.reset(ye);
             stat.month.reset(mo);
@@ -782,6 +782,7 @@ public class Statistics {
     }
 
     private static void dayClear() {
+        Log.infoChanged(TAG,"重置 statistics.json");
         Statistics stat = getStatistics();
         stat.waterFriendLogList.clear();
         stat.cooperateWaterList.clear();
@@ -1112,14 +1113,16 @@ public class Statistics {
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
-                Log.infoChanged("统计文件格式有误，已重置统计文件并备份原文件", json);
+            Log.i(TAG, "统计文件格式有误，已重置统计文件并备份原文件");
+            Log.infoChanged(TAG, "统计文件格式有误，已重置统计文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getStatisticsFile()));
             }
             stat = defInit();
         }
         String formatted = statistics2Json(stat);
         if (!formatted.equals(json)) {
-            Log.infoChanged("重新格式化 statistics.json", json);
+            Log.i(TAG, "重新格式化 statistics.json");
+            Log.infoChanged(TAG, "重新格式化 statistics.json");
             FileUtils.write2File(formatted, FileUtils.getStatisticsFile());
         }
         return stat;
@@ -1314,7 +1317,7 @@ public class Statistics {
 
     private static void save() {
         String json = statistics2Json(getStatistics());
-        Log.infoChanged("保存 statistics.json", json);
+        Log.infoChanged(TAG,"保存 statistics.json");
         FileUtils.write2File(json, FileUtils.getStatisticsFile());
     }
 
