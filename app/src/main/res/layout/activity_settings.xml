@@ -1132,6 +1132,30 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_stallInviteRegister" />
 
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/stall_throw_manure"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_stallThrowManure" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/stall_invite_shop_list"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_stallInviteShopList"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
 				</LinearLayout>
 				<!--其他-->
 				<LinearLayout
@@ -1292,34 +1316,6 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_merchantKmdk" />
-
-					<Button
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						style="?android:attr/buttonBarButtonStyle"
-						android:text="@string/support_xqe_developer"
-						android:textAllCaps="false"
-						android:onClick="onClick"
-						android:minHeight="50dp"
-						android:gravity="start|center_vertical"
-						android:background="@drawable/button"
-						android:id="@+id/btn_donation_xqe_developer"
-						android:paddingStart="@dimen/setting_item_padding"
-						android:paddingEnd="@dimen/setting_item_padding" />
-
-					<Button
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						style="?android:attr/buttonBarButtonStyle"
-						android:text="@string/support_developer"
-						android:textAllCaps="false"
-						android:onClick="onClick"
-						android:minHeight="50dp"
-						android:gravity="start|center_vertical"
-						android:background="@drawable/button"
-						android:id="@+id/btn_donation_developer"
-						android:paddingStart="@dimen/setting_item_padding"
-						android:paddingEnd="@dimen/setting_item_padding" />
 
 				</LinearLayout>
 
