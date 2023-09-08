@@ -124,6 +124,8 @@ public class Config {
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
     public static final String jn_stallDonate = "stallDonate";
     public static final String jn_stallInviteRegister = "stallInviteRegister";
+    public static final String jn_stallThrowManure = "stallThrowManure";
+    public static final String jn_stallInviteShopList = "stallInviteShopList";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -140,6 +142,7 @@ public class Config {
     public static final String jn_collectSesame = "collectSesame";
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
+    public static final String jn_greenFinance = "greenFinance";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -254,6 +257,8 @@ public class Config {
     private int stallSelfOpenTime;
     private boolean stallDonate;
     private boolean stallInviteRegister;
+    private boolean stallThrowManure;
+    private List<String> stallInviteShopList;
 
     /* other */
     private boolean receivePoint;
@@ -270,6 +275,7 @@ public class Config {
     private boolean collectSesame;
     private boolean zcjSignIn;
     private boolean merchantKmdk;
+    private boolean greenFinance;
 
     /* base */
     private static volatile Config config;
@@ -1104,8 +1110,21 @@ public class Config {
         hasChanged = true;
     }
 
+    public static List<String> stallInviteShopList() {
+        return getConfig().stallInviteShopList;
+    }
+
     public static boolean stallInviteRegister() {
         return getConfig().stallInviteRegister;
+    }
+
+    public static void setStallThrowManure(boolean b) {
+        getConfig().stallThrowManure = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallThrowManure() {
+        return getConfig().stallThrowManure;
     }
 
     /* other */
@@ -1250,6 +1269,15 @@ public class Config {
         return getConfig().merchantKmdk;
     }
 
+    public static void setGreenFinance(boolean b) {
+        getConfig().greenFinance = b;
+        hasChanged = true;
+    }
+
+    public static boolean greenFinance() {
+        return getConfig().greenFinance;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1387,6 +1415,8 @@ public class Config {
         c.stallSelfOpenTime = 120;
         c.stallDonate = false;
         c.stallInviteRegister = false;
+        c.stallThrowManure = false;
+        c.stallInviteShopList = new ArrayList<>();
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1400,6 +1430,7 @@ public class Config {
         c.collectSesame = false;
         c.zcjSignIn = false;
         c.merchantKmdk = false;
+        c.greenFinance = false;
         return c;
     }
 
@@ -1833,6 +1864,16 @@ public class Config {
 
             config.stallInviteRegister = jo.optBoolean(jn_stallInviteRegister, true);
 
+            config.stallThrowManure = jo.optBoolean(jn_stallThrowManure, false);
+
+            config.stallInviteShopList = new ArrayList<>();
+            if (jo.has(jn_stallInviteShopList)) {
+                ja = jo.getJSONArray(jn_stallInviteShopList);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.stallInviteShopList.add(ja.getString(i));
+                }
+            }
+
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
             Log.i(TAG, jn_receivePoint + ":" + config.receivePoint);
@@ -1875,11 +1916,14 @@ public class Config {
 
             config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, true);
             Log.i(TAG, jn_merchantKmdk + ":" + config.merchantKmdk);
+
+            config.greenFinance = jo.optBoolean(jn_greenFinance, false);
+            Log.i(TAG, jn_greenFinance + ":" + config.greenFinance);
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
                 Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
-                Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
+                Log.infoChanged(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
@@ -1887,8 +1931,7 @@ public class Config {
         String formatted = config2Json(config);
         if (!formatted.equals(json)) {
             Log.i(TAG, "重新格式化 config.json");
-            Log.infoChanged("重新格式化 config.json，原", json);
-            Log.infoChanged("重新格式化 config.json，新", formatted);
+            Log.infoChanged(TAG, "重新格式化 config.json");
             FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
@@ -2159,6 +2202,12 @@ public class Config {
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
             jo.put(jn_stallDonate, config.stallDonate);
             jo.put(jn_stallInviteRegister, config.stallInviteRegister);
+            jo.put(jn_stallThrowManure, config.stallThrowManure);
+            ja = new JSONArray();
+            for (int i = 0; i < config.stallInviteShopList.size(); i++) {
+                ja.put(config.stallInviteShopList.get(i));
+            }
+            jo.put(jn_stallInviteShopList, ja);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);
@@ -2188,6 +2237,8 @@ public class Config {
             jo.put(jn_zcjSignIn, config.zcjSignIn);
 
             jo.put(jn_merchantKmdk, config.merchantKmdk);
+
+            jo.put(jn_greenFinance, config.greenFinance);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

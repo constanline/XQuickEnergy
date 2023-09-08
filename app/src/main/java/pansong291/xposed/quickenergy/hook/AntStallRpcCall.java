@@ -1,5 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
+import org.json.JSONArray;
+
 import java.util.UUID;
 
 /**
@@ -188,14 +190,45 @@ public class AntStallRpcCall {
         return RpcUtil.request("com.alipay.antstall.friend.shop.sendback.pre",
                 "[{\"billNo\":\"" + billNo + "\",\"seatId\":\"" + seatId + "\",\"shopId\":\"" + shopId
                         + "\",\"shopUserId\":\"" + shopUserId
-                        + "\",\"source\":\"ch_appcollect__chsub_my-recentlyUsed\",\"systemType\":\"android\",\"version\":\""
+                        + "\",\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
                         + VERSION + "\"}]");
     }
 
     public static String shopSendBack(String seatId) {
         return RpcUtil.request("com.alipay.antstall.friend.shop.sendback",
                 "[{\"seatId\":\"" + seatId
-                        + "\",\"source\":\"ch_appcollect__chsub_my-recentlyUsed\",\"systemType\":\"android\",\"version\":\""
+                        + "\",\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
+
+    public static String rankInviteOpen() {
+        return RpcUtil.request("com.alipay.antstall.rank.invite.open",
+                "[{\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
+
+    public static String oneKeyInviteOpenShop(String friendUserId, String mySeatId) {
+        return RpcUtil.request("com.alipay.antstall.user.shop.oneKeyInviteOpenShop",
+                "[{\"friendUserId\":\"" + friendUserId + "\",\"mySeatId\":\"" + mySeatId
+                        + "\",\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
+
+    public static String dynamicLoss() {
+        return RpcUtil.request("com.alipay.antstall.dynamic.loss",
+                "[{\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\"" + VERSION + "\"}]");
+    }
+
+    public static String throwManure(JSONArray dynamicList) {
+        return RpcUtil.request("com.alipay.antstall.manure.throwManure",
+                "[{\"dynamicList\":" + dynamicList
+                        + ",\"sendMsg\":false,\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\""
+                        + VERSION + "\"}]");
+    }
+
+    public static String settleReceivable() {
+        return RpcUtil.request("com.alipay.antstall.self.settle.receivable",
+                "[{\"source\":\"ch_appcenter__chsub_9patch\",\"systemType\":\"android\",\"version\":\"" 
                         + VERSION + "\"}]");
     }
 }

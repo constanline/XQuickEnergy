@@ -14,6 +14,7 @@ public class AntOrchard {
     public static void start() {
         if (!Config.antOrchard())
             return;
+
         PluginUtils.invoke(AntOrchard.class, PluginUtils.PluginAction.START);
         new Thread() {
             @Override
