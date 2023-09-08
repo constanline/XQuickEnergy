@@ -1358,7 +1358,7 @@ public class AntFarm {
                     } else {
                         Log.recordLog(jo.getString("memo"), jo.toString());
                     }
-                    Thread.sleep(200);
+                    Thread.sleep(1000L);
                 }
             } else {
                 Log.recordLog(jo.getString("memo"), s);

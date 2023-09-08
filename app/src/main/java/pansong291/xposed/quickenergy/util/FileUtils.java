@@ -119,6 +119,11 @@ public class FileUtils {
     public static File getConfigFile(String userId) {
         if (!configFileMap.containsKey("Default")) {
             File configFile = new File(getMainDirectoryFile(), "config.json");
+            if (configFile.exists()) {
+                Log.i(TAG, "读:" + configFile.canRead() + ";写:" + configFile.canWrite());
+            } else {
+                Log.i(TAG, "config.json文件不存在");
+            }
             configFileMap.put("Default", configFile);
         }
         if (!StringUtil.isEmpty(userId)) {
@@ -189,6 +194,12 @@ public class FileUtils {
             statisticsFile = new File(getMainDirectoryFile(), "statistics.json");
             if (statisticsFile.exists() && statisticsFile.isDirectory())
                 statisticsFile.delete();
+
+            if (statisticsFile.exists()) {
+                Log.i(TAG, "读:" + statisticsFile.canRead() + ";写:" + statisticsFile.canWrite());
+            } else {
+                Log.i(TAG, "statisticsFile.json文件不存在");
+            }
         }
         return statisticsFile;
     }

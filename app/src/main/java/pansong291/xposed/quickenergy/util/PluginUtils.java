@@ -35,8 +35,7 @@ public class PluginUtils {
             if (!pluginMap.containsKey(pluginName)) {
                 try {
                     plugin = (AbsPlugin) Class.forName(pluginName).newInstance();
-                } catch (Throwable e) {
-                    Log.printStackTrace(pluginName, e);
+                } catch (Throwable ignored) {
                 }
                 pluginMap.put(pluginName, plugin);
             } else {

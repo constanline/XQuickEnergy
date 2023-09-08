@@ -177,6 +177,8 @@ public class AntForest {
                         }
                         if (Config.antdodoCollect()) {
                             antdodoCollect();
+                            antdodoReceiveTaskAward();
+                            antdodoPropList();
                         }
                         if (!Config.whoYouWantGiveTo().isEmpty()
                                 && !FriendIdMap.currentUid.equals(Config.whoYouWantGiveTo().get(0))) {
@@ -1194,7 +1196,7 @@ public class AntForest {
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     }
-                    Thread.sleep(200);
+                    Thread.sleep(1000L);
                     if (holdsNum > 1 || forestPropVOList.length() > 1) {
                         giveProp(targetUserId);
                     }
@@ -1308,6 +1310,89 @@ public class AntForest {
         } catch (Throwable t) {
             Log.i(TAG, "collect err:");
             Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void antdodoReceiveTaskAward() {
+        try {
+            String s = AntForestRpcCall.antdodoTaskList();
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray taskGroupInfoList = jo.getJSONObject("data").optJSONArray("taskGroupInfoList");
+                if (taskGroupInfoList == null)
+                    return;
+                for (int i = 0; i < taskGroupInfoList.length(); i++) {
+                    JSONObject antdodoTask = taskGroupInfoList.getJSONObject(i);
+                    JSONArray taskInfoList = antdodoTask.getJSONArray("taskInfoList");
+                    for (int j = 0; j < taskInfoList.length(); j++) {
+                        JSONObject taskInfo = taskInfoList.getJSONObject(j);
+                        JSONObject taskBaseInfo = taskInfo.getJSONObject("taskBaseInfo");
+                        JSONObject bizInfo = new JSONObject(taskBaseInfo.getString("bizInfo"));
+                        String taskType = taskBaseInfo.getString("taskType");
+                        String taskTitle = bizInfo.optString("taskTitle", taskType);
+                        String awardCount = bizInfo.optString("awardCount", "1");
+                        String sceneCode = taskBaseInfo.getString("sceneCode");
+                        String taskStatus = taskBaseInfo.getString("taskStatus");
+                        if (TaskStatus.FINISHED.name().equals(taskStatus)) {
+                            JSONObject joAward = new JSONObject(
+                                    AntForestRpcCall.antdodoReceiveTaskAward(sceneCode, taskType));
+                            if (joAward.getBoolean("success"))
+                                Log.forest("任务奖励🎖️[" + taskTitle + "]#" + awardCount + "个");
+                            else
+                                Log.recordLog("领取失败，" + s, joAward.toString());
+                        } else if (TaskStatus.TODO.name().equals(taskStatus)) {
+                            if ("SEND_FRIEND_CARD".equals(taskType)) {
+                                JSONObject joFinishTask = new JSONObject(
+                                        AntForestRpcCall.antdodoFinishTask(sceneCode, taskType));
+                                if (joFinishTask.getBoolean("success")) {
+                                    Log.forest("物种任务🧾️[" + taskTitle + "]");
+                                    antdodoReceiveTaskAward();
+                                    return;
+                                } else {
+                                    Log.recordLog("完成任务失败，" + taskTitle);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultDesc"), s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "antdodoReceiveTaskAward err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void antdodoPropList() {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.antdodoPropList());
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray propList = jo.getJSONObject("data").optJSONArray("propList");
+                for (int i = 0; i < propList.length(); i++) {
+                    JSONObject prop = propList.getJSONObject(i);
+                    String propType = prop.getString("propType");
+                    if ("COLLECT_TIMES_7_DAYS".equals(propType)) {
+                        JSONArray propIdList = prop.getJSONArray("propIdList");
+                        String propId = propIdList.getString(0);
+                        String propName = prop.getJSONObject("propConfig").getString("propName");
+                        jo = new JSONObject(AntForestRpcCall.antdodoConsumeProp(propId, propType));
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                            JSONObject useResult = jo.getJSONObject("data").getJSONObject("useResult");
+                            JSONObject animal = useResult.getJSONObject("animal");
+                            String ecosystem = animal.getString("ecosystem");
+                            String name = animal.getString("name");
+                            Log.forest("使用道具🎭[" + propName + "]#" + ecosystem + "-" + name);
+                        } else {
+                            Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                        }
+                        Thread.sleep(1000L);
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "antdodoPropList err:");
+            Log.printStackTrace(TAG, th);
         }
     }
 
