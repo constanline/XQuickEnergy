@@ -142,6 +142,7 @@ public class Config {
     public static final String jn_collectSesame = "collectSesame";
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
+    public static final String jn_greenFinance = "greenFinance";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -274,6 +275,7 @@ public class Config {
     private boolean collectSesame;
     private boolean zcjSignIn;
     private boolean merchantKmdk;
+    private boolean greenFinance;
 
     /* base */
     private static volatile Config config;
@@ -1267,6 +1269,15 @@ public class Config {
         return getConfig().merchantKmdk;
     }
 
+    public static void setGreenFinance(boolean b) {
+        getConfig().greenFinance = b;
+        hasChanged = true;
+    }
+
+    public static boolean greenFinance() {
+        return getConfig().greenFinance;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1419,6 +1430,7 @@ public class Config {
         c.collectSesame = false;
         c.zcjSignIn = false;
         c.merchantKmdk = false;
+        c.greenFinance = false;
         return c;
     }
 
@@ -1904,6 +1916,9 @@ public class Config {
 
             config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, true);
             Log.i(TAG, jn_merchantKmdk + ":" + config.merchantKmdk);
+
+            config.greenFinance = jo.optBoolean(jn_greenFinance, false);
+            Log.i(TAG, jn_greenFinance + ":" + config.greenFinance);
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -2222,6 +2237,8 @@ public class Config {
             jo.put(jn_zcjSignIn, config.zcjSignIn);
 
             jo.put(jn_merchantKmdk, config.merchantKmdk);
+
+            jo.put(jn_greenFinance, config.greenFinance);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

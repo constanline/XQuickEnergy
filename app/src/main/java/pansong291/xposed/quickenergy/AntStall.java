@@ -132,6 +132,7 @@ public class AntStall {
                         jo = new JSONObject(s);
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.farm("蚂蚁新村⛪邀请[" + FriendIdMap.getNameById(friendUserId) + "]开店成功");
+                            return;
                         }
                     }
                 }
@@ -666,7 +667,7 @@ public class AntStall {
                     }
                     JSONObject dynamic = new JSONObject();
                     dynamic.put("bizId", lossDynamic.getString("bizId"));
-                    dynamic.put("bizType", lossDynamic.getInt("bizType"));
+                    dynamic.put("bizType", lossDynamic.getString("bizType"));
                     dynamicList.put(dynamic);
                     if (dynamicList.length() == 5) {
                         throwManure(dynamicList);

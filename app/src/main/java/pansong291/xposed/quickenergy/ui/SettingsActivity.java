@@ -45,7 +45,7 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure;
+            sw_stallThrowManure, sw_greenFinance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +221,7 @@ public class SettingsActivity extends Activity {
         sw_stallDonate = findViewById(R.id.sw_stallDonate);
         sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
         sw_stallThrowManure = findViewById(R.id.sw_stallThrowManure);
+        sw_greenFinance = findViewById(R.id.sw_greenFinance);
     }
 
     @Override
@@ -293,6 +294,7 @@ public class SettingsActivity extends Activity {
         sw_stallDonate.setChecked(Config.stallDonate());
         sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
         sw_stallThrowManure.setChecked(Config.stallThrowManure());
+        sw_greenFinance.setChecked(Config.greenFinance());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -558,6 +560,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_stallThrowManure:
                     Config.setStallThrowManure(sw.isChecked());
+                    break;
+
+                case R.id.sw_greenFinance:
+                    Config.setGreenFinance(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
