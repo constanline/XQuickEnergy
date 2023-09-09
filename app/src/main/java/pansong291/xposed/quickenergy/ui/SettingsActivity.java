@@ -613,6 +613,11 @@ public class SettingsActivity extends Activity {
                             this.getString(R.string.use_double_card_time_desc));
                     break;
 
+                case R.id.btn_onlyCollectEnergyTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ONLY_COLLECT_ENERGY_TIME,
+                            this.getString(R.string.use_double_card_time_desc));
+                    break;
+
                 case R.id.btn_doubleCountLimit:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_COUNT_LIMIT);
                     break;

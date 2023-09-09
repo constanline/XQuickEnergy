@@ -10,7 +10,7 @@ import pansong291.xposed.quickenergy.util.Config;
 
 public class EditDialog {
     public enum EditMode {
-        TOAST_OFFSET_Y, CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME,
+        TOAST_OFFSET_Y, CHECK_INTERVAL, THREAD_COUNT, ADVANCE_TIME, COLLECT_INTERVAL, LIMIT_COUNT, DOUBLE_CARD_TIME, ONLY_COLLECT_ENERGY_TIME,
         DOUBLE_COUNT_LIMIT, COLLECT_TIMEOUT, RETURN_WATER_30, RETURN_WATER_20, RETURN_WATER_10, WATER_FRIEND_COUNT,
         FARM_GAME_TIME, ANIMAL_SLEEP_TIME, MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT,
         WAIT_WHEN_EXCEPTION, EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT, ORCHARD_SPREAD_MANURE_COUNT,
@@ -84,6 +84,10 @@ public class EditDialog {
 
                                         case DOUBLE_CARD_TIME:
                                             Config.setDoubleCardTime(edt.getText().toString());
+                                            break;
+
+                                        case ONLY_COLLECT_ENERGY_TIME:
+                                            Config.setOnlyCollectEnergyTime(edt.getText().toString());
                                             break;
 
                                         case DOUBLE_COUNT_LIMIT:
@@ -203,6 +207,10 @@ public class EditDialog {
 
             case DOUBLE_CARD_TIME:
                 str = Config.doubleCardTime();
+                break;
+
+            case ONLY_COLLECT_ENERGY_TIME:
+                str = Config.onlyCollectEnergyTime();
                 break;
 
             case DOUBLE_COUNT_LIMIT:

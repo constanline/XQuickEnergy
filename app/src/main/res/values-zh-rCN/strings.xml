@@ -91,6 +91,7 @@
     <string name="collect_watering_bubble">收金球</string>
     <string name="use_double_card_time">使用双击卡时间</string>
     <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
+    <string name="only_collect_energy_time">只收取能量时间</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
     <string name="visit_github">GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>

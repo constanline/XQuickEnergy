@@ -90,8 +90,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
 
-                        if (TimeUtil.getTimeStr().compareTo("0700") < 0
-                                || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                        if (false == Config.isOnlyCollectEnergyTime())
+                        {
+                            XposedBridge.log("not only collect energy time");
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();

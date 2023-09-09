@@ -58,6 +58,7 @@ public class Config {
     public static final String jn_checkInterval = "checkInterval";
     public static final String jn_doubleCard = "doubleCard";
     public static final String jn_doubleCardTime = "doubleCardTime";
+    public static final String jn_onlyCollectEnergyTime = "onlyCollectEnergyTime";
     public static final String jn_advanceTime = "advanceTime";
     public static final String jn_collectInterval = "collectInterval";
     public static final String jn_collectTimeout = "collectTimeout";
@@ -172,6 +173,7 @@ public class Config {
     private int limitCount;
     private boolean doubleCard;
     private List<String> doubleCardTime;
+    private List<String> onlyCollectEnergyTime;
     private int doubleCountLimit;
     private int advanceTime;
     private int collectInterval;
@@ -475,13 +477,30 @@ public class Config {
         hasChanged = true;
     }
 
+    public static void setOnlyCollectEnergyTime(String i) {
+        getConfig().onlyCollectEnergyTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+
     public static String doubleCardTime() {
         return String.join(",", getConfig().doubleCardTime);
+    }
+
+    public static String onlyCollectEnergyTime() {
+        return String.join(",", getConfig().onlyCollectEnergyTime);
     }
 
     public static boolean isDoubleCardTime() {
         for (String doubleTime : getConfig().doubleCardTime) {
             if (checkInTimeSpan(doubleTime))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isOnlyCollectEnergyTime() {
+        for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
+            if (checkInTimeSpan(onlyCollectEnergyTime))
                 return true;
         }
         return false;
@@ -1323,6 +1342,8 @@ public class Config {
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
         c.doubleCardTime.add("0700-0730");
+        c.onlyCollectEnergyTime = new ArrayList<>();
+        c.onlyCollectEnergyTime.add("0720-0725");      
         c.doubleCountLimit = 6;
         c.advanceTime = 0;
         c.collectInterval = 100;
@@ -1368,7 +1389,7 @@ public class Config {
         c.antdodoCollect = true;
         c.antOcean = true;
         c.userPatrol = true;
-        c.animalConsumeProp = true;
+        c.animalConsumeProp = false;
         c.collectGiftBox = true;
 
         c.enableFarm = true;
@@ -1521,6 +1542,8 @@ public class Config {
             Log.i(TAG, "doubleCard" + ":" + config.doubleCard);
 
             config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0730").split(","));
+
+            config.onlyCollectEnergyTime = Arrays.asList(jo.optString(jn_onlyCollectEnergyTime, "0720-0725").split(","));
 
             config.doubleCountLimit = jo.optInt("doubleCountLimit", 6);
             Log.i(TAG, "doubleCountLimit" + ":" + config.doubleCountLimit);
@@ -1695,7 +1718,7 @@ public class Config {
             config.userPatrol = jo.optBoolean(jn_userPatrol, true);
             Log.i(TAG, jn_userPatrol + ":" + config.userPatrol);
 
-            config.animalConsumeProp = jo.optBoolean(jn_animalConsumeProp, true);
+            config.animalConsumeProp = jo.optBoolean(jn_animalConsumeProp, false);
             Log.i(TAG, jn_animalConsumeProp + ":" + config.animalConsumeProp);
 
             config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
@@ -2005,6 +2028,8 @@ public class Config {
             jo.put(jn_doubleCard, config.doubleCard);
 
             jo.put(jn_doubleCardTime, String.join(",", config.doubleCardTime));
+
+            jo.put(jn_onlyCollectEnergyTime, String.join(",", config.onlyCollectEnergyTime));
 
             jo.put("doubleCountLimit", config.doubleCountLimit);
 

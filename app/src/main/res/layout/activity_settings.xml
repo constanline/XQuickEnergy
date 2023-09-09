@@ -212,6 +212,20 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/only_collect_energy_time"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_onlyCollectEnergyTime"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
 						android:text="@string/check_interval_minutes"
 						android:textAllCaps="false"
 						android:onClick="onClick"

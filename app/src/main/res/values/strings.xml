@@ -94,6 +94,7 @@
     <string name="collect_prop">Collect prop</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
+    <string name="only_collect_energy_time">Only collect energy time</string>
     <string name="animal_sleep_time">Animal sleep time</string>
     <string name="visit_github">Visit GitHub</string>
     <string name="exchange_energy_double_click">Exchange energy double click</string>
