@@ -44,7 +44,7 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure;
+            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +211,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
         sw_collectGiftBox = findViewById(R.id.sw_collectGiftBox);
+        sw_totalCertCount = findViewById(R.id.sw_totalCertCount);
 
         sw_enableStall = findViewById(R.id.sw_enableStall);
         sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
@@ -221,6 +222,7 @@ public class SettingsActivity extends Activity {
         sw_stallDonate = findViewById(R.id.sw_stallDonate);
         sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
         sw_stallThrowManure = findViewById(R.id.sw_stallThrowManure);
+        sw_greenFinance = findViewById(R.id.sw_greenFinance);
     }
 
     @Override
@@ -282,6 +284,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
         sw_collectGiftBox.setChecked(Config.collectGiftBox());
+        sw_totalCertCount.setChecked(Config.totalCertCount());
 
         sw_enableStall.setChecked(Config.enableStall());
         sw_stallAutoClose.setChecked(Config.stallAutoClose());
@@ -292,6 +295,7 @@ public class SettingsActivity extends Activity {
         sw_stallDonate.setChecked(Config.stallDonate());
         sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
         sw_stallThrowManure.setChecked(Config.stallThrowManure());
+        sw_greenFinance.setChecked(Config.greenFinance());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -523,6 +527,10 @@ public class SettingsActivity extends Activity {
                     Config.setCollectGiftBox(sw.isChecked());
                     break;
 
+                case R.id.sw_totalCertCount:
+                    Config.setTotalCertCount(sw.isChecked());
+                    break;
+
                 case R.id.sw_enableStall:
                     Config.setEnableStall(sw.isChecked());
                     break;
@@ -557,6 +565,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_stallThrowManure:
                     Config.setStallThrowManure(sw.isChecked());
+                    break;
+
+                case R.id.sw_greenFinance:
+                    Config.setGreenFinance(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {
@@ -716,6 +728,11 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_WhoYouWantToGiveTo:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null,
+                            ListDialog.ListType.RADIO);
+                    break;
+
+                case R.id.btn_sendFriendCard:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.sendFriendCard(), null,
                             ListDialog.ListType.RADIO);
                     break;
 

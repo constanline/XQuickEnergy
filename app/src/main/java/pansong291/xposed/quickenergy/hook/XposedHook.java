@@ -103,6 +103,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntOcean.start();
                             AntOrchard.start();
                             AntStall.start();
+                            GreenFinance.start();
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
@@ -116,14 +117,14 @@ public class XposedHook implements IXposedHookLoadPackage {
                 }
             };
         }
-        try {
-            AntForestToast.show("仙人掌加载成功");
+        try {         
             if (handler == null) {
                 handler = new Handler();
                 if (Config.startAt7()) {
                     Config.setAlarm7(AntForestToast.context);
                 }
             }
+            AntForestToast.show("仙人掌加载成功");
             handler.removeCallbacks(runnable);
             AntForest.stop();
             AntForestNotification.stop(service, false);

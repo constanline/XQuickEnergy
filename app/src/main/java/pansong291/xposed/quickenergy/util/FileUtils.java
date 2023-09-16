@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 
 public class FileUtils {
     private static final String TAG = FileUtils.class.getCanonicalName();
@@ -30,6 +31,8 @@ public class FileUtils {
     private static File runtimeLogFile;
     private static File friendWatchFile;
     private static File wuaFile;
+    private static File certCountDirectory;
+    private static File certCountFile;
 
     private static void copyFile(File srcDir, File dstDir, String filename) {
         File file = new File(srcDir, filename);
@@ -85,6 +88,21 @@ public class FileUtils {
             }
         }
         return configDirectory;
+    }
+
+    public static File getCertCountDirectoryFile() {
+        if (certCountDirectory == null) {
+            certCountDirectory = new File(getMainDirectoryFile(), "certCount");
+            if (certCountDirectory.exists()) {
+                if (certCountDirectory.isFile()) {
+                    certCountDirectory.delete();
+                    certCountDirectory.mkdirs();
+                }
+            } else {
+                certCountDirectory.mkdirs();
+            }
+        }
+        return certCountDirectory;
     }
 
     public static File getFriendWatchFile() {
@@ -277,6 +295,25 @@ public class FileUtils {
 
     public static File getBackupFile(File f) {
         return new File(f.getAbsolutePath() + ".bak");
+    }
+
+    public static File getCertCountFile(String userId) {
+        File certCountFile = new File(getCertCountDirectoryFile(), "certCount-" + userId + ".json");
+        if (!certCountFile.exists()) {
+            JSONObject jo_certCount = new JSONObject();
+            write2File(jo_certCount.toString(), certCountFile);
+        }
+        return certCountFile;
+    }
+
+    public static void setCertCount(String userId, String dateString, int certCount) {
+        try {
+            File certCountFile = getCertCountFile(userId);
+            JSONObject jo_certCount = new JSONObject(readFromFile(certCountFile));
+            jo_certCount.put(dateString, Integer.toString(certCount));
+            write2File(Config.formatJson(jo_certCount, false), certCountFile);
+        } catch (Throwable ignored) {
+        }
     }
 
     public static String readFromFile(File f) {

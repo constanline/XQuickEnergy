@@ -605,6 +605,20 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_antdodoCollect" />
 
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/send_friend_card"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_sendFriendCard"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding"
@@ -668,6 +682,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectGiftBox" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/total_cert_count"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_totalCertCount" />
 				</LinearLayout>
 				<!--庄园设置-->
 				<LinearLayout
@@ -1317,6 +1341,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_merchantKmdk" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/green_finance"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_greenFinance" />
 
 				</LinearLayout>
 

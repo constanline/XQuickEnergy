@@ -361,10 +361,7 @@ public class AntOcean {
                 if (homeTipsRefresh.optBoolean("fishCanBeCombined") || homeTipsRefresh.optBoolean("canBeRepaired")) {
                     querySeaAreaDetailList();
                 }
-                // 此处不确定，因为修复完成好像也会返回false
-                if (homeTipsRefresh.optBoolean("currentChapterFixed")) {
-                    switchOceanChapter();
-                }
+                switchOceanChapter();
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }

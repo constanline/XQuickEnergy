@@ -97,6 +97,7 @@ public class Config {
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
+    public static final String jn_sendFriendCard = "sendFriendCard";
     public static final String jn_acceptGift = "acceptGift";
     public static final String jn_visitFriendList = "visitFriendList";
     public static final String jn_chickenDiary = "chickenDiary";
@@ -108,6 +109,7 @@ public class Config {
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
     public static final String jn_collectGiftBox = "collectGiftBox";
+    public static final String jn_totalCertCount = "totalCertCount";
 
     public static final String jn_enableStall = "enableStall";
     public static final String jn_stallAutoOpen = "stallAutoOpen";
@@ -140,6 +142,7 @@ public class Config {
     public static final String jn_collectSesame = "collectSesame";
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
+    public static final String jn_greenFinance = "greenFinance";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -207,6 +210,7 @@ public class Config {
     private boolean userPatrol;
     private boolean animalConsumeProp;
     private boolean collectGiftBox;
+    private boolean totalCertCount;
 
     /* farm */
     private boolean enableFarm;
@@ -233,6 +237,7 @@ public class Config {
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
     private List<String> whoYouWantGiveTo;
+    private List<String> sendFriendCard;
     private boolean acceptGift;
     private List<String> visitFriendList;
     private List<Integer> visitFriendCountList;
@@ -272,6 +277,7 @@ public class Config {
     private boolean collectSesame;
     private boolean zcjSignIn;
     private boolean merchantKmdk;
+    private boolean greenFinance;
 
     /* base */
     private static volatile Config config;
@@ -744,6 +750,15 @@ public class Config {
         return getConfig().collectGiftBox;
     }
 
+    public static void setTotalCertCount(boolean b) {
+        getConfig().totalCertCount = b;
+        hasChanged = true;
+    }
+
+    public static boolean totalCertCount() {
+        return getConfig().totalCertCount;
+    }
+
     /* farm */
     public static void setEnableFarm(boolean b) {
         getConfig().enableFarm = b;
@@ -953,6 +968,10 @@ public class Config {
 
     public static List<String> whoYouWantGiveTo() {
         return getConfig().whoYouWantGiveTo;
+    }
+
+    public static List<String> sendFriendCard() {
+        return getConfig().sendFriendCard;
     }
 
     public static void setAcceptGift(boolean b) {
@@ -1266,6 +1285,15 @@ public class Config {
         return getConfig().merchantKmdk;
     }
 
+    public static void setGreenFinance(boolean b) {
+        getConfig().greenFinance = b;
+        hasChanged = true;
+    }
+
+    public static boolean greenFinance() {
+        return getConfig().greenFinance;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1351,6 +1379,7 @@ public class Config {
         c.userPatrol = true;
         c.animalConsumeProp = true;
         c.collectGiftBox = true;
+        c.totalCertCount = false;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1379,6 +1408,7 @@ public class Config {
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
         c.whoYouWantGiveTo = new ArrayList<>();
+        c.sendFriendCard = new ArrayList<>();
         c.acceptGift = true;
         if (c.visitFriendList == null)
             c.visitFriendList = new ArrayList<>();
@@ -1417,12 +1447,13 @@ public class Config {
         c.collectSesame = false;
         c.zcjSignIn = false;
         c.merchantKmdk = false;
+        c.greenFinance = false;
         return c;
     }
 
     public static boolean saveConfigFile() {
         String json = config2Json(config);
-        //Log.infoChanged("保存 config.json", json);
+        // Log.infoChanged("保存 config.json", json);
         return FileUtils.write2File(json, FileUtils.getConfigFile());
     }
 
@@ -1615,6 +1646,8 @@ public class Config {
 
             config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
 
+            config.totalCertCount = jo.optBoolean(jn_totalCertCount, false);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1690,6 +1723,14 @@ public class Config {
                 ja = jo.getJSONArray(jn_whoYouWantGiveTo);
                 for (int i = 0; i < ja.length(); i++) {
                     config.whoYouWantGiveTo.add(ja.getString(i));
+                }
+            }
+
+            config.sendFriendCard = new ArrayList<>();
+            if (jo.has(jn_sendFriendCard)) {
+                ja = jo.getJSONArray(jn_sendFriendCard);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.sendFriendCard.add(ja.getString(i));
                 }
             }
 
@@ -1801,6 +1842,8 @@ public class Config {
             config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, false);
 
             config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, false);
+
+            config.greenFinance = jo.optBoolean(jn_greenFinance, false);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
@@ -1979,6 +2022,8 @@ public class Config {
 
             jo.put(jn_collectGiftBox, config.collectGiftBox);
 
+            jo.put(jn_totalCertCount, config.totalCertCount);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -2042,6 +2087,12 @@ public class Config {
                 ja.put(s);
             }
             jo.put(jn_whoYouWantGiveTo, ja);
+
+            ja = new JSONArray();
+            for (String s : config.sendFriendCard) {
+                ja.put(s);
+            }
+            jo.put(jn_sendFriendCard, ja);
 
             jo.put(jn_acceptGift, config.acceptGift);
 
@@ -2122,6 +2173,8 @@ public class Config {
             jo.put(jn_zcjSignIn, config.zcjSignIn);
 
             jo.put(jn_merchantKmdk, config.merchantKmdk);
+
+            jo.put(jn_greenFinance, config.greenFinance);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);

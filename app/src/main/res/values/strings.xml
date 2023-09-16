@@ -147,5 +147,8 @@
     <string name="stall_invite_register">Stall invite register</string>
     <string name="stall_invite_shop_list">Stall invite shop list</string>
     <string name="stall_throw_manure">Stall throw manure</string>
+    <string name="green_finance">Green finance</string>
+    <string name="total_cert_count">Total cert count</string>
+    <string name="send_friend_card">Send friend card</string>
 
 </resources>
