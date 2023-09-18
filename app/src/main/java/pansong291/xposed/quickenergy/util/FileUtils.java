@@ -293,8 +293,8 @@ public class FileUtils {
     }
 
     public static String readFromFile(File f) {
-        if (!f.canRead()) {
-            AntForestToast.show(f.getName() + "没有读取权限！");
+        if (f.exists() && !f.canRead()) {
+            AntForestToast.show(f.getName() + "没有读取权限！", true);
             return "";
         }
         StringBuilder result = new StringBuilder();
@@ -327,8 +327,8 @@ public class FileUtils {
     }
 
     public static boolean write2File(String s, File f) {
-        if (!f.canWrite()) {
-            AntForestToast.show(f.getName() + "没有写入权限！");
+        if (f.exists() && !f.canWrite()) {
+            AntForestToast.show(f.getName() + "没有写入权限！", true);
             return false;
         }
         boolean success = false;
@@ -347,8 +347,8 @@ public class FileUtils {
     }
 
     public static boolean append2File(String s, File f) {
-        if (!f.canWrite()) {
-            AntForestToast.show(f.getName() + "没有写入权限！");
+        if (f.exists() && !f.canWrite()) {
+            AntForestToast.show(f.getName() + "没有写入权限！", true);
             return false;
         }
         boolean success = false;
