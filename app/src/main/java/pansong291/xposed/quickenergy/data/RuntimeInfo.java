@@ -17,6 +17,8 @@ public class RuntimeInfo {
 
     private static RuntimeInfo instance;
 
+    public static String process;
+
     private final String userId;
 
     private final Map<String, Object> map;

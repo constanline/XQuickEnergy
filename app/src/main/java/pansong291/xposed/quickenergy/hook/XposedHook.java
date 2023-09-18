@@ -17,6 +17,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
@@ -60,6 +61,7 @@ public class XposedHook implements IXposedHookLoadPackage {
         }
 
         if (!isHooked && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
+            RuntimeInfo.process = lpparam.packageName;
             isHooked = true;
             Log.i(TAG, lpparam.packageName);
             classLoader = lpparam.classLoader;

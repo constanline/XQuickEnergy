@@ -1,6 +1,8 @@
 package pansong291.xposed.quickenergy.util;
 
 import android.os.Environment;
+import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 
 import java.io.Closeable;
 import java.io.File;
@@ -51,22 +53,22 @@ public class FileUtils {
             mainDirectory = new File(storageDir, "xqe");
             if (!mainDirectory.exists()) {
                 mainDirectory.mkdirs();
-                File oldDirectory = new File(Environment.getExternalStorageDirectory(), "xqe");
-                if (oldDirectory.exists()) {
-                    File deprecatedFile = new File(oldDirectory, "deprecated");
-                    if (!deprecatedFile.exists()) {
-                        copyFile(oldDirectory, mainDirectory, "config.json");
-                        copyFile(oldDirectory, mainDirectory, "friendId.list");
-                        copyFile(oldDirectory, mainDirectory, "cooperationId.list");
-                        copyFile(oldDirectory, mainDirectory, "reserveId.list");
-                        copyFile(oldDirectory, mainDirectory, "statistics.json");
-                        copyFile(oldDirectory, mainDirectory, "cityCode.json");
-                        try {
-                            deprecatedFile.createNewFile();
-                        } catch (Throwable ignored) {
-                        }
-                    }
-                }
+//                File oldDirectory = new File(Environment.getExternalStorageDirectory(), "xqe");
+//                if (oldDirectory.exists()) {
+//                    File deprecatedFile = new File(oldDirectory, "deprecated");
+//                    if (!deprecatedFile.exists()) {
+//                        copyFile(oldDirectory, mainDirectory, "config.json");
+//                        copyFile(oldDirectory, mainDirectory, "friendId.list");
+//                        copyFile(oldDirectory, mainDirectory, "cooperationId.list");
+//                        copyFile(oldDirectory, mainDirectory, "reserveId.list");
+//                        copyFile(oldDirectory, mainDirectory, "statistics.json");
+//                        copyFile(oldDirectory, mainDirectory, "cityCode.json");
+//                        try {
+//                            deprecatedFile.createNewFile();
+//                        } catch (Throwable ignored) {
+//                        }
+//                    }
+//                }
             }
         }
         return mainDirectory;
@@ -120,7 +122,7 @@ public class FileUtils {
         if (!configFileMap.containsKey("Default")) {
             File configFile = new File(getMainDirectoryFile(), "config.json");
             if (configFile.exists()) {
-                Log.i(TAG, "读:" + configFile.canRead() + ";写:" + configFile.canWrite());
+                Log.i(TAG, "[" + RuntimeInfo.process + "][config]读:" + configFile.canRead() + ";写:" + configFile.canWrite());
             } else {
                 Log.i(TAG, "config.json文件不存在");
             }
@@ -196,7 +198,7 @@ public class FileUtils {
                 statisticsFile.delete();
 
             if (statisticsFile.exists()) {
-                Log.i(TAG, "读:" + statisticsFile.canRead() + ";写:" + statisticsFile.canWrite());
+                Log.i(TAG, "[" + RuntimeInfo.process + "][statistics]读:" + statisticsFile.canRead() + ";写:" + statisticsFile.canWrite());
             } else {
                 Log.i(TAG, "statisticsFile.json文件不存在");
             }
@@ -291,12 +293,16 @@ public class FileUtils {
     }
 
     public static String readFromFile(File f) {
+        if (!f.canRead()) {
+            AntForestToast.show(f.getName() + "没有读取权限！");
+            return "";
+        }
         StringBuilder result = new StringBuilder();
         FileReader fr = null;
         try {
             fr = new FileReader(f);
             char[] chs = new char[1024];
-            int len = 0;
+            int len;
             while ((len = fr.read(chs)) >= 0) {
                 result.append(chs, 0, len);
             }
@@ -321,6 +327,10 @@ public class FileUtils {
     }
 
     public static boolean write2File(String s, File f) {
+        if (!f.canWrite()) {
+            AntForestToast.show(f.getName() + "没有写入权限！");
+            return false;
+        }
         boolean success = false;
         FileWriter fw = null;
         try {
@@ -337,6 +347,10 @@ public class FileUtils {
     }
 
     public static boolean append2File(String s, File f) {
+        if (!f.canWrite()) {
+            AntForestToast.show(f.getName() + "没有写入权限！");
+            return false;
+        }
         boolean success = false;
         FileWriter fw = null;
         try {

@@ -547,7 +547,7 @@ public class AntForest {
                             break;
 
                         case WAITING:
-                            if (!true || Config.getDontCollectList().contains(userId))
+                            if (Config.getDontCollectList().contains(userId))
                                 break;
                             long produceTime = bubble.getLong("produceTime");
                             if (produceTime - serverTime < Config.checkInterval())
@@ -1728,14 +1728,16 @@ public class AntForest {
                 Log.recordLog("[" + FriendIdMap.getNameById(userId) + "]蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
                 // 20230725收取失败不再继续尝试
-                collectEnergy(userId, bubbleId, bizNo);
+//                collectEnergy(userId, bubbleId, bizNo);
 
-//                long time = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - time < Config.collectTimeout()) {
-//                    if (collectEnergy(userId, bubbleId, bizNo) > 0)
-//                        break;
-//                    sleep(500);
-//                }
+                long time = System.currentTimeMillis();
+                boolean first = true;
+                while (first || System.currentTimeMillis() - time < Config.collectTimeout()) {
+                    first = false;
+                    if (collectEnergy(userId, bubbleId, bizNo) > 0)
+                        break;
+                    sleep(500);
+                }
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);
