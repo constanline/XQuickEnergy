@@ -245,6 +245,14 @@ public class AntForestRpcCall {
             return RpcUtil.request("alipay.antforest.forest.h5.queryUserPatrol",
                             "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
     }
+    public static String queryMyPatrolRecord() {
+            return RpcUtil.request("alipay.antforest.forest.h5.queryMyPatrolRecord",
+                            "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
+    public static String switchUserPatrol(String targetPatrolId) {
+        return RpcUtil.request("alipay.antforest.forest.h5.switchUserPatrol",
+                "[{\"source\":\"ant_forest\",\"targetPatrolId\":" + targetPatrolId + ",\"timezoneId\":\"Asia/Shanghai\"}]");
+    }
 
     public static String patrolGo(int nodeIndex, int patrolId) {
         return RpcUtil.request("alipay.antforest.forest.h5.patrolGo",
