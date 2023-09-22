@@ -73,14 +73,10 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     private static void initHandler() {
         Log.recordLog("尝试初始化");
-        if (handler == null) {
-            handler = new Handler();
-            if (Config.startAt7()) {
-                Config.setAlarm7(AntForestToast.context);
-            }
-        }
         if (runnable == null) {
-            FriendManager.fillUser(XposedHook.classLoader);
+            if (!StringUtil.isEmpty(FriendIdMap.currentUid)) {
+                FriendManager.fillUser(XposedHook.classLoader);
+            }
 
             runnable = new Runnable() {
                 @Override
@@ -107,6 +103,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntOcean.start();
                             AntOrchard.start();
                             AntStall.start();
+                            GreenFinance.start();
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
@@ -120,7 +117,13 @@ public class XposedHook implements IXposedHookLoadPackage {
                 }
             };
         }
-        try {
+        try {         
+            if (handler == null) {
+                handler = new Handler();
+                if (Config.startAt7()) {
+                    Config.setAlarm7(AntForestToast.context);
+                }
+            }
             AntForestToast.show("仙人掌加载成功");
             handler.removeCallbacks(runnable);
             AntForest.stop();
@@ -159,16 +162,10 @@ public class XposedHook implements IXposedHookLoadPackage {
         try {
             XposedHelpers.findAndHookMethod(
                     "android.app.Service", loader, "onCreate", new XC_MethodHook() {
-                        ClassLoader loader;
-
-                        public XC_MethodHook setData(ClassLoader cl) {
-                            loader = cl;
-                            return this;
-                        }
 
                         @SuppressLint("WakelockTimeout")
                         @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        protected void afterHookedMethod(MethodHookParam param) {
                             Service service = (Service) param.thisObject;
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
@@ -178,7 +175,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             registerBroadcastReceiver(service);
                             XposedHook.service = service;
                             AntForestToast.context = service.getApplicationContext();
-                            RpcUtil.init(loader);
+                            RpcUtil.init(XposedHook.classLoader);
                             if (Config.stayAwake()) {
                                 PowerManager pm = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
                                 wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, service.getClass().getName());
@@ -192,9 +189,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 }
                             }
                             initHandler();
-                            super.afterHookedMethod(param);
                         }
-                    }.setData(loader));
+                    });
             Log.i(TAG, "hook onCreate successfully");
         } catch (Throwable t) {
             Log.i(TAG, "hook onCreate err:");
@@ -215,7 +211,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                     AntForestNotification.stop(service, false);
                     AntForestNotification.setContentText("支付宝前台服务被销毁");
                     Log.recordLog("支付宝前台服务被销毁", "");
-                    handler.removeCallbacks(runnable);
                     alarmHook(AntForestToast.context, 3000, false);
                 }
             });

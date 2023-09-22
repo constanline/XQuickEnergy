@@ -108,6 +108,7 @@ public class AntFarm {
         bizKeyList.add("HEART_DONATION_ADVANCED_FOOD_V2");
         bizKeyList.add("YEB_PURCHASE");
         bizKeyList.add("DIANTAOHUANDUAN");
+        bizKeyList.add("TAO_GOLDEN_V2");
     }
 
     public static void start() {

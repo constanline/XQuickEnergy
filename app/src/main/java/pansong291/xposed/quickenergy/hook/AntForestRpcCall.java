@@ -235,6 +235,19 @@ public class AntForestRpcCall {
                                 "[{\"propId\":\"" + propId + "\",\"propType\":\"" + propType + "\"}]");
         }
 
+        public static String queryBookInfo(String bookId) {
+                return RpcUtil.request("alipay.antdodo.rpc.h5.queryBookInfo",
+                                "[{\"bookId\":\"" + bookId + "\"}]");
+        }
+
+        // 送卡片给好友
+        public static String antdodoSocial(String targetAnimalId, String targetUserId) {
+                return RpcUtil.request("alipay.antdodo.rpc.h5.social",
+                                "[{\"actionCode\":\"GIFT_TO_FRIEND\",\"source\":\"GIFT_TO_FRIEND_FROM_CC\",\"targetAnimalId\":\""
+                                                + targetAnimalId + "\",\"targetUserId\":\"" + targetUserId
+                                                + "\",\"triggerTime\":\"" + System.currentTimeMillis() + "\"}]");
+        }
+
         /* 巡护保护地 */
         public static String queryUserPatrol() {
                 return RpcUtil.request("alipay.antforest.forest.h5.queryUserPatrol",

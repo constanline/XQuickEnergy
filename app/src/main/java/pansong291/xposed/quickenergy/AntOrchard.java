@@ -138,6 +138,7 @@ public class AntOrchard {
                             Statistics.spreadManureToday(userId);
                             return;
                         }
+                        Thread.sleep(500);
                         orchardSpreadManure();
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());

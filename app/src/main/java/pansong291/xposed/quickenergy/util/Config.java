@@ -97,6 +97,7 @@ public class Config {
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
+    public static final String jn_sendFriendCard = "sendFriendCard";
     public static final String jn_acceptGift = "acceptGift";
     public static final String jn_visitFriendList = "visitFriendList";
     public static final String jn_chickenDiary = "chickenDiary";
@@ -108,6 +109,7 @@ public class Config {
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
     public static final String jn_collectGiftBox = "collectGiftBox";
+    public static final String jn_totalCertCount = "totalCertCount";
 
     public static final String jn_enableStall = "enableStall";
     public static final String jn_stallAutoOpen = "stallAutoOpen";
@@ -122,6 +124,8 @@ public class Config {
     public static final String jn_stallSelfOpenTime = "tallSelfOpenTime";
     public static final String jn_stallDonate = "stallDonate";
     public static final String jn_stallInviteRegister = "stallInviteRegister";
+    public static final String jn_stallThrowManure = "stallThrowManure";
+    public static final String jn_stallInviteShopList = "stallInviteShopList";
 
     /* other */
     public static final String jn_receivePoint = "receivePoint";
@@ -138,6 +142,7 @@ public class Config {
     public static final String jn_collectSesame = "collectSesame";
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
+    public static final String jn_greenFinance = "greenFinance";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -205,6 +210,7 @@ public class Config {
     private boolean userPatrol;
     private boolean animalConsumeProp;
     private boolean collectGiftBox;
+    private boolean totalCertCount;
 
     /* farm */
     private boolean enableFarm;
@@ -231,6 +237,7 @@ public class Config {
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
     private List<String> whoYouWantGiveTo;
+    private List<String> sendFriendCard;
     private boolean acceptGift;
     private List<String> visitFriendList;
     private List<Integer> visitFriendCountList;
@@ -252,6 +259,8 @@ public class Config {
     private int stallSelfOpenTime;
     private boolean stallDonate;
     private boolean stallInviteRegister;
+    private boolean stallThrowManure;
+    private List<String> stallInviteShopList;
 
     /* other */
     private boolean receivePoint;
@@ -268,6 +277,7 @@ public class Config {
     private boolean collectSesame;
     private boolean zcjSignIn;
     private boolean merchantKmdk;
+    private boolean greenFinance;
 
     /* base */
     private static volatile Config config;
@@ -740,6 +750,15 @@ public class Config {
         return getConfig().collectGiftBox;
     }
 
+    public static void setTotalCertCount(boolean b) {
+        getConfig().totalCertCount = b;
+        hasChanged = true;
+    }
+
+    public static boolean totalCertCount() {
+        return getConfig().totalCertCount;
+    }
+
     /* farm */
     public static void setEnableFarm(boolean b) {
         getConfig().enableFarm = b;
@@ -951,6 +970,10 @@ public class Config {
         return getConfig().whoYouWantGiveTo;
     }
 
+    public static List<String> sendFriendCard() {
+        return getConfig().sendFriendCard;
+    }
+
     public static void setAcceptGift(boolean b) {
         getConfig().acceptGift = b;
         hasChanged = true;
@@ -1106,6 +1129,19 @@ public class Config {
         return getConfig().stallInviteRegister;
     }
 
+    public static List<String> stallInviteShopList() {
+        return getConfig().stallInviteShopList;
+    }
+
+    public static void setStallThrowManure(boolean b) {
+        getConfig().stallThrowManure = b;
+        hasChanged = true;
+    }
+
+    public static boolean stallThrowManure() {
+        return getConfig().stallThrowManure;
+    }
+
     /* other */
     public static void setReceivePoint(boolean b) {
         getConfig().receivePoint = b;
@@ -1249,6 +1285,15 @@ public class Config {
         return getConfig().merchantKmdk;
     }
 
+    public static void setGreenFinance(boolean b) {
+        getConfig().greenFinance = b;
+        hasChanged = true;
+    }
+
+    public static boolean greenFinance() {
+        return getConfig().greenFinance;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1334,6 +1379,7 @@ public class Config {
         c.userPatrol = true;
         c.animalConsumeProp = true;
         c.collectGiftBox = true;
+        c.totalCertCount = false;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1362,6 +1408,7 @@ public class Config {
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
         c.whoYouWantGiveTo = new ArrayList<>();
+        c.sendFriendCard = new ArrayList<>();
         c.acceptGift = true;
         if (c.visitFriendList == null)
             c.visitFriendList = new ArrayList<>();
@@ -1385,6 +1432,8 @@ public class Config {
         c.stallSelfOpenTime = 120;
         c.stallDonate = false;
         c.stallInviteRegister = false;
+        c.stallThrowManure = false;
+        c.stallInviteShopList = new ArrayList<>();
 
         c.receivePoint = true;
         c.openTreasureBox = true;
@@ -1398,12 +1447,13 @@ public class Config {
         c.collectSesame = false;
         c.zcjSignIn = false;
         c.merchantKmdk = false;
+        c.greenFinance = false;
         return c;
     }
 
     public static boolean saveConfigFile() {
         String json = config2Json(config);
-        //Log.infoChanged("保存 config.json", json);
+        // Log.infoChanged("保存 config.json", json);
         return FileUtils.write2File(json, FileUtils.getConfigFile());
     }
 
@@ -1596,6 +1646,8 @@ public class Config {
 
             config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
 
+            config.totalCertCount = jo.optBoolean(jn_totalCertCount, false);
+
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
 
@@ -1674,6 +1726,14 @@ public class Config {
                 }
             }
 
+            config.sendFriendCard = new ArrayList<>();
+            if (jo.has(jn_sendFriendCard)) {
+                ja = jo.getJSONArray(jn_sendFriendCard);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.sendFriendCard.add(ja.getString(i));
+                }
+            }
+
             config.acceptGift = jo.optBoolean(jn_acceptGift, true);
 
             config.visitFriendList = new ArrayList<>();
@@ -1744,6 +1804,16 @@ public class Config {
 
             config.stallInviteRegister = jo.optBoolean(jn_stallInviteRegister, true);
 
+            config.stallThrowManure = jo.optBoolean(jn_stallThrowManure, false);
+
+            config.stallInviteShopList = new ArrayList<>();
+            if (jo.has(jn_stallInviteShopList)) {
+                ja = jo.getJSONArray(jn_stallInviteShopList);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.stallInviteShopList.add(ja.getString(i));
+                }
+            }
+
             /* other */
             config.receivePoint = jo.optBoolean(jn_receivePoint, true);
 
@@ -1773,20 +1843,21 @@ public class Config {
 
             config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, false);
 
+            config.greenFinance = jo.optBoolean(jn_greenFinance, false);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
-                //Log.infoChanged("配置文件格式有误，已重置配置文件并备份原文件", json);
+                Log.i(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
+                Log.infoChanged(TAG, "配置文件格式有误，已重置配置文件并备份原文件");
                 FileUtils.write2File(json, FileUtils.getBackupFile(FileUtils.getConfigFile()));
             }
             config = defInit();
         }
         String formatted = config2Json(config);
         if (!formatted.equals(json)) {
-            //Log.infoChanged("重新格式化 config.json，原", json);
-            //Log.infoChanged("重新格式化 config.json，新", formatted);
-            Log.recordLog("重新格式化 config.json，新", "");
-
+            Log.i(TAG, "重新格式化 config.json");
+            Log.infoChanged(TAG, "重新格式化 config.json");
             FileUtils.write2File(formatted, FileUtils.getConfigFile());
         }
         return config;
@@ -1951,6 +2022,8 @@ public class Config {
 
             jo.put(jn_collectGiftBox, config.collectGiftBox);
 
+            jo.put(jn_totalCertCount, config.totalCertCount);
+
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
 
@@ -2015,6 +2088,12 @@ public class Config {
             }
             jo.put(jn_whoYouWantGiveTo, ja);
 
+            ja = new JSONArray();
+            for (String s : config.sendFriendCard) {
+                ja.put(s);
+            }
+            jo.put(jn_sendFriendCard, ja);
+
             jo.put(jn_acceptGift, config.acceptGift);
 
             ja = new JSONArray();
@@ -2059,6 +2138,12 @@ public class Config {
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
             jo.put(jn_stallDonate, config.stallDonate);
             jo.put(jn_stallInviteRegister, config.stallInviteRegister);
+            jo.put(jn_stallThrowManure, config.stallThrowManure);
+            ja = new JSONArray();
+            for (int i = 0; i < config.stallInviteShopList.size(); i++) {
+                ja.put(config.stallInviteShopList.get(i));
+            }
+            jo.put(jn_stallInviteShopList, ja);
 
             /* other */
             jo.put(jn_receivePoint, config.receivePoint);
@@ -2088,6 +2173,8 @@ public class Config {
             jo.put(jn_zcjSignIn, config.zcjSignIn);
 
             jo.put(jn_merchantKmdk, config.merchantKmdk);
+
+            jo.put(jn_greenFinance, config.greenFinance);
 
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
