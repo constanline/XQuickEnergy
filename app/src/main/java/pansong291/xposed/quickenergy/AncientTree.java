@@ -23,7 +23,7 @@ public class AncientTree {
             public void run() {
                 try {
                     while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                        Thread.sleep(100);
+                        Thread.sleep(101);
                     ancientTree(Config.getAncientTreeCityCodeList()); // 二次检查 有时会返回繁忙漏保护
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");

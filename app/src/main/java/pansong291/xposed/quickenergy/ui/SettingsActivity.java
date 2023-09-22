@@ -208,6 +208,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
         sw_collectGiftBox = findViewById(R.id.sw_collectGiftBox);
+        sw_totalCertCount = findViewById(R.id.sw_totalCertCount);
 
         sw_enableStall = findViewById(R.id.sw_enableStall);
         sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
