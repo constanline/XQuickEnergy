@@ -2,9 +2,6 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -45,7 +42,7 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure, sw_greenFinance;
+            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,6 +281,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
         sw_collectGiftBox.setChecked(Config.collectGiftBox());
+        sw_totalCertCount.setChecked(Config.totalCertCount());
 
         sw_enableStall.setChecked(Config.enableStall());
         sw_stallAutoClose.setChecked(Config.stallAutoClose());
@@ -526,6 +524,10 @@ public class SettingsActivity extends Activity {
                     Config.setCollectGiftBox(sw.isChecked());
                     break;
 
+                case R.id.sw_totalCertCount:
+                    Config.setTotalCertCount(sw.isChecked());
+                    break;
+
                 case R.id.sw_enableStall:
                     Config.setEnableStall(sw.isChecked());
                     break;
@@ -652,7 +654,7 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_ancientTreeAreaCodeList:
-                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
+                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeCityCodeList(), null);
                     break;
 
                 case R.id.btn_giveEnergyRainList:
@@ -722,6 +724,11 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_WhoYouWantToGiveTo:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null,
+                            ListDialog.ListType.RADIO);
+                    break;
+
+                case R.id.btn_sendFriendCard:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.sendFriendCard(), null,
                             ListDialog.ListType.RADIO);
                     break;
 

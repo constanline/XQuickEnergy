@@ -100,6 +100,7 @@ public class Config {
     public static final String jn_notifyFriend = "notifyFriend";
     public static final String jn_dontNotifyFriendList = "dontNotifyFriendList";
     public static final String jn_whoYouWantGiveTo = "whoYouWantGiveTo";
+    public static final String jn_sendFriendCard = "sendFriendCard";
     public static final String jn_acceptGift = "acceptGift";
     public static final String jn_visitFriendList = "visitFriendList";
     public static final String jn_chickenDiary = "chickenDiary";
@@ -111,6 +112,7 @@ public class Config {
     public static final String jn_userPatrol = "userPatrol";
     public static final String jn_animalConsumeProp = "animalConsumeProp";
     public static final String jn_collectGiftBox = "collectGiftBox";
+    public static final String jn_totalCertCount = "totalCertCount";
 
     public static final String jn_enableStall = "enableStall";
     public static final String jn_stallAutoOpen = "stallAutoOpen";
@@ -190,7 +192,7 @@ public class Config {
     private List<String> cooperateWaterList;
     private List<Integer> cooperateWaterNumList;
     private boolean ancientTree;
-    private List<String> ancientTreeAreaCodeList;
+    private List<String> ancientTreeCityCodeList;
     private boolean energyRain;
     private boolean reserve;
     private List<String> reserveList;
@@ -211,6 +213,7 @@ public class Config {
     private boolean userPatrol;
     private boolean animalConsumeProp;
     private boolean collectGiftBox;
+    private boolean totalCertCount;
 
     /* farm */
     private boolean enableFarm;
@@ -237,6 +240,7 @@ public class Config {
     private boolean notifyFriend;
     private List<String> dontNotifyFriendList;
     private List<String> whoYouWantGiveTo;
+    private List<String> sendFriendCard;
     private boolean acceptGift;
     private List<String> visitFriendList;
     private List<Integer> visitFriendCountList;
@@ -617,8 +621,8 @@ public class Config {
         return getConfig().ancientTree;
     }
 
-    public static List<String> getAncientTreeAreaCodeList() {
-        return getConfig().ancientTreeAreaCodeList;
+    public static List<String> getAncientTreeCityCodeList() {
+        return getConfig().ancientTreeCityCodeList;
     }
 
     public static void setReserve(boolean b) {
@@ -747,6 +751,15 @@ public class Config {
 
     public static boolean collectGiftBox() {
         return getConfig().collectGiftBox;
+    }
+
+    public static void setTotalCertCount(boolean b) {
+        getConfig().totalCertCount = b;
+        hasChanged = true;
+    }
+
+    public static boolean totalCertCount() {
+        return getConfig().totalCertCount;
     }
 
     /* farm */
@@ -960,6 +973,10 @@ public class Config {
         return getConfig().whoYouWantGiveTo;
     }
 
+    public static List<String> sendFriendCard() {
+        return getConfig().sendFriendCard;
+    }
+
     public static void setAcceptGift(boolean b) {
         getConfig().acceptGift = b;
         hasChanged = true;
@@ -1111,12 +1128,12 @@ public class Config {
         hasChanged = true;
     }
 
-    public static List<String> stallInviteShopList() {
-        return getConfig().stallInviteShopList;
-    }
-
     public static boolean stallInviteRegister() {
         return getConfig().stallInviteRegister;
+    }
+
+    public static List<String> stallInviteShopList() {
+        return getConfig().stallInviteShopList;
     }
 
     public static void setStallThrowManure(boolean b) {
@@ -1363,6 +1380,7 @@ public class Config {
         c.userPatrol = true;
         c.animalConsumeProp = true;
         c.collectGiftBox = true;
+        c.totalCertCount = false;
 
         c.enableFarm = true;
         c.rewardFriend = true;
@@ -1394,6 +1412,7 @@ public class Config {
         if (c.dontNotifyFriendList == null)
             c.dontNotifyFriendList = new ArrayList<>();
         c.whoYouWantGiveTo = new ArrayList<>();
+        c.sendFriendCard = new ArrayList<>();
         c.acceptGift = true;
         if (c.visitFriendList == null)
             c.visitFriendList = new ArrayList<>();
@@ -1598,14 +1617,14 @@ public class Config {
             config.ancientTree = jo.optBoolean(jn_ancientTree, true);
             Log.i(TAG, jn_ancientTree + ":" + config.ancientTree);
 
-            config.ancientTreeAreaCodeList = new ArrayList<>();
+            config.ancientTreeCityCodeList = new ArrayList<>();
             if (jo.has(jn_ancientTreeAreaCodeList)) {
                 ja = jo.getJSONArray(jn_ancientTreeAreaCodeList);
                 for (int i = 0; i < ja.length(); i++) {
-                    config.ancientTreeAreaCodeList.add(ja.getString(i));
+                    config.ancientTreeCityCodeList.add(ja.getString(i));
                 }
             }
-            Log.i(TAG, jn_ancientTreeAreaCodeList + ":" + String.join(",", config.ancientTreeAreaCodeList));
+            Log.i(TAG, jn_ancientTreeAreaCodeList + ":" + String.join(",", config.ancientTreeCityCodeList));
 
             config.energyRain = jo.optBoolean(jn_energyRain, true);
             Log.i(TAG, jn_energyRain + ":" + config.energyRain);
@@ -1683,6 +1702,8 @@ public class Config {
 
             config.collectGiftBox = jo.optBoolean(jn_collectGiftBox, true);
             Log.i(TAG, jn_collectGiftBox + ":" + config.collectGiftBox);
+
+            config.totalCertCount = jo.optBoolean(jn_totalCertCount, false);
 
             /* farm */
             config.enableFarm = jo.optBoolean(jn_enableFarm, true);
@@ -1784,6 +1805,13 @@ public class Config {
             }
             Log.i(TAG, jn_whoYouWantGiveTo + ":" + String.join(",", config.whoYouWantGiveTo));
 
+            config.sendFriendCard = new ArrayList<>();
+            if (jo.has(jn_sendFriendCard)) {
+                ja = jo.getJSONArray(jn_sendFriendCard);
+                for (int i = 0; i < ja.length(); i++) {
+                    config.sendFriendCard.add(ja.getString(i));
+                }
+            }
 
             config.acceptGift = jo.optBoolean(jn_acceptGift, true);
             Log.i(TAG, jn_acceptGift + ":" + config.acceptGift);
@@ -2044,7 +2072,7 @@ public class Config {
             jo.put(jn_ancientTree, config.ancientTree);
 
             ja = new JSONArray();
-            for (String s : config.ancientTreeAreaCodeList) {
+            for (String s : config.ancientTreeCityCodeList) {
                 ja.put(s);
             }
             jo.put(jn_ancientTreeAreaCodeList, ja);
@@ -2095,6 +2123,8 @@ public class Config {
             jo.put(jn_animalConsumeProp, config.animalConsumeProp);
 
             jo.put(jn_collectGiftBox, config.collectGiftBox);
+
+            jo.put(jn_totalCertCount, config.totalCertCount);
 
             /* farm */
             jo.put(jn_enableFarm, config.enableFarm);
@@ -2159,6 +2189,12 @@ public class Config {
                 ja.put(s);
             }
             jo.put(jn_whoYouWantGiveTo, ja);
+
+            ja = new JSONArray();
+            for (String s : config.sendFriendCard) {
+                ja.put(s);
+            }
+            jo.put(jn_sendFriendCard, ja);
 
             jo.put(jn_acceptGift, config.acceptGift);
 

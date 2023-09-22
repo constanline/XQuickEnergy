@@ -173,9 +173,9 @@ public class AntForest {
                             }
                         }
                         if (Config.antdodoCollect()) {
-                            antdodoCollect();
                             antdodoReceiveTaskAward();
                             antdodoPropList();
+                            antdodoCollect();
                         }
                         if (!Config.whoYouWantGiveTo().isEmpty()
                                 && !FriendIdMap.currentUid.equals(Config.whoYouWantGiveTo().get(0))) {
@@ -366,7 +366,11 @@ public class AntForest {
                     selfName = "我";
                 FriendIdMap.putIdMapIfEmpty(selfId, selfName);
                 FriendIdMap.saveIdMap();
-
+                if (Config.totalCertCount()) {
+                    JSONObject userBaseInfo = joHomePage.getJSONObject("userBaseInfo");
+                    int totalCertCount = userBaseInfo.optInt("totalCertCount", 0);
+                    FileUtils.setCertCount(selfId, Log.getFormatDate(), totalCertCount);
+                }
                 if (Config.collectEnergy()) {
                     Log.recordLog("进入[" + selfName + "]的蚂蚁森林", "");
                     for (int i = 0; i < jaBubbles.length(); i++) {
@@ -1255,6 +1259,7 @@ public class AntForest {
             JSONObject jo = new JSONObject(AntForestRpcCall.antdodoHomePage());
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 JSONObject data = jo.getJSONObject("data");
+                String bookId = data.getJSONObject("animalBook").getString("bookId");
                 JSONArray ja = data.getJSONArray("limit");
                 int index = -1;
                 for (int i = 0; i < ja.length(); i++) {
@@ -1278,6 +1283,10 @@ public class AntForest {
                             Log.i(TAG, jo.getString("resultDesc"));
                         }
                     }
+                }
+                if (!Config.sendFriendCard().isEmpty()
+                        && !FriendIdMap.currentUid.equals(Config.sendFriendCard().get(0))) {
+                    sendAntdodoCard(bookId, Config.sendFriendCard().get(0));
                 }
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
@@ -1367,6 +1376,37 @@ public class AntForest {
             }
         } catch (Throwable th) {
             Log.i(TAG, "antdodoPropList err:");
+            Log.printStackTrace(TAG, th);
+        }
+    }
+
+    private static void sendAntdodoCard(String bookId, String targetUser) {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.queryBookInfo(bookId));
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                JSONArray animalForUserList = jo.getJSONObject("data").optJSONArray("animalForUserList");
+                for (int i = 0; i < animalForUserList.length(); i++) {
+                    JSONObject animalForUser = animalForUserList.getJSONObject(i);
+                    int count = animalForUser.getJSONObject("collectDetail").optInt("count");
+                    if (count <= 0)
+                        continue;
+                    JSONObject animal = animalForUser.getJSONObject("animal");
+                    String animalId = animal.getString("animalId");
+                    String ecosystem = animal.getString("ecosystem");
+                    String name = animal.getString("name");
+                    for (int j = 0; j < count; j++) {
+                        jo = new JSONObject(AntForestRpcCall.antdodoSocial(animalId, targetUser));
+                        if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                            Log.forest("赠送卡片🦕[" + FriendIdMap.getNameById(targetUser) + "]#" + ecosystem + "-" + name);
+                        } else {
+                            Log.i(TAG, jo.getString("resultDesc"));
+                        }
+                        Thread.sleep(500L);
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            Log.i(TAG, "sendAntdodoCard err:");
             Log.printStackTrace(TAG, th);
         }
     }
