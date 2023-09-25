@@ -9,17 +9,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.TimeUtil;
 
 import java.text.DateFormat;
 
 public class AntForestNotification {
-    public static final int NOTIFICATION_ID = 66;
+    public static final int NOTIFICATION_ID = 99;
     public static final String CHANNEL_ID = "pansong291.xposed.quickenergy.repair.ANTFOREST_NOTIFY_CHANNEL";
     private static NotificationManager mNotifyManager;
     private static Notification mNotification;
     private static Notification.Builder builder;
     private static boolean isStart = false;
+
+    private static long nextScanTime = 0;
+    private static CharSequence contentText = "";
 
     private AntForestNotification() {
     }
@@ -33,7 +38,7 @@ public class AntForestNotification {
                 getNotificationManager(context).notify(NOTIFICATION_ID, mNotification);
             isStart = true;
         }
-        setContentText("开始检测能量");
+        setContentText("运行中...");
     }
 
     public static void stop(Context context, boolean remove) {
@@ -85,14 +90,35 @@ public class AntForestNotification {
         }
     }
 
+    public static void setNextScanTime(long nextScanTime) {
+        AntForestNotification.nextScanTime = nextScanTime;
+        if (isStart) {
+            innerSetContentText();
+        }
+    }
+
+    private static void innerSetContentText() {
+        String preContent = (nextScanTime > 0) ? "下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" : "";
+        Notification.BigTextStyle style = new Notification.BigTextStyle();
+        style.bigText(preContent + contentText);
+//        Notification.InboxStyle style = new Notification.InboxStyle();
+//        style.addLine(preContent);
+//        style.addLine(contentText);
+        builder.setStyle(style);
+
+        mNotification = builder.build();
+        if (mNotifyManager != null)
+            mNotifyManager.notify(NOTIFICATION_ID, mNotification);
+    }
+
     public static void setContentText(CharSequence cs) {
         if (isStart) {
-            if (Config.forestPauseTime() > System.currentTimeMillis()) {
-                cs = "请求不合法,等待至" + DateFormat.getDateTimeInstance().format(Config.forestPauseTime());
+            long forestPauseTime = RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime);
+            if (forestPauseTime > System.currentTimeMillis()) {
+                cs = "触发异常,等待至" + DateFormat.getDateTimeInstance().format(forestPauseTime);
             }
-            mNotification = builder.setContentText(cs).build();
-            if (mNotifyManager != null)
-                mNotifyManager.notify(NOTIFICATION_ID, mNotification);
+            contentText = cs;
+            innerSetContentText();
         }
     }
 

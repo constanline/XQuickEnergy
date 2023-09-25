@@ -1,0 +1,43 @@
+name: 问题与 BUG 反馈
+description: 问题反馈应当使用此模板进行提交
+labels: [ bug ]
+body:
+  - type: markdown
+    attributes:
+      value: |        
+        ### 请在下方填写问题发生的具体原因和复现步骤。
+        
+        发生异常、崩溃、闪退或功能性问题，必须提交问题 Log (日志)，没有 Log 的 issues 将直接被关闭。
+  - type: input
+    attributes:
+      label: |
+        程序版本 / 框架版本 / 模块版本
+      description: 请填写当前使用的 程序版本 (例如：10.5.8)、框架版本 (例如：LSPosed 1.8.4) 及 模块版本 (例如：1.1.1)
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: |
+        系统版本 / Android版本
+      description: 这里填写当前使用的 系统版本 (例如：MIUI、ColorOS、OxygenOS、PE/原生) 及 Android版本 (例如：Android 10、Android 11、Android 12)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 详细描述问题发生的具体原因
+      description: 请在下方详细描述问题发生的具体场景、复现步骤和经过，以便我们能够按照你所描述的步骤复现这个问题。
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 提供模块问题 Log 或必要 Log
+      description: 闪退需提交闪退(crash)日志，无响应需提交无响应(ANR)日志，功能性问题需提交运行时(runtime)日志。
+      value: |
+        <details><summary>展开查看</summary><pre><code>
+
+        (此处粘贴问题 Log)
+
+        </code></pre></details>
+        <!-- 提交时可以将个人信息脱敏，粘贴你复制的日志，不要破坏代码格式 -->
+    validations:
+      required: true

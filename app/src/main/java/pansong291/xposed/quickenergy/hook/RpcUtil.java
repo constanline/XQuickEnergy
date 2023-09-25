@@ -4,6 +4,7 @@ import de.robv.android.xposed.XposedHelpers;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.StringUtil;
@@ -11,7 +12,6 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
-import java.util.Objects;
 
 public class RpcUtil {
     private static final String TAG = RpcUtil.class.getCanonicalName();
@@ -19,7 +19,7 @@ public class RpcUtil {
     private static Method getResponseMethod;
     private static Object curH5PageImpl;
 
-    public static boolean isInterrupted = false;
+    public static volatile boolean isInterrupted = false;
 
     public static void init(ClassLoader loader) {
         if (rpcCallMethod == null) {
@@ -55,7 +55,7 @@ public class RpcUtil {
                                     classLoader).getName()), "getMyAccountInfoModelByLocal");
             return (String) XposedHelpers.getObjectField(callMethod, "userId");
         } catch (Throwable th) {
-            Log.i(TAG, "getUserId err:" + Objects.requireNonNull(th.getCause()).getMessage());
+            Log.i(TAG, "getUserId err");
             Log.printStackTrace(TAG, th);
         }
         return null;
@@ -106,11 +106,11 @@ public class RpcUtil {
                                 }
                             }
                         }
-                    } else if (msg.contains("请求不合法")) {
+                    } else if (msg.contains("[1004]") && "alipay.antmember.forest.h5.collectEnergy".equals(args0)) {
                         if (Config.waitWhenException() > 0) {
                             long waitTime = System.currentTimeMillis() + Config.waitWhenException();
-                            Config.setForestPauseTime(waitTime);
-                            AntForestNotification.setContentText("请求不合法,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            RuntimeInfo.getInstance().put(RuntimeInfo.RuntimeInfoKey.ForestPauseTime, waitTime);
+                            AntForestNotification.setContentText("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                             Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
                     } else if (msg.contains("MMTPException")) {

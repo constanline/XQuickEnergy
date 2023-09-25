@@ -1,0 +1,23 @@
+name: 功能建议
+description: 功能建议使用此模板进行提交
+labels: [ enhancement ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 请在下方填写功能需求或建议。
+  - type: dropdown
+    attributes:
+      label: 增强类型
+      options:
+        - 功能型增强
+        - 优化型增强
+        - 强迫症增强
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 具体描述
+      description: 请在下方详细描述功能需求或建议。
+    validations:
+      required: true

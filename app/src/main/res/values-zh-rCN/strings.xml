@@ -17,8 +17,8 @@
     <string name="return_water_33">返水33g</string>
     <string name="return_water_18">返水18g</string>
     <string name="return_water_10">返水10g</string>
-    <string name="help_friend_collect">帮收能量</string>
-    <string name="don_t_help_collect_list">不帮收能量名单</string>
+    <string name="help_friend_collect">复活好友能量</string>
+    <string name="don_t_help_collect_list">不复活好友能量名单</string>
     <string name="don_t_collect_list">不收取能量名单</string>
     <string name="receive_forest_task_award">收取森林任务奖励</string>
     <string name="water_friend_list">好友浇水列表</string>
@@ -26,7 +26,7 @@
     <string name="cooperate_water_list">合种浇水列表</string>
     <string name="farm_configuration">庄园</string>
     <string name="enable_farm">开启庄园</string>
-    <string name="reward_friend">回报好友</string>
+    <string name="reward_friend">打赏好友</string>
     <string name="send_back_animal">遣返小鸡</string>
     <string name="send_type">遣返方式</string>
     <string name="don_t_send_friend_list">不遣返小鸡名单</string>
@@ -53,7 +53,7 @@
     <string name="latest_exchange_time_24_hour_system">最晚捐步时间(24小时制)</string>
     <string name="koubei_sign_in">口碑签到</string>
     <string name="more">更多</string>
-    <string name="support_developer">支持当前开发者</string>
+    <string name="support_developer">支持芝麻粒开发者</string>
     <string name="hello_user">你好，旅行者！</string>
     <string name="support_xqe_developer">支持XQE原作者</string>
     <string name="forest_log">森林记录</string>
@@ -94,10 +94,10 @@
     <string name="visit_github">GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
     <string name="exchange_energy_double_click_count">兑换限时双击卡数量</string>
-    <string name="reserve">兑换保护地（会使用能量慎用！）</string>
+    <string name="reserve">每日兑换保护地(会使用能量慎用)</string>
     <string name="reserve_list">保护地列表</string>
     <string name="eco_life_tick">绿色行动打卡</string>
-    <string name="ancient_tree">保护古树（会使用能量慎用！）</string>
+    <string name="ancient_tree">保护古树(会使用能量慎用)</string>
     <string name="ancient_tree_area_code_list">古树区划代码列表</string>
     <string name="ancient_tree_only_week">仅星期一、三、五运行保护古树</string>
     <string name="antdodo_collect">神奇物种开卡</string>
@@ -113,9 +113,9 @@
     <string name="user_patrol">巡护森林</string>
     <string name="toast_vertical_offset">气泡纵向偏移</string>
     <string name="animal_game_time">小鸡游戏时间</string>
-    <string name="animal_consume_prop">派遣小动物</string>
-    <string name="double_count_limit">每日双击卡次数限制</string>
-    <string name="ins_blue_bean_exchange">安心豆兑换</string>
+    <string name="animal_consume_prop">派遣动物</string>
+    <string name="double_count_limit">双击卡次数限制</string>
+    <string name="ins_blue_bean_exchange">安心豆兑换时光加速器</string>
     <string name="enable_on_going">开启状态栏禁删</string>
     <string name="backup_runtime_log">备份runtime日志</string>
     <string name="ant_orchard">施肥</string>
@@ -123,5 +123,30 @@
     <string name="orchard_spread_manure_count">施肥次数</string>
     <string name="collect_prop">收集道具</string>
     <string name="who_you_want_to_give_to">赠送道具给谁（赠送所有可送道具）</string>
+    <string name="collect_sesame">收芝麻粒</string>
+    <string name="zcj_sign_in">招财金签到</string>
+    <string name="merchant_kmdk">商户开门打卡</string>
+    <string name="enable_stall">开启蚂蚁新村</string>
+    <string name="stall_auto_close">新村自动收摊</string>
+    <string name="stall_auto_open">新村自动摆摊</string>
+    <string name="stall_auto_task">新村自动任务</string>
+    <string name="stall_receive_award">新村自动领奖</string>
+    <string name="accept_gift">收麦子</string>
+    <string name="visit_friend_list">送麦子名单</string>
+    <string name="stall_open_type">摊位类型(打开:摆摊列表/关闭:不摆列表)</string>
+    <string name="stall_open_list">摊位列表</string>
+    <string name="stall_white_list">不请走列表</string>
+    <string name="stall_allow_open_time">允许他人摆摊时长</string>
+    <string name="stall_self_open_time">自己收摊时长</string>
+    <string name="stall_black_list">禁摆摊列表</string>
+    <string name="chicken_diary">小鸡日记</string>
+    <string name="stall_donate">新村自动捐赠</string>
+    <string name="collect_gift_box">领取礼盒</string>
+    <string name="stall_invite_register">邀请好友开通新村</string>
+    <string name="stall_invite_shop_list">新村邀请摆摊列表</string>
+    <string name="stall_throw_manure">新村丢肥料</string>
+    <string name="green_finance">开启绿色经营</string>
+    <string name="total_cert_count">记录证书总数</string>
+    <string name="send_friend_card">送好友卡片(赠送当前图鉴所有卡片)</string>
 
 </resources>

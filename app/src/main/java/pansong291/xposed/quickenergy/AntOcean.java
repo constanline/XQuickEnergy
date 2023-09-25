@@ -8,6 +8,7 @@ import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.FriendIdMap;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.AntFarm.TaskStatus;
+import pansong291.xposed.quickenergy.util.StringUtil;
 
 /**
  * @author Constanline
@@ -24,7 +25,7 @@ public class AntOcean {
             public void run() {
                 try {
                     while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                    Thread.sleep(100);
+                        Thread.sleep(100);
                     String s = AntOceanRpcCall.queryOceanStatus();
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -49,9 +50,9 @@ public class AntOcean {
         try {
             JSONObject joHomePage = new JSONObject(AntOceanRpcCall.queryHomePage());
             if ("SUCCESS".equals(joHomePage.getString("resultCode"))) {
-//                if (Config.collectEnergy() && joHomePage.has("bubbleVOList")) {
-//                    collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
-//                }
+                if (joHomePage.has("bubbleVOList")) {
+                    collectEnergy(joHomePage.getJSONArray("bubbleVOList"));
+                }
 
                 JSONObject userInfoVO = joHomePage.getJSONObject("userInfoVO");
                 int rubbishNumber = userInfoVO.optInt("rubbishNumber");
@@ -89,6 +90,9 @@ public class AntOcean {
         try {
             for (int i = 0; i < bubbleVOList.length(); i++) {
                 JSONObject bubble = bubbleVOList.getJSONObject(i);
+                if (!"ocean".equals(bubble.getString("channel"))) {
+                    continue;
+                }
                 if ("AVAILABLE".equals(bubble.getString("collectStatus"))) {
                     long bubbleId = bubble.getLong("id");
                     String userId = bubble.getString("userId");
@@ -273,6 +277,48 @@ public class AntOcean {
         }
     }
 
+    private static void switchOceanChapter() {
+        String s = AntOceanRpcCall.queryOceanChapterList();
+        try {
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                String currentChapterCode = jo.getString("currentChapterCode");
+                JSONArray chapterVOs = jo.getJSONArray("userChapterDetailVOList");
+                boolean isFinish = false;
+                String dstChapterCode = "";
+                String dstChapterName = "";
+                for (int i = 0; i < chapterVOs.length(); i++) {
+                    JSONObject chapterVO = chapterVOs.getJSONObject(i);
+                    int repairedSeaAreaNum = chapterVO.getInt("repairedSeaAreaNum");
+                    int seaAreaNum = chapterVO.getInt("seaAreaNum");
+                    if (chapterVO.getString("chapterCode").equals(currentChapterCode)) {
+                        isFinish = repairedSeaAreaNum >= seaAreaNum;
+                    } else {
+                        if (repairedSeaAreaNum >= seaAreaNum || !chapterVO.getBoolean("chapterOpen")) {
+                            continue;
+                        }
+                        dstChapterName = chapterVO.getString("chapterName");
+                        dstChapterCode = chapterVO.getString("chapterCode");
+                    }
+                }
+                if (isFinish && !StringUtil.isEmpty(dstChapterCode)) {
+                    s = AntOceanRpcCall.switchOceanChapter(dstChapterCode);
+                    jo = new JSONObject(s);
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        Log.forest("神奇海洋🐳切换到[" + dstChapterName + "]系列");
+                    } else {
+                        Log.i(TAG, jo.getString("resultDesc"));
+                    }
+                }
+            } else {
+                Log.i(TAG, jo.getString("resultDesc"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "queryUserRanking err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void querySeaAreaDetailList() {
         try {
             String s = AntOceanRpcCall.querySeaAreaDetailList();
@@ -315,6 +361,7 @@ public class AntOcean {
                 if (homeTipsRefresh.optBoolean("fishCanBeCombined") || homeTipsRefresh.optBoolean("canBeRepaired")) {
                     querySeaAreaDetailList();
                 }
+                switchOceanChapter();
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }
@@ -330,6 +377,9 @@ public class AntOcean {
         }
         try {
             String userId = fillFlag.getString("userId");
+            if (Config.getDontCollectList().contains(userId)) {
+                return;
+            }
             String s = AntOceanRpcCall.queryFriendPage(userId);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {

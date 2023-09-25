@@ -127,6 +127,30 @@
     <string name="receive_orchard_task_award">Receive orchard task award</string>
     <string name="orchard_spread_manure_count">Orchard spread manure count</string>
     <string name="who_you_want_to_give_to">Who you want to give to</string>
-
+    <string name="collect_sesame">Collect sesame</string>
+    <string name="zcj_sign_in">Zcj sign in</string>
+    <string name="merchant_kmdk">Merchant kmdk</string>
+    <string name="enable_stall">Enable stall</string>
+    <string name="stall_auto_close">Stall auto close</string>
+    <string name="stall_auto_open">Stall auto open</string>
+    <string name="stall_auto_task">Stall auto task</string>
+    <string name="stall_receive_award">Stall receive award</string>
+    <string name="accept_gift">Accept gift</string>
+    <string name="visit_friend_list">Visit friend list</string>
+    <string name="stall_open_type">Stall open type</string>
+    <string name="stall_open_list">Stall open list</string>
+    <string name="stall_white_list">Stall white list</string>
+    <string name="stall_allow_open_time">Stall allow open time</string>
+    <string name="stall_self_open_time">Stall self open time</string>
+    <string name="stall_black_list">Stall black list</string>
+    <string name="chicken_diary">Chicken diary</string>
+    <string name="stall_donate">Stall donate</string>
+    <string name="collect_gift_box">Collect gift box</string>
+    <string name="stall_invite_register">Stall invite register</string>
+    <string name="stall_invite_shop_list">Stall invite shop list</string>
+    <string name="stall_throw_manure">Stall throw manure</string>
+    <string name="green_finance">Green finance</string>
+    <string name="total_cert_count">Total cert count</string>
+    <string name="send_friend_card">Send friend card</string>
 
 </resources>

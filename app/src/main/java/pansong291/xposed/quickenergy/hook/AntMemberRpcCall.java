@@ -49,4 +49,59 @@ public class AntMemberRpcCall {
                 "[{\"extParams\":{\"itemId\":\"" + itemId + "\",\"pointAmount\":\"" + Integer.toString(pointAmount)
                         + "\"},\"planCode\":\"bluebean_onestop\",\"planOperateCode\":\"exchange\"}]");
     }
+
+    /* 芝麻信用 */
+    public static String queryHome() {
+        return RpcUtil.request("com.antgroup.zmxy.zmcustprod.biz.rpc.home.api.HomeV6RpcManager.queryHome",
+                "[{\"miniZmGrayInside\":\"\"}]");
+    }
+
+    public static String queryCreditFeedback() {
+        return RpcUtil.request(
+                "com.antgroup.zmxy.zmcustprod.biz.rpc.home.creditaccumulate.api.CreditAccumulateRpcManager.queryCreditFeedback",
+                "[{\"queryPotential\":false,\"size\":20,\"status\":\"UNCLAIMED\"}]");
+    }
+
+    public static String collectCreditFeedback(String creditFeedbackId) {
+        return RpcUtil.request(
+                "com.antgroup.zmxy.zmcustprod.biz.rpc.home.creditaccumulate.api.CreditAccumulateRpcManager.collectCreditFeedback",
+                "[{\"collectAll\":false,\"creditFeedbackId\":\"" + creditFeedbackId + "\",\"status\":\"UNCLAIMED\"}]");
+    }
+
+    /* 商家服务 */
+    public static String transcodeCheck() {
+        return RpcUtil.request("alipay.mrchservbase.mrchbusiness.sign.transcode.check",
+                "[{}]");
+    }
+
+    public static String zcjSignInQuery() {
+        return RpcUtil.request("alipay.mrchservbase.zcj.view.invoke",
+                "[{\"compId\":\"ZCJ_SIGN_IN_QUERY\"}]");
+    }
+
+    public static String zcjSignInExecute() {
+        return RpcUtil.request("alipay.mrchservbase.zcj.view.invoke",
+                "[{\"compId\":\"ZCJ_SIGN_IN_EXECUTE\"}]");
+    }
+
+    public static String taskListQuery() {
+        return RpcUtil.request("alipay.mrchservbase.zcj.taskList.query",
+                "[{\"compId\":\"ZCJ_TASK_LIST\",\"params\":{\"activityCode\":\"ZCJ\",\"clientVersion\":\"10.3.36\",\"extInfo\":{},\"platform\":\"Android\",\"underTakeTaskCode\":\"\"}}]");
+    }
+
+    public static String queryActivity() {
+        return RpcUtil.request("alipay.merchant.kmdk.query.activity",
+                "[{\"scene\":\"activityCenter\"}]");
+    }
+
+    public static String signIn(String activityNo) {
+        return RpcUtil.request("alipay.merchant.kmdk.signIn",
+                "[{\"activityNo\":\"" + activityNo + "\"}]");
+    }
+
+    public static String signUp(String activityNo) {
+        return RpcUtil.request("alipay.merchant.kmdk.signUp",
+                "[{\"activityNo\":\"" + activityNo + "\"}]");
+    }
+
 }
