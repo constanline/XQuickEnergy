@@ -50,6 +50,10 @@ public class AntForestRpcCall {
         return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
     }
 
+    public static String collectRebornEnergy() {
+        return RpcUtil.request("alipay.antforest.forest.h5.collectRebornEnergy", "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
+    }
+
     public static String transferEnergy(String targetUser, String bizNo, int energyId) {
         return RpcUtil.request("alipay.antmember.forest.h5.transferEnergy", "[{\"bizNo\":\"" +
                 bizNo + UUID.randomUUID().toString() + "\",\"energyId\":" + energyId +
