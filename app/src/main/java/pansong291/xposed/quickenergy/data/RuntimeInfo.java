@@ -40,11 +40,20 @@ public class RuntimeInfo {
         String content = FileUtils.readFromFile(FileUtils.runtimeInfoFile());
         try {
             joAll = new JSONObject(content);
+        } catch (Exception ignored) {
+            joAll = new JSONObject();
+        }
+        try {
             if (!joAll.has(userId)) {
                 joAll.put(userId, new JSONObject());
             }
+        } catch (Exception ignored) {
+        }
+        try {
             joCurrent = joAll.getJSONObject(userId);
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+            joCurrent = new JSONObject();
+        }
     }
 
     public void save() {
@@ -66,6 +75,7 @@ public class RuntimeInfo {
     public void put(RuntimeInfoKey key, Object value) {
         try {
             joCurrent.put(key.name(), value);
+            joAll.put(userId, joCurrent);
         } catch (JSONException e) {
             Log.i(TAG, "put err:");
             Log.printStackTrace(TAG, e);
