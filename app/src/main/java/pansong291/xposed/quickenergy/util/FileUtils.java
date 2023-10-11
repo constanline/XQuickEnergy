@@ -330,7 +330,10 @@ public class FileUtils {
     }
 
     public static String readFromFile(File f) {
-        if (f.exists() && !f.canRead()) {
+        if (!f.exists()) {
+            return "";
+        }
+        if (!f.canRead()) {
             AntForestToast.show(f.getName() + "没有读取权限！", true);
             return "";
         }
@@ -345,8 +348,9 @@ public class FileUtils {
             }
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
+        } finally {
+            close(fr, f);
         }
-        close(fr, f);
         return result.toString();
     }
 
