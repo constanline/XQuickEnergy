@@ -39,7 +39,7 @@ jobs:
           buildToolsVersion: 30.0.3
 
       - name: Upload to Release Action
-        uses: Shopify/upload-to-release@v1.0.1
+        uses: Shopify/upload-to-release@v1.2.2
         with:
           name: xqe-sesame-${{ github.event.release.tag_name }}.apk
           path: ${{ steps.sign_app.outputs.signedFile }}
