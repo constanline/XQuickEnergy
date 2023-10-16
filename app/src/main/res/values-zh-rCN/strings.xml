@@ -26,7 +26,7 @@
     <string name="cooperate_water_list">合种浇水列表</string>
     <string name="farm_configuration">庄园</string>
     <string name="enable_farm">开启庄园</string>
-    <string name="reward_friend">回报好友</string>
+    <string name="reward_friend">打赏好友</string>
     <string name="send_back_animal">遣返小鸡</string>
     <string name="send_type">遣返方式</string>
     <string name="don_t_send_friend_list">不遣返小鸡名单</string>
@@ -146,5 +146,7 @@
     <string name="stall_invite_shop_list">新村邀请摆摊列表</string>
     <string name="stall_throw_manure">新村丢肥料</string>
     <string name="green_finance">开启绿色经营</string>
+    <string name="total_cert_count">记录证书总数</string>
+    <string name="send_friend_card">送好友卡片(赠送当前图鉴所有卡片)</string>
 
 </resources>

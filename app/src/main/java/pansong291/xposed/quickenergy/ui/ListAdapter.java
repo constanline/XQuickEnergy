@@ -66,7 +66,8 @@ public class ListAdapter extends BaseAdapter {
         }
     }
 
-    public int findLast(CharSequence cs) {
+    public int
+    findLast(CharSequence cs) {
         if (list == null || list.isEmpty())
             return -1;
         if (!cs.equals(findWord)) {

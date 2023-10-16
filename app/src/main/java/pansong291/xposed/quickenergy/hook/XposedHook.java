@@ -17,6 +17,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
@@ -59,14 +60,17 @@ public class XposedHook implements IXposedHookLoadPackage {
                     });
         }
 
-        if (!isHooked && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
-            isHooked = true;
-            Log.i(TAG, lpparam.packageName);
-            classLoader = lpparam.classLoader;
-            hookRpcCall();
-            hookStep();
-            hookService(lpparam.classLoader);
-            PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
+        if (ClassMember.PACKAGE_NAME.equals(lpparam.processName) && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
+            if (!isHooked) {
+                RuntimeInfo.process = lpparam.packageName;
+                isHooked = true;
+                Log.i(TAG, lpparam.packageName);
+                classLoader = lpparam.classLoader;
+                hookRpcCall();
+                hookStep();
+                hookService(lpparam.classLoader);
+                PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
+            }
         }
     }
 
@@ -141,6 +145,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     "onResume", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
+                            Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
@@ -169,6 +174,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
                             }
+                            Log.i(TAG, "Service onCreate");
                             RpcUtil.isInterrupted = false;
                             AntForestNotification.setContentText("运行中...");
                             registerBroadcastReceiver(service);
