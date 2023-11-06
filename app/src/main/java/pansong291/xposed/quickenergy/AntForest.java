@@ -439,6 +439,28 @@ public class AntForest {
                                 } else {
                                     Log.recordLog("收取[我]的复活金球失败:" + joEnergy.getString("resultDesc"), str);
                                 }
+                            } else if ("baohuhuizeng".equals(bizType)) {
+                                String friendId = wateringBubble.getString("userId");
+                                String str = AntForestRpcCall.collectEnergy(bizType, selfId,
+                                        wateringBubble.getLong("id"));
+                                JSONObject joEnergy = new JSONObject(str);
+                                if ("SUCCESS".equals(joEnergy.getString("resultCode"))) {
+                                    JSONArray bubbles = joEnergy.getJSONArray("bubbles");
+                                    for (int j = 0; j < bubbles.length(); j++) {
+                                        collected = bubbles.getJSONObject(j).getInt("collectedEnergy");
+                                    }
+                                    if (collected > 0) {
+                                        totalCollected += collected;
+                                        Statistics.addData(Statistics.DataType.COLLECTED, collected);
+                                        String msg = "收取金球🍯[" + FriendIdMap.getNameById(friendId) + "]复活回赠[" + collected + "g]";
+                                        Log.forest(msg);
+                                        AntForestToast.show(msg);
+                                    } else {
+                                        Log.recordLog("收取[" + FriendIdMap.getNameById(friendId) + "]的复活回赠金球失败", "");
+                                    }
+                                } else {
+                                    Log.recordLog("收取[" + FriendIdMap.getNameById(friendId) + "]的复活回赠金球失败:" + joEnergy.getString("resultDesc"), str);
+                                }
                             }
                             Thread.sleep(1000L);
                         }
