@@ -152,5 +152,6 @@
     <string name="green_finance">Green finance</string>
     <string name="total_cert_count">Total cert count</string>
     <string name="send_friend_card">Send friend card</string>
+    <string name="batch_rob_energy">Batch rob energy</string>
 
 </resources>
