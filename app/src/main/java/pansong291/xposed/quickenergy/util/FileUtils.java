@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.util;
 import android.os.Environment;
 import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
+import pansong291.xposed.quickenergy.hook.ClassMember;
 
 import java.io.Closeable;
 import java.io.File;
@@ -49,7 +50,8 @@ public class FileUtils {
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
         if (mainDirectory == null) {
-            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" + File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
+            File storageDir = new File(storageDirStr);
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
@@ -330,7 +332,10 @@ public class FileUtils {
     }
 
     public static String readFromFile(File f) {
-        if (f.exists() && !f.canRead()) {
+        if (!f.exists()) {
+            return "";
+        }
+        if (!f.canRead()) {
             AntForestToast.show(f.getName() + "没有读取权限！", true);
             return "";
         }
@@ -345,8 +350,9 @@ public class FileUtils {
             }
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
+        } finally {
+            close(fr, f);
         }
-        close(fr, f);
         return result.toString();
     }
 
