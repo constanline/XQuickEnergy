@@ -43,6 +43,7 @@ public class Config {
     public static final String jn_startAt7 = "startAt7";
     public static final String jn_enableOnGoing = "enableOnGoing";
     public static final String jn_backupRuntime = "backupRuntime";
+    public static final String jn_languageSimplifiedChinese = "languageSimplifiedChinese";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
@@ -163,6 +164,8 @@ public class Config {
     private boolean startAt7;
     private boolean enableOnGoing;
     private boolean backupRuntime;
+    private boolean languageSimplifiedChinese;
+
 
     /* forest */
     private boolean collectEnergy;
@@ -395,8 +398,17 @@ public class Config {
         hasChanged = true;
     }
 
+    public static void setLanguageSimplifiedChinese(boolean b) {
+        getConfig().languageSimplifiedChinese = b;
+        hasChanged = true;
+    }
+
     public static boolean backupRuntime() {
         return getConfig().backupRuntime;
+    }
+
+    public static boolean languageSimplifiedChinese() {
+        return getConfig().languageSimplifiedChinese;
     }
 
     /* forest */
@@ -1324,6 +1336,7 @@ public class Config {
         c.startAt7 = false;
         c.enableOnGoing = false;
         c.backupRuntime = false;
+        c.languageSimplifiedChinese = false;
 
         c.collectEnergy = false;
         c.collectWateringBubble = true;
@@ -1506,6 +1519,9 @@ public class Config {
 
             config.backupRuntime = jo.optBoolean(jn_backupRuntime, false);
             //Log.i(TAG, jn_backupRuntime + ":" + config.backupRuntime);
+
+            config.languageSimplifiedChinese = jo.optBoolean(jn_languageSimplifiedChinese, false);
+            //Log.i(TAG, jn_languageSimplifiedChinese + ":" + config.languageSimplifiedChinese);
 
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, false);
@@ -1997,6 +2013,8 @@ public class Config {
             jo.put(jn_enableOnGoing, config.enableOnGoing);
 
             jo.put(jn_backupRuntime, config.backupRuntime);
+
+            jo.put(jn_languageSimplifiedChinese, config.languageSimplifiedChinese);
 
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
