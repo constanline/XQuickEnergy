@@ -8,8 +8,8 @@ android {
         minSdk 21
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
-        versionCode 70
-        versionName "1.2.2-fix1"
+        versionCode 71
+        versionName "1.2.3-beta6"
     }
     buildTypes {
         release {
