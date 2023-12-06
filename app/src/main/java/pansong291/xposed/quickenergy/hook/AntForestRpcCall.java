@@ -4,6 +4,8 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 
 import pansong291.xposed.quickenergy.util.RandomUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class AntForestRpcCall {
@@ -47,6 +49,14 @@ public class AntForestRpcCall {
             args1 = "[{\"bizType\":\"" + bizType + "\",\"bubbleIds\":[" + bubbleId
                     + "],\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\"" + userId + "\"}]";
         }
+        return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
+    }
+
+    public static String batchRobEnergy(String userId, List<String> bubbleId) {
+        String args1;
+            args1 = "[{\"bizType\":\"\",\"bubbleIds\":[" + String.join(",", bubbleId)
+                    + "],\"fromAct\":\"BATCH_ROB_ENERGY\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\"" + userId + "\",\"version\":\""
+                    + VERSION + "\"}]";
         return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
     }
 

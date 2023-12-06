@@ -43,12 +43,14 @@ public class Config {
     public static final String jn_startAt7 = "startAt7";
     public static final String jn_enableOnGoing = "enableOnGoing";
     public static final String jn_backupRuntime = "backupRuntime";
+    public static final String jn_languageSimplifiedChinese = "languageSimplifiedChinese";
 
     /* forest */
     public static final String jn_collectEnergy = "collectEnergy";
 
     public static final String jn_ancientTreeCityCodeList = "ancientTreeCityCodeList";
     public static final String jn_collectWateringBubble = "collectWateringBubble";
+    public static final String jn_batchRobEnergy = "batchRobEnergy";
     public static final String jn_collectProp = "collectProp";
     public static final String jn_ReturnWater33 = "returnWater30";
     public static final String jn_ReturnWater18 = "returnWater20";
@@ -163,12 +165,16 @@ public class Config {
     private boolean startAt7;
     private boolean enableOnGoing;
     private boolean backupRuntime;
+    private boolean languageSimplifiedChinese;
+
 
     /* forest */
     private boolean collectEnergy;
     private int checkInterval;
 
     private boolean collectWateringBubble;
+
+    private boolean batchRobEnergy;
     private boolean collectProp;
     private boolean limitCollect;
     private int limitCount;
@@ -395,8 +401,17 @@ public class Config {
         hasChanged = true;
     }
 
+    public static void setLanguageSimplifiedChinese(boolean b) {
+        getConfig().languageSimplifiedChinese = b;
+        hasChanged = true;
+    }
+
     public static boolean backupRuntime() {
         return getConfig().backupRuntime;
+    }
+
+    public static boolean languageSimplifiedChinese() {
+        return getConfig().languageSimplifiedChinese;
     }
 
     /* forest */
@@ -416,6 +431,15 @@ public class Config {
 
     public static boolean collectWateringBubble() {
         return getConfig().collectWateringBubble;
+    }
+
+    public static void setBatchRobEnergy(boolean b) {
+        getConfig().batchRobEnergy = b;
+        hasChanged = true;
+    }
+
+    public static boolean batchRobEnergy() {
+        return getConfig().batchRobEnergy;
     }
 
     public static void setCollectProp(boolean b) {
@@ -1324,9 +1348,11 @@ public class Config {
         c.startAt7 = false;
         c.enableOnGoing = false;
         c.backupRuntime = false;
+        c.languageSimplifiedChinese = false;
 
         c.collectEnergy = false;
         c.collectWateringBubble = true;
+        c.batchRobEnergy = false;
         c.collectProp = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
@@ -1507,12 +1533,17 @@ public class Config {
             config.backupRuntime = jo.optBoolean(jn_backupRuntime, false);
             //Log.i(TAG, jn_backupRuntime + ":" + config.backupRuntime);
 
+            config.languageSimplifiedChinese = jo.optBoolean(jn_languageSimplifiedChinese, false);
+            //Log.i(TAG, jn_languageSimplifiedChinese + ":" + config.languageSimplifiedChinese);
+
             /* forest */
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, false);
             //Log.i(TAG, jn_collectEnergy + ":" + config.collectEnergy);
 
             config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
             //Log.i(TAG, jn_collectWateringBubble + ":" + config.collectWateringBubble);
+
+            config.batchRobEnergy = jo.optBoolean(jn_batchRobEnergy, false);
 
             config.collectProp = jo.optBoolean(jn_collectProp, true);
             //Log.i(TAG, jn_collectProp + ":" + config.collectProp);
@@ -1998,10 +2029,14 @@ public class Config {
 
             jo.put(jn_backupRuntime, config.backupRuntime);
 
+            jo.put(jn_languageSimplifiedChinese, config.languageSimplifiedChinese);
+
             /* forest */
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_collectWateringBubble, config.collectWateringBubble);
+
+            jo.put(jn_batchRobEnergy, config.batchRobEnergy);
 
             jo.put(jn_collectProp, config.collectProp);
 

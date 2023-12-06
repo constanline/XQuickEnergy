@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,15 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.entity.FriendWatch;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.FileUtils;
+import pansong291.xposed.quickenergy.util.LanguageUtil;
 import pansong291.xposed.quickenergy.util.PermissionUtil;
 import pansong291.xposed.quickenergy.util.Statistics;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
     TextView tvStatistics;
@@ -63,6 +67,7 @@ public class MainActivity extends Activity {
         }
         return isExp;
     }
+
     /**
      * 判断当前应用是否是debug状态
      */
@@ -78,6 +83,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LanguageUtil.setLocale(this);
         setContentView(R.layout.activity_main);
         RuntimeInfo.process = "app";
 

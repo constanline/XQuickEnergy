@@ -118,6 +118,8 @@
     <string name="ins_blue_bean_exchange">安心豆兑换时光加速器</string>
     <string name="enable_on_going">开启状态栏禁删</string>
     <string name="backup_runtime_log">备份runtime日志</string>
+    <string name="language_simplified_chinese">界面始终使用中文</string>
+    <string name="language_simplified_chinese_need_restart">重启当前app生效</string>
     <string name="ant_orchard">施肥</string>
     <string name="receive_orchard_task_award">收取施肥任务奖励</string>
     <string name="orchard_spread_manure_count">施肥次数</string>
@@ -148,5 +150,6 @@
     <string name="green_finance">开启绿色经营</string>
     <string name="total_cert_count">记录证书总数</string>
     <string name="send_friend_card">送好友卡片(赠送当前图鉴所有卡片)</string>
+    <string name="batch_rob_energy">一键收能量</string>
 
 </resources>

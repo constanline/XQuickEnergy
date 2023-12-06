@@ -2,7 +2,6 @@ package pansong291.xposed.quickenergy;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.Gravity;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
