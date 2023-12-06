@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
 import pansong291.xposed.quickenergy.util.*;
@@ -1317,8 +1318,6 @@ public class AntFarm {
 
     private static void visit() {
         try {
-            String s, memo;
-            JSONObject jo;
             for (int i = 0; i < Config.getVisitFriendList().size(); i++) {
                 String userId = Config.getVisitFriendList().get(i);
                 if (userId.equals(FriendIdMap.currentUid))
@@ -1396,27 +1395,34 @@ public class AntFarm {
         }
     }
 
+    private static void diaryTietie(String queryDayStr, String roleId) throws JSONException {
+        JSONObject jo = new JSONObject(AntFarmRpcCall.diaryTietie(queryDayStr, roleId));
+        if ("SUCCESS".equals(jo.getString("memo"))) {
+            String prizeType = jo.getString("prizeType");
+            int prizeNum = jo.optInt("prizeNum", 0);
+            Log.farm("贴贴小鸡💞[" + prizeType + "*" + prizeNum + "]");
+        } else {
+            Log.i(jo.getString("memo"), jo.toString());
+        }
+    }
+
     private static void queryChickenDiary(String queryDayStr) {
         try {
             JSONObject jo = new JSONObject(AntFarmRpcCall.queryChickenDiary(queryDayStr));
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                if (!jo.getBoolean("hasTietie")) {
+                    diaryTietie(queryDayStr, "NEW");
+                    return;
+                }
                 JSONObject chickenDiary = jo.getJSONObject("data").getJSONObject("chickenDiary");
-                String diaryDateStr = chickenDiary.getString("diaryDateStr");
                 if (!chickenDiary.has("tietieStatus"))
                     return;
                 JSONObject tietieStatus = chickenDiary.getJSONObject("tietieStatus");
-                Iterator it = tietieStatus.keys();
+                Iterator<String> it = tietieStatus.keys();
                 while (it.hasNext()) {
-                    String key = (String) it.next();
+                    String key = it.next();
                     if (tietieStatus.optBoolean(key, false)) {
-                        jo = new JSONObject(AntFarmRpcCall.diaryTietie(diaryDateStr, key));
-                        if ("SUCCESS".equals(jo.getString("memo"))) {
-                            String prizeType = jo.getString("prizeType");
-                            int prizeNum = jo.optInt("prizeNum", 0);
-                            Log.farm("贴贴小鸡💞[" + prizeType + "*" + prizeNum + "]");
-                        } else {
-                            Log.i(jo.getString("memo"), jo.toString());
-                        }
+                        diaryTietie(queryDayStr, key);
                     }
                 }
             } else {
