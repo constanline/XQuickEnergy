@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import pansong291.xposed.quickenergy.R;
-import pansong291.xposed.quickenergy.util.LanguageUtil;
 
 public class HtmlViewerActivity extends Activity {
     MyWebView mWebView;
@@ -23,7 +22,6 @@ public class HtmlViewerActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LanguageUtil.setLocale(this);
         setContentView(R.layout.activity_html_viewer);
 
         mWebView = findViewById(R.id.mwv_webview);

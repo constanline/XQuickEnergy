@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -148,7 +147,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
-                            PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {

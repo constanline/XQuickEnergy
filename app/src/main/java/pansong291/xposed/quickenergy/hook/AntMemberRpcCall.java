@@ -13,10 +13,9 @@ public class AntMemberRpcCall {
         return RpcUtil.request("alipay.antmember.biz.rpc.member.h5.receivePointByUser", args1);
     }
 
-    public static String queryMemberSigninCalendar() {
+    public static String memberSignIn() {
         String args1 = "[{}]";
-        return RpcUtil.request("com.alipay.amic.biz.rpc.signin.h5.queryMemberSigninCalendar",
-                "[{\"autoSignIn\":true,\"invitorUserId\":\"\",\"sceneCode\":\"QUERY\"}]");
+        return RpcUtil.request("alipay.antmember.biz.rpc.member.h5.memberSignin", args1);
     }
     /* 安心豆 */
 
