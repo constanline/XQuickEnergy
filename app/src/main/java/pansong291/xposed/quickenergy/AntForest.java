@@ -522,10 +522,6 @@ public class AntForest {
             Log.recordLog("异常等待中，暂不执行检测！", "");
             return;
         }
-        if (Config.getDontCollectList().contains(userId)) {
-            Log.recordLog("不偷取[" + FriendIdMap.getNameById(userId) + "]", ", userId=" + userId);
-            return;
-        }
         try {
             long start = System.currentTimeMillis();
             String s = AntForestRpcCall.queryFriendHomePage(userId);
@@ -560,17 +556,15 @@ public class AntForest {
                     }
                 }
                 int collected = 0;
-                List<String> batchIdList = new ArrayList<>();
                 for (int i = 0; i < jaBubbles.length(); i++) {
                     JSONObject bubble = jaBubbles.getJSONObject(i);
                     long bubbleId = bubble.getLong("id");
                     switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
                         case AVAILABLE:
-                            if (Config.batchRobEnergy()) {
-                                batchIdList.add(String.valueOf(bubbleId));
-                            } else {
+                            if (Config.getDontCollectList().contains(userId))
+                                Log.recordLog("不偷取[" + FriendIdMap.getNameById(userId) + "]", ", userId=" + userId);
+                            else
                                 collected += collectEnergy(userId, bubbleId, bizNo);
-                            }
                             break;
 
                         case WAITING:
@@ -583,10 +577,6 @@ public class AntForest {
                                 setLaterTime(produceTime);
                             break;
                     }
-                }
-                if (Config.batchRobEnergy()) {
-                    if (!batchIdList.isEmpty())
-                        batchRobEnergy(userId, batchIdList, null);
                 }
                 collectedEnergy += collected;
                 onForestEnd();
@@ -676,74 +666,6 @@ public class AntForest {
 
     private static int collectEnergy(String userId, long bubbleId, String bizNo) {
         return collectEnergy(userId, bubbleId, bizNo, null);
-    }
-
-    private static int batchRobEnergy(String userId, List<String> bubbleId, String extra) {
-        if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System
-                .currentTimeMillis()) {
-            Log.recordLog("异常等待中，暂不收取能量！", "");
-            return 0;
-        }
-        int collected = 0;
-        try {
-            while (checkCollectLimited()) {
-                Thread.sleep(1000);
-            }
-        } catch (Throwable th) {
-            Log.printStackTrace("到达分钟限制，等待失败！", th);
-            return 0;
-        }
-        try {
-            String s = "{\"resultCode\": \"FAILED\"}";
-            if (Config.collectInterval() > 0) {
-                synchronized (collectLock) {
-                    while (System.currentTimeMillis() - lastCollectTime < Config.collectInterval()) {
-                        Thread.sleep(System.currentTimeMillis() - lastCollectTime);
-                    }
-                    if (Config.doubleCard() && doubleEndTime < System.currentTimeMillis()) {
-                        if (Config.isDoubleCardTime() && !selfId.equals(userId) && Statistics.canDoubleToday()) {
-                            useDoubleCard();
-                        }
-                    }
-                    s = AntForestRpcCall.batchRobEnergy(userId, bubbleId);
-                    lastCollectTime = System.currentTimeMillis();
-                }
-            }
-            JSONObject jo = new JSONObject(s);
-            if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                offerCollectQueue();
-                JSONArray jaBubbles = jo.getJSONArray("bubbles");
-                bubbleId = new ArrayList<>();
-                for (int i = 0; i < jaBubbles.length(); i++) {
-                    JSONObject bubble = jaBubbles.getJSONObject(i);
-                    if (bubble.getBoolean("canBeRobbedAgain")) {
-                        bubbleId.add(String.valueOf(bubble.getLong("id")));
-                    }
-                    collected += bubble.getInt("collectedEnergy");
-                }
-                if (collected > 0) {
-                    FriendManager.friendWatch(userId, collected);
-                    totalCollected += collected;
-                    Statistics.addData(Statistics.DataType.COLLECTED, collected);
-                    String str = "收取能量🪂[" + FriendIdMap.getNameById(userId) + "]#" + collected + "g"
-                            + (StringUtil.isEmpty(extra) ? "" : "[" + extra + "]");
-                    Log.forest(str);
-                    AntForestToast.show(str);
-                } else {
-                    Log.recordLog("收取[" + FriendIdMap.getNameById(userId) + "]的能量失败",
-                            "，UserID：" + userId + "，BubbleId：" + bubbleId);
-                }
-                if (!bubbleId.isEmpty()) {
-                    collected += batchRobEnergy(userId, bubbleId, "双击卡");
-                }
-            } else {
-                Log.recordLog("[" + FriendIdMap.getNameById(userId) + "]" + jo.getString("resultDesc"), s);
-            }
-        } catch (Throwable t) {
-            Log.i(TAG, "collectEnergy err:");
-            Log.printStackTrace(TAG, t);
-        }
-        return collected;
     }
 
     private static int collectEnergy(String userId, long bubbleId, String bizNo, String extra) {

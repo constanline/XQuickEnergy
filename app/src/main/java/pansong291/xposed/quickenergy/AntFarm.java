@@ -53,9 +53,9 @@ public class AntFarm {
     }
 
     public enum GameType {
-        starGame, jumpGame, flyGame;
+        starGame, jumpGame;
 
-        public static final CharSequence[] gameNames = { "星星球", "登山赛", "飞行赛" };
+        public static final CharSequence[] gameNames = { "星星球", "登山赛" };
 
         public CharSequence gameName() {
             return gameNames[ordinal()];
@@ -227,7 +227,6 @@ public class AntFarm {
                     }
 
                     if (Config.recordFarmGame() && Config.isFarmGameTime()) {
-                        recordFarmGame(GameType.flyGame);
                         recordFarmGame(GameType.starGame);
                         recordFarmGame(GameType.jumpGame);
                     }
@@ -678,12 +677,9 @@ public class AntFarm {
         try {
             JSONObject jo = new JSONObject(AntFarmRpcCall.initFarmGame(gameType.name()));
             if ("SUCCESS".equals(jo.getString("memo"))) {
-                if (jo.getJSONObject("gameAward").getBoolean("level3Get")) {
+                JSONObject gameAward = jo.getJSONObject("gameAward");
+                if (gameAward.getBoolean("level3Get"))
                     return;
-                }
-                if (jo.optInt("remainingGameCount", 1) == 0) {
-                    return;
-                }
                 jo = new JSONObject(AntFarmRpcCall.recordFarmGame(gameType.name()));
                 if ("SUCCESS".equals(jo.getString("memo"))) {
                     JSONArray awardInfos = jo.getJSONArray("awardInfos");
@@ -692,13 +688,7 @@ public class AntFarm {
                         jo = awardInfos.getJSONObject(i);
                         award.append(jo.getString("awardName")).append("*").append(jo.getInt("awardCount"));
                     }
-                    if (jo.has("receiveFoodCount")) {
-                        award.append(";肥料*").append(jo.getString("receiveFoodCount"));
-                    }
                     Log.farm("庄园游戏🎮[" + gameType.gameName() + "]#" + award);
-                    if (jo.optInt("remainingGameCount", 0) > 0) {
-                        recordFarmGame(gameType);
-                    }
                 } else {
                     Log.i(TAG, jo.toString());
                 }

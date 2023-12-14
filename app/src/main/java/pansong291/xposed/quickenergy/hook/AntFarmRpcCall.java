@@ -181,45 +181,31 @@ public class AntFarmRpcCall {
     }
 
     public static String initFarmGame(String gameType) {
-        if ("flyGame".equals(gameType)) {
-            return RpcUtil.request("com.alipay.antfarm.initFarmGame",
-                    "[{\"gameType\":\"flyGame\",\"requestType\":\"RPC\",\"sceneCode\":\"FLAYGAME\"," +
-                            "\"source\":\"FARM_game_yundongfly\",\"toolTypes\":\"ACCELERATETOOL,SHARETOOL,NONE\",\"version\":\"\"}]");
-        }
         return RpcUtil.request("com.alipay.antfarm.initFarmGame",
                 "[{\"gameType\":\"" + gameType
                         + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"toolTypes\":\"STEALTOOL,ACCELERATETOOL,SHARETOOL\"}]");
+    }
+
+    public static int RandomScore(String str) {
+        if ("starGame".equals(str)) {
+            return RandomUtils.nextInt(200, 300);
+
+        } else if ("jumpGame".equals(str)) {
+            return RandomUtils.nextInt(150, 170) * 10;
+        } else {
+            return 210;
+        }
     }
 
     public static String recordFarmGame(String gameType) {
         String uuid = getUuid();
         String md5String = getMD5(uuid);
         int score = RandomScore(gameType);
-        if ("flyGame".equals(gameType)) {
-            int foodCount = score / 50;
-            return RpcUtil.request("com.alipay.antfarm.recordFarmGame",
-                    "[{\"foodCount\":" + foodCount + ",\"gameType\":\"flyGame\",\"md5\":\"" + md5String
-                            + "\",\"requestType\":\"RPC\",\"sceneCode\":\"FLAYGAME\",\"score\":" + score
-                            + ",\"source\":\"ANTFARM\",\"toolTypes\":\"ACCELERATETOOL,SHARETOOL,NONE\",\"uuid\":\"" + uuid
-                            + "\",\"version\":\"\"}]");
-        }
         return RpcUtil.request("com.alipay.antfarm.recordFarmGame",
                 "[{\"gameType\":\"" + gameType + "\",\"md5\":\"" + md5String
                         + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"score\":" + score
                         + ",\"source\":\"H5\",\"toolTypes\":\"STEALTOOL,ACCELERATETOOL,SHARETOOL\",\"uuid\":\"" + uuid
                         + "\"}]");
-    }
-
-    public static int RandomScore(String str) {
-        if ("starGame".equals(str)) {
-            return RandomUtils.nextInt(200, 300);
-        } else if ("jumpGame".equals(str)) {
-            return RandomUtils.nextInt(150, 170) * 10;
-        } else if ("flyGame".equals(str)) {
-            return RandomUtils.nextInt(5000, 8000);
-        } else {
-            return 210;
-        }
     }
 
     private static String getUuid() {
