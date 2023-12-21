@@ -50,11 +50,17 @@ public class FileUtils {
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
         if (mainDirectory == null) {
-            String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" + File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
-            File storageDir = new File(storageDirStr);
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
+            File useMedia = new File(storageDir, "useMedia");
+            if (useMedia.exists()) {
+                String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" +
+                        File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
+                storageDir = new File(storageDirStr);
+            }
+
             mainDirectory = new File(storageDir, "xqe");
             if (!mainDirectory.exists()) {
                 mainDirectory.mkdirs();
@@ -371,7 +377,7 @@ public class FileUtils {
 
     public static boolean write2File(String s, File f) {
         if (f.exists() && !f.canWrite()) {
-            AntForestToast.show(f.getName() + "没有写入权限！", true);
+            AntForestToast.show(f.getAbsoluteFile() + "没有写入权限！", true);
             return false;
         }
         boolean success = false;
@@ -391,7 +397,7 @@ public class FileUtils {
 
     public static boolean append2File(String s, File f) {
         if (f.exists() && !f.canWrite()) {
-            AntForestToast.show(f.getName() + "没有写入权限！", true);
+            AntForestToast.show(f.getAbsoluteFile() + "没有写入权限！", true);
             return false;
         }
         boolean success = false;
