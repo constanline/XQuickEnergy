@@ -155,5 +155,8 @@
     <string name="total_cert_count">Total cert count</string>
     <string name="send_friend_card">Send friend card</string>
     <string name="batch_rob_energy">Batch rob energy</string>
+    <string name="select_all">Select All</string>
+    <string name="select_invert">Select Invert</string>
+    <string name="close">Close</string>
 
 </resources>
