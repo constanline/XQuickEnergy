@@ -23,6 +23,8 @@ public class ListAdapter extends BaseAdapter {
     public static ListAdapter get(Context c) {
         if (adapter == null)
             adapter = new ListAdapter(c);
+        adapter.findIndex = -1;
+        adapter.findWord = null;
         return adapter;
     }
 
@@ -32,6 +34,8 @@ public class ListAdapter extends BaseAdapter {
             viewHolderList = new ArrayList<>();
         }
         ListAdapter.listType = listType;
+        adapter.findIndex = -1;
+        adapter.findWord = null;
         return adapter;
     }
 
