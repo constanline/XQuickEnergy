@@ -73,6 +73,7 @@
     <string name="limit_count_per_minute">Limit count per minute</string>
     <string name="energy_rain">Energy Rain</string>
     <string name="give_energy_rain_list">Give energy rain list</string>
+    // lzw add
     <string name="master_id_list">Master id list</string>
     <string name="sync_step_count">Sync Step Count</string>
     <string name="stay_awake_type">Stay awake type</string>
@@ -94,6 +95,7 @@
     <string name="collect_prop">Collect prop</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
+    // lzw add
     <string name="only_collect_energy_time">Only collect energy time</string>
     <string name="animal_sleep_time">Animal sleep time</string>
     <string name="visit_github">Visit GitHub</string>
@@ -125,6 +127,8 @@
     <string name="ins_blue_bean_exchange">Ins blue bean exchange</string>
     <string name="enable_on_going">Enable on going</string>
     <string name="backup_runtime_log">Backup runtime log</string>
+    <string name="language_simplified_chinese">Chinese Language</string>
+    <string name="language_simplified_chinese_need_restart">Need to restart the app to take effect</string>
     <string name="ant_orchard">Ant orchard</string>
     <string name="receive_orchard_task_award">Receive orchard task award</string>
     <string name="orchard_spread_manure_count">Orchard spread manure count</string>
@@ -152,5 +156,8 @@
     <string name="stall_invite_shop_list">Stall invite shop list</string>
     <string name="stall_throw_manure">Stall throw manure</string>
     <string name="green_finance">Green finance</string>
+    <string name="total_cert_count">Total cert count</string>
+    <string name="send_friend_card">Send friend card</string>
+    <string name="batch_rob_energy">Batch rob energy</string>
 
 </resources>

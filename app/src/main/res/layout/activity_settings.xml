@@ -176,6 +176,16 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_backupRuntime" />
 
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/language_simplified_chinese"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_languageSimplifiedChinese" />
+// lzw add
 					<Button
 						android:id="@+id/btn_masterIDList"
 						style="?android:attr/buttonBarButtonStyle"
@@ -207,7 +217,7 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectEnergy" />
-
+// lzw add
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -245,6 +255,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectWateringBubble" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/batch_rob_energy"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_batchRobEnergy" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
@@ -633,6 +653,20 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_antdodoCollect" />
 
+					<Button
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						style="?android:attr/buttonBarButtonStyle"
+						android:text="@string/send_friend_card"
+						android:textAllCaps="false"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:gravity="start|center_vertical"
+						android:background="@drawable/button"
+						android:id="@+id/btn_sendFriendCard"
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding" />
+
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding"
@@ -696,6 +730,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectGiftBox" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/total_cert_count"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_totalCertCount" />
 				</LinearLayout>
 				<!--庄园设置-->
 				<LinearLayout

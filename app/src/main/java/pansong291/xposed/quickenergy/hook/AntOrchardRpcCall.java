@@ -1,7 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 public class AntOrchardRpcCall {
-        private static final String VERSION = "0.1.2308151427.44";
+        private static final String VERSION = "0.1.2309201826.34";
 
         public static String orchardIndex() {
                 return RpcUtil.request("com.alipay.antfarm.orchardIndex",

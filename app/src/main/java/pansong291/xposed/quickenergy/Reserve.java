@@ -14,10 +14,19 @@ import pansong291.xposed.quickenergy.util.Statistics;
 public class Reserve {
     private static final String TAG = Reserve.class.getCanonicalName();
 
+    private static boolean isProtecting = false;
+
     public static void start() {
         if (!Config.reserve() && !Config.beach())
             return;
-        Log.recordLog("开始检测保护地", "");
+
+        if (isProtecting) {
+            Log.recordLog("之前的兑换保护地未结束，本次暂停", "");
+            return;
+        } else {
+            Log.recordLog("开始检测保护地", "");
+            isProtecting = true;
+        }
         new Thread() {
 
             @Override
@@ -32,7 +41,7 @@ public class Reserve {
                     if (Config.beach()) {
                         protectBeach();
                     }
-
+                    isProtecting = false;
                 } catch (Throwable t) {
                     Log.i(TAG, "start.run err:");
                     Log.printStackTrace(TAG, t);
@@ -50,7 +59,6 @@ public class Reserve {
             }
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                JSONObject userBaseInfo = jo.getJSONObject("userBaseInfo");
                 JSONArray ja = jo.getJSONArray("treeItems");
                 for (int i = 0; i < ja.length(); i++) {
                     jo = ja.getJSONObject(i);
@@ -131,7 +139,7 @@ public class Reserve {
                 s = ReserveRpcCall.exchangeTree(projectId);
                 jo = new JSONObject(s);
                 if ("SUCCESS".equals(jo.getString("resultCode"))) {
-                    int vitalityAmount = jo.optInt("vitalityAmount",0);
+                    int vitalityAmount = jo.optInt("vitalityAmount", 0);
                     appliedTimes = Statistics.getReserveTimes(projectId) + 1;
                     String str = "领保护地🏕️[" + itemName + "]#第" + appliedTimes + "次"
                             + (vitalityAmount > 0 ? "-活力值+" + vitalityAmount : "");
@@ -140,7 +148,7 @@ public class Reserve {
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     Log.forest("领保护地🏕️[" + itemName + "]#发生未知错误，停止申请");
-                    //Statistics.reserveToday(projectId, count);
+                    // Statistics.reserveToday(projectId, count);
                     break;
                 }
                 Thread.sleep(300);
@@ -149,7 +157,7 @@ public class Reserve {
                     // Statistics.reserveToday(projectId, count);
                     break;
                 } else {
-                    Thread.sleep(200);
+                    Thread.sleep(300);
                 }
                 if (!Statistics.canReserveToday(projectId, count))
                     break;
@@ -199,8 +207,6 @@ public class Reserve {
                     int BeachCount = Config.getBeachCountList().get(index);
                     if (BeachCount <= 0)
                         continue;
-                    if (!Statistics.canBeach(templateCode, BeachCount) || !Statistics.canBeachToday(templateCode))
-                        continue;
                     oceanExchangeTree(templateCode, projectCode, cultivationName, BeachCount);
                 }
             } else {
@@ -213,7 +219,8 @@ public class Reserve {
         BeachIdMap.saveIdMap();
     }
 
-    private static boolean queryCultivationDetail(String cultivationCode, String projectCode) {
+    private static int queryCultivationDetail(String cultivationCode, String projectCode, int count) {
+        int appliedTimes = -1;
         try {
             String s = ReserveRpcCall.queryCultivationDetail(cultivationCode, projectCode);
             JSONObject jo = new JSONObject(s);
@@ -222,16 +229,17 @@ public class Reserve {
                 int currentEnergy = userInfo.getInt("currentEnergy");
                 jo = jo.getJSONObject("cultivationDetailVO");
                 String applyAction = jo.getString("applyAction");
+                int certNum = jo.getInt("certNum");
                 if ("AVAILABLE".equals(applyAction)) {
                     if (currentEnergy >= jo.getInt("energy")) {
-                        return true;
+                        if (certNum < count) {
+                            appliedTimes = certNum + 1;
+                        }
                     } else {
                         Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#能量不足停止申请");
-                        return false;
                     }
                 } else {
                     Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#似乎没有了");
-                    return false;
                 }
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
@@ -240,16 +248,15 @@ public class Reserve {
             Log.i(TAG, "queryCultivationDetail err:");
             Log.printStackTrace(TAG, t);
         }
-        return false;
+        return appliedTimes;
     }
 
     private static void oceanExchangeTree(String cultivationCode, String projectCode, String itemName, int count) {
-        int appliedTimes = 0;
         try {
             String s;
             JSONObject jo;
-            boolean canApply = queryCultivationDetail(cultivationCode, projectCode);
-            if (!canApply)
+            int appliedTimes = queryCultivationDetail(cultivationCode, projectCode, count);
+            if (appliedTimes < 0)
                 return;
             for (int applyCount = 1; applyCount <= count; applyCount++) {
                 s = ReserveRpcCall.oceanExchangeTree(cultivationCode, projectCode);
@@ -261,27 +268,21 @@ public class Reserve {
                         jo = awardInfos.getJSONObject(i);
                         award.append(jo.getString("name")).append("*").append(jo.getInt("num"));
                     }
-                    appliedTimes = Statistics.getBeachTimes(cultivationCode) + 1;
                     String str = "净滩行动🏖️[" + itemName + "]#第" + appliedTimes + "次"
                             + "-获得奖励" + award;
                     Log.forest(str);
-                    Statistics.beachRecord(cultivationCode, 1);
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
                     Log.forest("净滩行动🏖️[" + itemName + "]#发生未知错误，停止申请");
-                    //Statistics.beachToday(cultivationCode);
                     break;
                 }
                 Thread.sleep(300);
-                canApply = queryCultivationDetail(cultivationCode, projectCode);
-                if (!canApply) {
-                    // Statistics.beachToday(cultivationCode);
+                appliedTimes = queryCultivationDetail(cultivationCode, projectCode, count);
+                if (appliedTimes < 0) {
                     break;
                 } else {
-                    Thread.sleep(200);
+                    Thread.sleep(300);
                 }
-                if (!Statistics.canBeach(cultivationCode, count) || !Statistics.canBeachToday(cultivationCode))
-                    break;
             }
         } catch (Throwable t) {
             Log.i(TAG, "oceanExchangeTree err:");

@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,10 +15,10 @@ import android.os.PowerManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.ui.MainActivity;
 import pansong291.xposed.quickenergy.util.*;
 
@@ -60,14 +61,17 @@ public class XposedHook implements IXposedHookLoadPackage {
                     });
         }
 
-        if (!isHooked && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
-            isHooked = true;
-            Log.i(TAG, lpparam.packageName);
-            classLoader = lpparam.classLoader;
-            hookRpcCall();
-            hookStep();
-            hookService(lpparam.classLoader);
-            PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
+        if (ClassMember.PACKAGE_NAME.equals(lpparam.processName) && ClassMember.PACKAGE_NAME.equals(lpparam.packageName)) {
+            if (!isHooked) {
+                RuntimeInfo.process = lpparam.packageName;
+                isHooked = true;
+                Log.i(TAG, lpparam.packageName);
+                classLoader = lpparam.classLoader;
+                hookRpcCall();
+                hookStep();
+                hookService(lpparam.classLoader);
+                PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
+            }
         }
     }
 
@@ -90,9 +94,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
 
-                        if (false == Config.isOnlyCollectEnergyTime())
-                        {
-                            XposedBridge.log("not only collect energy time");
+                        if (TimeUtil.getTimeStr().compareTo("0700") < 0
+                                || TimeUtil.getTimeStr().compareTo("0730") > 0) {
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();
@@ -108,14 +111,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
-                        int interval = Config.checkInterval();
-
-                        if (TimeUtil.getTimeStr().compareTo("0719") > 0 && TimeUtil.getTimeStr().compareTo("0723") < 0) {
-                            interval = 60000;
-                        }
-                        XposedBridge.log("checkinterval:"+interval);
-                        Log.i(TAG, "checkinterval:"+interval);
-                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + interval);
+                        AntForestNotification.setNextScanTime(System.currentTimeMillis() + Config.checkInterval());
                         handler.postDelayed(this, Config.checkInterval());
                     } else {
                         AntForestNotification.stop(service, false);
@@ -150,7 +146,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                     "onResume", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
+                            Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
+                            PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
@@ -178,6 +176,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             if (!ClassMember.CURRENT_USING_SERVICE.equals(service.getClass().getCanonicalName())) {
                                 return;
                             }
+                            Log.i(TAG, "Service onCreate");
                             RpcUtil.isInterrupted = false;
                             AntForestNotification.setContentText("运行中...");
                             registerBroadcastReceiver(service);

@@ -377,6 +377,9 @@ public class AntOcean {
         }
         try {
             String userId = fillFlag.getString("userId");
+            if (Config.getDontCollectList().contains(userId)) {
+                return;
+            }
             String s = AntOceanRpcCall.queryFriendPage(userId);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {

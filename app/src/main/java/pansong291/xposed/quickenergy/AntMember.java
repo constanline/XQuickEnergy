@@ -23,7 +23,7 @@ public class AntMember {
                     while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
                         Thread.sleep(100);
                     if (Statistics.canMemberSignInToday(FriendIdMap.currentUid)) {
-                        String s = AntMemberRpcCall.memberSignIn();
+                        String s = AntMemberRpcCall.queryMemberSigninCalendar();
                         JSONObject jo = new JSONObject(s);
                         if ("SUCCESS".equals(jo.getString("resultCode"))) {
                             Log.other("每日签到📅[" + jo.getString("signinPoint") + "积分]#已签到" + jo.getString("signinSumDay")

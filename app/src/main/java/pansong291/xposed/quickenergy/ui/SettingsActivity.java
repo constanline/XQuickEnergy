@@ -2,9 +2,7 @@ package pansong291.xposed.quickenergy.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -15,6 +13,9 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.Toast;
+
+import java.util.Locale;
+
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.*;
 import pansong291.xposed.quickenergy.util.*;
@@ -33,7 +34,7 @@ public class SettingsActivity extends Activity {
     private Animation slideRightIn;
     private Animation slideRightOut;
 
-    Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7,
+    Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7, sw_language_simplified_chinese,
             sw_collectWateringBubble, sw_collectProp, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
             sw_cooperateWater, sw_energyRain, sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
             sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce, sw_donation, sw_answerQuestion,
@@ -45,11 +46,12 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure, sw_greenFinance;
+            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount, sw_batchRobEnergy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LanguageUtil.setLocale(this);
         setContentView(R.layout.activity_settings);
         setTitle(R.string.settings);
 
@@ -64,7 +66,9 @@ public class SettingsActivity extends Activity {
         BeachIdMap.shouldReload = true;
 
         initSwitch();
+
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -101,7 +105,7 @@ public class SettingsActivity extends Activity {
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                    float velocityY) {
+                                   float velocityY) {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                     return false;
                 int lastView = tabHost.getCurrentTab();
@@ -162,9 +166,11 @@ public class SettingsActivity extends Activity {
         sw_startAt7 = findViewById(R.id.sw_startAt7);
         sw_enableOnGoing = findViewById(R.id.sw_enableOnGoing);
         sw_backupRuntime = findViewById(R.id.sw_backupRuntime);
+        sw_language_simplified_chinese = findViewById(R.id.sw_languageSimplifiedChinese);
 
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
+        sw_batchRobEnergy = findViewById(R.id.sw_batchRobEnergy);
         sw_collectProp = findViewById(R.id.sw_collectProp);
         sw_helpFriendCollect = findViewById(R.id.sw_helpFriendCollect);
         sw_receiveForestTaskAward = findViewById(R.id.sw_receiveForestTaskAward);
@@ -211,6 +217,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol = findViewById(R.id.sw_userPatrol);
         sw_animalConsumeProp = findViewById(R.id.sw_animalConsumeProp);
         sw_collectGiftBox = findViewById(R.id.sw_collectGiftBox);
+        sw_totalCertCount = findViewById(R.id.sw_totalCertCount);
 
         sw_enableStall = findViewById(R.id.sw_enableStall);
         sw_stallAutoClose = findViewById(R.id.sw_stallAutoClose);
@@ -235,9 +242,11 @@ public class SettingsActivity extends Activity {
         sw_startAt7.setChecked(Config.startAt7());
         sw_enableOnGoing.setChecked(Config.enableOnGoing());
         sw_backupRuntime.setChecked(Config.backupRuntime());
+        sw_language_simplified_chinese.setChecked(Config.languageSimplifiedChinese());
 
         sw_collectEnergy.setChecked(Config.collectEnergy());
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
+        sw_batchRobEnergy.setChecked(Config.batchRobEnergy());
         sw_collectProp.setChecked(Config.collectProp());
         sw_helpFriendCollect.setChecked(Config.helpFriendCollect());
         sw_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
@@ -284,6 +293,7 @@ public class SettingsActivity extends Activity {
         sw_userPatrol.setChecked(Config.userPatrol());
         sw_animalConsumeProp.setChecked(Config.animalConsumeProp());
         sw_collectGiftBox.setChecked(Config.collectGiftBox());
+        sw_totalCertCount.setChecked(Config.totalCertCount());
 
         sw_enableStall.setChecked(Config.enableStall());
         sw_stallAutoClose.setChecked(Config.stallAutoClose());
@@ -334,12 +344,22 @@ public class SettingsActivity extends Activity {
                     Config.setBackupRuntime(sw.isChecked());
                     break;
 
+                case R.id.sw_languageSimplifiedChinese:
+                    Config.setLanguageSimplifiedChinese(sw.isChecked());
+                    // 提示需要重启 language_simplified_chinese_need_restart
+                    Toast.makeText(this, R.string.language_simplified_chinese_need_restart, Toast.LENGTH_SHORT).show();
+                    break;
+
                 case R.id.sw_collectEnergy:
                     Config.setCollectEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectWateringBubble:
                     Config.setCollectWateringBubble(sw.isChecked());
+                    break;
+
+                case R.id.sw_batchRobEnergy:
+                    Config.setBatchRobEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectProp:
@@ -526,6 +546,10 @@ public class SettingsActivity extends Activity {
                     Config.setCollectGiftBox(sw.isChecked());
                     break;
 
+                case R.id.sw_totalCertCount:
+                    Config.setTotalCertCount(sw.isChecked());
+                    break;
+
                 case R.id.sw_enableStall:
                     Config.setEnableStall(sw.isChecked());
                     break;
@@ -612,7 +636,7 @@ public class SettingsActivity extends Activity {
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME,
                             this.getString(R.string.use_double_card_time_desc));
                     break;
-
+// lzw add
                 case R.id.btn_onlyCollectEnergyTime:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ONLY_COLLECT_ENERGY_TIME,
                             this.getString(R.string.use_double_card_time_desc));
@@ -657,13 +681,13 @@ public class SettingsActivity extends Activity {
                     break;
 
                 case R.id.btn_ancientTreeAreaCodeList:
-                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeAreaCodeList(), null);
+                    ListDialog.show(this, btn.getText(), AreaCode.getList(), Config.getAncientTreeCityCodeList(), null);
                     break;
 
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
-
+// lzw add
                 case R.id.btn_masterIDList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getMasterIDList(), null);
                     break;
@@ -731,6 +755,11 @@ public class SettingsActivity extends Activity {
 
                 case R.id.btn_WhoYouWantToGiveTo:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.whoYouWantGiveTo(), null,
+                            ListDialog.ListType.RADIO);
+                    break;
+
+                case R.id.btn_sendFriendCard:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.sendFriendCard(), null,
                             ListDialog.ListType.RADIO);
                     break;
 

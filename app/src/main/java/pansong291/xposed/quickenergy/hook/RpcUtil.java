@@ -12,7 +12,6 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
-import java.util.Objects;
 
 public class RpcUtil {
     private static final String TAG = RpcUtil.class.getCanonicalName();

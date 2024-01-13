@@ -1,12 +1,11 @@
 package pansong291.xposed.quickenergy.util;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
+// lzw add
 import de.robv.android.xposed.XposedBridge;
 
 public class FriendIdMap {
@@ -116,6 +115,7 @@ public class FriendIdMap {
                 try {
                     String[] idSet = str.split("\n");
                     for (String s : idSet) {
+					// lzw add
                         // XposedBridge.log(TAG+":"+s);
                         int ind = s.indexOf(":");
                         idMap.put(s.substring(0, ind), s.substring(ind + 1));
