@@ -121,12 +121,12 @@ public class AntFarm {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
                         Thread.sleep(100);
-                    String s = AntFarmRpcCall.enterFarm("", FriendIdMap.currentUid);
+                    String s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
                     if (s == null) {
                         Thread.sleep(RandomUtils.delay());
-                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.currentUid);
+                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
                     }
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("memo"))) {
@@ -257,7 +257,7 @@ public class AntFarm {
                         donation();
                     }
 
-                    if (Config.answerQuestion() && Statistics.canAnswerQuestionToday(FriendIdMap.currentUid)) {
+                    if (Config.answerQuestion() && Statistics.canAnswerQuestionToday(FriendIdMap.getCurrentUid())) {
                         answerQuestion();
                     }
 
@@ -292,6 +292,8 @@ public class AntFarm {
                     // 送麦子
                     visit();
 
+                    visitAnimal();
+
                     // 帮好友喂鸡
                     feedFriend();
 
@@ -317,9 +319,58 @@ public class AntFarm {
 
     }
 
+    private static void visitAnimal() {
+        try {
+            String s = AntFarmRpcCall.visitAnimal();
+            JSONObject jo = new JSONObject(s);
+            if ("SUCCESS".equals(jo.getString("memo"))) {
+                JSONArray talkNodes = jo.getJSONArray("talkNodes");
+                for (int i = 0; i < talkNodes.length(); i++) {
+                    JSONObject talkNode = talkNodes.getJSONObject(i);
+                    if (talkNode.has("actionNodes")) {
+                        JSONArray actionNodes = talkNode.getJSONArray("actionNodes");
+                        for (int j = 0; j < actionNodes.length(); j++) {
+                            JSONObject actionNode = actionNodes.getJSONObject(j);
+                            if (actionNode.has("consistencyKey")) {
+                                String consistencyKey = actionNode.getString("consistencyKey");
+
+                                JSONObject talkConfig = jo.getJSONArray("talkConfigs").getJSONObject(0);
+                                String farmId = talkConfig.getString("farmId");
+                                s = AntFarmRpcCall.feedFriendAnimalVisit(farmId);
+                                jo = new JSONObject(s);
+                                if ("SUCCESS".equals(jo.getString("memo"))) {
+                                    s = AntFarmRpcCall.visitAnimalSendPrize(consistencyKey);
+                                    jo = new JSONObject(s);
+                                    if ("SUCCESS".equals(jo.getString("memo"))) {
+                                        String prizeName = jo.getString("prizeName");
+                                        Log.farm("小鸡到访🍖" + prizeName);
+                                    } else {
+                                        Log.i(TAG, "visitAnimalSendPrize err:" + s);
+                                        Log.i(TAG, s);
+                                    }
+                                } else {
+                                    Log.i(TAG, "feedFriendAnimalVisit err:" + s);
+                                    Log.i(TAG, s);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            } else {
+                Log.i(TAG, "visitAnimal err:" + s);
+                Log.i(TAG, s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "sleep err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
     private static void animalSleep() {
         try {
-            String s = AntFarmRpcCall.queryLoveCabin(FriendIdMap.currentUid);
+            String s = AntFarmRpcCall.queryLoveCabin(FriendIdMap.getCurrentUid());
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("memo"))) {
                 JSONObject sleepNotifyInfo = jo.getJSONObject("sleepNotifyInfo");
@@ -623,7 +674,7 @@ public class AntFarm {
                                         }
                                         Log.recordLog("答题" + (correct ? "正确" : "错误") + "可领取［"
                                                 + extInfo.getString("award") + "克］");
-                                        Statistics.answerQuestionToday(FriendIdMap.currentUid);
+                                        Statistics.answerQuestionToday(FriendIdMap.getCurrentUid());
 
                                         JSONArray operationConfigList = joDailySubmit
                                                 .getJSONArray("operationConfigList");
@@ -654,13 +705,13 @@ public class AntFarm {
                             case RECEIVED:
                                 Statistics.setQuestionHint(null);
                                 Log.recordLog("今日答题已完成", "");
-                                Statistics.answerQuestionToday(FriendIdMap.currentUid);
+                                Statistics.answerQuestionToday(FriendIdMap.getCurrentUid());
                                 break;
 
                             case FINISHED:
                                 Statistics.setQuestionHint(null);
                                 Log.recordLog("已经答过题了，饲料待领取", "");
-                                Statistics.answerQuestionToday(FriendIdMap.currentUid);
+                                Statistics.answerQuestionToday(FriendIdMap.getCurrentUid());
                                 break;
                         }
                         break;
@@ -935,7 +986,7 @@ public class AntFarm {
             JSONObject jo;
             for (int i = 0; i < Config.getFeedFriendAnimalList().size(); i++) {
                 String userId = Config.getFeedFriendAnimalList().get(i);
-                if (userId.equals(FriendIdMap.currentUid))
+                if (userId.equals(FriendIdMap.getCurrentUid()))
                     continue;
                 if (!Statistics.canFeedFriendToday(userId, Config.getFeedFriendCountList().get(i)))
                     continue;
@@ -1020,7 +1071,7 @@ public class AntFarm {
                         String userId = jo.getString("userId");
                         String userName = FriendIdMap.getNameById(userId);
                         if (Config.getDontNotifyFriendList().contains(userId)
-                                || userId.equals(FriendIdMap.currentUid))
+                                || userId.equals(FriendIdMap.getCurrentUid()))
                             continue;
                         boolean starve = jo.has("actionType") && "starve_action".equals(jo.getString("actionType"));
                         if (jo.getBoolean("stealingAnimal") && !starve) {
@@ -1320,7 +1371,7 @@ public class AntFarm {
         try {
             for (int i = 0; i < Config.getVisitFriendList().size(); i++) {
                 String userId = Config.getVisitFriendList().get(i);
-                if (userId.equals(FriendIdMap.currentUid))
+                if (userId.equals(FriendIdMap.getCurrentUid()))
                     continue;
                 int visitCount = Config.getVisitFriendCountList().get(i);
                 if (visitCount <= 0)

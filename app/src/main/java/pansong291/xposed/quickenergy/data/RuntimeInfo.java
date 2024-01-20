@@ -30,13 +30,13 @@ public class RuntimeInfo {
     }
 
     public static RuntimeInfo getInstance() {
-        if (instance == null || !Objects.equals(instance.userId, FriendIdMap.currentUid)) {
+        if (instance == null || !Objects.equals(instance.userId, FriendIdMap.getCurrentUid())) {
             instance = new RuntimeInfo();
         }
         return instance;
     }
     private RuntimeInfo() {
-        userId = FriendIdMap.currentUid;
+        userId = FriendIdMap.getCurrentUid();
         String content = FileUtils.readFromFile(FileUtils.runtimeInfoFile());
         try {
             joAll = new JSONObject(content);

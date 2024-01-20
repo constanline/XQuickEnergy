@@ -1326,8 +1326,8 @@ public class Config {
             shouldReload = false;
             Log.i(TAG, "get config from" + RuntimeInfo.process);
             String confJson = null;
-            if (FileUtils.getConfigFile(FriendIdMap.currentUid).exists())
-                confJson = FileUtils.readFromFile(FileUtils.getConfigFile(FriendIdMap.currentUid));
+            if (FileUtils.getConfigFile(FriendIdMap.getCurrentUid()).exists())
+                confJson = FileUtils.readFromFile(FileUtils.getConfigFile(FriendIdMap.getCurrentUid()));
             config = json2Config(confJson);
         }
         return config;
