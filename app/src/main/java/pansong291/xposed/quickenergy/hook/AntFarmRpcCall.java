@@ -369,4 +369,22 @@ public class AntFarmRpcCall {
                 "[{\"diaryDate\":\"" + diaryDate + "\",\"requestType\":\"NORMAL\",\"roleId\":\"" + roleId
                         + "\",\"sceneCode\":\"DIARY\",\"source\":\"antfarm_icon\"}]");
     }
+
+    public static String visitAnimal() {
+        return RpcUtil.request("com.alipay.antfarm.visitAnimal",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"version\":\"" + VERSION +
+                        "\"}]");
+    }
+
+    public static String feedFriendAnimalVisit(String friendFarmId) {
+        return RpcUtil.request("com.alipay.antfarm.feedFriendAnimal",
+                "[{\"friendFarmId\":\"" + friendFarmId + "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\"," +
+                        "\"source\":\"visitChicken\",\"version\":\"" + VERSION + "\"}]");
+    }
+
+    public static String visitAnimalSendPrize(String token) {
+        return RpcUtil.request("com.alipay.antfarm.visitAnimalSendPrize",
+                "[{\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"H5\",\"token\":\"" + token +
+                        "\",\"version\":\"" + VERSION + "\"}]");
+    }
 }

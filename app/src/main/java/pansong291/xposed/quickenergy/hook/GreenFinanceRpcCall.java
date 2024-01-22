@@ -14,7 +14,7 @@ public class GreenFinanceRpcCall {
     public static String batchSelfCollect(JSONArray bsnIds) {
         return RpcUtil.request("com.alipay.mcaplatformunit.common.mobile.service.GreenFinancePointCollectService.batchSelfCollect",
                 "[{\"bsnIds\":" + bsnIds + ",\"clientVersion\":\"VERSION2\",\"custType\":\"MERCHANT\",\"uid\":\""
-                        + FriendIdMap.currentUid + "\"}]");
+                        + FriendIdMap.getCurrentUid() + "\"}]");
     }
 
     public static String signInQuery(String sceneId) {

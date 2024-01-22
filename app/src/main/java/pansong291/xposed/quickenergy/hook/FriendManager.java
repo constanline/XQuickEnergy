@@ -64,7 +64,7 @@ public class FriendManager {
     private static JSONObject joFriendWatch;
 
     public static void friendWatch(String id, int collectedEnergy) {
-        if (id.equals(FriendIdMap.currentUid)) {
+        if (id.equals(FriendIdMap.getCurrentUid())) {
             return;
         }
         try {
