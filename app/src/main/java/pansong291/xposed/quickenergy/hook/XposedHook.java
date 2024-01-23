@@ -328,12 +328,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                 boolean force = intent.getBooleanExtra("force", false);
                 restartHook(AntForestToast.context, force);
             } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
-                String fun = intent.getStringExtra("fun");
-                String data = intent.getStringExtra("data");
-                String type = intent.getStringExtra("type");
-                Log.recordLog("收到测试消息:<fun>" + fun + "<data>" + data + "<type>" + type);
+                Log.recordLog("收到测试消息" );
                 // XposedHook.restartHook(false);
-                RpcTest.start(fun, data, type);
             } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
                 Config.cancelAlarm7(AntForestToast.context, false);
             }

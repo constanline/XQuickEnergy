@@ -1493,7 +1493,7 @@ public class AntFarm {
                         jo = new JSONObject(AntFarmRpcCall.visitAnimalSendPrize(consistencyKey));
                         if ("SUCCESS".equals(jo.getString("memo"))) {
                             String prizeName = jo.getString("prizeName");
-                            Log.farm("投喂小鸡💞[" + prizeName + "]");
+                            Log.farm("小鸡到访💞[" + prizeName + "]");
                         } else {
                             Log.i(jo.getString("memo"), jo.toString());
                         }
