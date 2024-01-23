@@ -18,7 +18,7 @@ public class Config {
     public enum RecallAnimalType {
         ALWAYS, WHEN_THIEF, WHEN_HUNGRY, NEVER;
 
-        public static final CharSequence[] nickNames = { "始终召回", "作贼时召回", "饥饿时召回", "不召回" };
+        public static final CharSequence[] nickNames = { "始终召回", "偷吃时召回", "饥饿时召回", "不召回" };
         public static final CharSequence[] names = { ALWAYS.nickName(), WHEN_THIEF.nickName(), WHEN_HUNGRY.nickName(),
                 NEVER.nickName() };
 
@@ -46,6 +46,7 @@ public class Config {
     public static final String jn_collectEnergy = "collectEnergy";
 
     public static final String jn_collectWateringBubble = "collectWateringBubble";
+    public static final String jn_batchRobEnergy = "batchRobEnergy";
     public static final String jn_collectProp = "collectProp";
     public static final String jn_ReturnWater33 = "returnWater30";
     public static final String jn_ReturnWater18 = "returnWater20";
@@ -143,6 +144,9 @@ public class Config {
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
     public static final String jn_greenFinance = "greenFinance";
+    public static final String jn_antBookRead = "antBookRead";
+    public static final String jn_consumeGold = "consumeGold";
+    public static final String jn_omegakoiTown = "omegakoiTown";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -166,6 +170,7 @@ public class Config {
     private int checkInterval;
 
     private boolean collectWateringBubble;
+    private boolean batchRobEnergy;
     private boolean collectProp;
     private boolean limitCollect;
     private int limitCount;
@@ -278,6 +283,9 @@ public class Config {
     private boolean zcjSignIn;
     private boolean merchantKmdk;
     private boolean greenFinance;
+    private boolean antBookRead;
+    private boolean consumeGold;
+    private boolean omegakoiTown;
 
     /* base */
     private static volatile Config config;
@@ -413,6 +421,15 @@ public class Config {
 
     public static boolean collectWateringBubble() {
         return getConfig().collectWateringBubble;
+    }
+
+    public static void setBatchRobEnergy(boolean b) {
+        getConfig().batchRobEnergy = b;
+        hasChanged = true;
+    }
+
+    public static boolean batchRobEnergy() {
+        return getConfig().batchRobEnergy;
     }
 
     public static void setCollectProp(boolean b) {
@@ -1294,6 +1311,33 @@ public class Config {
         return getConfig().greenFinance;
     }
 
+    public static void setAntBookRead(boolean b) {
+        getConfig().antBookRead = b;
+        hasChanged = true;
+    }
+
+    public static boolean antBookRead() {
+        return getConfig().antBookRead;
+    }
+
+    public static void setConsumeGold(boolean b) {
+        getConfig().consumeGold = b;
+        hasChanged = true;
+    }
+
+    public static boolean consumeGold() {
+        return getConfig().consumeGold;
+    }
+
+    public static void setOmegakoiTown(boolean b) {
+        getConfig().omegakoiTown = b;
+        hasChanged = true;
+    }
+
+    public static boolean omegakoiTown() {
+        return getConfig().omegakoiTown;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1324,6 +1368,7 @@ public class Config {
 
         c.collectEnergy = false;
         c.collectWateringBubble = true;
+        c.batchRobEnergy = false;
         c.collectProp = true;
         c.checkInterval = 720_000;
         c.waitWhenException = 60 * 60 * 1000;
@@ -1448,6 +1493,9 @@ public class Config {
         c.zcjSignIn = false;
         c.merchantKmdk = false;
         c.greenFinance = false;
+        c.antBookRead = false;
+        c.consumeGold = false;
+        c.omegakoiTown = false;
         return c;
     }
 
@@ -1495,6 +1543,8 @@ public class Config {
             config.collectEnergy = jo.optBoolean(jn_collectEnergy, false);
 
             config.collectWateringBubble = jo.optBoolean(jn_collectWateringBubble, true);
+
+            config.batchRobEnergy = jo.optBoolean(jn_batchRobEnergy, false);
 
             config.collectProp = jo.optBoolean(jn_collectProp, true);
 
@@ -1845,6 +1895,12 @@ public class Config {
 
             config.greenFinance = jo.optBoolean(jn_greenFinance, false);
 
+            config.antBookRead = jo.optBoolean(jn_antBookRead, false);
+
+            config.consumeGold = jo.optBoolean(jn_consumeGold, false);
+
+            config.omegakoiTown = jo.optBoolean(jn_omegakoiTown, false);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -1898,6 +1954,8 @@ public class Config {
             jo.put(jn_collectEnergy, config.collectEnergy);
 
             jo.put(jn_collectWateringBubble, config.collectWateringBubble);
+
+            jo.put(jn_batchRobEnergy, config.batchRobEnergy);
 
             jo.put(jn_collectProp, config.collectProp);
 
@@ -2176,6 +2234,12 @@ public class Config {
 
             jo.put(jn_greenFinance, config.greenFinance);
 
+            jo.put(jn_antBookRead, config.antBookRead);
+
+            jo.put(jn_consumeGold, config.consumeGold);
+
+            jo.put(jn_omegakoiTown, config.omegakoiTown);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
@@ -2252,13 +2316,14 @@ public class Config {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
-            } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
-            }
-            // alarmManager.setAlarmClock(new
-            // AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), null), pi);
+            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+            // calendar.getTimeInMillis(), pi);
+            // } else {
+            // alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+            // pi);
+            // }
+            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), null), pi);
         } catch (Throwable th) {
             Log.printStackTrace("alarm7", th);
         }

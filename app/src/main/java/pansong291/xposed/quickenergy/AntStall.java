@@ -27,6 +27,17 @@ public class AntStall {
         }
     }
 
+    private static List<String> taskTypeList;
+
+    static {
+        taskTypeList = new ArrayList<>();
+        taskTypeList.add("ANTSTALL_NORMAL_OPEN_NOTICE");// 开启收新村收益提醒
+        taskTypeList.add("tianjiashouye");// 添加首页
+        taskTypeList.add("SHANGYEHUA_ceshi");// 【木兰市集】逛精选好物
+        taskTypeList.add("ANTSTALL_ELEME_VISIT");// 去饿了么果园逛一逛
+        taskTypeList.add("ANTSTALL_TASK_diantao202311");// 去点淘赚元宝提现
+    }
+
     public static void start() {
         if (!Config.enableStall()) {
             return;
@@ -185,7 +196,8 @@ public class AntStall {
                 JSONObject master = coinsMap.getJSONObject("MASTER");
                 String assetId = master.getString("assetId");
                 int settleCoin = (int) (master.getJSONObject("money").getDouble("amount"));
-                if (settleCoin > 100) {
+                boolean fullShow = master.getBoolean("fullShow");
+                if (fullShow || settleCoin > 100) {
                     String s = AntStallRpcCall.settle(assetId, settleCoin);
                     JSONObject jo = new JSONObject(s);
                     if (jo.getString("resultCode").equals("SUCCESS")) {
@@ -374,7 +386,7 @@ public class AntStall {
                         String taskType = task.getString("taskType");
                         String title = bizInfo.optString("title", taskType);
                         if ("VISIT_AUTO_FINISH".equals(bizInfo.getString("actionType"))
-                                || "ANTSTALL_NORMAL_OPEN_NOTICE".equals(taskType) || "tianjiashouye".equals(taskType)) {
+                                || taskTypeList.contains(taskType)) {
                             if (finishTask(taskType)) {
                                 Log.farm("蚂蚁新村⛪[完成任务]#" + title);
                                 taskList();
@@ -393,6 +405,7 @@ public class AntStall {
                             shareP2P();
                         }
                     }
+                    Thread.sleep(200L);
                 }
             } else {
                 Log.recordLog("taskList err:", s);
@@ -401,7 +414,6 @@ public class AntStall {
             Log.i(TAG, "taskList err:");
             Log.printStackTrace(TAG, t);
         }
-
     }
 
     private static void signToday() {
@@ -438,7 +450,9 @@ public class AntStall {
     }
 
     private static boolean finishTask(String taskType) {
-        String s = AntStallRpcCall.finishTask(FriendIdMap.currentUid + "_" + taskType, taskType);
+        // String s = AntStallRpcCall.finishTask(FriendIdMap.currentUid + "_" +
+        // taskType, taskType);
+        String s = AntStallRpcCall.finishTask(taskType + "_" + System.currentTimeMillis(), taskType);
         try {
             JSONObject jo = new JSONObject(s);
             if (jo.getBoolean("success")) {

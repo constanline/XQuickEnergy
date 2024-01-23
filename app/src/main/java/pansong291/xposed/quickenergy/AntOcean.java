@@ -377,6 +377,9 @@ public class AntOcean {
         }
         try {
             String userId = fillFlag.getString("userId");
+            if (Config.getDontCollectList().contains(userId)) {
+                return;
+            }
             String s = AntOceanRpcCall.queryFriendPage(userId);
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -427,16 +430,18 @@ public class AntOcean {
                     if (!TaskStatus.TODO.name().equals(jo.getString("taskStatus")))
                         continue;
                     JSONObject bizInfo = new JSONObject(jo.getString("bizInfo"));
-                    if (!bizInfo.optBoolean("autoCompleteTask", false))
+                    if (!jo.has("taskType"))
                         continue;
                     String taskType = jo.getString("taskType");
-                    String sceneCode = jo.getString("sceneCode");
-                    jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
-                    if (jo.getBoolean("success")) {
-                        String taskTitle = bizInfo.optString("taskTitle", taskType);
-                        Log.forest("海洋任务🧾[" + taskTitle + "]");
-                    } else {
-                        Log.recordLog(jo.getString("desc"), jo.toString());
+                    if (bizInfo.optBoolean("autoCompleteTask", false) || taskType.startsWith("DAOLIU_")) {
+                        String sceneCode = jo.getString("sceneCode");
+                        jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
+                        if (jo.getBoolean("success")) {
+                            String taskTitle = bizInfo.optString("taskTitle", taskType);
+                            Log.forest("海洋任务🧾[" + taskTitle + "]");
+                        } else {
+                            Log.recordLog(jo.getString("desc"), jo.toString());
+                        }
                     }
                 }
             } else {

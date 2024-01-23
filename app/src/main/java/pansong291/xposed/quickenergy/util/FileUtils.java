@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.util;
 
 import android.os.Environment;
+import pansong291.xposed.quickenergy.hook.ClassMember;
 
 import java.io.Closeable;
 import java.io.File;
@@ -51,25 +52,15 @@ public class FileUtils {
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
+            File useMedia = new File(storageDir, "useMedia");
+            if (useMedia.exists()) {
+                String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" +
+                        File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
+                storageDir = new File(storageDirStr);
+            }
             mainDirectory = new File(storageDir, "xqe");
             if (!mainDirectory.exists()) {
                 mainDirectory.mkdirs();
-                File oldDirectory = new File(Environment.getExternalStorageDirectory(), "xqe");
-                if (oldDirectory.exists()) {
-                    File deprecatedFile = new File(oldDirectory, "deprecated");
-                    if (!deprecatedFile.exists()) {
-                        copyFile(oldDirectory, mainDirectory, "config.json");
-                        copyFile(oldDirectory, mainDirectory, "friendId.list");
-                        copyFile(oldDirectory, mainDirectory, "cooperationId.list");
-                        copyFile(oldDirectory, mainDirectory, "reserveId.list");
-                        copyFile(oldDirectory, mainDirectory, "statistics.json");
-                        copyFile(oldDirectory, mainDirectory, "cityCode.json");
-                        try {
-                            deprecatedFile.createNewFile();
-                        } catch (Throwable ignored) {
-                        }
-                    }
-                }
             }
         }
         return mainDirectory;
@@ -317,6 +308,9 @@ public class FileUtils {
     }
 
     public static String readFromFile(File f) {
+        if (!f.exists()) {
+            return "";
+        }
         StringBuilder result = new StringBuilder();
         FileReader fr = null;
         try {

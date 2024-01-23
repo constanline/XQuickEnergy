@@ -44,7 +44,8 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount;
+            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount, sw_batchRobEnergy, sw_antBookRead, sw_consumeGold,
+            sw_omegakoiTown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +166,7 @@ public class SettingsActivity extends Activity {
         sw_backupRuntime = findViewById(R.id.sw_backupRuntime);
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
+        sw_batchRobEnergy = findViewById(R.id.sw_batchRobEnergy);
         sw_collectProp = findViewById(R.id.sw_collectProp);
         sw_helpFriendCollect = findViewById(R.id.sw_helpFriendCollect);
         sw_receiveForestTaskAward = findViewById(R.id.sw_receiveForestTaskAward);
@@ -223,6 +225,9 @@ public class SettingsActivity extends Activity {
         sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
         sw_stallThrowManure = findViewById(R.id.sw_stallThrowManure);
         sw_greenFinance = findViewById(R.id.sw_greenFinance);
+        sw_antBookRead = findViewById(R.id.sw_antBookRead);
+        sw_consumeGold = findViewById(R.id.sw_consumeGold);
+        sw_omegakoiTown = findViewById(R.id.sw_omegakoiTown);
     }
 
     @Override
@@ -238,6 +243,7 @@ public class SettingsActivity extends Activity {
         sw_backupRuntime.setChecked(Config.backupRuntime());
         sw_collectEnergy.setChecked(Config.collectEnergy());
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
+        sw_batchRobEnergy.setChecked(Config.batchRobEnergy());
         sw_collectProp.setChecked(Config.collectProp());
         sw_helpFriendCollect.setChecked(Config.helpFriendCollect());
         sw_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
@@ -296,6 +302,9 @@ public class SettingsActivity extends Activity {
         sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
         sw_stallThrowManure.setChecked(Config.stallThrowManure());
         sw_greenFinance.setChecked(Config.greenFinance());
+        sw_antBookRead.setChecked(Config.antBookRead());
+        sw_consumeGold.setChecked(Config.consumeGold());
+        sw_omegakoiTown.setChecked(Config.omegakoiTown());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -341,6 +350,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_collectWateringBubble:
                     Config.setCollectWateringBubble(sw.isChecked());
+                    break;
+
+                case R.id.sw_batchRobEnergy:
+                    Config.setBatchRobEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectProp:
@@ -569,6 +582,18 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_greenFinance:
                     Config.setGreenFinance(sw.isChecked());
+                    break;
+
+                case R.id.sw_antBookRead:
+                    Config.setAntBookRead(sw.isChecked());
+                    break;
+
+                case R.id.sw_consumeGold:
+                    Config.setConsumeGold(sw.isChecked());
+                    break;
+
+                case R.id.sw_omegakoiTown:
+                    Config.setOmegakoiTown(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {

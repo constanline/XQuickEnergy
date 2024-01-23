@@ -4,11 +4,13 @@ import pansong291.xposed.quickenergy.util.StringUtil;
 
 import pansong291.xposed.quickenergy.util.RandomUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class AntForestRpcCall {
 
-        private static final String VERSION = "20230710";
+        private static final String VERSION = "20231208";
 
         private static String getUniqueId() {
                 return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();
@@ -50,6 +52,20 @@ public class AntForestRpcCall {
                                         + "\"}]";
                 }
                 return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
+        }
+
+        public static String batchRobEnergy(String userId, List<String> bubbleId) {
+                String args1;
+                args1 = "[{\"bizType\":\"\",\"bubbleIds\":[" + String.join(",", bubbleId)
+                                + "],\"fromAct\":\"BATCH_ROB_ENERGY\",\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"userId\":\""
+                                + userId + "\",\"version\":\""
+                                + VERSION + "\"}]";
+                return RpcUtil.request("alipay.antmember.forest.h5.collectEnergy", args1);
+        }
+
+        public static String collectRebornEnergy() {
+                return RpcUtil.request("alipay.antforest.forest.h5.collectRebornEnergy",
+                                "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\"}]");
         }
 
         public static String transferEnergy(String targetUser, String bizNo, int energyId) {
@@ -252,6 +268,17 @@ public class AntForestRpcCall {
         public static String queryUserPatrol() {
                 return RpcUtil.request("alipay.antforest.forest.h5.queryUserPatrol",
                                 "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+        }
+
+        public static String queryMyPatrolRecord() {
+                return RpcUtil.request("alipay.antforest.forest.h5.queryMyPatrolRecord",
+                                "[{\"source\":\"ant_forest\",\"timezoneId\":\"Asia/Shanghai\"}]");
+        }
+
+        public static String switchUserPatrol(String targetPatrolId) {
+                return RpcUtil.request("alipay.antforest.forest.h5.switchUserPatrol",
+                                "[{\"source\":\"ant_forest\",\"targetPatrolId\":" + targetPatrolId
+                                                + ",\"timezoneId\":\"Asia/Shanghai\"}]");
         }
 
         public static String patrolGo(int nodeIndex, int patrolId) {

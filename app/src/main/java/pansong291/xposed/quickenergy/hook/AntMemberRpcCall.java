@@ -1,6 +1,12 @@
 package pansong291.xposed.quickenergy.hook;
 
+import pansong291.xposed.quickenergy.util.RandomUtils;
+
 public class AntMemberRpcCall {
+
+    private static String getUniqueId() {
+        return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();
+    }
 
     /* ant member point */
     public static String queryPointCert(int page, int pageSize) {
@@ -13,9 +19,9 @@ public class AntMemberRpcCall {
         return RpcUtil.request("alipay.antmember.biz.rpc.member.h5.receivePointByUser", args1);
     }
 
-    public static String memberSignIn() {
-        String args1 = "[{}]";
-        return RpcUtil.request("alipay.antmember.biz.rpc.member.h5.memberSignin", args1);
+    public static String queryMemberSigninCalendar() {
+        return RpcUtil.request("com.alipay.amic.biz.rpc.signin.h5.queryMemberSigninCalendar",
+                "[{\"autoSignIn\":true,\"invitorUserId\":\"\",\"sceneCode\":\"QUERY\"}]");
     }
     /* 安心豆 */
 
@@ -102,6 +108,53 @@ public class AntMemberRpcCall {
     public static String signUp(String activityNo) {
         return RpcUtil.request("alipay.merchant.kmdk.signUp",
                 "[{\"activityNo\":\"" + activityNo + "\"}]");
+    }
+
+    /* 商家服务任务 */
+
+    public static String taskFinish(String bizId) {
+        return RpcUtil.request("com.alipay.adtask.biz.mobilegw.service.task.finish",
+                "[{\"bizId\":\"" + bizId + "\"}]");
+    }
+
+    public static String taskReceive(String taskCode) {
+        return RpcUtil.request("alipay.mrchservbase.sqyj.task.receive",
+                "[{\"compId\":\"ZTS_TASK_RECEIVE\",\"extInfo\":{\"taskCode\":\"" + taskCode + "\"}}]");
+    }
+
+    public static String actioncode(String actionCode) {
+        return RpcUtil.request("alipay.mrchservbase.task.query.by.actioncode",
+                "[{\"actionCode\":\"" + actionCode + "\"}]");
+    }
+
+    public static String produce(String actionCode) {
+        return RpcUtil.request("alipay.mrchservbase.biz.task.action.produce",
+                "[{\"actionCode\":\"" + actionCode + "\"}]");
+    }
+
+    public static String ballReceive(String ballIds) {
+        return RpcUtil.request("alipay.mrchservbase.mrchpoint.ball.receive",
+                "[{\"ballIds\":[\"" + ballIds
+                        + "\"],\"channel\":\"MRCH_SELF\",\"outBizNo\":\"" + getUniqueId() + "\"}]");
+    }
+
+    /* 会员任务 */
+    public static String signPageTaskList() {
+        return RpcUtil.request("alipay.antmember.biz.rpc.membertask.h5.signPageTaskList",
+                "[{\"sourceBusiness\":\"antmember\",\"spaceCode\":\"ant_member_xlight_task\"}]");
+    }
+
+    public static String applyTask(String darwinName, Long taskConfigId) {
+        return RpcUtil.request("alipay.antmember.biz.rpc.membertask.h5.applyTask",
+                "[{\"darwinExpParams\":{\"darwinName\":\"" + darwinName
+                        + "\"},\"sourcePassMap\":{\"innerSource\":\"\",\"source\":\"myTab\",\"unid\":\"\"},\"taskConfigId\":"
+                        + taskConfigId + "}]");
+    }
+
+    public static String executeTask(String bizParam, String bizSubType) {
+        return RpcUtil.request("alipay.antmember.biz.rpc.membertask.h5.executeTask",
+                "[{\"bizOutNo\":\"" + String.valueOf(System.currentTimeMillis() - 16000L) + "\",\"bizParam\":\""
+                        + bizParam + "\",\"bizSubType\":\"" + bizSubType + "\",\"bizType\":\"BROWSE\"}]");
     }
 
 }

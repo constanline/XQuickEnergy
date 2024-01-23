@@ -9,7 +9,7 @@ import org.json.JSONArray;
  * @since 2023/08/22
  */
 public class AntStallRpcCall {
-        private static final String VERSION = "0.1.2308081346.4";
+        private static final String VERSION = "0.1.2312271038.27";
 
         public static String home() {
                 return RpcUtil.request("com.alipay.antstall.self.home",
