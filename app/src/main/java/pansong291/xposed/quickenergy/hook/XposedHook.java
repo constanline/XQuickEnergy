@@ -96,6 +96,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             Reserve.start();
                             if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
                                 AncientTree.start();
+                                AntBookRead.start();
                             }
                             AntSports.start(XposedHook.classLoader);
                             AntMember.receivePoint();
@@ -103,6 +104,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntOrchard.start();
                             AntStall.start();
                             GreenFinance.start();
+                            OmegakoiTown.start();
+                            ConsumeGold.start();
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {

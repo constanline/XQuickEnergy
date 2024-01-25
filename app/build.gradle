@@ -9,7 +9,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
         versionCode 71
-        versionName "1.2.3-beta10"
+        versionName "1.2.3-beta12"
     }
     buildTypes {
         release {

@@ -64,7 +64,7 @@ public class AncientTree {
                     JSONObject districtInfo = districtBriefInfo.getJSONObject("districtInfo");
                     String districtCode = districtInfo.getString("districtCode");
                     districtDetail(districtCode);
-                    Thread.sleep(500L);
+                    Thread.sleep(1000L);
                 }
                 Statistics.ancientTreeToday(cityCode);
             }

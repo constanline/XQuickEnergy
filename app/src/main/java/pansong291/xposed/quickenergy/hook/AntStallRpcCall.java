@@ -1,8 +1,8 @@
 package pansong291.xposed.quickenergy.hook;
 
-import org.json.JSONArray;
-
 import java.util.UUID;
+
+import org.json.JSONArray;
 
 /**
  * @author Constanline

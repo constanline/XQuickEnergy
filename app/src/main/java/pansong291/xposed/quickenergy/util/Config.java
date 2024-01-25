@@ -148,6 +148,9 @@ public class Config {
     public static final String jn_zcjSignIn = "zcjSignIn";
     public static final String jn_merchantKmdk = "merchantKmdk";
     public static final String jn_greenFinance = "greenFinance";
+    public static final String jn_antBookRead = "antBookRead";
+    public static final String jn_consumeGold = "consumeGold";
+    public static final String jn_omegakoiTown = "omegakoiTown";
 
     public static volatile boolean shouldReload;
     public static volatile boolean hasChanged;
@@ -287,6 +290,9 @@ public class Config {
     private boolean zcjSignIn;
     private boolean merchantKmdk;
     private boolean greenFinance;
+    private boolean antBookRead;
+    private boolean consumeGold;
+    private boolean omegakoiTown;
 
     /* base */
     private static volatile Config config;
@@ -1320,6 +1326,33 @@ public class Config {
         return getConfig().greenFinance;
     }
 
+    public static void setAntBookRead(boolean b) {
+        getConfig().antBookRead = b;
+        hasChanged = true;
+    }
+
+    public static boolean antBookRead() {
+        return getConfig().antBookRead;
+    }
+
+    public static void setConsumeGold(boolean b) {
+        getConfig().consumeGold = b;
+        hasChanged = true;
+    }
+
+    public static boolean consumeGold() {
+        return getConfig().consumeGold;
+    }
+
+    public static void setOmegakoiTown(boolean b) {
+        getConfig().omegakoiTown = b;
+        hasChanged = true;
+    }
+
+    public static boolean omegakoiTown() {
+        return getConfig().omegakoiTown;
+    }
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1478,6 +1511,9 @@ public class Config {
         c.zcjSignIn = false;
         c.merchantKmdk = false;
         c.greenFinance = false;
+        c.antBookRead = false;
+        c.consumeGold = false;
+        c.omegakoiTown = false;
         return c;
     }
 
@@ -1969,17 +2005,20 @@ public class Config {
             config.insBlueBeanExchange = jo.optBoolean(jn_insBlueBeanExchange, true);
             //Log.i(TAG, jn_insBlueBeanExchange + ":" + config.insBlueBeanExchange);
 
-            config.collectSesame = jo.optBoolean(jn_collectSesame, true);
-            //Log.i(TAG, jn_collectSesame + ":" + config.collectSesame);
+            config.collectSesame = jo.optBoolean(jn_collectSesame, false);
 
-            config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, true);
-            //Log.i(TAG, jn_zcjSignIn + ":" + config.zcjSignIn);
+            config.zcjSignIn = jo.optBoolean(jn_zcjSignIn, false);
 
-            config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, true);
-            //Log.i(TAG, jn_merchantKmdk + ":" + config.merchantKmdk);
+            config.merchantKmdk = jo.optBoolean(jn_merchantKmdk, false);
 
             config.greenFinance = jo.optBoolean(jn_greenFinance, false);
-            //Log.i(TAG, jn_greenFinance + ":" + config.greenFinance);
+
+            config.antBookRead = jo.optBoolean(jn_antBookRead, false);
+
+            config.consumeGold = jo.optBoolean(jn_consumeGold, false);
+
+            config.omegakoiTown = jo.optBoolean(jn_omegakoiTown, false);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
             if (json != null) {
@@ -2313,6 +2352,12 @@ public class Config {
 
             jo.put(jn_greenFinance, config.greenFinance);
 
+            jo.put(jn_antBookRead, config.antBookRead);
+
+            jo.put(jn_consumeGold, config.consumeGold);
+
+            jo.put(jn_omegakoiTown, config.omegakoiTown);
+
         } catch (Throwable t) {
             Log.printStackTrace(TAG, t);
         }
@@ -2320,15 +2365,15 @@ public class Config {
     }
 
     public static String formatJson(JSONObject jo, boolean removeQuote) {
-        String formated;
+        String formatted;
         try {
-            formated = jo.toString(4);
+            formatted = jo.toString(4);
         } catch (Throwable t) {
             return jo.toString();
         }
         if (!removeQuote)
-            return formated;
-        StringBuilder sb = new StringBuilder(formated);
+            return formatted;
+        StringBuilder sb = new StringBuilder(formatted);
         char currentChar, lastNonSpaceChar = 0;
         for (int i = 0; i < sb.length(); i++) {
             currentChar = sb.charAt(i);
@@ -2354,8 +2399,8 @@ public class Config {
                     lastNonSpaceChar = currentChar;
             }
         }
-        formated = sb.toString();
-        return formated;
+        formatted = sb.toString();
+        return formatted;
     }
 
     private static PendingIntent alarm7Pi;

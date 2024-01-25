@@ -64,6 +64,14 @@ public class RuntimeInfo {
         return joCurrent.opt(key.name());
     }
 
+    public String getString(String key) {
+        return joCurrent.optString(key);
+    }
+
+    public Long getLong(String key, long def) {
+        return joCurrent.optLong(key, def);
+    }
+
     public String getString(RuntimeInfoKey key) {
         return joCurrent.optString(key.name());
     }
@@ -73,8 +81,11 @@ public class RuntimeInfo {
     }
 
     public void put(RuntimeInfoKey key, Object value) {
+        put(key.name(), value);
+    }
+    public void put(String key, Object value) {
         try {
-            joCurrent.put(key.name(), value);
+            joCurrent.put(key, value);
             joAll.put(userId, joCurrent);
         } catch (JSONException e) {
             Log.i(TAG, "put err:");
