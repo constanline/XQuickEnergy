@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -59,4 +60,19 @@ public class Log {
     public static String getFormatTime() {
         return getFormatDateTime().split(" ")[1];
     }
+
+    /* //日期转换为时间戳 */
+    public static long timeToStamp(String timers) {
+        Date d = new Date();
+        long timeStemp = 0;
+        try {
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault());
+            d = sf.parse(timers);// 日期转换为时间戳
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        timeStemp = d.getTime();
+        return timeStemp;
+    }
+
 }

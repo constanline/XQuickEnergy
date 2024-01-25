@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -104,6 +105,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                             AntOrchard.start();
                             AntStall.start();
                             GreenFinance.start();
+                            AntBookRead.start();
+                            OmegakoiTown.start();
+                            ConsumeGold.start();
                         }
                     }
                     if (Config.collectEnergy() || Config.enableFarm()) {
@@ -117,7 +121,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                 }
             };
         }
-        try {         
+        try {
             if (handler == null) {
                 handler = new Handler();
                 if (Config.startAt7()) {
@@ -143,6 +147,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
                             RpcUtil.isInterrupted = false;
+                            PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.currentUid)) {
@@ -323,7 +328,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                 boolean force = intent.getBooleanExtra("force", false);
                 restartHook(AntForestToast.context, force);
             } else if ("com.eg.android.AlipayGphone.xqe.test".equals(action)) {
-                Log.recordLog("收到测试消息:");
+                Log.recordLog("收到测试消息" );
                 // XposedHook.restartHook(false);
             } else if ("com.eg.android.AlipayGphone.xqe.cancelAlarm7".equals(action)) {
                 Config.cancelAlarm7(AntForestToast.context, false);

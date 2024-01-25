@@ -223,6 +223,16 @@
 						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:text="@string/batch_rob_energy"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_batchRobEnergy" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
 						android:text="@string/collect_prop"
 						android:onClick="onClick"
 						android:minHeight="50dp"
@@ -1351,6 +1361,36 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_greenFinance" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/ant_book_read"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_antBookRead" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/consume_gold"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_consumeGold" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/omegakoi_town"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_omegakoiTown" />
 
 				</LinearLayout>
 
