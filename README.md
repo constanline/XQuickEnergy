@@ -1,4 +1,4 @@
-# XQuickEnergy
+# XQuickEnergy.
 
 [![License](https://img.shields.io/github/license/constanline/XQuickEnergy.svg)](LICENSE)
 [![Latest Release](https://img.shields.io/github/release/constanline/XQuickEnergy.svg)](../../releases)
