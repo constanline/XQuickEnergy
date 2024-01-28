@@ -32,7 +32,7 @@ public class Reserve {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
                         Thread.sleep(100);
                     if (Config.reserve()) {
                         animalReserve();
@@ -168,7 +168,7 @@ public class Reserve {
         }
     }
 
-    /* 净滩行动 */
+    /* 保护海洋 */
 
     private static void protectBeach() {
         try {
@@ -185,7 +185,7 @@ public class Reserve {
                     if (!jo.has("templateSubType"))
                         continue;
                     if (!"BEACH".equals(jo.getString("templateSubType"))
-                            && !"COOPERATE_SEA_TREE".equals(jo.getString("templateSubType")))
+                            && !"COOPERATE_SEA_TREE".equals(jo.getString("templateSubType"))&& !"SEA_ANIMAL".equals(jo.getString("templateSubType")))
                         continue;
                     if (!"AVAILABLE".equals(jo.getString("applyAction")))
                         continue;
@@ -236,10 +236,10 @@ public class Reserve {
                             appliedTimes = certNum + 1;
                         }
                     } else {
-                        Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#能量不足停止申请");
+                        Log.forest("保护海洋🏖️[" + jo.getString("cultivationName") + "]#能量不足停止申请");
                     }
                 } else {
-                    Log.forest("净滩行动🏖️[" + jo.getString("cultivationName") + "]#似乎没有了");
+                    Log.forest("保护海洋🏖️[" + jo.getString("cultivationName") + "]#似乎没有了");
                 }
             } else {
                 Log.recordLog(jo.getString("resultDesc"), s);
@@ -268,12 +268,12 @@ public class Reserve {
                         jo = awardInfos.getJSONObject(i);
                         award.append(jo.getString("name")).append("*").append(jo.getInt("num"));
                     }
-                    String str = "净滩行动🏖️[" + itemName + "]#第" + appliedTimes + "次"
+                    String str = "保护海洋🏖️[" + itemName + "]#第" + appliedTimes + "次"
                             + "-获得奖励" + award;
                     Log.forest(str);
                 } else {
                     Log.recordLog(jo.getString("resultDesc"), jo.toString());
-                    Log.forest("净滩行动🏖️[" + itemName + "]#发生未知错误，停止申请");
+                    Log.forest("保护海洋🏖️[" + itemName + "]#发生未知错误，停止申请");
                     break;
                 }
                 Thread.sleep(300);
