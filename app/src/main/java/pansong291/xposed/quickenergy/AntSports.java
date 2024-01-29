@@ -27,7 +27,7 @@ public class AntSports {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
                         Thread.sleep(100);
                     if (Config.openTreasureBox())
                         queryMyHomePage(loader);
@@ -38,7 +38,7 @@ public class AntSports {
                     if (Config.donateCharityCoin())
                         queryProjectList(loader);
 
-                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.currentUid))
+                    if (Config.minExchangeCount() > 0 && Statistics.canExchangeToday(FriendIdMap.getCurrentUid()))
                         queryWalkStep(loader);
 
                     if (Config.tiyubiz()) {
@@ -359,7 +359,7 @@ public class AntSports {
                     JSONObject walkDonateHomeModel = jo.getJSONObject("walkDonateHomeModel");
                     JSONObject walkUserInfoModel = walkDonateHomeModel.getJSONObject("walkUserInfoModel");
                     if (!walkUserInfoModel.has("exchangeFlag")) {
-                        Statistics.exchangeToday(FriendIdMap.currentUid);
+                        Statistics.exchangeToday(FriendIdMap.getCurrentUid());
                         return;
                     }
 
@@ -374,10 +374,10 @@ public class AntSports {
                         int userCount = donateExchangeResultModel.getInt("userCount");
                         double amount = donateExchangeResultModel.getJSONObject("userAmount").getDouble("amount");
                         Log.other("捐出活动❤️[" + userCount + "步]#兑换" + amount + "元公益金");
-                        Statistics.exchangeToday(FriendIdMap.currentUid);
+                        Statistics.exchangeToday(FriendIdMap.getCurrentUid());
 
                     } else if (s.contains("已捐步")) {
-                        Statistics.exchangeToday(FriendIdMap.currentUid);
+                        Statistics.exchangeToday(FriendIdMap.getCurrentUid());
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
                     }
@@ -521,7 +521,7 @@ public class AntSports {
                 int minGoStepCount = path.getInt("minGoStepCount");
                 if (jo.has("userPath")) {
                     JSONObject userPath = jo.getJSONObject("userPath");
-                    FriendIdMap.currentUid = userPath.getString("userId");
+                    FriendIdMap.setCurrentUid(userPath.getString("userId"));
                     String userPathRecordStatus = userPath.getString("userPathRecordStatus");
                     if ("COMPLETED".equals(userPathRecordStatus)) {
                         pathMapHomepage(pathId);

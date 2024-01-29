@@ -21,7 +21,7 @@ public class AntCooperate {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
+                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
                         Thread.sleep(100);
                     String s = AntCooperateRpcCall.queryUserCooperatePlantList();
                     if (s == null) {
@@ -42,7 +42,7 @@ public class AntCooperate {
                             String name = jo.getString("name");
                             int waterDayLimit = jo.getInt("waterDayLimit");
                             CooperationIdMap.putIdMap(cooperationId, name);
-                            if (!Statistics.canCooperateWaterToday(FriendIdMap.currentUid, cooperationId))
+                            if (!Statistics.canCooperateWaterToday(FriendIdMap.getCurrentUid(), cooperationId))
                                 continue;
                             int index = -1;
                             for (int j = 0; j < Config.getCooperateWaterList().size(); j++) {
@@ -58,7 +58,7 @@ public class AntCooperate {
                                 if (num > userCurrentEnergy)
                                     num = userCurrentEnergy;
                                 if (num > 0)
-                                    cooperateWater(FriendIdMap.currentUid, cooperationId, num, name);
+                                    cooperateWater(FriendIdMap.getCurrentUid(), cooperationId, num, name);
                             }
                         }
                     } else {
@@ -79,7 +79,7 @@ public class AntCooperate {
             JSONObject jo = new JSONObject(s);
             if ("SUCCESS".equals(jo.getString("resultCode"))) {
                 Log.forest("合种浇水🚿[" + name + "]" + jo.getString("barrageText"));
-                Statistics.cooperateWaterToday(FriendIdMap.currentUid, coopId);
+                Statistics.cooperateWaterToday(FriendIdMap.getCurrentUid(), coopId);
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }

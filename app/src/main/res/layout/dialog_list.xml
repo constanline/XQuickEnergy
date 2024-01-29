@@ -5,6 +5,38 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
+	<RelativeLayout
+		android:id="@+id/layout_batch_process"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="visible">
+
+		<Button
+			android:id="@+id/btn_select_invert"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/button"
+			android:minHeight="50dp"
+			android:padding="12dp"
+			android:text="@string/select_invert"
+			android:textAllCaps="false" />
+
+		<Button
+			android:id="@+id/btn_select_all"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/btn_select_invert"
+			android:background="@drawable/button"
+			android:minHeight="50dp"
+			android:padding="12dp"
+			android:text="@string/select_all"
+			android:textAllCaps="false" />
+
+	</RelativeLayout>
+
 	<ListView
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
