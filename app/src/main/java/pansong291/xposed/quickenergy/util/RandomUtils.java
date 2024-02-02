@@ -18,6 +18,12 @@ public class RandomUtils {
         return rnd.nextLong();
     }
 
+    public static long nextLong(long min, long max) {
+        if (min >= max) return min;
+        long o = max - min;
+        return rnd.nextLong() % o + min;
+    }
+
     public static double nextDouble() {
         return rnd.nextDouble();
     }

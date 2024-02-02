@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.RelativeLayout;
 import java.util.List;
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.AlipayUser;
@@ -26,7 +27,8 @@ import pansong291.xposed.quickenergy.util.FriendIdMap;
 
 public class ListDialog {
     static AlertDialog listDialog;
-    static Button btn_find_last, btn_find_next;
+    static Button btn_find_last, btn_find_next,
+            btn_select_all, btn_select_invert;
     static EditText edt_find;
     static ListView lv_list;
     static List<String> selectedList;
@@ -41,6 +43,8 @@ public class ListDialog {
 
     static AlertDialog optionsDialog;
     static AlertDialog deleteDialog;
+
+    static RelativeLayout layout_batch_process;
 
     public enum ListType {
         RADIO, CHECK, SHOW
@@ -77,7 +81,7 @@ public class ListDialog {
             listDialog = new AlertDialog.Builder(c)
                     .setTitle("title")
                     .setView(getListView(c))
-                    .setPositiveButton(c.getString(R.string.ok), null)
+                    .setPositiveButton(c.getString(R.string.close), null)
                     .create();
         listDialog.setOnShowListener(
                 new OnShowListener() {
@@ -90,6 +94,9 @@ public class ListDialog {
 
                     @Override
                     public void onShow(DialogInterface p1) {
+                        AlertDialog d = (AlertDialog) p1;
+                        layout_batch_process = d.findViewById(R.id.layout_batch_process);
+                        layout_batch_process.setVisibility(listType==ListType.CHECK&&countList==null?View.VISIBLE:View.GONE);
                         ListAdapter.get(c).notifyDataSetChanged();
                     }
                 }.setContext(c));
@@ -98,11 +105,19 @@ public class ListDialog {
 
     private static View getListView(Context c) {
         View v = LayoutInflater.from(c).inflate(R.layout.dialog_list, null);
-        OnBtnClickListener onBtnClickListener = new OnBtnClickListener();
+
         btn_find_last = v.findViewById(R.id.btn_find_last);
         btn_find_next = v.findViewById(R.id.btn_find_next);
+        btn_select_all = v.findViewById(R.id.btn_select_all);
+        btn_select_invert = v.findViewById(R.id.btn_select_invert);
+
+        OnBtnClickListener onBtnClickListener = new OnBtnClickListener();
+        BatchBtnOnClickListener batchBtnOnClickListener = new BatchBtnOnClickListener();
         btn_find_last.setOnClickListener(onBtnClickListener);
         btn_find_next.setOnClickListener(onBtnClickListener);
+        btn_select_all.setOnClickListener(batchBtnOnClickListener);
+        btn_select_invert.setOnClickListener(batchBtnOnClickListener);
+
         edt_find = v.findViewById(R.id.edt_find);
         lv_list = v.findViewById(R.id.lv_list);
         lv_list.setAdapter(ListAdapter.get(c));
@@ -348,6 +363,23 @@ public class ListDialog {
             } else {
                 lv_list.setSelection(index);
             }
+        }
+    }
+
+    static class BatchBtnOnClickListener implements View.OnClickListener {
+        @SuppressLint("NonConstantResourceId")
+        @Override
+        public void onClick(View p1) {
+            ListAdapter la = ListAdapter.get(p1.getContext());
+            switch (p1.getId()) {
+                case R.id.btn_select_all:
+                    la.selectAll();
+                    break;
+                case R.id.btn_select_invert:
+                    la.SelectInvert();
+                    break;
+            }
+            Config.hasChanged = true;
         }
     }
 

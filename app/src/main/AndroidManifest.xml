@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
 
     <application
         android:theme="@style/AppTheme"
@@ -28,6 +27,9 @@
         <meta-data
             android:name="xposedminversion"
             android:value="54"/>
+
+        <meta-data android:name="xposedscope" android:resource="@array/xposed_scopes" />
+
 
         <activity
             android:name=".ui.MainActivity"

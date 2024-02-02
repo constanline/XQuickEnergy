@@ -1,22 +1,34 @@
 package pansong291.xposed.quickenergy.util;
 
+import pansong291.xposed.quickenergy.hook.FriendManager;
+import pansong291.xposed.quickenergy.hook.XposedHook;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-// lzw add
-import de.robv.android.xposed.XposedBridge;
 
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();
 
     public static boolean shouldReload = false;
 
-    public static String currentUid = null;
+    private static String currentUid = null;
 
     private static Map<String, String> idMap;
     private static boolean hasChanged = false;
+
+    public static void setCurrentUid(String uid) {
+        if (currentUid == null || !currentUid.equals(uid)) {
+            currentUid = uid;
+            FriendManager.fillUser(XposedHook.classLoader);
+        }
+    }
+
+    public static String getCurrentUid() {
+        return currentUid;
+    }
 
     public static void putIdMapIfEmpty(String key, String value) {
         if (key == null || key.isEmpty())
@@ -111,12 +123,11 @@ public class FriendIdMap {
             shouldReload = false;
             idMap = new ConcurrentHashMap<>();
             String str = FileUtils.readFromFile(FileUtils.getFriendIdMapFile());
-            if (str != null && str.length() > 0) {
+            if (str != null && !str.isEmpty()) {
                 try {
                     String[] idSet = str.split("\n");
                     for (String s : idSet) {
-					// lzw add
-                        // XposedBridge.log(TAG+":"+s);
+                        // Log.i(TAG, s);
                         int ind = s.indexOf(":");
                         idMap.put(s.substring(0, ind), s.substring(ind + 1));
                     }

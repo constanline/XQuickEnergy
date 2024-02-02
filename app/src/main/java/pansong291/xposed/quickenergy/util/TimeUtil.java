@@ -46,4 +46,17 @@ public class TimeUtil {
         String max = TimeUtil.getTimeStr();
         return min.compareTo(strTime) <= 0 && max.compareTo(strTime) > 0;
     }
+
+    public static Calendar getToday() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c;
+    }
+
+    public static int getHour() {
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    }
 }

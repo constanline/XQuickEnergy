@@ -69,8 +69,10 @@
     <string name="limit_count_per_minute">限制每分钟收取个数</string>
     <string name="energy_rain">能量雨</string>
     <string name="give_energy_rain_list">赠送能量雨列表</string>
-    // lzw add
+// lzw add
     <string name="master_id_list">大号列表</string>
+    <string name="only_collect_energy_time">只收取能量时间</string>
+// lzw  add end
     <string name="sync_step_count">自定义同步步数</string>
     <string name="stay_awake_type">保活方式</string>
     <string name="use_double_card">使用双击卡</string>
@@ -92,8 +94,6 @@
     <string name="collect_watering_bubble">收金球</string>
     <string name="use_double_card_time">使用双击卡时间</string>
     <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
-    // lzw add
-    <string name="only_collect_energy_time">只收取能量时间</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
     <string name="visit_github">GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
@@ -107,8 +107,8 @@
     <string name="antdodo_collect">神奇物种开卡</string>
     <string name="ant_ocean">神奇海洋</string>
     <string name="water_friend_count">每次浇水克数(10 18 33 66)</string>
-    <string name="beach">净滩行动</string>
-    <string name="beach_list">净滩行动列表(总数)</string>
+    <string name="beach">保护海洋</string>
+    <string name="beach_list">保护海洋列表(总数)</string>
     <string name="test">测试</string>
     <string name="timeout_restart_type">超时重启方式</string>
     <string name="start_at_7_o_clock">7点时启动(实验性功能)</string>
@@ -124,9 +124,9 @@
     <string name="backup_runtime_log">备份runtime日志</string>
     <string name="language_simplified_chinese">界面始终使用中文</string>
     <string name="language_simplified_chinese_need_restart">重启当前app生效</string>
-    <string name="ant_orchard">施肥</string>
-    <string name="receive_orchard_task_award">收取施肥任务奖励</string>
-    <string name="orchard_spread_manure_count">施肥次数</string>
+    <string name="ant_orchard">开启农场</string>
+    <string name="receive_orchard_task_award">收取农场任务奖励</string>
+    <string name="orchard_spread_manure_count">农场每日施肥次数</string>
     <string name="collect_prop">收集道具</string>
     <string name="who_you_want_to_give_to">赠送道具给谁（赠送所有可送道具）</string>
     <string name="collect_sesame">收芝麻粒</string>
@@ -155,5 +155,11 @@
     <string name="total_cert_count">记录证书总数</string>
     <string name="send_friend_card">送好友卡片(赠送当前图鉴所有卡片)</string>
     <string name="batch_rob_energy">一键收能量</string>
+    <string name="select_all">全选</string>
+    <string name="select_invert">反选</string>
+    <string name="close">关闭</string>
+    <string name="ant_book_read">读书听书</string>
+    <string name="omegakoi_town">支小镇</string>
+    <string name="consume_gold">支付宝消费金</string>
 
 </resources>

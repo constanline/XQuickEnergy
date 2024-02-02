@@ -1,0 +1,5 @@
+<resources>
+    <string-array name="xposed_scopes" >
+        <item>com.eg.android.AlipayGphone</item>
+    </string-array>
+</resources>

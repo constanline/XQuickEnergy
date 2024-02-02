@@ -12,8 +12,7 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONObject;
-// lzw add
-import de.robv.android.xposed.XposedBridge;
+
 public class FileUtils {
     private static final String TAG = FileUtils.class.getCanonicalName();
     private static File mainDirectory;
@@ -51,8 +50,9 @@ public class FileUtils {
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
         if (mainDirectory == null) {
-		// lzw add
+// lzw add begin
             File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+// lzw add end
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
@@ -352,7 +352,7 @@ public class FileUtils {
         try {
             fr = new FileReader(f);
             char[] chs = new char[1024];
-            int len = 0;
+            int len;
             while ((len = fr.read(chs)) >= 0) {
                 result.append(chs, 0, len);
             }

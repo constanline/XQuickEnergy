@@ -35,6 +35,7 @@
 						android:layout_height="wrap_content"
 						android:text="@string/immediate_effect"
 						android:onClick="onClick"
+						android:checked="true"
 						android:minHeight="50dp"
 						android:id="@+id/sw_immediateEffect" />
 
@@ -185,7 +186,7 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_languageSimplifiedChinese" />
-// lzw add
+// lzw add begin
 					<Button
 						android:id="@+id/btn_masterIDList"
 						style="?android:attr/buttonBarButtonStyle"
@@ -199,7 +200,7 @@
 						android:paddingEnd="@dimen/setting_item_padding"
 						android:text="@string/master_id_list"
 						android:textAllCaps="false" />
-
+// lzw  add end
 				</LinearLayout>
 				<!--森林设置-->
 				<LinearLayout
@@ -217,7 +218,7 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectEnergy" />
-// lzw add
+// lzw add begin
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -231,7 +232,7 @@
 						android:id="@+id/btn_onlyCollectEnergyTime"
 						android:paddingStart="@dimen/setting_item_padding"
 						android:paddingEnd="@dimen/setting_item_padding" />
-
+// lzw  add end
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -1399,6 +1400,36 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_greenFinance" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/ant_book_read"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_antBookRead" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/consume_gold"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_consumeGold" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/omegakoi_town"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_omegakoiTown" />
 
 				</LinearLayout>
 

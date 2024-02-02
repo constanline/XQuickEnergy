@@ -73,8 +73,10 @@
     <string name="limit_count_per_minute">Limit count per minute</string>
     <string name="energy_rain">Energy Rain</string>
     <string name="give_energy_rain_list">Give energy rain list</string>
-    // lzw add
+// lzw add begin
     <string name="master_id_list">Master id list</string>
+    <string name="only_collect_energy_time">Only collect energy time</string>    
+// lzw  add end    
     <string name="sync_step_count">Sync Step Count</string>
     <string name="stay_awake_type">Stay awake type</string>
     <string name="use_double_card">Use double card</string>
@@ -95,8 +97,6 @@
     <string name="collect_prop">Collect prop</string>
     <string name="use_double_card_time">Use double card time</string>
     <string name="use_double_card_time_desc">For example: (0000-0100, 0700-0730) represents 0 to 1 p.m. and 7 to 7:30 a.m., when there is energy and the card is automatically used without using double click</string>
-    // lzw add
-    <string name="only_collect_energy_time">Only collect energy time</string>
     <string name="animal_sleep_time">Animal sleep time</string>
     <string name="visit_github">Visit GitHub</string>
     <string name="exchange_energy_double_click">Exchange energy double click</string>
@@ -159,5 +159,11 @@
     <string name="total_cert_count">Total cert count</string>
     <string name="send_friend_card">Send friend card</string>
     <string name="batch_rob_energy">Batch rob energy</string>
+    <string name="select_all">Select All</string>
+    <string name="select_invert">Select Invert</string>
+    <string name="close">Close</string>
+    <string name="ant_book_read">Ant book Read</string>
+    <string name="omegakoi_town">Omegakoi Town</string>
+    <string name="consume_gold">Consume Gold</string>
 
 </resources>

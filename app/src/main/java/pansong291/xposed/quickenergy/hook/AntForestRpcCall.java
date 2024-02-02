@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class AntForestRpcCall {
 
-    private static final String VERSION = "20230925";
+    private static final String VERSION = "20231208";
 
     private static String getUniqueId() {
             return String.valueOf(System.currentTimeMillis()) + RandomUtils.nextLong();
@@ -29,7 +29,7 @@ public class AntForestRpcCall {
 
     public static String queryHomePage() {
         return RpcUtil.request("alipay.antforest.forest.h5.queryHomePage",
-                "[{\"configVersionMap\":{\"wateringBubbleConfig\":\"0\"},\"skipWhackMole\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
+                "[{\"configVersionMap\":{\"wateringBubbleConfig\":\"10\"},\"skipWhackMole\":false,\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"version\":\""
                         + VERSION + "\"}]");
     }
 
