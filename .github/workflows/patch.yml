@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ "patch" ]
-#  pull_request:
-#    branches: [ "patch" ]
+  push:
+    branches: [ "masterid" ]  
 
 jobs:
   android:
