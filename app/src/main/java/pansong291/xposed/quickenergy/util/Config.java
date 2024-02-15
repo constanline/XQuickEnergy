@@ -1449,7 +1449,7 @@ public class Config {
             c.cooperateWaterList = new ArrayList<>();
         if (c.cooperateWaterNumList == null)
             c.cooperateWaterNumList = new ArrayList<>();
-        c.ancientTree = true;
+        c.ancientTree = false;
         c.reserve = true;
         if (c.reserveList == null)
             c.reserveList = new ArrayList<>();
@@ -1516,20 +1516,20 @@ public class Config {
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
 
-        c.enableStall = false;
-        c.stallAutoClose = false;
-        c.stallAutoOpen = false;
+        c.enableStall = true;
+        c.stallAutoClose = true;
+        c.stallAutoOpen = true;
         c.stallAutoTask = true;
-        c.stallReceiveAward = false;
+        c.stallReceiveAward = true;
         c.stallOpenType = true;
         c.stallOpenList = new ArrayList<>();
         c.stallWhiteList = new ArrayList<>();
         c.stallBlackList = new ArrayList<>();
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
-        c.stallDonate = false;
-        c.stallInviteRegister = false;
-        c.stallThrowManure = false;
+        c.stallDonate = true;
+        c.stallInviteRegister = true;
+        c.stallThrowManure = true;
         c.stallInviteShopList = new ArrayList<>();
 
         c.receivePoint = true;
