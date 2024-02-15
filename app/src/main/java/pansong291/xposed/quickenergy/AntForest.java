@@ -674,23 +674,46 @@ public class AntForest {
                         if ("fuhuo".equals(wateringBubble.getString("bizType"))) {
                             restTimes = wateringBubble.getJSONObject("extInfo").optInt("restTimes", 0);
                             if (wateringBubble.getBoolean("canProtect")) {
-                                if (Config.getDontHelpCollectList().contains(userId)) {
-                                    Log.recordLog("不复活[" + FriendIdMap.getNameById(userId) + "]", "");
-                                } else {
-                                    JSONObject joProtect = new JSONObject(AntForestRpcCall.protectBubble(userId));
-                                    if ("SUCCESS".equals(joProtect.getString("resultCode"))) {
-                                        int vitalityAmount = joProtect.optInt("vitalityAmount", 0);
-                                        int fullEnergy = wateringBubble.optInt("fullEnergy", 0);
-                                        String str = "复活能量🚑[" + FriendIdMap.getNameById(userId) + "-" + fullEnergy
-                                                + "g]" + (vitalityAmount > 0 ? "#活力值+" + vitalityAmount : "");
-                                        Log.forest(str);
-                                        totalHelpCollected += fullEnergy;
-                                        Statistics.addData(Statistics.DataType.HELPED, fullEnergy);
-                                    } else {
-                                        Log.recordLog(joProtect.getString("resultDesc"), joProtect.toString());
+// lzw add begin                                
+                                if(Config.isMonday()) {
+                                    Log.forest("今天是周一,只复活小号列表");
+                                    List<String> list = Config.getSubIDList();
+                                    if (list.contains(userId)) {
+                                        JSONObject joProtect = new JSONObject(AntForestRpcCall.protectBubble(userId));
+                                        if ("SUCCESS".equals(joProtect.getString("resultCode"))) {
+                                            int vitalityAmount = joProtect.optInt("vitalityAmount", 0);
+                                            int fullEnergy = wateringBubble.optInt("fullEnergy", 0);
+                                            String str = "复活能量🚑[" + FriendIdMap.getNameById(userId) + "-" + fullEnergy
+                                                    + "g]" + (vitalityAmount > 0 ? "#活力值+" + vitalityAmount : "");
+                                            Log.forest(str);
+                                            totalHelpCollected += fullEnergy;
+                                            Statistics.addData(Statistics.DataType.HELPED, fullEnergy);
+                                        } else {
+                                            Log.recordLog(joProtect.getString("resultDesc"), joProtect.toString());
+                                        }                                        
                                     }
+                                } else {
+                                    Log.forest("今天不是周一,复活其他人");
+                                    if (Config.getDontHelpCollectList().contains(userId)) {
+                                        Log.recordLog("不复活[" + FriendIdMap.getNameById(userId) + "]", "");
+                                    } else {
+                                        JSONObject joProtect = new JSONObject(AntForestRpcCall.protectBubble(userId));
+                                        if ("SUCCESS".equals(joProtect.getString("resultCode"))) {
+                                            int vitalityAmount = joProtect.optInt("vitalityAmount", 0);
+                                            int fullEnergy = wateringBubble.optInt("fullEnergy", 0);
+                                            String str = "复活能量🚑[" + FriendIdMap.getNameById(userId) + "-" + fullEnergy
+                                                    + "g]" + (vitalityAmount > 0 ? "#活力值+" + vitalityAmount : "");
+                                            Log.forest(str);
+                                            totalHelpCollected += fullEnergy;
+                                            Statistics.addData(Statistics.DataType.HELPED, fullEnergy);
+                                        } else {
+                                            Log.recordLog(joProtect.getString("resultDesc"), joProtect.toString());
+                                        }
+                                    }                                    
                                 }
+
                             }
+// lzw add end
                             break;
                         }
                     }
@@ -1190,27 +1213,35 @@ public class AntForest {
                     List<String> list = Config.getGiveEnergyRainList();
                     String userId;
                     boolean granted = false;
+// lzw add begin
+                    List<String> canSendlist = new ArrayList<>();
                     for (int j = 0; j < grantInfos.length(); j++) {
                         JSONObject grantInfo = grantInfos.getJSONObject(j);
                         if (grantInfo.getBoolean("canGrantedStatus")) {
                             userId = grantInfo.getString("userId");
-                            if (list.contains(userId)) {
-                                JSONObject joEnergyRainChance = new JSONObject(
-                                        AntForestRpcCall.grantEnergyRainChance(userId));
-                                Log.recordLog("尝试送能量雨给【" + FriendIdMap.getNameById(userId) + "】");
-                                granted = true;
-                                // 20230724能量雨调整为列表中没有可赠送的好友则不赠送
-                                if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
-                                    Log.forest("送能量雨🌧️[" + FriendIdMap.getNameById(userId) + "]#"
-                                            + FriendIdMap.getNameById(FriendIdMap.getCurrentUid()));
-                                    startEnergyRain();
-                                } else {
-                                    Log.recordLog("送能量雨失败", joEnergyRainChance.toString());
-                                }
-                                break;
-                            }
+                            canSendlist.add(userId);
                         }
                     }
+
+                    for (int k = 0; k < list.size(); k++) {
+                        userId = list.get(k);
+                        if (canSendlist.contains(userId)) {
+                            JSONObject joEnergyRainChance = new JSONObject(
+                                    AntForestRpcCall.grantEnergyRainChance(userId));
+                            Log.recordLog("尝试送能量雨给【" + FriendIdMap.getNameById(userId) + "】");
+                            granted = true;
+                            // 20230724能量雨调整为列表中没有可赠送的好友则不赠送
+                            if ("SUCCESS".equals(joEnergyRainChance.getString("resultCode"))) {
+                                Log.forest("送能量雨🌧️[" + FriendIdMap.getNameById(userId) + "]#"
+                                        + FriendIdMap.getNameById(FriendIdMap.getCurrentUid()));
+                                startEnergyRain();
+                            } else {
+                                Log.recordLog("送能量雨失败", joEnergyRainChance.toString());
+                            }
+                            break;
+                        }
+                    }
+// lzw add end
                     if (!granted) {
                         Log.recordLog("没有可以送的用户");
                     }

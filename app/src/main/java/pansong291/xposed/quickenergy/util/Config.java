@@ -299,11 +299,17 @@ public class Config {
 // lzw add begin
     public static final String jn_onlyCollectEnergyTime = "onlyCollectEnergyTime";
     public static final String jn_matserIDList = "matserIDList";	
+    public static final String jn_subIDList = "subIDList";	
     private List<String> onlyCollectEnergyTime;
     private List<String> matserIDList;
+    private List<String> subIDList;
 
     public static List<String> getMasterIDList() {
         return getConfig().matserIDList;
+    }
+
+    public static List<String> getSubIDList() {
+        return getConfig().subIDList;
     }
 
     public static void setOnlyCollectEnergyTime(String i) {
@@ -1379,6 +1385,15 @@ public class Config {
         return getConfig().omegakoiTown;
     }
 
+// lzw add begin
+    public static boolean isMonday() {
+        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String week = sdf_week.format(new Date());
+        Log.i(TAG, "today is:" + week);
+        return "星期一".equals(week);
+    }
+// lzw add end
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1419,12 +1434,14 @@ public class Config {
         c.limitCount = 50;
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
-        c.doubleCardTime.add("0700-0730");
+        c.doubleCardTime.add("0720-0730");
 // lzw add begin	
         c.onlyCollectEnergyTime = new ArrayList<>();
         c.onlyCollectEnergyTime.add("0720-0725");
         if (c.matserIDList == null)
-            c.matserIDList = new ArrayList<>();		
+            c.matserIDList = new ArrayList<>();
+        if (c.subIDList == null)
+            c.subIDList = new ArrayList<>();	            
 // lzw add end
         c.doubleCountLimit = 6;
         c.advanceTime = 0;
@@ -1645,6 +1662,17 @@ public class Config {
                 }
             }
             Log.i(TAG, jn_matserIDList + ":" + String.join(",", config.matserIDList));
+
+            config.subIDList = new ArrayList<>();
+            if (jo.has(jn_subIDList)) {
+                ja = jo.getJSONArray(jn_subIDList);
+                for (int i = 0; i < ja.length(); i++) {
+                    jaa = ja.getJSONArray(i);
+                    config.subIDList.add(jaa.getString(0));
+                }
+            }
+            Log.i(TAG, jn_subIDList + ":" + String.join(",", config.subIDList));
+
 // lzw add end
             config.doubleCountLimit = jo.optInt("doubleCountLimit", 6);
             Log.i(TAG, "doubleCountLimit" + ":" + config.doubleCountLimit);
@@ -2237,6 +2265,15 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_matserIDList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.subIDList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.subIDList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_subIDList, ja);
+
 // lzw add end
 
             jo.put("exchangeEnergyDoubleClick", config.exchangeEnergyDoubleClick);

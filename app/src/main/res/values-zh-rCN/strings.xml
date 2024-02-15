@@ -71,6 +71,7 @@
     <string name="give_energy_rain_list">赠送能量雨列表</string>
 // lzw add
     <string name="master_id_list">大号列表</string>
+    <string name="sub_id_list">小号列表</string>
     <string name="only_collect_energy_time">只收取能量时间</string>
 // lzw  add end
     <string name="sync_step_count">自定义同步步数</string>

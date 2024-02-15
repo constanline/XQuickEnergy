@@ -710,6 +710,9 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_masterIDList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getMasterIDList(), null);
                     break;
+                case R.id.btn_subIDList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getSubIDList(), null);
+                    break;                    
 // lzw add end
                 case R.id.btn_reserveList:
                     ListDialog.show(this, btn.getText(), AlipayReserve.getList(), Config.getReserveList(),
