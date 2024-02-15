@@ -2012,7 +2012,6 @@ public class AntForest {
                     }
                 }
 // lzw  add end
-
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);

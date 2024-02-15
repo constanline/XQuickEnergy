@@ -1,0 +1,66 @@
+name: Android CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "patch" ]
+#  pull_request:
+#    branches: [ "patch" ]
+
+jobs:
+  android:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3.5.3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3.3.1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease --build-cache --parallel --no-daemon --warning-mode all
+
+      - name: Sign app APK
+        uses: ilharp/sign-android-release@v1.0.4
+        id: sign_app
+        with:
+          releaseDir: app/build/outputs/apk/release/
+          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: 33.0.0
+
+      - name: Get versionName from build.gradle
+        id: get_version
+        run: |
+          VERSION_NAME=$(grep -oP 'versionName "\K(.*?)(?=")' app/build.gradle)
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+
+      - name: Upload Apk to Release Action
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          repo_token: ${{ github.token }}
+          file: ${{ steps.sign_app.outputs.signedFile }}
+          asset_name: xqe-patch-v${{ env.VERSION_NAME }}.apk
+          tag: v${{ env.VERSION_NAME }}
