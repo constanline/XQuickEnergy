@@ -15,6 +15,9 @@ public class EditDialog {
         FARM_GAME_TIME, ANIMAL_SLEEP_TIME, MIN_EXCHANGE_COUNT, LATEST_EXCHANGE_TIME, SYNC_STEP_COUNT,
         WAIT_WHEN_EXCEPTION, EXCHANGE_ENERGY_DOUBLE_CLICK_COUNT, ORCHARD_SPREAD_MANURE_COUNT,
         STALL_ALLOW_OPEN_TIME, STALL_SELF_OPEN_TIME
+// lzw add begin
+        ,ONLY_COLLECT_ENERGY_TIME
+// lzw add end
     }
 
     private static EditMode mode;
@@ -85,7 +88,11 @@ public class EditDialog {
                                         case DOUBLE_CARD_TIME:
                                             Config.setDoubleCardTime(edt.getText().toString());
                                             break;
-
+// lzw add begin
+                                        case ONLY_COLLECT_ENERGY_TIME:
+                                            Config.setOnlyCollectEnergyTime(edt.getText().toString());
+                                            break;
+// lzw add end
                                         case DOUBLE_COUNT_LIMIT:
                                             if (i < 0)
                                                 i = 0;
@@ -204,7 +211,11 @@ public class EditDialog {
             case DOUBLE_CARD_TIME:
                 str = Config.doubleCardTime();
                 break;
-
+// lzw add begin
+            case ONLY_COLLECT_ENERGY_TIME:
+                str = Config.onlyCollectEnergyTime();
+                break;
+// lzw add end
             case DOUBLE_COUNT_LIMIT:
                 str = String.valueOf(Config.getDoubleCountLimit());
                 break;

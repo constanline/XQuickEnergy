@@ -296,6 +296,32 @@ public class Config {
 
     /* base */
     private static volatile Config config;
+// lzw add begin
+    public static final String jn_onlyCollectEnergyTime = "onlyCollectEnergyTime";
+    public static final String jn_matserIDList = "matserIDList";	
+    private List<String> onlyCollectEnergyTime;
+    private List<String> matserIDList;
+
+    public static List<String> getMasterIDList() {
+        return getConfig().matserIDList;
+    }
+
+    public static void setOnlyCollectEnergyTime(String i) {
+        getConfig().onlyCollectEnergyTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+    public static String onlyCollectEnergyTime() {
+        return String.join(",", getConfig().onlyCollectEnergyTime);
+    }
+
+    public static boolean isOnlyCollectEnergyTime() {
+        for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
+            if (checkInTimeSpan(onlyCollectEnergyTime))
+                return true;
+        }
+        return false;
+    }
+// lzw add end
 
     /* application */
     public static void setImmediateEffect(boolean b) {
@@ -1394,6 +1420,12 @@ public class Config {
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
         c.doubleCardTime.add("0700-0730");
+// lzw add begin	
+        c.onlyCollectEnergyTime = new ArrayList<>();
+        c.onlyCollectEnergyTime.add("0720-0725");
+        if (c.matserIDList == null)
+            c.matserIDList = new ArrayList<>();		
+// lzw add end
         c.doubleCountLimit = 6;
         c.advanceTime = 0;
         c.collectInterval = 100;
@@ -1431,13 +1463,15 @@ public class Config {
         c.energyRain = true;
         if (c.giveEnergyRainList == null)
             c.giveEnergyRainList = new ArrayList<>();
+			
+
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
         c.antOcean = true;
         c.userPatrol = true;
-        c.animalConsumeProp = true;
+        c.animalConsumeProp = false;
         c.collectGiftBox = true;
         c.totalCertCount = false;
 
@@ -1600,7 +1634,18 @@ public class Config {
             Log.i(TAG, "doubleCard" + ":" + config.doubleCard);
 
             config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0730").split(","));
-
+// lzw add begin
+            config.onlyCollectEnergyTime = Arrays.asList(jo.optString(jn_onlyCollectEnergyTime, "0720-0725").split(","));
+            config.matserIDList = new ArrayList<>();
+            if (jo.has(jn_matserIDList)) {
+                ja = jo.getJSONArray(jn_matserIDList);
+                for (int i = 0; i < ja.length(); i++) {
+                    jaa = ja.getJSONArray(i);
+                    config.matserIDList.add(jaa.getString(0));
+                }
+            }
+            Log.i(TAG, jn_matserIDList + ":" + String.join(",", config.matserIDList));
+// lzw add end
             config.doubleCountLimit = jo.optInt("doubleCountLimit", 6);
             Log.i(TAG, "doubleCountLimit" + ":" + config.doubleCountLimit);
 
@@ -2181,6 +2226,18 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_giveEnergyRainList, ja);
+			
+// lzw add begin
+            jo.put(jn_onlyCollectEnergyTime, String.join(",", config.onlyCollectEnergyTime));
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.matserIDList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.matserIDList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_matserIDList, ja);
+// lzw add end
 
             jo.put("exchangeEnergyDoubleClick", config.exchangeEnergyDoubleClick);
 

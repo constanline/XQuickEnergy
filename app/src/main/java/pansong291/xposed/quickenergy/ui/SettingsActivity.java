@@ -655,7 +655,12 @@ public class SettingsActivity extends Activity {
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_CARD_TIME,
                             this.getString(R.string.use_double_card_time_desc));
                     break;
-
+// lzw add begin
+                case R.id.btn_onlyCollectEnergyTime:
+                    EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.ONLY_COLLECT_ENERGY_TIME,
+                            this.getString(R.string.use_double_card_time_desc));
+                    break;
+// lzw add end
                 case R.id.btn_doubleCountLimit:
                     EditDialog.showEditDialog(this, btn.getText(), EditDialog.EditMode.DOUBLE_COUNT_LIMIT);
                     break;
@@ -701,7 +706,11 @@ public class SettingsActivity extends Activity {
                 case R.id.btn_giveEnergyRainList:
                     ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getGiveEnergyRainList(), null);
                     break;
-
+// lzw add begin
+                case R.id.btn_masterIDList:
+                    ListDialog.show(this, btn.getText(), AlipayUser.getList(), Config.getMasterIDList(), null);
+                    break;
+// lzw add end
                 case R.id.btn_reserveList:
                     ListDialog.show(this, btn.getText(), AlipayReserve.getList(), Config.getReserveList(),
                             Config.getReserveCountList());

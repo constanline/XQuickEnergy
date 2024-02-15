@@ -73,6 +73,10 @@
     <string name="limit_count_per_minute">Limit count per minute</string>
     <string name="energy_rain">Energy Rain</string>
     <string name="give_energy_rain_list">Give energy rain list</string>
+// lzw add begin
+    <string name="master_id_list">Master id list</string>
+    <string name="only_collect_energy_time">Only collect energy time</string>    
+// lzw  add end    
     <string name="sync_step_count">Sync Step Count</string>
     <string name="stay_awake_type">Stay awake type</string>
     <string name="use_double_card">Use double card</string>

@@ -390,28 +390,40 @@ public class AntForest {
                 }
                 if (Config.collectEnergy()) {
                     Log.recordLog("进入[" + selfName + "]的蚂蚁森林", "");
-                    for (int i = 0; i < jaBubbles.length(); i++) {
-                        JSONObject bubble = jaBubbles.getJSONObject(i);
-                        long bubbleId = bubble.getLong("id");
-                        switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
-                            case AVAILABLE:
-                                if (Config.getDontCollectList().contains(selfId))
-                                    Log.recordLog("不收取[" + selfName + "]", ", userId=" + selfId);
-                                else
-                                    collectedEnergy += collectEnergy(selfId, bubbleId, selfName, null);
-                                break;
-
-                            case WAITING:
-                                if (Config.getDontCollectList().contains(selfId))
+// lzw add begin
+                    List<String> list = Config.getMasterIDList();
+                    if (list.contains(FriendIdMap.getCurrentUid())) {
+                        //String msg = "当前用户id:"+FriendIdMap.getCurrentUid()+":"+FriendIdMap.getNameById(FriendIdMap.getCurrentUid())+",是大号";
+                        //AntForestToast.show(msg);
+                        for (int i = 0; i < jaBubbles.length(); i++) {
+                            JSONObject bubble = jaBubbles.getJSONObject(i);
+                            long bubbleId = bubble.getLong("id");
+                            switch (CollectStatus.valueOf(bubble.getString("collectStatus"))) {
+                                case AVAILABLE:
+                                    if (Config.getDontCollectList().contains(selfId))
+                                        Log.recordLog("不收取[" + selfName + "]", ", userId=" + selfId);
+                                    else
+                                        collectedEnergy += collectEnergy(selfId, bubbleId, selfName, null);
                                     break;
-                                long produceTime = bubble.getLong("produceTime");
-                                if (produceTime - serverTime < Config.checkInterval())
-                                    execute(selfId, null, bubbleId, produceTime);
-                                else
-                                    setLaterTime(produceTime);
-                                break;
+
+                                case WAITING:
+                                    if (Config.getDontCollectList().contains(selfId))
+                                        break;
+                                    long produceTime = bubble.getLong("produceTime");
+                                    if (produceTime - serverTime < Config.checkInterval())
+                                        execute(selfId, null, bubbleId, produceTime);
+                                    else 
+                                        setLaterTime(produceTime);
+                                    break;
+                            }
                         }
                     }
+                    else
+                    {
+                        String msg = "当前用户id:"+FriendIdMap.getCurrentUid()+":"+FriendIdMap.getNameById(FriendIdMap.getCurrentUid())+",不是大号";
+                        AntForestToast.show(msg);
+                    }
+// lzw  add end
                 }
                 if (Config.collectWateringBubble()) {
                     JSONArray wateringBubbles = joHomePage.has("wateringBubbles")
@@ -556,6 +568,17 @@ public class AntForest {
     }
 
     private static void canCollectEnergy(String userId) {
+// lzw  add begin	
+        List<String> list = Config.getMasterIDList();
+        if (list.contains(FriendIdMap.getCurrentUid())) {
+            String msg = "当前用户id:"+FriendIdMap.getCurrentUid()+":"+FriendIdMap.getNameById(FriendIdMap.getCurrentUid())+",是大号，收取能量";
+            Log.forest(msg);
+        } else {
+            String msg = "当前用户id:"+FriendIdMap.getCurrentUid()+":"+FriendIdMap.getNameById(FriendIdMap.getCurrentUid())+",不是大号，不收取能量";
+            Log.forest(msg);
+            return;
+        }
+// lzw  add end
         if (RuntimeInfo.getInstance().getLong(RuntimeInfo.RuntimeInfoKey.ForestPauseTime) > System
                 .currentTimeMillis()) {
             Log.recordLog("异常等待中，暂不执行检测！", "");
@@ -1973,16 +1996,22 @@ public class AntForest {
                 Log.recordLog("[" + FriendIdMap.getNameById(userId) + "]蹲点收取开始" + collectTaskCount, "");
                 collectTaskCount--;
                 // 20230725收取失败不再继续尝试
-//                collectEnergy(userId, bubbleId, bizNo);
-
-                long time = System.currentTimeMillis();
-                boolean first = true;
-                while (first || System.currentTimeMillis() - time < Config.collectTimeout()) {
-                    first = false;
-                    if (collectEnergy(userId, bubbleId, bizNo) > 0)
-                        break;
-                    sleep(500);
+// lzw add begin
+                int collected = collectEnergy(userId, bubbleId, bizNo);
+                // 只定点收取大号的
+                List<String> list = Config.getMasterIDList();
+                if (list.contains(FriendIdMap.getCurrentUid())) {
+                    if ( collected <= 0 )
+                    {   Log.recordLog("没有收到，开始循环收取", "");
+                        long time = System.currentTimeMillis();
+                        while (System.currentTimeMillis() - time < Config.collectTimeout()) {
+                            if (collectEnergy(userId, bubbleId, bizNo) > 0)
+                                break;
+                            sleep(500);
+                        }
+                    }
                 }
+// lzw  add end
             } catch (Throwable t) {
                 Log.i(TAG, "BubbleTimerTask.run err:");
                 Log.printStackTrace(TAG, t);
