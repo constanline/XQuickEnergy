@@ -90,7 +90,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
 // lzw add begin
                         if (false == Config.isOnlyCollectEnergyTime()) {
-                            Log.other("非只收能量时间段");
 // lzw add end
                             AntCooperate.start();
                             AntFarm.start();

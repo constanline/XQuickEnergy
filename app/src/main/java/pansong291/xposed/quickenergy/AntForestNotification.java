@@ -98,8 +98,9 @@ public class AntForestNotification {
     }
 
     private static void innerSetContentText() {
+        String preContent = (nextScanTime > 0) ? "下次扫描时间" + TimeUtil.getTimeStr(nextScanTime) + "\n" : "";
         Notification.BigTextStyle style = new Notification.BigTextStyle();
-        style.bigText(contentText);
+        style.bigText(preContent + contentText);
 //        Notification.InboxStyle style = new Notification.InboxStyle();
 //        style.addLine(preContent);
 //        style.addLine(contentText);

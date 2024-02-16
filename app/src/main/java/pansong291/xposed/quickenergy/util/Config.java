@@ -322,9 +322,12 @@ public class Config {
 
     public static boolean isOnlyCollectEnergyTime() {
         for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
-            if (checkInTimeSpan(onlyCollectEnergyTime))
+            if (checkInTimeSpan(onlyCollectEnergyTime)) {
+                Log.other("只收能量时间段");
                 return true;
+            }
         }
+        Log.other("非只收能量时间段");
         return false;
     }
 // lzw add end

@@ -62,5 +62,5 @@ jobs:
         with:
           repo_token: ${{ github.token }}
           file: ${{ steps.sign_app.outputs.signedFile }}
-          asset_name: xqe-patch-v${{ env.VERSION_NAME }}.apk
+          asset_name: xqe-release-v${{ env.VERSION_NAME }}.apk
           tag: v${{ env.VERSION_NAME }}
