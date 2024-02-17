@@ -1226,13 +1226,18 @@ public class AntForest {
                     }
 
                     String next_userId;
+                    // Log.forest("送能量雨🌧️[当前用户id:" + FriendIdMap.getCurrentUid() + "]");
                     for (int k = 0; k < list.size(); k++) {
-                        if (FriendIdMap.getCurrentUid() != list.get(k)) {
+                        if (false == FriendIdMap.getCurrentUid().equals(list.get(k))) {
+                            // Log.forest("送能量雨🌧️[非当前用户id:" + list.get(k) + "]");
                             continue;
                         }
+                        // Log.forest("送能量雨🌧️[找到当前用户id:" + list.get(k) + "]");
                         for (int m = 1; m < list.size(); m++) {
                             int next_idx = (k + m) % list.size();
+                            // Log.forest("送能量雨🌧️[下一个用户id索引:" + next_idx + "]");
                             next_userId = list.get(next_idx);
+                            // Log.forest("送能量雨🌧️[下一个用户id:" + next_userId + "]");
                             if (canSendlist.contains(next_userId)) {
                                 JSONObject joEnergyRainChance = new JSONObject(
                                         AntForestRpcCall.grantEnergyRainChance(next_userId));
