@@ -50,7 +50,9 @@ public class FileUtils {
     @SuppressWarnings("deprecation")
     public static File getMainDirectoryFile() {
         if (mainDirectory == null) {
-            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+// lzw add begin
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+// lzw add end
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }

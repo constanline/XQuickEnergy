@@ -296,6 +296,41 @@ public class Config {
 
     /* base */
     private static volatile Config config;
+// lzw add begin
+    public static final String jn_onlyCollectEnergyTime = "onlyCollectEnergyTime";
+    public static final String jn_matserIDList = "matserIDList";	
+    public static final String jn_subIDList = "subIDList";	
+    private List<String> onlyCollectEnergyTime;
+    private List<String> matserIDList;
+    private List<String> subIDList;
+
+    public static List<String> getMasterIDList() {
+        return getConfig().matserIDList;
+    }
+
+    public static List<String> getSubIDList() {
+        return getConfig().subIDList;
+    }
+
+    public static void setOnlyCollectEnergyTime(String i) {
+        getConfig().onlyCollectEnergyTime = Arrays.asList(i.split(","));
+        hasChanged = true;
+    }
+    public static String onlyCollectEnergyTime() {
+        return String.join(",", getConfig().onlyCollectEnergyTime);
+    }
+
+    public static boolean isOnlyCollectEnergyTime() {
+        for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
+            if (checkInTimeSpan(onlyCollectEnergyTime)) {
+                Log.other("只收能量时间段");
+                return true;
+            }
+        }
+        Log.other("非只收能量时间段");
+        return false;
+    }
+// lzw add end
 
     /* application */
     public static void setImmediateEffect(boolean b) {
@@ -1353,6 +1388,15 @@ public class Config {
         return getConfig().omegakoiTown;
     }
 
+// lzw add begin
+    public static boolean isMonday() {
+        SimpleDateFormat sdf_week = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String week = sdf_week.format(new Date());
+        Log.i(TAG, "today is:" + week);
+        return "星期一".equals(week);
+    }
+// lzw add end
+
     /* base */
     private static synchronized Config getConfig() {
         if (config == null || shouldReload && config.immediateEffect) {
@@ -1393,7 +1437,15 @@ public class Config {
         c.limitCount = 50;
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
-        c.doubleCardTime.add("0700-0730");
+        c.doubleCardTime.add("0720-0730");
+// lzw add begin	
+        c.onlyCollectEnergyTime = new ArrayList<>();
+        c.onlyCollectEnergyTime.add("0720-0725");
+        if (c.matserIDList == null)
+            c.matserIDList = new ArrayList<>();
+        if (c.subIDList == null)
+            c.subIDList = new ArrayList<>();	            
+// lzw add end
         c.doubleCountLimit = 6;
         c.advanceTime = 0;
         c.collectInterval = 100;
@@ -1417,7 +1469,7 @@ public class Config {
             c.cooperateWaterList = new ArrayList<>();
         if (c.cooperateWaterNumList == null)
             c.cooperateWaterNumList = new ArrayList<>();
-        c.ancientTree = true;
+        c.ancientTree = false;
         c.reserve = true;
         if (c.reserveList == null)
             c.reserveList = new ArrayList<>();
@@ -1431,13 +1483,15 @@ public class Config {
         c.energyRain = true;
         if (c.giveEnergyRainList == null)
             c.giveEnergyRainList = new ArrayList<>();
+			
+
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
         c.antOcean = true;
         c.userPatrol = true;
-        c.animalConsumeProp = true;
+        c.animalConsumeProp = false;
         c.collectGiftBox = true;
         c.totalCertCount = false;
 
@@ -1482,20 +1536,20 @@ public class Config {
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
 
-        c.enableStall = false;
-        c.stallAutoClose = false;
-        c.stallAutoOpen = false;
+        c.enableStall = true;
+        c.stallAutoClose = true;
+        c.stallAutoOpen = true;
         c.stallAutoTask = true;
-        c.stallReceiveAward = false;
+        c.stallReceiveAward = true;
         c.stallOpenType = true;
         c.stallOpenList = new ArrayList<>();
         c.stallWhiteList = new ArrayList<>();
         c.stallBlackList = new ArrayList<>();
         c.stallAllowOpenTime = 121;
         c.stallSelfOpenTime = 120;
-        c.stallDonate = false;
-        c.stallInviteRegister = false;
-        c.stallThrowManure = false;
+        c.stallDonate = true;
+        c.stallInviteRegister = true;
+        c.stallThrowManure = true;
         c.stallInviteShopList = new ArrayList<>();
 
         c.receivePoint = true;
@@ -1600,7 +1654,29 @@ public class Config {
             Log.i(TAG, "doubleCard" + ":" + config.doubleCard);
 
             config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0730").split(","));
+// lzw add begin
+            config.onlyCollectEnergyTime = Arrays.asList(jo.optString(jn_onlyCollectEnergyTime, "0720-0725").split(","));
+            config.matserIDList = new ArrayList<>();
+            if (jo.has(jn_matserIDList)) {
+                ja = jo.getJSONArray(jn_matserIDList);
+                for (int i = 0; i < ja.length(); i++) {
+                    jaa = ja.getJSONArray(i);
+                    config.matserIDList.add(jaa.getString(0));
+                }
+            }
+            Log.i(TAG, jn_matserIDList + ":" + String.join(",", config.matserIDList));
 
+            config.subIDList = new ArrayList<>();
+            if (jo.has(jn_subIDList)) {
+                ja = jo.getJSONArray(jn_subIDList);
+                for (int i = 0; i < ja.length(); i++) {
+                    jaa = ja.getJSONArray(i);
+                    config.subIDList.add(jaa.getString(0));
+                }
+            }
+            Log.i(TAG, jn_subIDList + ":" + String.join(",", config.subIDList));
+
+// lzw add end
             config.doubleCountLimit = jo.optInt("doubleCountLimit", 6);
             Log.i(TAG, "doubleCountLimit" + ":" + config.doubleCountLimit);
 
@@ -2181,6 +2257,27 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_giveEnergyRainList, ja);
+			
+// lzw add begin
+            jo.put(jn_onlyCollectEnergyTime, String.join(",", config.onlyCollectEnergyTime));
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.matserIDList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.matserIDList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_matserIDList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.subIDList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.subIDList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_subIDList, ja);
+
+// lzw add end
 
             jo.put("exchangeEnergyDoubleClick", config.exchangeEnergyDoubleClick);
 

@@ -88,13 +88,13 @@ public class XposedHook implements IXposedHookLoadPackage {
 
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
-
-                        if (TimeUtil.getTimeStr().compareTo("0700") < 0
-                                || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+// lzw add begin
+                        if (false == Config.isOnlyCollectEnergyTime()) {
+// lzw add end
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();
-                            if (TimeUtil.getTimeStr().compareTo("0800") >= 0) {
+                            if (TimeUtil.getTimeStr().compareTo("0700") >= 0) {
                                 AncientTree.start();
                                 AntBookRead.start();
                             }

@@ -1,8 +1,6 @@
 # XQuickEnergy
 
-[![License](https://img.shields.io/github/license/constanline/XQuickEnergy.svg)](LICENSE)
-[![Latest Release](https://img.shields.io/github/release/constanline/XQuickEnergy.svg)](../../releases)
-[![All Releases Download](https://img.shields.io/github/downloads/constanline/XQuickEnergy/total.svg)](../../releases)
+Fork自https://github.com/constanline/XQuickEnergy
 
 ## 主要功能
 感谢蚂蚁森林对绿化事业的贡献。快速收取蚂蚁森林能量，也为祖国的绿化事业出一份微薄之力~
@@ -33,7 +31,10 @@
 - [x] 高版本API存储问题
 
 
-***目前没有大小号、号码切换的计划***
+添加了大小号设置
+能量雨按照顺序赠送，可以配合Autojs
+小号不收取能量
+周一大号只复活小号能量
 
 ## 使用说明
 

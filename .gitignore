@@ -61,3 +61,7 @@ fastlane/readme.md
 
 Xposed-Modules-Repo/
 plugin/
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+gradlew
