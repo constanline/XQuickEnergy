@@ -2,6 +2,7 @@ package pansong291.xposed.quickenergy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.hook.OmegakoiTownRpcCall;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
@@ -48,6 +49,12 @@ public class OmegakoiTown {
         if (!Config.omegakoiTown())
             return;
 
+        long executeTime = RuntimeInfo.getInstance().getLong("omegakoiTown", 0);
+        if (System.currentTimeMillis() - executeTime < 21600000) {
+            return;
+        }
+        RuntimeInfo.getInstance().put("omegakoiTown", System.currentTimeMillis());
+
         new Thread() {
             @Override
             public void run() {
@@ -82,10 +89,14 @@ public class OmegakoiTown {
                             continue;
                         int amount = task.getJSONObject("reward").getInt("amount");
                         String itemId = task.getJSONObject("reward").getString("itemId");
-                        RewardType rewardType = RewardType.valueOf(itemId);
-                        jo = new JSONObject(OmegakoiTownRpcCall.triggerTaskReward(taskId));
-                        if (jo.getBoolean("success")) {
-                            Log.other("小镇任务🌇[" + name + "]#" + amount + "[" + rewardType.rewardName() + "]");
+                        try {
+                            RewardType rewardType = RewardType.valueOf(itemId);
+                            jo = new JSONObject(OmegakoiTownRpcCall.triggerTaskReward(taskId));
+                            if (jo.getBoolean("success")) {
+                                Log.other("小镇任务🌇[" + name + "]#" + amount + "[" + rewardType.rewardName() + "]");
+                            }
+                        } catch (Throwable th) {
+                            Log.i(TAG, "spec RewardType:" + itemId + ";未知的类型");
                         }
                     }
                 }

@@ -89,6 +89,8 @@ public class Config {
     public static final String jn_receiveFarmToolReward = "receiveFarmToolReward";
     public static final String jn_recordFarmGame = "recordFarmGame";
     public static final String jn_kitchen = "kitchen";
+
+    public static final String jn_useSpecialFood = "useSpecialFood";
     public static final String jn_useNewEggTool = "useNewEggTool";
     public static final String jn_harvestProduce = "harvestProduce";
     public static final String jn_donation = "donation";
@@ -234,6 +236,7 @@ public class Config {
     private boolean receiveFarmToolReward;
     private boolean recordFarmGame;
     private boolean kitchen;
+    private boolean useSpecialFood;
     private boolean useNewEggTool;
     private boolean harvestProduce;
     private boolean donation;
@@ -869,6 +872,15 @@ public class Config {
         return getConfig().kitchen;
     }
 
+    public static void setUseSpecialFood(boolean b) {
+        getConfig().useSpecialFood = b;
+        hasChanged = true;
+    }
+
+    public static boolean useSpecialFood() {
+        return getConfig().useSpecialFood;
+    }
+
     public static void setUseNewEggTool(boolean b) {
         getConfig().useNewEggTool = b;
         hasChanged = true;
@@ -1451,6 +1463,7 @@ public class Config {
         c.receiveFarmToolReward = true;
         c.recordFarmGame = true;
         c.kitchen = true;
+        c.useSpecialFood = false;
         c.useNewEggTool = true;
         c.harvestProduce = true;
         c.donation = true;
@@ -1806,6 +1819,8 @@ public class Config {
 
             config.kitchen = jo.optBoolean(jn_kitchen, true);
             //Log.i(TAG, jn_kitchen + ":" + config.kitchen);
+
+            config.useSpecialFood = jo.optBoolean(jn_useSpecialFood, false);
 
             config.useNewEggTool = jo.optBoolean(jn_useNewEggTool, true);
             //Log.i(TAG, jn_useNewEggTool + ":" + config.useNewEggTool);
@@ -2222,6 +2237,8 @@ public class Config {
             jo.put(jn_recordFarmGame, config.recordFarmGame);
 
             jo.put(jn_kitchen, config.kitchen);
+
+            jo.put(jn_useSpecialFood, config.useSpecialFood);
 
             jo.put(jn_useNewEggTool, config.useNewEggTool);
 

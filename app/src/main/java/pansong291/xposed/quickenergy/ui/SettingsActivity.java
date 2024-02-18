@@ -47,7 +47,7 @@ public class SettingsActivity extends Activity {
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
             sw_stallThrowManure, sw_greenFinance, sw_totalCertCount, sw_batchRobEnergy, sw_antBookRead, sw_consumeGold,
-            sw_omegakoiTown, sw_language_simplified_chinese;
+            sw_omegakoiTown, sw_language_simplified_chinese, sw_special_food;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +186,7 @@ public class SettingsActivity extends Activity {
         sw_receiveFarmToolReward = findViewById(R.id.sw_receiveFarmToolReward);
         sw_recordFarmGame = findViewById(R.id.sw_recordFarmGame);
         sw_kitchen = findViewById(R.id.sw_kitchen);
+        sw_special_food = findViewById(R.id.sw_special_food);
         sw_useNewEggTool = findViewById(R.id.sw_useNewEggTool);
         sw_harvestProduce = findViewById(R.id.sw_harvestProduce);
         sw_donation = findViewById(R.id.sw_donation);
@@ -265,6 +266,7 @@ public class SettingsActivity extends Activity {
         sw_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
         sw_recordFarmGame.setChecked(Config.recordFarmGame());
         sw_kitchen.setChecked(Config.kitchen());
+        sw_special_food.setChecked(Config.useSpecialFood());
         sw_useNewEggTool.setChecked(Config.useNewEggTool());
         sw_harvestProduce.setChecked(Config.harvestProduce());
         sw_donation.setChecked(Config.donation());
@@ -435,6 +437,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_kitchen:
                     Config.setKitchen(sw.isChecked());
+                    break;
+
+                case R.id.sw_special_food:
+                    Config.setUseSpecialFood(sw.isChecked());
                     break;
 
                 case R.id.sw_useNewEggTool:

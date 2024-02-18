@@ -1,5 +1,6 @@
 package pansong291.xposed.quickenergy.util;
 
+import pansong291.xposed.quickenergy.AntFarm;
 import pansong291.xposed.quickenergy.hook.FriendManager;
 import pansong291.xposed.quickenergy.hook.XposedHook;
 
@@ -23,6 +24,7 @@ public class FriendIdMap {
         if (currentUid == null || !currentUid.equals(uid)) {
             currentUid = uid;
             FriendManager.fillUser(XposedHook.classLoader);
+            PluginUtils.invoke(FriendIdMap.class, PluginUtils.PluginAction.INIT);
         }
     }
 
