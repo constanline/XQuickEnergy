@@ -111,6 +111,7 @@ public class Config {
     public static final String jn_antOrchard = "antOrchard";
     public static final String jn_receiveOrchardTaskAward = "receiveOrchardTaskAward";
     public static final String jn_orchardSpreadManureCount = "orchardSpreadManureCount";
+    public static final String jn_batchHireAnimal = "batchHireAnimal";
     public static final String jn_antdodoCollect = "antdodoCollect";
     public static final String jn_antOcean = "antOcean";
     public static final String jn_userPatrol = "userPatrol";
@@ -260,6 +261,7 @@ public class Config {
     private boolean antOrchard;
     private boolean receiveOrchardTaskAward;
     private int orchardSpreadManureCount;
+    private boolean batchHireAnimal;
 
     private boolean enableStall;
     private boolean stallAutoClose;
@@ -1072,6 +1074,14 @@ public class Config {
         hasChanged = true;
     }
 
+    public static void setBatchHireAnimal(boolean b) {
+        getConfig().batchHireAnimal = b;
+        hasChanged = true;
+    }
+    public static boolean batchHireAnimal() {
+        return getConfig().batchHireAnimal;
+    }
+
     public static void setEnableStall(boolean b) {
         getConfig().enableStall = b;
         hasChanged = true;
@@ -1494,6 +1504,7 @@ public class Config {
         c.antOrchard = true;
         c.receiveOrchardTaskAward = true;
         c.orchardSpreadManureCount = 0;
+        c.batchHireAnimal = false;
 
         c.enableStall = false;
         c.stallAutoClose = false;
@@ -1926,6 +1937,9 @@ public class Config {
             config.orchardSpreadManureCount = jo.optInt(jn_orchardSpreadManureCount, 0);
             //Log.i(TAG, jn_orchardSpreadManureCount + ":" + config.orchardSpreadManureCount);
 
+            config.batchHireAnimal = jo.optBoolean(jn_batchHireAnimal, false);
+            //Log.i(TAG, jn_batchHireAnimal + ":" + config.batchHireAnimal);
+
             config.enableStall = jo.optBoolean(jn_enableStall, false);
             //Log.i(TAG, jn_enableStall + ":" + config.enableStall);
 
@@ -2306,32 +2320,48 @@ public class Config {
 
             jo.put(jn_orchardSpreadManureCount, config.orchardSpreadManureCount);
 
+            jo.put(jn_batchHireAnimal, config.batchHireAnimal);
+
             jo.put(jn_enableStall, config.enableStall);
+
             jo.put(jn_stallAutoClose, config.stallAutoClose);
+
             jo.put(jn_stallAutoOpen, config.stallAutoOpen);
+
             jo.put(jn_stallAutoTask, config.stallAutoTask);
+
             jo.put(jn_stallReceiveAward, config.stallReceiveAward);
+
             jo.put(jn_stallOpenType, config.stallOpenType);
+
             ja = new JSONArray();
             for (int i = 0; i < config.stallOpenList.size(); i++) {
                 ja.put(config.stallOpenList.get(i));
             }
             jo.put(jn_stallOpenList, ja);
+
             ja = new JSONArray();
             for (int i = 0; i < config.stallWhiteList.size(); i++) {
                 ja.put(config.stallWhiteList.get(i));
             }
             jo.put(jn_stallWhiteList, ja);
+
             ja = new JSONArray();
             for (int i = 0; i < config.stallBlackList.size(); i++) {
                 ja.put(config.stallBlackList.get(i));
             }
             jo.put(jn_stallBlackList, ja);
+
             jo.put(jn_stallAllowOpenTime, config.stallAllowOpenTime);
+
             jo.put(jn_stallSelfOpenTime, config.stallSelfOpenTime);
+
             jo.put(jn_stallDonate, config.stallDonate);
+
             jo.put(jn_stallInviteRegister, config.stallInviteRegister);
+
             jo.put(jn_stallThrowManure, config.stallThrowManure);
+
             ja = new JSONArray();
             for (int i = 0; i < config.stallInviteShopList.size(); i++) {
                 ja.put(config.stallInviteShopList.get(i));

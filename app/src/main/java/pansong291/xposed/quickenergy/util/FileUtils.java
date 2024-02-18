@@ -363,8 +363,9 @@ public class FileUtils {
     }
 
     public synchronized static void append2SimpleLogFile(String s) {
-        if (getSimpleLogFile().length() > 31_457_280) // 30MB
+        if (getSimpleLogFile().length() > 31_457_280) {// 30MB
             getSimpleLogFile().delete();
+        }
         append2File(Log.getFormatDateTime() + "  " + s + "\n", getSimpleLogFile());
     }
 

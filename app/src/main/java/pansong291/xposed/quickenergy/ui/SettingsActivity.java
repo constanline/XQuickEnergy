@@ -47,7 +47,7 @@ public class SettingsActivity extends Activity {
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
             sw_stallThrowManure, sw_greenFinance, sw_totalCertCount, sw_batchRobEnergy, sw_antBookRead, sw_consumeGold,
-            sw_omegakoiTown, sw_language_simplified_chinese, sw_special_food;
+            sw_omegakoiTown, sw_language_simplified_chinese, sw_special_food, sw_batchHireAnimal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +199,7 @@ public class SettingsActivity extends Activity {
         sw_chickenDiary = findViewById(R.id.sw_chickenDiary);
         sw_antOrchard = findViewById(R.id.sw_antOrchard);
         sw_receiveOrchardTaskAward = findViewById(R.id.sw_receiveOrchardTaskAward);
+        sw_batchHireAnimal = findViewById(R.id.sw_batchHireAnimal);
         sw_receivePoint = findViewById(R.id.sw_receivePoint);
         sw_openTreasureBox = findViewById(R.id.sw_openTreasureBox);
         sw_receiveCoinAsset = findViewById(R.id.sw_receiveCoinAsset);
@@ -279,6 +280,7 @@ public class SettingsActivity extends Activity {
         sw_chickenDiary.setChecked(Config.chickenDiary());
         sw_antOrchard.setChecked(Config.antOrchard());
         sw_receiveOrchardTaskAward.setChecked(Config.receiveOrchardTaskAward());
+        sw_batchHireAnimal.setChecked(Config.batchHireAnimal());
         sw_receivePoint.setChecked(Config.receivePoint());
         sw_openTreasureBox.setChecked(Config.openTreasureBox());
         sw_receiveCoinAsset.setChecked(Config.receiveCoinAsset());
@@ -489,6 +491,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_receiveOrchardTaskAward:
                     Config.setReceiveOrchardTaskAward(sw.isChecked());
+                    break;
+
+                case R.id.sw_batchHireAnimal:
+                    Config.setBatchHireAnimal(sw.isChecked());
                     break;
 
                 case R.id.sw_receivePoint:
