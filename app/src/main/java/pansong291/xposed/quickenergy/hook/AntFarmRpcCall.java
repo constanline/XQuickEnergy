@@ -198,6 +198,8 @@ public class AntFarmRpcCall {
             return RandomUtils.nextInt(150, 170) * 10;
         } else if ("flyGame".equals(str)) {
             return RandomUtils.nextInt(5000, 8000);
+        } else if ("hitGame".equals(str)) {
+            return RandomUtils.nextInt(60, 100);
         } else {
             return 210;
         }

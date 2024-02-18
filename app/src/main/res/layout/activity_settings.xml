@@ -842,6 +842,16 @@
 						android:paddingEnd="@dimen/setting_item_padding"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:text="@string/use_special_food"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_special_food" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
 						android:text="@string/use_new_egg_tool"
 						android:onClick="onClick"
 						android:minHeight="50dp"

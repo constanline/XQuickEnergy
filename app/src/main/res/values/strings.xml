@@ -161,5 +161,6 @@
     <string name="ant_book_read">Ant book Read</string>
     <string name="omegakoi_town">Omegakoi Town</string>
     <string name="consume_gold">Consume Gold</string>
+    <string name="use_special_food">Use Special Food</string>
 
 </resources>
