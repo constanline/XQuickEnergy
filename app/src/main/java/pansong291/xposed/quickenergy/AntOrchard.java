@@ -36,9 +36,11 @@ public class AntOrchard {
                                 if (jo.has("lotteryPlusInfo"))
                                     drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
                                 extraInfoGet();
-                                if (!joo.optBoolean("hireCountOnceLimit", true)
-                                        && !joo.optBoolean("hireCountOneDayLimit", true))
-                                    batchHireAnimalRecommend();
+                                if (Config.batchHireAnimal()) {
+                                    if (!joo.optBoolean("hireCountOnceLimit", true)
+                                            && !joo.optBoolean("hireCountOneDayLimit", true))
+                                        batchHireAnimalRecommend();
+                                }
                                 if (Config.receiveOrchardTaskAward()) {
                                     doOrchardDailyTask(userId);
                                     triggerTbTask();
@@ -52,7 +54,6 @@ public class AntOrchard {
                                 } else if (Config.getOrchardSpreadManureCount() >= 10) {
                                     querySubplotsActivity(10);
                                 }
-
                             } else {
                                 Log.recordLog(jo.getString("resultDesc"), jo.toString());
                             }

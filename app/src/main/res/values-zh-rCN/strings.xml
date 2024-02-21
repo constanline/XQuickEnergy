@@ -32,7 +32,7 @@
     <string name="don_t_send_friend_list">不遣返小鸡名单</string>
     <string name="recall_animal_type">召回类型</string>
     <string name="receive_farm_tool_reward">收取道具奖励</string>
-    <string name="record_farm_game">游戏改分(星星球、登山赛)</string>
+    <string name="record_farm_game">游戏改分(星星球、登山赛、飞行赛、揍小鸡)</string>
     <string name="kitchen">小鸡厨房</string>
     <string name="use_new_egg_tool">使用新蛋卡</string>
     <string name="harvest_produce">收获爱心鸡蛋</string>
@@ -89,7 +89,7 @@
     <string name="start_check_energy">开始检测能量</string>
     <string name="collect_watering_bubble">收金球</string>
     <string name="use_double_card_time">使用双击卡时间</string>
-    <string name="use_double_card_time_desc">例如：(0000-0100,0700-0730)代表晚上0点到1点，早上7点到7点半，有能量并且没有使用双击卡就会自动使用</string>
+    <string name="use_double_card_time_desc">例如:(0000-0100,0700-0730)代表晚上0点到1点,早上7点到7点半,有能量并且没有使用双击卡就会自动使用</string>
     <string name="animal_sleep_time">小鸡睡眠时间(设置方式同双击卡)</string>
     <string name="visit_github">GitHub</string>
     <string name="exchange_energy_double_click">活力值兑换限时双击卡</string>
@@ -124,7 +124,7 @@
     <string name="receive_orchard_task_award">收取农场任务奖励</string>
     <string name="orchard_spread_manure_count">农场每日施肥次数</string>
     <string name="collect_prop">收集道具</string>
-    <string name="who_you_want_to_give_to">赠送道具给谁（赠送所有可送道具）</string>
+    <string name="who_you_want_to_give_to">赠送道具给谁(赠送所有可送道具)</string>
     <string name="collect_sesame">收芝麻粒</string>
     <string name="zcj_sign_in">招财金签到</string>
     <string name="merchant_kmdk">商户开门打卡</string>
@@ -158,5 +158,6 @@
     <string name="omegakoi_town">支小镇</string>
     <string name="consume_gold">支付宝消费金</string>
     <string name="use_special_food">使用特殊食品</string>
+    <string name="batch_hire_animal">一键捉鸡</string>
 
 </resources>
