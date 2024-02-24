@@ -162,5 +162,6 @@
     <string name="ant_book_read">读书听书</string>
     <string name="omegakoi_town">支小镇</string>
     <string name="consume_gold">支付宝消费金</string>
+    <string name="use_special_food">使用特殊食品</string>
 
 </resources>

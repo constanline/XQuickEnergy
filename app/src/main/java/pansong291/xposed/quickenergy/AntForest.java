@@ -678,7 +678,7 @@ public class AntForest {
                             if (wateringBubble.getBoolean("canProtect")) {
 // lzw add begin                                
                                 if(Config.isMonday()) {
-                                    Log.forest("今天是周一,只复活小号列表");
+                                    // Log.forest("今天是周一,只复活小号列表");
                                     List<String> list = Config.getSubIDList();
                                     if (list.contains(userId)) {
                                         JSONObject joProtect = new JSONObject(AntForestRpcCall.protectBubble(userId));
@@ -840,14 +840,19 @@ public class AntForest {
             return 0;
         }
         int collected = 0;
-        try {
-            while (checkCollectLimited()) {
-                Thread.sleep(1000);
+        if (!userId.equals(selfId)) {
+            try {
+                while (checkCollectLimited()) {
+                    Thread.sleep(1000);
+                }
+            } catch (Throwable th) {
+                Log.printStackTrace("到达分钟限制，等待失败！", th);
+                return 0;
             }
-        } catch (Throwable th) {
-            Log.printStackTrace("到达分钟限制，等待失败！", th);
-            return 0;
+        } else {
+            Log.recordLog("不限制收取自己的能量", "");
         }
+
         // if (checkCollectLimited()) {
         // return 0;
         // }

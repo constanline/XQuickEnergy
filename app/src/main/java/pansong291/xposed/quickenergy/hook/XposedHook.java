@@ -85,6 +85,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     String targetUid = RpcUtil.getUserId(XposedHook.classLoader);
                     if (targetUid != null) {
                         FriendIdMap.setCurrentUid(targetUid);
+                        Config.shouldReload = true;
 
                         Statistics.resetToday();
                         AntForest.checkEnergyRanking(XposedHook.classLoader);
