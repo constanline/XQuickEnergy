@@ -147,7 +147,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
-                            PermissionUtil.requestPermissions((Activity) param.thisObject);
+                            //PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
                             if (targetUid == null || targetUid.equals(FriendIdMap.getCurrentUid())) {
