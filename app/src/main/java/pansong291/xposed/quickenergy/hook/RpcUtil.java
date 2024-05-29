@@ -1,17 +1,18 @@
 package pansong291.xposed.quickenergy.hook;
 
-import de.robv.android.xposed.XposedHelpers;
 import org.json.JSONObject;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.DateFormat;
+
+import de.robv.android.xposed.XposedHelpers;
 import pansong291.xposed.quickenergy.AntForestNotification;
 import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.StringUtil;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.DateFormat;
 
 public class RpcUtil {
     private static final String TAG = RpcUtil.class.getCanonicalName();
@@ -62,6 +63,10 @@ public class RpcUtil {
     }
 
     public static String request(String args0, String args1) {
+        return request(args0, args1, false);
+    }
+
+    public static String request(String args0, String args1, boolean failNull) {
         if (isInterrupted) {
             return null;
         }
@@ -90,6 +95,7 @@ public class RpcUtil {
         } catch (Throwable t) {
             Log.i(TAG, "invoke err:");
             Log.printStackTrace(TAG, t);
+            String result = null;
             if (t instanceof InvocationTargetException) {
                 String msg = t.getCause().getMessage();
                 if (!StringUtil.isEmpty(msg)) {
@@ -114,12 +120,12 @@ public class RpcUtil {
                             Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                         }
                     } else if (msg.contains("MMTPException")) {
-                        return "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
+                        result = "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
                     }
                 }
             }
+            return failNull ? null : result;
         }
-        return null;
     }
 
     public static String getResponse(Object resp) throws Throwable {

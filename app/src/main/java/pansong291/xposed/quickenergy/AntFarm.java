@@ -135,7 +135,7 @@ public class AntFarm {
                     FriendIdMap.waitingCurrentUid();
                     String s = null;
                     try {
-                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid(), true);
                     } catch (Exception e) {
                         Log.i(TAG, "first AntFarmRpcCall.enterFarm err:");
                         Log.printStackTrace(TAG, e);
@@ -149,7 +149,7 @@ public class AntFarm {
                         //Thread.sleep(RandomUtils.delay());
                         Thread.sleep(1000);
                         try {
-                            s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                            s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid(), true);
                         } catch (Exception e) {
                             Log.i(TAG, "AntFarmRpcCall.enterFarm err:");
                             Log.printStackTrace(TAG, e);

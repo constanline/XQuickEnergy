@@ -3,16 +3,21 @@ package pansong291.xposed.quickenergy.hook;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+
 import pansong291.xposed.quickenergy.util.RandomUtils;
 
 public class AntFarmRpcCall {
     private static final String VERSION = "1.8.2302070202.46";
 
     public static String enterFarm(String farmId, String userId) {
+        return enterFarm(farmId, userId, false);
+    }
+
+    public static String enterFarm(String farmId, String userId, boolean failNull) {
         return RpcUtil.request("com.alipay.antfarm.enterFarm",
                 "[{\"animalId\":\"\",\"farmId\":\"" + farmId +
                         "\",\"gotoneScene\":\"\",\"gotoneTemplateId\":\"\",\"masterFarmId\":\"\",\"queryLastRecordNum\":true,\"recall\":false,\"requestType\":\"NORMAL\",\"sceneCode\":\"ANTFARM\",\"source\":\"ANTFOREST\",\"touchRecordId\":\"\",\"userId\":\""
-                        + userId + "\",\"version\":\"" + VERSION + "\"}]");
+                        + userId + "\",\"version\":\"" + VERSION + "\"}]", failNull);
     }
 
     public static String syncAnimalStatus(String farmId) {
