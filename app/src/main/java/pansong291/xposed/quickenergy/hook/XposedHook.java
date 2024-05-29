@@ -1,7 +1,6 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,18 +11,39 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
+
+import java.util.Calendar;
+import java.util.Map;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.AncientTree;
+import pansong291.xposed.quickenergy.AntBookRead;
+import pansong291.xposed.quickenergy.AntCooperate;
+import pansong291.xposed.quickenergy.AntFarm;
+import pansong291.xposed.quickenergy.AntForest;
+import pansong291.xposed.quickenergy.AntForestNotification;
+import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.AntMember;
+import pansong291.xposed.quickenergy.AntOcean;
+import pansong291.xposed.quickenergy.AntOrchard;
+import pansong291.xposed.quickenergy.AntSports;
+import pansong291.xposed.quickenergy.AntStall;
+import pansong291.xposed.quickenergy.ConsumeGold;
+import pansong291.xposed.quickenergy.GreenFinance;
+import pansong291.xposed.quickenergy.OmegakoiTown;
+import pansong291.xposed.quickenergy.Reserve;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.ui.MainActivity;
-import pansong291.xposed.quickenergy.util.*;
-
-import java.util.Calendar;
-import java.util.Map;
+import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.PluginUtils;
+import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.TimeUtil;
 
 public class XposedHook implements IXposedHookLoadPackage {
     private static final String TAG = XposedHook.class.getCanonicalName();
@@ -92,6 +112,12 @@ public class XposedHook implements IXposedHookLoadPackage {
 
                         if (TimeUtil.getTimeStr().compareTo("0700") < 0
                                 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                Log.i(TAG, "sleep err:");
+                                Log.printStackTrace(TAG, e);
+                            }
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();
@@ -265,7 +291,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     public static void restartHook(Context context, boolean force) {
         try {
             Intent intent;
-            if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+            if (Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 intent = new Intent(Intent.ACTION_VIEW);
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -305,7 +331,7 @@ public class XposedHook implements IXposedHookLoadPackage {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pi;
-            if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+            if (Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());

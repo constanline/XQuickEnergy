@@ -20,8 +20,7 @@ public class AntMember {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     if (Statistics.canMemberSignInToday(FriendIdMap.getCurrentUid())) {
                         String s = AntMemberRpcCall.queryMemberSigninCalendar();
                         JSONObject jo = new JSONObject(s);

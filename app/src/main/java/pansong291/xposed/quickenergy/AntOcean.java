@@ -24,8 +24,7 @@ public class AntOcean {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     String s = AntOceanRpcCall.queryOceanStatus();
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {

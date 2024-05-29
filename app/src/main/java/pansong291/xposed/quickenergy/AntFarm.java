@@ -2,14 +2,22 @@ package pansong291.xposed.quickenergy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
-import pansong291.xposed.quickenergy.util.*;
-import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
+import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
+import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.PluginUtils;
+import pansong291.xposed.quickenergy.util.RandomUtils;
+import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.StringUtil;
+import pansong291.xposed.quickenergy.util.TimeUtil;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -124,13 +132,30 @@ public class AntFarm {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
-                    String s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
-                    if (s == null) {
-                        Thread.sleep(RandomUtils.delay());
+                    FriendIdMap.waitingCurrentUid();
+                    String s = null;
+                    try {
                         s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                    } catch (Exception e) {
+                        Log.i(TAG, "first AntFarmRpcCall.enterFarm err:");
+                        Log.printStackTrace(TAG, e);
                     }
+                    int count = 1;
+                    while (s == null) {
+                        if (count > 5) {
+                            throw new RuntimeException("庄园加载失败");
+                        }
+                        count++;
+                        //Thread.sleep(RandomUtils.delay());
+                        Thread.sleep(1000);
+                        try {
+                            s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                        } catch (Exception e) {
+                            Log.i(TAG, "AntFarmRpcCall.enterFarm err:");
+                            Log.printStackTrace(TAG, e);
+                        }
+                    }
+                    Log.i(TAG, "AntFarmRpcCall.enterFarm success");
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("memo"))) {
                         rewardProductNum = jo.getJSONObject("dynamicGlobalConfig").getString("rewardProductNum");
