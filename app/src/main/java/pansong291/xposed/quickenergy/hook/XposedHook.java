@@ -1,6 +1,7 @@
 package pansong291.xposed.quickenergy.hook;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -56,6 +57,8 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static Runnable runnable;
 
     private static boolean isHooked = false;
+
+    private static boolean isRestart = false;
 
     public enum StayAwakeType {
         BROADCAST, ALARM, NONE;
@@ -173,6 +176,11 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
+                            if (isRestart) {
+                                ((Activity) param.thisObject).finish();
+                                isRestart = false;
+                                return;
+                            }
                             //PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
@@ -291,11 +299,12 @@ public class XposedHook implements IXposedHookLoadPackage {
     public static void restartHook(Context context, boolean force) {
         try {
             Intent intent;
-            if (Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+            if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 intent = new Intent(Intent.ACTION_VIEW);
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+                isRestart = true;
             } else {
                 intent = new Intent();
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
@@ -331,10 +340,11 @@ public class XposedHook implements IXposedHookLoadPackage {
         try {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pi;
-            if (Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
+            if (force || Config.stayAwakeTarget() == StayAwakeTarget.ACTIVITY) {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());
+                isRestart = true;
             } else {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
