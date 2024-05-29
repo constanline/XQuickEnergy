@@ -304,7 +304,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-                isRestart = true;
+                if (force) {
+                    isRestart = true;
+                }
             } else {
                 intent = new Intent();
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
@@ -344,7 +346,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());
-                isRestart = true;
+                if (force) {
+                    isRestart = true;
+                }
             } else {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
