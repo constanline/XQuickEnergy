@@ -115,12 +115,6 @@ public class XposedHook implements IXposedHookLoadPackage {
 
                         if (TimeUtil.getTimeStr().compareTo("0700") < 0
                                 || TimeUtil.getTimeStr().compareTo("0730") > 0) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                Log.i(TAG, "sleep err:");
-                                Log.printStackTrace(TAG, e);
-                            }
                             AntCooperate.start();
                             AntFarm.start();
                             Reserve.start();
@@ -176,11 +170,6 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
-                            if (isRestart) {
-                                ((Activity) param.thisObject).finish();
-                                isRestart = false;
-                                return;
-                            }
                             //PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
@@ -190,6 +179,11 @@ public class XposedHook implements IXposedHookLoadPackage {
                             FriendIdMap.setCurrentUid(targetUid);
                             if (handler != null) {
                                 initHandler();
+                            }
+                            if (isRestart) {
+                                isRestart = false;
+                                Log.i(TAG, "Activity isRestart");
+                                ((Activity) param.thisObject).finish();
                             }
                         }
                     });
@@ -303,10 +297,10 @@ public class XposedHook implements IXposedHookLoadPackage {
                 intent = new Intent(Intent.ACTION_VIEW);
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
                 if (force) {
                     isRestart = true;
                 }
+                context.startActivity(intent);
             } else {
                 intent = new Intent();
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);
