@@ -133,29 +133,10 @@ public class AntFarm {
             public void run() {
                 try {
                     FriendIdMap.waitingCurrentUid();
-                    String s = null;
-                    try {
-                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid(), true);
-                    } catch (Exception e) {
-                        Log.i(TAG, "first AntFarmRpcCall.enterFarm err:");
-                        Log.printStackTrace(TAG, e);
+                    String s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                    if (s == null) {
+                        throw new RuntimeException("庄园加载失败");
                     }
-                    int count = 1;
-                    while (s == null) {
-                        if (count > 5) {
-                            throw new RuntimeException("庄园加载失败");
-                        }
-                        count++;
-                        //Thread.sleep(RandomUtils.delay());
-                        Thread.sleep(1000);
-                        try {
-                            s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid(), true);
-                        } catch (Exception e) {
-                            Log.i(TAG, "AntFarmRpcCall.enterFarm err:");
-                            Log.printStackTrace(TAG, e);
-                        }
-                    }
-                    Log.i(TAG, "AntFarmRpcCall.enterFarm success");
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("memo"))) {
                         rewardProductNum = jo.getJSONObject("dynamicGlobalConfig").getString("rewardProductNum");

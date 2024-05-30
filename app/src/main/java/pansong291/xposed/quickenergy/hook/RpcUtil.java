@@ -12,6 +12,7 @@ import pansong291.xposed.quickenergy.AntForestToast;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.RandomUtils;
 import pansong291.xposed.quickenergy.util.StringUtil;
 
 public class RpcUtil {
@@ -63,69 +64,80 @@ public class RpcUtil {
     }
 
     public static String request(String args0, String args1) {
-        return request(args0, args1, false);
-    }
-
-    public static String request(String args0, String args1, boolean failNull) {
         if (isInterrupted) {
             return null;
         }
-        try {
-            Object o;
-            if (rpcCallMethod.getParameterTypes().length == 12) {
-                o = rpcCallMethod.invoke(
-                        null, args0, args1, "", true, null, null, false, curH5PageImpl, 0, "", false, -1);
-            } else {
-                o = rpcCallMethod.invoke(
-                        null, args0, args1, "", true, null, null, false, curH5PageImpl, 0, "", false, -1, "");
-            }
-            String str = getResponse(o);
-            Log.i(TAG, "argument: " + args0 + ", " + args1);
-            Log.i(TAG, "response: " + str);
+        String result = null;
+        int count = 0;
+        while (count < 3) {
+            count++;
             try {
-                JSONObject jo = new JSONObject(str);
-                if (jo.optString("memo", "").contains("系统繁忙")) {
-                    isInterrupted = true;
-                    AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
-                    Log.recordLog("系统繁忙，可能需要滑动验证");
-                    return str;
+                Object o;
+                if (rpcCallMethod.getParameterTypes().length == 12) {
+                    o = rpcCallMethod.invoke(
+                            null, args0, args1, "", true, null, null, false, curH5PageImpl, 0, "", false, -1);
+                } else {
+                    o = rpcCallMethod.invoke(
+                            null, args0, args1, "", true, null, null, false, curH5PageImpl, 0, "", false, -1, "");
                 }
-            } catch (Throwable ignored) { }
-            return str;
-        } catch (Throwable t) {
-            Log.i(TAG, "invoke err:");
-            Log.printStackTrace(TAG, t);
-            String result = null;
-            if (t instanceof InvocationTargetException) {
-                String msg = t.getCause().getMessage();
-                if (!StringUtil.isEmpty(msg)) {
-                    if (msg.contains("登录超时")) {
+                String str = getResponse(o);
+                Log.i(TAG, "argument: " + args0 + ", " + args1);
+                Log.i(TAG, "response: " + str);
+                try {
+                    JSONObject jo = new JSONObject(str);
+                    if (jo.optString("memo", "").contains("系统繁忙")) {
                         isInterrupted = true;
-                        AntForestNotification.setContentText("登录超时");
-                        if (AntForestToast.context != null) {
-                            if (Config.timeoutRestart()) {
-                                Log.recordLog("尝试重启！");
-                                if (Config.timeoutType() == XposedHook.StayAwakeType.ALARM) {
-                                    XposedHook.alarmHook(AntForestToast.context, 3000, true);
-                                } else {
-                                    XposedHook.alarmBroadcast(AntForestToast.context, 3000, true);
+                        AntForestNotification.setContentText("系统繁忙，可能需要滑动验证");
+                        Log.recordLog("系统繁忙，可能需要滑动验证");
+                        return str;
+                    }
+                } catch (Throwable ignored) {
+                }
+                return str;
+            } catch (Throwable t) {
+                Log.i(TAG, "rpc [" + args0 + "] err:");
+                Log.printStackTrace(TAG, t);
+                result = null;
+                if (t instanceof InvocationTargetException) {
+                    String msg = t.getCause().getMessage();
+                    if (!StringUtil.isEmpty(msg)) {
+                        if (msg.contains("登录超时")) {
+                            isInterrupted = true;
+                            AntForestNotification.setContentText("登录超时");
+                            if (AntForestToast.context != null) {
+                                if (Config.timeoutRestart()) {
+                                    Log.recordLog("尝试重启！");
+                                    if (Config.timeoutType() == XposedHook.StayAwakeType.ALARM) {
+                                        XposedHook.alarmHook(AntForestToast.context, 3000, true);
+                                    } else {
+                                        XposedHook.alarmBroadcast(AntForestToast.context, 3000, true);
+                                    }
                                 }
                             }
+                        } else if (msg.contains("[1004]") && "alipay.antmember.forest.h5.collectEnergy".equals(args0)) {
+                            if (Config.waitWhenException() > 0) {
+                                long waitTime = System.currentTimeMillis() + Config.waitWhenException();
+                                RuntimeInfo.getInstance().put(RuntimeInfo.RuntimeInfoKey.ForestPauseTime, waitTime);
+                                AntForestNotification.setContentText("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                                Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                            }
+                        } else if (msg.contains("MMTPException")) {
+                            result = "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
+                        } else {
+                            return result;
                         }
-                    } else if (msg.contains("[1004]") && "alipay.antmember.forest.h5.collectEnergy".equals(args0)) {
-                        if (Config.waitWhenException() > 0) {
-                            long waitTime = System.currentTimeMillis() + Config.waitWhenException();
-                            RuntimeInfo.getInstance().put(RuntimeInfo.RuntimeInfoKey.ForestPauseTime, waitTime);
-                            AntForestNotification.setContentText("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
-                            Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
+                        try {
+                            Thread.sleep(900 + RandomUtils.delay());
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
-                    } else if (msg.contains("MMTPException")) {
-                        result = "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
+                        continue;
                     }
                 }
+                return result;
             }
-            return failNull ? null : result;
         }
+        return result;
     }
 
     public static String getResponse(Object resp) throws Throwable {
