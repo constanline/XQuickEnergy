@@ -72,6 +72,10 @@ public class XposedHook implements IXposedHookLoadPackage {
         public static final CharSequence[] nickNames = {"Service", "Activity"};
     }
 
+    public static boolean getIsRestart() {
+        return isRestart;
+    }
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if ("pansong291.xposed.quickenergy.repair".equals(lpparam.packageName)) {
@@ -225,11 +229,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, service.getClass().getName());
                                 wakeLock.acquire();
 
-                                if (Config.stayAwakeType() == StayAwakeType.BROADCAST) {
-                                    alarmBroadcast(AntForestToast.context, 30 * 60 * 1000, false);
-                                } else if (Config.stayAwakeType() == StayAwakeType.ALARM) {
-                                    alarmHook(AntForestToast.context, 30 * 60 * 1000, false);
-                                }
+                                restartHook(AntForestToast.context, Config.stayAwakeType(), 30 * 60 * 1000, false);
                             }
                             initHandler();
                         }
@@ -298,6 +298,14 @@ public class XposedHook implements IXposedHookLoadPackage {
             Log.printStackTrace(TAG, t);
         }
 
+    }
+
+    public static void restartHook(Context context, StayAwakeType stayAwakeType, long delayTime, boolean force) {
+        if (stayAwakeType == StayAwakeType.ALARM) {
+            alarmHook(context, delayTime, force);
+        } else {
+            alarmBroadcast(context, delayTime, force);
+        }
     }
 
     public static void restartHook(Context context, boolean force) {

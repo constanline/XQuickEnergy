@@ -102,18 +102,22 @@ public class RpcUtil {
                     String msg = t.getCause().getMessage();
                     if (!StringUtil.isEmpty(msg)) {
                         if (msg.contains("登录超时")) {
-                            isInterrupted = true;
-                            AntForestNotification.setContentText("登录超时");
-                            if (AntForestToast.context != null) {
-                                if (Config.timeoutRestart()) {
-                                    Log.recordLog("尝试重启！");
-                                    if (Config.timeoutType() == XposedHook.StayAwakeType.ALARM) {
-                                        XposedHook.alarmHook(AntForestToast.context, 3000, true);
-                                    } else {
-                                        XposedHook.alarmBroadcast(AntForestToast.context, 3000, true);
+                            if (!isInterrupted && !XposedHook.getIsRestart()) {
+                                isInterrupted = true;
+                                AntForestNotification.setContentText("登录超时");
+                                if (AntForestToast.context != null) {
+                                    if (Config.timeoutRestart()) {
+                                        Log.recordLog("尝试重启！");
+                                        XposedHook.restartHook(AntForestToast.context, Config.timeoutType(), 500, true);
                                     }
                                 }
                             }
+                            try {
+                                Thread.sleep(3000 + RandomUtils.delay());
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            continue;
                         } else if (msg.contains("[1004]") && "alipay.antmember.forest.h5.collectEnergy".equals(args0)) {
                             if (Config.waitWhenException() > 0) {
                                 long waitTime = System.currentTimeMillis() + Config.waitWhenException();
