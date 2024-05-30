@@ -63,13 +63,13 @@ public class XposedHook implements IXposedHookLoadPackage {
     public enum StayAwakeType {
         BROADCAST, ALARM, NONE;
 
-        public static final CharSequence[] nickNames = { "广播", "闹钟", "不重启" };
+        public static final CharSequence[] nickNames = {"广播", "闹钟", "不重启"};
     }
 
     public enum StayAwakeTarget {
         SERVICE, ACTIVITY;
 
-        public static final CharSequence[] nickNames = { "Service", "Activity" };
+        public static final CharSequence[] nickNames = {"Service", "Activity"};
     }
 
     @Override
@@ -95,6 +95,16 @@ public class XposedHook implements IXposedHookLoadPackage {
                 hookService(lpparam.classLoader);
                 PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
             }
+        }
+    }
+
+    private static void restartHandler() {
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+            AntForest.stop();
+            AntForestNotification.stop(service, false);
+            AntForestNotification.start(service);
+            handler.post(runnable);
         }
     }
 
@@ -150,12 +160,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     Config.setAlarm7(AntForestToast.context);
                 }
             }
+            restartHandler();
             AntForestToast.show("芝麻粒加载成功");
-            handler.removeCallbacks(runnable);
-            AntForest.stop();
-            AntForestNotification.stop(service, false);
-            AntForestNotification.start(service);
-            handler.post(runnable);
         } catch (Throwable th) {
             Log.i(TAG, "initHandler err:");
             Log.printStackTrace(TAG, th);
@@ -173,17 +179,21 @@ public class XposedHook implements IXposedHookLoadPackage {
                             //PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
-                            if (targetUid == null || targetUid.equals(FriendIdMap.getCurrentUid())) {
+                            if (targetUid == null) {
                                 return;
                             }
-                            FriendIdMap.setCurrentUid(targetUid);
-                            if (handler != null) {
-                                initHandler();
+                            if (!targetUid.equals(FriendIdMap.getCurrentUid())) {
+                                FriendIdMap.setCurrentUid(targetUid);
+                            } else if (!isRestart) {
+                                return;
                             }
                             if (isRestart) {
-                                isRestart = false;
                                 Log.i(TAG, "Activity isRestart");
+                                isRestart = false;
+                                restartHandler();
                                 ((Activity) param.thisObject).finish();
+                            } else if (handler != null) {
+                                initHandler();
                             }
                         }
                     });
