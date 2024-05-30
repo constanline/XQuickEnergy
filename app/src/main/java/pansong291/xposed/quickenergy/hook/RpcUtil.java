@@ -121,17 +121,21 @@ public class RpcUtil {
                                 AntForestNotification.setContentText("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                                 Log.recordLog("触发异常,等待至" + DateFormat.getDateTimeInstance().format(waitTime));
                             }
+                            try {
+                                Thread.sleep(900 + RandomUtils.delay());
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            continue;
                         } else if (msg.contains("MMTPException")) {
                             result = "{\"resultCode\":\"FAIL\",\"memo\":\"MMTPException\",\"resultDesc\":\"MMTPException\"}";
-                        } else {
-                            return result;
+                            try {
+                                Thread.sleep(900 + RandomUtils.delay());
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            continue;
                         }
-                        try {
-                            Thread.sleep(900 + RandomUtils.delay());
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        continue;
                     }
                 }
                 return result;
