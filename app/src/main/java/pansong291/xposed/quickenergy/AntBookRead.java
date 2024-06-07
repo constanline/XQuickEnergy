@@ -26,7 +26,7 @@ public class AntBookRead {
             @Override
             public void run() {
                 try {
-                    queryTaskCenterPage();
+//                    queryTaskCenterPage();
                     queryTask();
                     queryTreasureBox();
                 } catch (Throwable t) {
@@ -70,6 +70,8 @@ public class AntBookRead {
                                         }
                                         Log.forest("阅读书籍📚[" + name + "]#累计能量" + energy + "g");
                                     }
+                                } else {
+                                    Log.recordLog(jo.getString("resultDesc"), s);
                                 }
                                 if (energy >= 150) {
                                     break;
