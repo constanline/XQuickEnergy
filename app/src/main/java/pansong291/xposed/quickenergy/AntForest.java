@@ -360,6 +360,7 @@ public class AntForest {
         try {
             boolean hasMore = false;
             long start = System.currentTimeMillis();
+            //TODO 修复 6秒拼手速活动导致数据错误，目前只能关闭该活动
             String s = AntForestRpcCall.queryHomePage();
             long end = System.currentTimeMillis();
             if (s == null) {

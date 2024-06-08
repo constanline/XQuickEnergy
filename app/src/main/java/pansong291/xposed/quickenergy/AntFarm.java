@@ -2,14 +2,22 @@ package pansong291.xposed.quickenergy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
-import pansong291.xposed.quickenergy.util.*;
-import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import pansong291.xposed.quickenergy.hook.AntFarmRpcCall;
+import pansong291.xposed.quickenergy.hook.DadaDailyRpcCall;
+import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.PluginUtils;
+import pansong291.xposed.quickenergy.util.RandomUtils;
+import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.StringUtil;
+import pansong291.xposed.quickenergy.util.TimeUtil;
 
 public class AntFarm {
     private static final String TAG = AntFarm.class.getCanonicalName();
@@ -124,12 +132,10 @@ public class AntFarm {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     String s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
                     if (s == null) {
-                        Thread.sleep(RandomUtils.delay());
-                        s = AntFarmRpcCall.enterFarm("", FriendIdMap.getCurrentUid());
+                        throw new RuntimeException("庄园加载失败");
                     }
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("memo"))) {
@@ -166,17 +172,18 @@ public class AntFarm {
                     if (Config.sendBackAnimal())
                         sendBackAnimal();
 
+                    Log.farm("小鸡animalInteractStatus" + ownerAnimal.animalInteractStatus);
+                    Log.farm("小鸡locationType" + ownerAnimal.locationType);
                     if (!AnimalInteractStatus.HOME.name().equals(ownerAnimal.animalInteractStatus)) {
-                        syncAnimalStatusAtOtherFarm(ownerAnimal.currentFarmId);
-
                         if ("ORCHARD".equals(ownerAnimal.locationType)) {
-                            Log.recordLog("小鸡到好友家除草了", "");
+                            Log.farm("小鸡到好友家除草了" );
                             JSONObject joRecallAnimal = new JSONObject(AntFarmRpcCall
                                     .orchardRecallAnimal(ownerAnimal.animalId, ownerAnimal.currentFarmMasterUserId));
 
                             int manureCount = joRecallAnimal.getInt("manureCount");
-                            Log.recordLog("", "召回小鸡，收获肥料" + manureCount + "g");
+                            Log.farm("召回小鸡📣收获肥料" + manureCount + "g");
                         } else {
+                            syncAnimalStatusAtOtherFarm(ownerAnimal.currentFarmId);
                             boolean guest = false;
                             switch (SubAnimalType.valueOf(ownerAnimal.subAnimalType)) {
                                 case GUEST:
@@ -1142,14 +1149,15 @@ public class AntFarm {
             JSONArray jaAnimals = subFarmVO.getJSONArray("animals");
             animals = new Animal[jaAnimals.length()];
             for (int i = 0; i < animals.length; i++) {
-                if (animals[i] == null)
-                    animals[i] = new Animal();
+                animals[i] = new Animal();
                 JSONObject animal = jaAnimals.getJSONObject(i);
                 animals[i].animalId = animal.getString("animalId");
                 animals[i].currentFarmId = animal.getString("currentFarmId");
                 animals[i].masterFarmId = animal.getString("masterFarmId");
                 animals[i].animalBuff = animal.getString("animalBuff");
                 animals[i].subAnimalType = animal.getString("subAnimalType");
+                animals[i].currentFarmMasterUserId = animal.getString("currentFarmMasterUserId");
+                animals[i].locationType = animal.optString("locationType", "");
                 JSONObject animalStatusVO = animal.getJSONObject("animalStatusVO");
                 animals[i].animalFeedStatus = animalStatusVO.getString("animalFeedStatus");
                 animals[i].animalInteractStatus = animalStatusVO.getString("animalInteractStatus");

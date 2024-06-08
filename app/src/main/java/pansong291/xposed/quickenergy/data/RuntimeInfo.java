@@ -72,6 +72,10 @@ public class RuntimeInfo {
         return joCurrent.optLong(key, def);
     }
 
+    public boolean getBool(String key, boolean def) {
+        return joCurrent.optBoolean(key, def);
+    }
+
     public String getString(RuntimeInfoKey key) {
         return joCurrent.optString(key.name());
     }

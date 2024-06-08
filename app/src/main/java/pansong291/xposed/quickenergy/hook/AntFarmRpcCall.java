@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.hook;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+
 import pansong291.xposed.quickenergy.util.RandomUtils;
 
 public class AntFarmRpcCall {
@@ -51,7 +52,7 @@ public class AntFarmRpcCall {
 
     public static String orchardRecallAnimal(String animalId, String userId) {
         String args1 = "[{\"animalId\":\"" + animalId + "\",\"orchardUserId\":\"" + userId +
-                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ORCHARD\",\"source\":\"zhuangyuan_zhaohuixiaoji\",\"version\":\"\"0.1.2307042001.2\"\"}]";
+                "\",\"requestType\":\"NORMAL\",\"sceneCode\":\"ORCHARD\",\"source\":\"zhuangyuan_zhaohuixiaoji\",\"version\":\"0.1.2403061630.6\"}]";
         return RpcUtil.request("com.alipay.antorchard.recallAnimal", args1);
     }
 

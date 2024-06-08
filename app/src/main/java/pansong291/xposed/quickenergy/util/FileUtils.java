@@ -54,12 +54,9 @@ public class FileUtils {
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
-            File useMedia = new File(storageDir, "useMedia");
-            if (useMedia.exists()) {
-                String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" +
-                        File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
-                storageDir = new File(storageDirStr);
-            }
+            String storageDirStr = Environment.getExternalStorageDirectory() + File.separator + "Android" +
+                    File.separator + "media" + File.separator + ClassMember.PACKAGE_NAME;
+            storageDir = new File(storageDirStr);
 
             mainDirectory = new File(storageDir, "xqe");
             if (!mainDirectory.exists()) {
