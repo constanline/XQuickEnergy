@@ -1,14 +1,13 @@
 package pansong291.xposed.quickenergy.util;
 
-import pansong291.xposed.quickenergy.AntFarm;
-import pansong291.xposed.quickenergy.hook.FriendManager;
-import pansong291.xposed.quickenergy.hook.XposedHook;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import pansong291.xposed.quickenergy.hook.FriendManager;
+import pansong291.xposed.quickenergy.hook.XposedHook;
 
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();
@@ -140,6 +139,18 @@ public class FriendIdMap {
             }
         }
         return idMap;
+    }
+
+    public static void waitingCurrentUid() throws InterruptedException {
+        int count = 1;
+        while (getCurrentUid() == null || getCurrentUid().isEmpty()) {
+            if (count > 3) {
+                throw new InterruptedException("获取当前用户超时");
+            } else {
+                count++;
+                Thread.sleep(1000);
+            }
+        }
     }
 
 }

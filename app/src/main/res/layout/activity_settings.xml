@@ -234,6 +234,16 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectEnergy" />
 // lzw add begin
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/collect_energy_on_wee_hours"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_collectEnergyOnWeeHours" />
+
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"

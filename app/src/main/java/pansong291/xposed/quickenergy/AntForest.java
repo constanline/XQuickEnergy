@@ -695,7 +695,7 @@ public class AntForest {
                                         }                                        
                                     }
                                 } else {
-                                    Log.forest("今天不是周一,复活其他人");
+                                    // Log.forest("今天不是周一,复活其他人");
                                     if (Config.getDontHelpCollectList().contains(userId)) {
                                         Log.recordLog("不复活[" + FriendIdMap.getNameById(userId) + "]", "");
                                     } else {
@@ -1828,6 +1828,10 @@ public class AntForest {
                         combineAnimalPiece(id);
                     }
                 }
+// lzw add begin				
+                Log.forest("动物合成完了");
+                AntForestToast.show("动物合成完了");
+// lzw add end				
             } else {
                 Log.i(TAG, jo.getString("resultDesc"));
             }

@@ -32,8 +32,7 @@ public class Reserve {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     if (Config.reserve()) {
                         animalReserve();
                     }

@@ -21,8 +21,7 @@ public class AntCooperate {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     String s = AntCooperateRpcCall.queryUserCooperatePlantList();
                     if (s == null) {
                         Thread.sleep(RandomUtils.delay());

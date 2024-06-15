@@ -35,7 +35,7 @@ public class SettingsActivity extends Activity {
     private Animation slideRightOut;
 
     Switch sw_immediateEffect, sw_recordLog, sw_showToast, sw_stayAwake, sw_timeoutRestart, sw_startAt7,
-            sw_collectWateringBubble, sw_collectProp, sw_collectEnergy, sw_helpFriendCollect, sw_receiveForestTaskAward,
+            sw_collectWateringBubble, sw_collectProp, sw_collectEnergy,sw_collectEnergyOnWeeHours, sw_helpFriendCollect, sw_receiveForestTaskAward,
             sw_cooperateWater, sw_energyRain, sw_enableFarm, sw_rewardFriend, sw_sendBackAnimal,
             sw_receiveFarmToolReward, sw_useNewEggTool, sw_harvestProduce, sw_donation, sw_answerQuestion,
             sw_receiveFarmTaskAward, sw_feedAnimal, sw_useAccelerateTool, sw_notifyFriend, sw_receivePoint,
@@ -170,6 +170,9 @@ public class SettingsActivity extends Activity {
         sw_language_simplified_chinese = findViewById(R.id.sw_languageSimplifiedChinese);
 
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
+// lzw add begin        
+        sw_collectEnergyOnWeeHours = findViewById(R.id.sw_collectEnergyOnWeeHours);
+// lzw add end        
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
         sw_batchRobEnergy = findViewById(R.id.sw_batchRobEnergy);
         sw_collectProp = findViewById(R.id.sw_collectProp);
@@ -250,6 +253,9 @@ public class SettingsActivity extends Activity {
         sw_language_simplified_chinese.setChecked(Config.languageSimplifiedChinese());
 
         sw_collectEnergy.setChecked(Config.collectEnergy());
+// lzw add begin
+        sw_collectEnergyOnWeeHours.setChecked(Config.collectEnergyOnWeeHours());
+// lzw add end		
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
         sw_batchRobEnergy.setChecked(Config.batchRobEnergy());
         sw_collectProp.setChecked(Config.collectProp());
@@ -362,7 +368,11 @@ public class SettingsActivity extends Activity {
                 case R.id.sw_collectEnergy:
                     Config.setCollectEnergy(sw.isChecked());
                     break;
-
+// lzw add begin
+                case R.id.sw_collectEnergyOnWeeHours:
+                    Config.setCollectEnergyOnWeeHours(sw.isChecked());
+                    break;
+// lzw add end
                 case R.id.sw_collectWateringBubble:
                     Config.setCollectWateringBubble(sw.isChecked());
                     break;

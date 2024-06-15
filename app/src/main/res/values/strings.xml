@@ -74,6 +74,7 @@
     <string name="energy_rain">Energy Rain</string>
     <string name="give_energy_rain_list">Give energy rain list</string>
 // lzw add begin
+    <string name="collect_energy_on_wee_hours">Collect energy_on_wee_hours</string>
     <string name="master_id_list">Master id list</string>
     <string name="sub_id_list">Sub id list</string>
     <string name="only_collect_energy_time">Only collect energy time</string>    

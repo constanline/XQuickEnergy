@@ -301,6 +301,8 @@ public class Config {
     private static volatile Config config;
 // lzw add begin
     public static final String jn_onlyCollectEnergyTime = "onlyCollectEnergyTime";
+    public static final String jn_collectEnergyOnWeeHours = "collectEnergyOnWeeHours";
+    private boolean collectEnergyOnWeeHours;	
     public static final String jn_matserIDList = "matserIDList";	
     public static final String jn_subIDList = "subIDList";	
     private List<String> onlyCollectEnergyTime;
@@ -326,13 +328,40 @@ public class Config {
     public static boolean isOnlyCollectEnergyTime() {
         for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
             if (checkInTimeSpan(onlyCollectEnergyTime)) {
-                Log.other("只收能量时间段");
+                // Log.other("只收能量时间段");
                 return true;
             }
         }
-        Log.other("非只收能量时间段");
+        // Log.other("非只收能量时间段");
         return false;
     }
+
+    public static boolean isOnWeeHours() {
+        for (String onlyCollectEnergyTime : getConfig().onlyCollectEnergyTime) {
+            if (onlyCollectEnergyTime.contains("-")) {
+                String[] arr = onlyCollectEnergyTime.split("-");
+                String end = arr[0];
+                String start = "0000";
+                String now = TimeUtil.getTimeStr();
+                return start.compareTo(now) <= 0 && end.compareTo(now) > 0;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+	
+    public static void setCollectEnergyOnWeeHours(boolean b) {
+        getConfig().collectEnergyOnWeeHours = b;
+        hasChanged = true;
+    }
+	
+    public static boolean collectEnergyOnWeeHours() {
+        boolean b = getConfig().collectEnergyOnWeeHours;
+        // Log.other("凌晨是否收能量:"+b);
+        return b;
+    }	
+
 // lzw add end
 
     /* application */
@@ -463,11 +492,17 @@ public class Config {
         getConfig().collectEnergy = b;
         hasChanged = true;
     }
-
+// lzw add begin
     public static boolean collectEnergy() {
+        if (false == collectEnergyOnWeeHours()) {
+            if( (true == isOnWeeHours()) && (false == isOnlyCollectEnergyTime()) ) {
+                Log.forest("现在是凌晨时间,也不是只收取能量时间，不收取能量");
+                return false;
+            }
+        }
         return getConfig().collectEnergy;
     }
-
+// lzw add end
     public static void setCollectWateringBubble(boolean b) {
         getConfig().collectWateringBubble = b;
         hasChanged = true;
@@ -1450,7 +1485,8 @@ public class Config {
         c.doubleCard = false;
         c.doubleCardTime = new ArrayList<>();
         c.doubleCardTime.add("0720-0730");
-// lzw add begin	
+// lzw add begin
+        c.collectEnergyOnWeeHours = false;
         c.onlyCollectEnergyTime = new ArrayList<>();
         c.onlyCollectEnergyTime.add("0720-0725");
         if (c.matserIDList == null)
@@ -1666,6 +1702,10 @@ public class Config {
 
             config.doubleCardTime = Arrays.asList(jo.optString(jn_doubleCardTime, "0700-0730").split(","));
 // lzw add begin
+
+            config.collectEnergyOnWeeHours = jo.optBoolean(jn_collectEnergyOnWeeHours, false);
+            //Log.i(TAG, jn_collectEnergyOnWeeHours + ":" + config.collectEnergyOnWeeHours);
+
             config.onlyCollectEnergyTime = Arrays.asList(jo.optString(jn_onlyCollectEnergyTime, "0720-0725").split(","));
             config.matserIDList = new ArrayList<>();
             if (jo.has(jn_matserIDList)) {
@@ -2272,6 +2312,7 @@ public class Config {
             jo.put(jn_giveEnergyRainList, ja);
 			
 // lzw add begin
+            jo.put(jn_collectEnergyOnWeeHours, config.collectEnergyOnWeeHours);
             jo.put(jn_onlyCollectEnergyTime, String.join(",", config.onlyCollectEnergyTime));
 
             ja = new JSONArray();

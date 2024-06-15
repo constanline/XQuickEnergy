@@ -12,18 +12,39 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
+
+import java.util.Calendar;
+import java.util.Map;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import pansong291.xposed.quickenergy.*;
+import pansong291.xposed.quickenergy.AncientTree;
+import pansong291.xposed.quickenergy.AntBookRead;
+import pansong291.xposed.quickenergy.AntCooperate;
+import pansong291.xposed.quickenergy.AntFarm;
+import pansong291.xposed.quickenergy.AntForest;
+import pansong291.xposed.quickenergy.AntForestNotification;
+import pansong291.xposed.quickenergy.AntForestToast;
+import pansong291.xposed.quickenergy.AntMember;
+import pansong291.xposed.quickenergy.AntOcean;
+import pansong291.xposed.quickenergy.AntOrchard;
+import pansong291.xposed.quickenergy.AntSports;
+import pansong291.xposed.quickenergy.AntStall;
+import pansong291.xposed.quickenergy.ConsumeGold;
+import pansong291.xposed.quickenergy.GreenFinance;
+import pansong291.xposed.quickenergy.OmegakoiTown;
+import pansong291.xposed.quickenergy.Reserve;
 import pansong291.xposed.quickenergy.data.RuntimeInfo;
 import pansong291.xposed.quickenergy.ui.MainActivity;
-import pansong291.xposed.quickenergy.util.*;
-
-import java.util.Calendar;
-import java.util.Map;
+import pansong291.xposed.quickenergy.util.Config;
+import pansong291.xposed.quickenergy.util.FriendIdMap;
+import pansong291.xposed.quickenergy.util.Log;
+import pansong291.xposed.quickenergy.util.PluginUtils;
+import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.TimeUtil;
 
 public class XposedHook implements IXposedHookLoadPackage {
     private static final String TAG = XposedHook.class.getCanonicalName();
@@ -37,16 +58,22 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     private static boolean isHooked = false;
 
+    private static boolean isRestart = false;
+
     public enum StayAwakeType {
         BROADCAST, ALARM, NONE;
 
-        public static final CharSequence[] nickNames = { "广播", "闹钟", "不重启" };
+        public static final CharSequence[] nickNames = {"广播", "闹钟", "不重启"};
     }
 
     public enum StayAwakeTarget {
         SERVICE, ACTIVITY;
 
-        public static final CharSequence[] nickNames = { "Service", "Activity" };
+        public static final CharSequence[] nickNames = {"Service", "Activity"};
+    }
+
+    public static boolean getIsRestart() {
+        return isRestart;
     }
 
     @Override
@@ -72,6 +99,16 @@ public class XposedHook implements IXposedHookLoadPackage {
                 hookService(lpparam.classLoader);
                 PluginUtils.invoke(XposedHook.class, PluginUtils.PluginAction.INIT);
             }
+        }
+    }
+
+    private static void restartHandler() {
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+            AntForest.stop();
+            AntForestNotification.stop(service, false);
+            AntForestNotification.start(service);
+            handler.post(runnable);
         }
     }
 
@@ -127,12 +164,8 @@ public class XposedHook implements IXposedHookLoadPackage {
                     Config.setAlarm7(AntForestToast.context);
                 }
             }
+            restartHandler();
             AntForestToast.show("芝麻粒加载成功");
-            handler.removeCallbacks(runnable);
-            AntForest.stop();
-            AntForestNotification.stop(service, false);
-            AntForestNotification.start(service);
-            handler.post(runnable);
         } catch (Throwable th) {
             Log.i(TAG, "initHandler err:");
             Log.printStackTrace(TAG, th);
@@ -147,14 +180,23 @@ public class XposedHook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             Log.i(TAG, "Activity onResume");
                             RpcUtil.isInterrupted = false;
-                            PermissionUtil.requestPermissions((Activity) param.thisObject);
+                            //PermissionUtil.requestPermissions((Activity) param.thisObject);
                             AntForestNotification.setContentText("运行中...");
                             String targetUid = RpcUtil.getUserId(loader);
-                            if (targetUid == null || targetUid.equals(FriendIdMap.getCurrentUid())) {
+                            if (targetUid == null) {
                                 return;
                             }
-                            FriendIdMap.setCurrentUid(targetUid);
-                            if (handler != null) {
+                            if (!targetUid.equals(FriendIdMap.getCurrentUid())) {
+                                FriendIdMap.setCurrentUid(targetUid);
+                            } else if (!isRestart) {
+                                return;
+                            }
+                            if (isRestart) {
+                                Log.i(TAG, "Activity isRestart");
+                                isRestart = false;
+                                restartHandler();
+                                ((Activity) param.thisObject).finish();
+                            } else if (handler != null) {
                                 initHandler();
                             }
                         }
@@ -187,11 +229,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                                 wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, service.getClass().getName());
                                 wakeLock.acquire();
 
-                                if (Config.stayAwakeType() == StayAwakeType.BROADCAST) {
-                                    alarmBroadcast(AntForestToast.context, 30 * 60 * 1000, false);
-                                } else if (Config.stayAwakeType() == StayAwakeType.ALARM) {
-                                    alarmHook(AntForestToast.context, 30 * 60 * 1000, false);
-                                }
+                                restartHook(AntForestToast.context, Config.stayAwakeType(), 30 * 60 * 1000, false);
                             }
                             initHandler();
                         }
@@ -262,6 +300,14 @@ public class XposedHook implements IXposedHookLoadPackage {
 
     }
 
+    public static void restartHook(Context context, StayAwakeType stayAwakeType, long delayTime, boolean force) {
+        if (stayAwakeType == StayAwakeType.ALARM) {
+            alarmHook(context, delayTime, force);
+        } else {
+            alarmBroadcast(context, delayTime, force);
+        }
+    }
+
     public static void restartHook(Context context, boolean force) {
         try {
             Intent intent;
@@ -269,6 +315,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 intent = new Intent(Intent.ACTION_VIEW);
                 intent.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (force) {
+                    isRestart = true;
+                }
                 context.startActivity(intent);
             } else {
                 intent = new Intent();
@@ -309,6 +358,9 @@ public class XposedHook implements IXposedHookLoadPackage {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_ACTIVITY);
                 pi = PendingIntent.getActivity(context, 1, it, getPendingIntentFlag());
+                if (force) {
+                    isRestart = true;
+                }
             } else {
                 Intent it = new Intent();
                 it.setClassName(ClassMember.PACKAGE_NAME, ClassMember.CURRENT_USING_SERVICE);

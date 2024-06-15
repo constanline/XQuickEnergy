@@ -27,8 +27,7 @@ public class AntSports {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.getCurrentUid() == null || FriendIdMap.getCurrentUid().isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     if (Config.openTreasureBox())
                         queryMyHomePage(loader);
 
