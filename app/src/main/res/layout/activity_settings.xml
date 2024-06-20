@@ -529,6 +529,16 @@
 						android:minHeight="50dp"
 						android:id="@+id/sw_ExchangeEnergyDoubleClick" />
 
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/exchange_energy_shield"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_ExchangeEnergyShield" />
+
 					<Button
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"

@@ -219,6 +219,8 @@ public class Config {
 
     private boolean exchangeEnergyDoubleClick;
     private int exchangeEnergyDoubleClickCount;
+    private boolean exchangeEnergyShield;
+    private int exchangeEnergyShieldCount;
     private boolean antdodoCollect;
     private boolean antOcean;
     private boolean userPatrol;
@@ -705,7 +707,7 @@ public class Config {
         return getConfig().energyRain;
     }
 
-    public static boolean ExchangeEnergyDoubleClick() {
+    public static boolean exchangeEnergyDoubleClick() {
         return getConfig().exchangeEnergyDoubleClick;
     }
 
@@ -723,6 +725,24 @@ public class Config {
         hasChanged = true;
     }
 
+
+    public static boolean exchangeEnergyShield() {
+        return getConfig().exchangeEnergyShield;
+    }
+
+    public static void setExchangeEnergyShield(boolean b) {
+        getConfig().exchangeEnergyShield = b;
+        hasChanged = true;
+    }
+
+    public static int getExchangeEnergyShieldCount() {
+        return getConfig().exchangeEnergyShieldCount;
+    }
+
+    public static void setExchangeEnergyShieldCount(int i) {
+        getConfig().exchangeEnergyShieldCount = i;
+        hasChanged = true;
+    }
     public static void setAncientTreeOnlyWeek(boolean b) {
         getConfig().ancientTreeOnlyWeek = b;
         hasChanged = true;
@@ -1445,6 +1465,8 @@ public class Config {
             c.giveEnergyRainList = new ArrayList<>();
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
+        c.exchangeEnergyShield = false;
+        c.exchangeEnergyShieldCount = 6;
         c.ancientTreeOnlyWeek = true;
         c.antdodoCollect = true;
         c.antOcean = true;
@@ -1764,6 +1786,12 @@ public class Config {
 
             config.exchangeEnergyDoubleClickCount = jo.optInt("exchangeEnergyDoubleClickCount", 6);
             Log.i(TAG, "exchangeEnergyDoubleClickCount" + ":" + config.exchangeEnergyDoubleClickCount);
+
+            config.exchangeEnergyShield = jo.optBoolean("exchangeEnergyShield", false);
+            Log.i(TAG, "exchangeEnergyShield" + ":" + config.exchangeEnergyShield);
+
+            config.exchangeEnergyShieldCount = jo.optInt("exchangeEnergyShieldCount", 6);
+            Log.i(TAG, "exchangeEnergyShieldCount" + ":" + config.exchangeEnergyShieldCount);
 
             config.ancientTreeOnlyWeek = jo.optBoolean(jn_ancientTreeOnlyWeek, true);
             //Log.i(TAG, jn_ancientTreeOnlyWeek + ":" + config.ancientTreeOnlyWeek);
@@ -2200,6 +2228,10 @@ public class Config {
             jo.put("exchangeEnergyDoubleClick", config.exchangeEnergyDoubleClick);
 
             jo.put("exchangeEnergyDoubleClickCount", config.exchangeEnergyDoubleClickCount);
+
+            jo.put("exchangeEnergyShield", config.exchangeEnergyShield);
+
+            jo.put("exchangeEnergyShieldCount", config.exchangeEnergyShieldCount);
 
             jo.put(jn_ancientTreeOnlyWeek, config.ancientTreeOnlyWeek);
 

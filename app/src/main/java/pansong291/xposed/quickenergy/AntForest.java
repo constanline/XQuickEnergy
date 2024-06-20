@@ -201,10 +201,15 @@ public class AntForest {
                         if (Config.userPatrol()) {
                             UserPatrol();
                         }
-                        if (Config.ExchangeEnergyDoubleClick() && Statistics.canExchangeDoubleCardToday()) {
+                        if (Config.exchangeEnergyDoubleClick() && Statistics.canExchangeDoubleCardToday()) {
                             int exchangeCount = Config.getExchangeEnergyDoubleClickCount();
                             exchangeEnergyDoubleClick(exchangeCount);
                         }
+                        if (Config.exchangeEnergyShield()) {
+                            exchangeEnergyShield();
+                        }
+                        sendEnergyByAction("GREEN_LIFE");
+                        sendEnergyByAction("ANTFOREST");
                     }
 
                     PluginUtils.invoke(AntForest.class, PluginUtils.PluginAction.STOP);
@@ -1825,6 +1830,90 @@ public class AntForest {
             }
         } catch (Throwable t) {
             Log.i(TAG, "combineAnimalPiece err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void sendEnergyByAction(String sourceType) {
+        try {
+            JSONObject jo = new JSONObject(AntForestRpcCall.consultForSendEnergyByAction(sourceType));
+            if (jo.getBoolean("success")) {
+                JSONObject data = jo.getJSONObject("data");
+                if (data.optBoolean("canSendEnergy", false)) {
+                    jo = new JSONObject(AntForestRpcCall.sendEnergyByAction(sourceType));
+                    if (jo.getBoolean("success")) {
+                        data = jo.getJSONObject("data");
+                        if (data.optBoolean("canSendEnergy", false)) {
+                            int receivedEnergyAmount = data.getInt("receivedEnergyAmount");
+                            Log.forest("集市逛街👀[能量" + receivedEnergyAmount + "g]");
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, jo.getJSONObject("data").getString("resultCode"));
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "sendEnergyByAction err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void exchangeEnergyShield() {
+        try {
+            String s = AntForestRpcCall.itemList("SC_ASSETS");
+            JSONObject jo = new JSONObject(s);
+            String skuId = null;
+            String spuId = null;
+            double price = 0d;
+            if (jo.getBoolean("success")) {
+                JSONArray itemInfoVOList = jo.optJSONArray("itemInfoVOList");
+                if (itemInfoVOList != null && itemInfoVOList.length() > 0) {
+                    for (int i = 0; i < itemInfoVOList.length(); i++) {
+                        jo = itemInfoVOList.getJSONObject(i);
+                        if ("能量保护罩".equals(jo.getString("spuName"))) {
+                            spuId = jo.getString("spuId");
+                            jo = new JSONObject(AntForestRpcCall.itemDetail(spuId));
+                            if (jo.getBoolean("success")) {
+                                JSONObject spuItemInfoVO = jo.getJSONObject("spuItemInfoVO");
+                                JSONArray skuModelList = spuItemInfoVO.getJSONArray("skuModelList");
+                                for (int j = 0; j < skuModelList.length(); j++) {
+                                    jo = skuModelList.getJSONObject(j);
+                                    if ("VITALITY_ENERGY_SHIELD_NO_EXPIRE_2023"
+                                            .equals(jo.getString("rightsConfigId"))) {
+                                        if (!jo.has("skuRuleResult")) {
+                                            skuId = jo.getString("skuId");
+                                            price = jo.getJSONObject("price").getDouble("amount");
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (skuId != null && spuId != null) {
+                    jo = new JSONObject(AntForestRpcCall.queryVitalityStoreIndex());
+                    if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                        int totalVitalityAmount = jo.getJSONObject("userVitalityInfoVO")
+                                .getInt("totalVitalityAmount");
+                        if (totalVitalityAmount > price) {
+                            jo = new JSONObject(AntForestRpcCall.exchangeBenefit(spuId, skuId));
+                            if ("SUCCESS".equals(jo.getString("resultCode"))) {
+                                Log.forest("活力兑换🎐[永久保护罩]");
+                            } else {
+                                Log.recordLog(jo.getString("resultDesc"), jo.toString());
+                            }
+                        } else {
+                            Log.recordLog("活力值不足，停止兑换！", "");
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("desc"), s);
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "exchangeEnergyShield err:");
             Log.printStackTrace(TAG, t);
         }
     }

@@ -172,8 +172,6 @@ public class AntFarm {
                     if (Config.sendBackAnimal())
                         sendBackAnimal();
 
-                    Log.farm("小鸡animalInteractStatus" + ownerAnimal.animalInteractStatus);
-                    Log.farm("小鸡locationType" + ownerAnimal.locationType);
                     if (!AnimalInteractStatus.HOME.name().equals(ownerAnimal.animalInteractStatus)) {
                         if ("ORCHARD".equals(ownerAnimal.locationType)) {
                             Log.farm("小鸡到好友家除草了" );

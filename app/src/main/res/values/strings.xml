@@ -162,5 +162,6 @@
     <string name="omegakoi_town">Omegakoi Town</string>
     <string name="consume_gold">Consume Gold</string>
     <string name="use_special_food">Use Special Food</string>
+    <string name="exchange_energy_shield">Exchange Energy Shield</string>
 
 </resources>

@@ -343,4 +343,13 @@ public class AntForestRpcCall {
                 "[{\"source\":\"chInfo_ch_appcenter__chsub_9patch\",\"targetId\":\"" + targetId
                         + "\",\"targetUserId\":\"" + targetUserId + "\"}]");
     }
+    public static String consultForSendEnergyByAction(String sourceType) {
+        return RpcUtil.request("alipay.bizfmcg.greenlife.consultForSendEnergyByAction",
+                "[{\"sourceType\":\"" + sourceType + "\"}]");
+    }
+
+    public static String sendEnergyByAction(String sourceType) {
+        return RpcUtil.request("alipay.bizfmcg.greenlife.sendEnergyByAction",
+                "[{\"actionType\":\"GOODS_BROWSE\",\"requestId\":\"" + RandomUtils.getRandom(8) + "\",\"sourceType\":\"" + sourceType + "\"}]");
+    }
 }

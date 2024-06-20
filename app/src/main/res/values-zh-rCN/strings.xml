@@ -158,5 +158,6 @@
     <string name="omegakoi_town">支小镇</string>
     <string name="consume_gold">支付宝消费金</string>
     <string name="use_special_food">使用特殊食品</string>
+    <string name="exchange_energy_shield">活力值兑换能量罩</string>
 
 </resources>
