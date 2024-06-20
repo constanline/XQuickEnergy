@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.Toast;
+
 import pansong291.xposed.quickenergy.R;
 import pansong291.xposed.quickenergy.entity.*;
 import pansong291.xposed.quickenergy.util.*;
@@ -42,11 +43,13 @@ public class SettingsActivity extends Activity {
             sw_enableOnGoing, sw_backupRuntime, sw_collectSesame, sw_zcjSignIn, sw_merchantKmdk, sw_acceptGift,
             sw_enableStall, sw_stallAutoClose, sw_stallAutoOpen, sw_stallAutoTask, sw_stallReceiveAward,
             sw_stallOpenType, sw_stallDonate, sw_chickenDiary, sw_collectGiftBox, sw_stallInviteRegister,
-            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount;
+            sw_stallThrowManure, sw_greenFinance, sw_totalCertCount, sw_batchRobEnergy, sw_antBookRead, sw_consumeGold,
+            sw_omegakoiTown, sw_language_simplified_chinese, sw_special_food, sw_ExchangeEnergyShield;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LanguageUtil.setLocale(this);
         setContentView(R.layout.activity_settings);
         setTitle(R.string.settings);
 
@@ -61,7 +64,9 @@ public class SettingsActivity extends Activity {
         BeachIdMap.shouldReload = true;
 
         initSwitch();
+
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -98,7 +103,7 @@ public class SettingsActivity extends Activity {
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                    float velocityY) {
+                                   float velocityY) {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                     return false;
                 int lastView = tabHost.getCurrentTab();
@@ -159,9 +164,11 @@ public class SettingsActivity extends Activity {
         sw_startAt7 = findViewById(R.id.sw_startAt7);
         sw_enableOnGoing = findViewById(R.id.sw_enableOnGoing);
         sw_backupRuntime = findViewById(R.id.sw_backupRuntime);
+        sw_language_simplified_chinese = findViewById(R.id.sw_languageSimplifiedChinese);
 
         sw_collectEnergy = findViewById(R.id.sw_collectEnergy);
         sw_collectWateringBubble = findViewById(R.id.sw_collectWateringBubble);
+        sw_batchRobEnergy = findViewById(R.id.sw_batchRobEnergy);
         sw_collectProp = findViewById(R.id.sw_collectProp);
         sw_helpFriendCollect = findViewById(R.id.sw_helpFriendCollect);
         sw_receiveForestTaskAward = findViewById(R.id.sw_receiveForestTaskAward);
@@ -176,6 +183,7 @@ public class SettingsActivity extends Activity {
         sw_receiveFarmToolReward = findViewById(R.id.sw_receiveFarmToolReward);
         sw_recordFarmGame = findViewById(R.id.sw_recordFarmGame);
         sw_kitchen = findViewById(R.id.sw_kitchen);
+        sw_special_food = findViewById(R.id.sw_special_food);
         sw_useNewEggTool = findViewById(R.id.sw_useNewEggTool);
         sw_harvestProduce = findViewById(R.id.sw_harvestProduce);
         sw_donation = findViewById(R.id.sw_donation);
@@ -196,6 +204,7 @@ public class SettingsActivity extends Activity {
         sw_limitCollect = findViewById(R.id.sw_limitCollect);
         sw_doubleCard = findViewById(R.id.sw_doubleCard);
         sw_ExchangeEnergyDoubleClick = findViewById(R.id.sw_ExchangeEnergyDoubleClick);
+        sw_ExchangeEnergyShield = findViewById(R.id.sw_ExchangeEnergyShield);
         sw_ecoLifeTick = findViewById(R.id.sw_ecoLifeTick);
         sw_tiyubiz = findViewById(R.id.sw_tiyubiz);
         sw_insBlueBeanExchange = findViewById(R.id.sw_insBlueBeanExchange);
@@ -220,6 +229,9 @@ public class SettingsActivity extends Activity {
         sw_stallInviteRegister = findViewById(R.id.sw_stallInviteRegister);
         sw_stallThrowManure = findViewById(R.id.sw_stallThrowManure);
         sw_greenFinance = findViewById(R.id.sw_greenFinance);
+        sw_antBookRead = findViewById(R.id.sw_antBookRead);
+        sw_consumeGold = findViewById(R.id.sw_consumeGold);
+        sw_omegakoiTown = findViewById(R.id.sw_omegakoiTown);
     }
 
     @Override
@@ -233,9 +245,11 @@ public class SettingsActivity extends Activity {
         sw_startAt7.setChecked(Config.startAt7());
         sw_enableOnGoing.setChecked(Config.enableOnGoing());
         sw_backupRuntime.setChecked(Config.backupRuntime());
+        sw_language_simplified_chinese.setChecked(Config.languageSimplifiedChinese());
 
         sw_collectEnergy.setChecked(Config.collectEnergy());
         sw_collectWateringBubble.setChecked(Config.collectWateringBubble());
+        sw_batchRobEnergy.setChecked(Config.batchRobEnergy());
         sw_collectProp.setChecked(Config.collectProp());
         sw_helpFriendCollect.setChecked(Config.helpFriendCollect());
         sw_receiveForestTaskAward.setChecked(Config.receiveForestTaskAward());
@@ -250,6 +264,7 @@ public class SettingsActivity extends Activity {
         sw_receiveFarmToolReward.setChecked(Config.receiveFarmToolReward());
         sw_recordFarmGame.setChecked(Config.recordFarmGame());
         sw_kitchen.setChecked(Config.kitchen());
+        sw_special_food.setChecked(Config.useSpecialFood());
         sw_useNewEggTool.setChecked(Config.useNewEggTool());
         sw_harvestProduce.setChecked(Config.harvestProduce());
         sw_donation.setChecked(Config.donation());
@@ -269,7 +284,8 @@ public class SettingsActivity extends Activity {
         sw_kbSignIn.setChecked(Config.kbSginIn());
         sw_limitCollect.setChecked(Config.isLimitCollect());
         sw_doubleCard.setChecked(Config.doubleCard());
-        sw_ExchangeEnergyDoubleClick.setChecked(Config.ExchangeEnergyDoubleClick());
+        sw_ExchangeEnergyDoubleClick.setChecked(Config.exchangeEnergyDoubleClick());
+        sw_ExchangeEnergyShield.setChecked(Config.exchangeEnergyShield());
         sw_ecoLifeTick.setChecked(Config.ecoLifeTick());
         sw_tiyubiz.setChecked(Config.tiyubiz());
         sw_insBlueBeanExchange.setChecked(Config.insBlueBeanExchange());
@@ -294,6 +310,9 @@ public class SettingsActivity extends Activity {
         sw_stallInviteRegister.setChecked(Config.stallInviteRegister());
         sw_stallThrowManure.setChecked(Config.stallThrowManure());
         sw_greenFinance.setChecked(Config.greenFinance());
+        sw_antBookRead.setChecked(Config.antBookRead());
+        sw_consumeGold.setChecked(Config.consumeGold());
+        sw_omegakoiTown.setChecked(Config.omegakoiTown());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -333,12 +352,22 @@ public class SettingsActivity extends Activity {
                     Config.setBackupRuntime(sw.isChecked());
                     break;
 
+                case R.id.sw_languageSimplifiedChinese:
+                    Config.setLanguageSimplifiedChinese(sw.isChecked());
+                    // 提示需要重启 language_simplified_chinese_need_restart
+                    Toast.makeText(this, R.string.language_simplified_chinese_need_restart, Toast.LENGTH_SHORT).show();
+                    break;
+
                 case R.id.sw_collectEnergy:
                     Config.setCollectEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectWateringBubble:
                     Config.setCollectWateringBubble(sw.isChecked());
+                    break;
+
+                case R.id.sw_batchRobEnergy:
+                    Config.setBatchRobEnergy(sw.isChecked());
                     break;
 
                 case R.id.sw_collectProp:
@@ -377,6 +406,10 @@ public class SettingsActivity extends Activity {
                     Config.setExchangeEnergyDoubleClick(sw.isChecked());
                     break;
 
+                case R.id.sw_ExchangeEnergyShield:
+                    Config.setExchangeEnergyShield(sw.isChecked());
+                    break;
+
                 case R.id.sw_reserve:
                     Config.setReserve(sw.isChecked());
                     break;
@@ -407,6 +440,10 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_kitchen:
                     Config.setKitchen(sw.isChecked());
+                    break;
+
+                case R.id.sw_special_food:
+                    Config.setUseSpecialFood(sw.isChecked());
                     break;
 
                 case R.id.sw_useNewEggTool:
@@ -567,6 +604,18 @@ public class SettingsActivity extends Activity {
 
                 case R.id.sw_greenFinance:
                     Config.setGreenFinance(sw.isChecked());
+                    break;
+
+                case R.id.sw_antBookRead:
+                    Config.setAntBookRead(sw.isChecked());
+                    break;
+
+                case R.id.sw_consumeGold:
+                    Config.setConsumeGold(sw.isChecked());
+                    break;
+
+                case R.id.sw_omegakoiTown:
+                    Config.setOmegakoiTown(sw.isChecked());
                     break;
             }
         } else if (v instanceof Button) {

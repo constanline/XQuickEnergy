@@ -24,8 +24,7 @@ public class AntOcean {
             @Override
             public void run() {
                 try {
-                    while (FriendIdMap.currentUid == null || FriendIdMap.currentUid.isEmpty())
-                        Thread.sleep(100);
+                    FriendIdMap.waitingCurrentUid();
                     String s = AntOceanRpcCall.queryOceanStatus();
                     JSONObject jo = new JSONObject(s);
                     if ("SUCCESS".equals(jo.getString("resultCode"))) {
@@ -33,7 +32,7 @@ public class AntOcean {
                             queryHomePage();
                         } else {
                             Config.setAntOcean(false);
-                            Log.recordLog("神奇海洋🐳请先开启神奇海洋，并完成引导教程");
+                            Log.recordLog("请先开启神奇海洋，并完成引导教程");
                         }
                     } else {
                         Log.i(TAG, jo.getString("resultDesc"));
@@ -55,7 +54,7 @@ public class AntOcean {
                 }
 
                 JSONObject userInfoVO = joHomePage.getJSONObject("userInfoVO");
-                int rubbishNumber = userInfoVO.optInt("rubbishNumber");
+                int rubbishNumber = userInfoVO.optInt("rubbishNumber", 0);
                 String userId = userInfoVO.getString("userId");
                 cleanOcean(userId, rubbishNumber);
 
@@ -430,16 +429,18 @@ public class AntOcean {
                     if (!TaskStatus.TODO.name().equals(jo.getString("taskStatus")))
                         continue;
                     JSONObject bizInfo = new JSONObject(jo.getString("bizInfo"));
-                    if (!bizInfo.optBoolean("autoCompleteTask", false))
+                    if (!jo.has("taskType"))
                         continue;
                     String taskType = jo.getString("taskType");
-                    String sceneCode = jo.getString("sceneCode");
-                    jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
-                    if (jo.getBoolean("success")) {
-                        String taskTitle = bizInfo.optString("taskTitle", taskType);
-                        Log.forest("海洋任务🧾[" + taskTitle + "]");
-                    } else {
-                        Log.recordLog(jo.getString("desc"), jo.toString());
+                    if (bizInfo.optBoolean("autoCompleteTask", false) || taskType.startsWith("DAOLIU_")) {
+                        String sceneCode = jo.getString("sceneCode");
+                        jo = new JSONObject(AntOceanRpcCall.finishTask(sceneCode, taskType));
+                        if (jo.getBoolean("success")) {
+                            String taskTitle = bizInfo.optString("taskTitle", taskType);
+                            Log.forest("海洋任务🧾[" + taskTitle + "]");
+                        } else {
+                            Log.recordLog(jo.getString("desc"), jo.toString());
+                        }
                     }
                 }
             } else {

@@ -36,12 +36,14 @@ jobs:
           keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          buildToolsVersion: 30.0.3
+          buildToolsVersion: 31.0.0
 
       - name: Upload to Release Action
-        uses: Shopify/upload-to-release@v1.0.1
+        uses: termux/upload-release-action@v4.1.0
         with:
-          name: xqe-sesame-${{ github.event.release.tag_name }}.apk
-          path: ${{ steps.sign_app.outputs.signedFile }}
-          repo-token: ${{ github.token }}
-          content-type: application/zip
+          asset_name: xqe-sesame-${{ github.event.release.tag_name }}.apk
+          file: ${{ steps.sign_app.outputs.signedFile }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          overwrite: true
+          checksums: sha256

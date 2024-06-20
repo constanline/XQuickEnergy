@@ -6,15 +6,30 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import pansong291.xposed.quickenergy.hook.FriendManager;
+import pansong291.xposed.quickenergy.hook.XposedHook;
+
 public class FriendIdMap {
     private static final String TAG = FriendIdMap.class.getCanonicalName();
 
     public static boolean shouldReload = false;
 
-    public static String currentUid = null;
+    private static String currentUid = null;
 
     private static Map<String, String> idMap;
     private static boolean hasChanged = false;
+
+    public static void setCurrentUid(String uid) {
+        if (currentUid == null || !currentUid.equals(uid)) {
+            currentUid = uid;
+            FriendManager.fillUser(XposedHook.classLoader);
+            PluginUtils.invoke(FriendIdMap.class, PluginUtils.PluginAction.INIT);
+        }
+    }
+
+    public static String getCurrentUid() {
+        return currentUid;
+    }
 
     public static void putIdMapIfEmpty(String key, String value) {
         if (key == null || key.isEmpty())
@@ -109,7 +124,7 @@ public class FriendIdMap {
             shouldReload = false;
             idMap = new ConcurrentHashMap<>();
             String str = FileUtils.readFromFile(FileUtils.getFriendIdMapFile());
-            if (str != null && str.length() > 0) {
+            if (str != null && !str.isEmpty()) {
                 try {
                     String[] idSet = str.split("\n");
                     for (String s : idSet) {
@@ -124,6 +139,18 @@ public class FriendIdMap {
             }
         }
         return idMap;
+    }
+
+    public static void waitingCurrentUid() throws InterruptedException {
+        int count = 1;
+        while (getCurrentUid() == null || getCurrentUid().isEmpty()) {
+            if (count > 3) {
+                throw new InterruptedException("获取当前用户超时");
+            } else {
+                count++;
+                Thread.sleep(1000);
+            }
+        }
     }
 
 }

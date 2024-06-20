@@ -127,6 +127,8 @@ public class Statistics {
     private ArrayList<String> protectBubbleList;
     private int exchangeDoubleCard = 0;
     private int exchangeTimes = 0;
+    private int exchangeShieldCard = 0;
+    private int exchangeShieldTimes = 0;
     private int doubleTimes = 0;
 
     // farm
@@ -225,7 +227,7 @@ public class Statistics {
     }
 
     public static boolean canWaterFriendToday(String id, int count) {
-        id = FriendIdMap.currentUid + "-" + id;
+        id = FriendIdMap.getCurrentUid() + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.waterFriendLogList.size(); i++)
@@ -240,7 +242,7 @@ public class Statistics {
     }
 
     public static void waterFriendToday(String id, int count) {
-        id = FriendIdMap.currentUid + "-" + id;
+        id = FriendIdMap.getCurrentUid() + "-" + id;
         Statistics stat = getStatistics();
         WaterFriendLog wfl;
         int index = -1;
@@ -425,7 +427,7 @@ public class Statistics {
     }
 
     public static boolean canVisitFriendToday(String id, int count) {
-        id = FriendIdMap.currentUid + "-" + id;
+        id = FriendIdMap.getCurrentUid() + "-" + id;
         Statistics stat = getStatistics();
         int index = -1;
         for (int i = 0; i < stat.visitFriendLogList.size(); i++)
@@ -440,7 +442,7 @@ public class Statistics {
     }
 
     public static void visitFriendToday(String id, int count) {
-        id = FriendIdMap.currentUid + "-" + id;
+        id = FriendIdMap.getCurrentUid() + "-" + id;
         Statistics stat = getStatistics();
         VisitFriendLog vfl;
         int index = -1;
@@ -617,13 +619,13 @@ public class Statistics {
     }
 
     public static boolean canStallP2PHelpToday(String uid) {
-        uid = FriendIdMap.currentUid + "-" + uid;
+        uid = FriendIdMap.getCurrentUid() + "-" + uid;
         Statistics stat = getStatistics();
         return !stat.stallP2PHelpedList.contains(uid);
     }
 
     public static void stallP2PHelpeToday(String uid) {
-        uid = FriendIdMap.currentUid + "-" + uid;
+        uid = FriendIdMap.getCurrentUid() + "-" + uid;
         Statistics stat = getStatistics();
         if (!stat.stallP2PHelpedList.contains(uid)) {
             stat.stallP2PHelpedList.add(uid);
@@ -664,6 +666,13 @@ public class Statistics {
         } else return stat.exchangeTimes < Config.getExchangeEnergyDoubleClickCount();
     }
 
+    public static boolean canExchangeShieldCardToday() {
+        Statistics stat = getStatistics();
+        if (stat.exchangeShieldCard < stat.day.time) {
+            return true;
+        } else return stat.exchangeShieldTimes < Config.getExchangeEnergyShieldCount();
+    }
+
     public static void exchangeDoubleCardToday(boolean isSuccess) {
         Statistics stat = getStatistics();
         if (stat.exchangeDoubleCard != stat.day.time) {
@@ -677,9 +686,27 @@ public class Statistics {
         save();
     }
 
+    public static void exchangeShieldToday(boolean isSuccess) {
+        Statistics stat = getStatistics();
+        if (stat.exchangeShieldCard != stat.day.time) {
+            stat.exchangeShieldCard = stat.day.time;
+        }
+        if (isSuccess) {
+            stat.exchangeShieldTimes += 1;
+        } else {
+            stat.exchangeShieldTimes = Config.getExchangeEnergyShieldCount();
+        }
+        save();
+    }
+
     public static int getExchangeTimes() {
         Statistics stat = getStatistics();
         return stat.exchangeTimes;
+    }
+
+    public static int getExchangeShieldTimes() {
+        Statistics stat = getStatistics();
+        return stat.exchangeShieldTimes;
     }
 
     public static boolean canDoubleToday() {

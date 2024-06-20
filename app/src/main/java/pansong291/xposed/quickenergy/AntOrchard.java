@@ -5,6 +5,9 @@ import org.json.JSONObject;
 import pansong291.xposed.quickenergy.hook.AntOrchardRpcCall;
 import pansong291.xposed.quickenergy.util.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AntOrchard {
     private static final String TAG = AntOrchard.class.getCanonicalName();
 
@@ -33,6 +36,9 @@ public class AntOrchard {
                                 if (jo.has("lotteryPlusInfo"))
                                     drawLotteryPlus(jo.getJSONObject("lotteryPlusInfo"));
                                 extraInfoGet();
+                                if (!joo.optBoolean("hireCountOnceLimit", true)
+                                        && !joo.optBoolean("hireCountOneDayLimit", true))
+                                    batchHireAnimalRecommend();
                                 if (Config.receiveOrchardTaskAward()) {
                                     doOrchardDailyTask(userId);
                                     triggerTbTask();
@@ -83,17 +89,16 @@ public class AntOrchard {
         return "null";
     }
 
-    private static boolean canSpreadManureContinue(String stageBefore, String stageAfter) {
-        Double bef = Double.parseDouble(StringUtil.getSubString(stageBefore, "施肥", "%"));
-        Double aft = Double.parseDouble(StringUtil.getSubString(stageAfter, "施肥", "%"));
-        if (bef - aft != 0.01)
+    private static boolean canSpreadManureContinue(int stageBefore, int stageAfter) {
+        if (stageAfter - stageBefore > 1) {
             return true;
+        }
         Log.recordLog("施肥只加0.01%进度今日停止施肥！");
         return false;
     }
 
     private static void orchardSpreadManure() {
-        try {
+        try { 
             JSONObject jo = new JSONObject(AntOrchardRpcCall.orchardIndex());
             if ("100".equals(jo.getString("resultCode"))) {
                 if (jo.has("spreadManureActivity")) {
@@ -120,7 +125,7 @@ public class AntOrchard {
                     return;
                 }
                 JSONObject seedStage = plantInfo.getJSONObject("seedStage");
-                String stageBefore = seedStage.getString("stageText");
+                int totalValueBefore = seedStage.getInt("totalValue");
                 treeLevel = Integer.toString(seedStage.getInt("stageLevel"));
                 JSONObject accountInfo = jo.getJSONObject("gameInfo").getJSONObject("accountInfo");
                 int happyPoint = Integer.parseInt(accountInfo.getString("happyPoint"));
@@ -132,12 +137,14 @@ public class AntOrchard {
                     if ("100".equals(jo.getString("resultCode"))) {
                         taobaoData = jo.getString("taobaoData");
                         jo = new JSONObject(taobaoData);
-                        String stageAfter = jo.getJSONObject("currentStage").getString("stageText");
-                        Log.farm("农场施肥💩[" + stageAfter + "]");
-                        if (!canSpreadManureContinue(stageBefore, stageAfter)) {
+                        String stageText = jo.getJSONObject("currentStage").getString("stageText");
+                        int totalValueAfter = jo.getJSONObject("currentStage").getInt("totalValue");
+                        Log.farm("农场施肥💩[" + stageText + "]");
+                        if (!canSpreadManureContinue(totalValueBefore, totalValueAfter)) {
                             Statistics.spreadManureToday(userId);
                             return;
                         }
+                        Thread.sleep(500);
                         orchardSpreadManure();
                     } else {
                         Log.recordLog(jo.getString("resultDesc"), jo.toString());
@@ -230,7 +237,8 @@ public class AntOrchard {
                     if (!"TODO".equals(jo.getString("taskStatus")))
                         continue;
                     String title = jo.getJSONObject("taskDisplayConfig").getString("title");
-                    if ("TRIGGER".equals(jo.getString("actionType")) || "ADD_HOME".equals(jo.getString("actionType"))) {
+                    if ("TRIGGER".equals(jo.getString("actionType")) || "ADD_HOME".equals(jo.getString("actionType"))
+                            || "PUSH_SUBSCRIBE".equals(jo.getString("actionType"))) {
                         String taskId = jo.getString("taskId");
                         String sceneCode = jo.getString("sceneCode");
                         jo = new JSONObject(AntOrchardRpcCall.finishTask(userId, sceneCode, taskId));
@@ -349,6 +357,42 @@ public class AntOrchard {
             }
         } catch (Throwable t) {
             Log.i(TAG, "triggerTbTask err:");
+            Log.printStackTrace(TAG, t);
+        }
+    }
+
+    private static void batchHireAnimalRecommend() {
+        try {
+            JSONObject jo = new JSONObject(AntOrchardRpcCall.batchHireAnimalRecommend(FriendIdMap.getCurrentUid()));
+            if ("100".equals(jo.getString("resultCode"))) {
+                JSONArray recommendGroupList = jo.optJSONArray("recommendGroupList");
+                if (recommendGroupList != null && recommendGroupList.length() > 0) {
+                    List<String> GroupList = new ArrayList<>();
+                    for (int i = 0; i < recommendGroupList.length(); i++) {
+                        jo = recommendGroupList.getJSONObject(i);
+                        String animalUserId = jo.getString("animalUserId");
+                        if (Config.getDontNotifyFriendList().contains(animalUserId)) {
+                            continue;
+                        }
+                        int earnManureCount = jo.getInt("earnManureCount");
+                        String groupId = jo.getString("groupId");
+                        String orchardUserId = jo.getString("orchardUserId");
+                        GroupList.add("{\"animalUserId\":\"" + animalUserId + "\",\"earnManureCount\":"
+                                + earnManureCount + ",\"groupId\":\"" + groupId + "\",\"orchardUserId\":\""
+                                + orchardUserId + "\"}");
+                    }
+                    if (!GroupList.isEmpty()) {
+                        jo = new JSONObject(AntOrchardRpcCall.batchHireAnimal(GroupList));
+                        if ("100".equals(jo.getString("resultCode"))) {
+                            Log.farm("一键捉鸡🐣[除草]");
+                        }
+                    }
+                }
+            } else {
+                Log.recordLog(jo.getString("resultDesc"), jo.toString());
+            }
+        } catch (Throwable t) {
+            Log.i(TAG, "batchHireAnimalRecommend err:");
             Log.printStackTrace(TAG, t);
         }
     }

@@ -35,6 +35,7 @@
 						android:layout_height="wrap_content"
 						android:text="@string/immediate_effect"
 						android:onClick="onClick"
+						android:checked="true"
 						android:minHeight="50dp"
 						android:id="@+id/sw_immediateEffect" />
 
@@ -175,6 +176,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_backupRuntime" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/language_simplified_chinese"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_languageSimplifiedChinese" />
 				</LinearLayout>
 				<!--森林设置-->
 				<LinearLayout
@@ -216,6 +227,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_collectWateringBubble" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/batch_rob_energy"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_batchRobEnergy" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
@@ -507,6 +528,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_ExchangeEnergyDoubleClick" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/exchange_energy_shield"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_ExchangeEnergyShield" />
 
 					<Button
 						android:layout_width="match_parent"
@@ -815,6 +846,16 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_kitchen" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/use_special_food"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_special_food" />
 
 					<Switch
 						android:paddingStart="@dimen/setting_item_padding"
@@ -1350,6 +1391,36 @@
 						android:onClick="onClick"
 						android:minHeight="50dp"
 						android:id="@+id/sw_greenFinance" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/ant_book_read"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_antBookRead" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/consume_gold"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_consumeGold" />
+
+					<Switch
+						android:paddingStart="@dimen/setting_item_padding"
+						android:paddingEnd="@dimen/setting_item_padding"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/omegakoi_town"
+						android:onClick="onClick"
+						android:minHeight="50dp"
+						android:id="@+id/sw_omegakoiTown" />
 
 				</LinearLayout>
 
